@@ -96,7 +96,7 @@ This document outlines the implementation tasks for adding Turborepo to the VSG 
   - Check that all tasks complete successfully
   - Verify documentation is accurate and complete
 
-- [ ] **Create commit with changes**
+- [x] **Create commit with changes**
   - Stage all changes: `turbo.json`, `package.json`, `pnpm-lock.yaml`, docs
   - Write descriptive commit message following project conventions
   - Push to feature branch and create PR if applicable
