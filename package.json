@@ -2,7 +2,19 @@
   "name": "vsgkugelberg",
   "version": "1.0.0",
   "description": "This is the monorepo for the sports club VSG Kugelberg e.V. website and related projects.",
-  "scripts": {},
+  "packageManager": "pnpm@10.22.0",
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "type-check": "turbo type-check",
+    "format": "turbo format",
+    "format:fix": "turbo format:fix",
+    "lint:fix": "turbo lint:fix"
+  },
   "author": "René Wagner",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "turbo": "^2.6.1"
+  }
 }
