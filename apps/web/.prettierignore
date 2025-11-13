@@ -1,0 +1,20 @@
+# Build output
+dist
+dist-ssr
+*.local
+
+# Dependencies
+node_modules
+
+# Logs
+*.log
+
+# Coverage
+coverage
+
+# Type declarations
+*.d.ts
+
+# Editor
+.vscode
+.idea
