@@ -1,12 +1,13 @@
 // @ts-check
 import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
-import globals from 'globals';
+import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
+import globals from 'globals';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 
-export default tseslint.config(
+export default defineConfig(
   {
-    ignores: ['eslint.config.mjs'],
+    ignores: ['dist/**', 'node_modules/**', '*.d.ts', 'coverage/**', 'eslint.config.mjs'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,

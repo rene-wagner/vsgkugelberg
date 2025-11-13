@@ -1,21 +1,22 @@
 // @ts-check
 import eslint from '@eslint/js';
-import eslintPluginVue from 'eslint-plugin-vue';
+import { defineConfig } from 'eslint/config';
+import tseslint from 'typescript-eslint';
 import globals from 'globals';
-import typescriptEslint from 'typescript-eslint';
+import eslintPluginVue from 'eslint-plugin-vue';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
-export default typescriptEslint.config(
+export default defineConfig(
   // Ignore patterns
   {
-    ignores: ['dist/**', 'node_modules/**', '*.d.ts', 'coverage/**'],
+    ignores: ['dist/**', 'node_modules/**', '*.d.ts', 'coverage/**', 'eslint.config.mjs'],
   },
 
   // Base ESLint recommended rules
   eslint.configs.recommended,
 
   // TypeScript ESLint recommended rules
-  ...typescriptEslint.configs.recommended,
+  ...tseslint.configs.recommended,
 
   // Vue recommended rules for Vue 3
   ...eslintPluginVue.configs['flat/recommended'],
@@ -31,9 +32,10 @@ export default typescriptEslint.config(
         ...globals.node,
       },
       parserOptions: {
-        parser: typescriptEslint.parser,
+        parser: tseslint.parser,
         ecmaVersion: 'latest',
         sourceType: 'module',
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
