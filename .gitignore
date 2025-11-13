@@ -4,5 +4,6 @@ node_modules/
 # Turborepo
 .turbo/
 
-# AI Files
-.github/
+# AI Files - ignore all except workflows
+.github/*
+!.github/workflows/
