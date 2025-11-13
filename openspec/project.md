@@ -11,6 +11,7 @@ This is the monorepo for the sports club VSG Kugelberg e.V. website and related 
 - **State Management:** Pinia 3.0+
 - **Routing:** Vue Router 4.6+
 - **Build Tool:** Vite 7.1+
+- **Styling:** Tailwind CSS 4.1+ with native Vite plugin
 - **TypeScript:** 5.9 with strict type checking
 - **Node.js:** ^20.19.0 || >=22.12.0
 - **Development Tools:** 
@@ -82,6 +83,57 @@ Turborepo automatically caches task outputs:
 - **Dependency issues:** Run `pnpm install` at the root
 - **Build failures:** Check individual package build with `cd apps/<name> && pnpm build`
 - **Task not found:** Ensure the task is defined in the package's `package.json`
+
+### Styling with Tailwind CSS
+
+The web application uses Tailwind CSS v4 for styling, providing a utility-first approach with excellent performance.
+
+#### Using Tailwind Utilities
+Apply Tailwind utility classes directly in Vue component templates:
+```vue
+<template>
+  <div class="mt-4 p-6 bg-blue-100 rounded-lg">
+    <h2 class="text-2xl font-bold text-blue-900">Hello World</h2>
+    <p class="text-gray-700 mt-2">Tailwind utilities work seamlessly!</p>
+  </div>
+</template>
+```
+
+#### Responsive Design
+Use responsive prefixes for mobile-first design:
+- `sm:` - Small screens (640px+)
+- `md:` - Medium screens (768px+)
+- `lg:` - Large screens (1024px+)
+- `xl:` - Extra large screens (1280px+)
+
+Example: `class="text-sm md:text-lg lg:text-xl"`
+
+#### State Modifiers
+Apply styles on interaction states:
+- `hover:` - On mouse hover
+- `focus:` - On keyboard focus
+- `active:` - When actively pressed
+- `disabled:` - When disabled
+
+Example: `class="bg-blue-500 hover:bg-blue-600 focus:ring-2"`
+
+#### When to Use Custom CSS
+While Tailwind handles most styling needs, use custom CSS for:
+- Complex animations that require `@keyframes`
+- Global base styles (in `src/assets/base.css`)
+- Component-specific styles that don't fit utility patterns
+
+#### Configuration
+- Tailwind is configured via the `@tailwindcss/vite` plugin in `vite.config.ts`
+- Main import is at the top of `src/assets/main.css`
+- No `tailwind.config.js` needed - v4 uses CSS-based configuration
+- Theme customization can be done via CSS variables if needed
+
+#### Performance Notes
+- Tailwind v4 automatically purges unused utilities in production builds
+- CSS bundle is typically < 10KB gzipped
+- Hot Module Replacement (HMR) works instantly for style changes
+- Turborepo caching includes Tailwind compilation
 
 ### Testing Strategy
 [To be defined - currently no testing framework configured]

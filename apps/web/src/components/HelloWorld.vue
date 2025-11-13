@@ -8,10 +8,14 @@ defineProps<{
   <div class="greetings">
     <h1 class="green">{{ msg }}</h1>
     <h3>
-      You’ve successfully created a project with
+      You've successfully created a project with
       <a href="https://vite.dev/" target="_blank" rel="noopener">Vite</a> +
       <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>. What's next?
     </h3>
+    <!-- Tailwind CSS v4 test -->
+    <div class="mt-4 p-4 bg-blue-100 border border-blue-300 rounded-lg">
+      <p class="text-blue-800 font-semibold">✅ Tailwind CSS v4 is working!</p>
+    </div>
   </div>
 </template>
 
