@@ -1,0 +1,8 @@
+{
+  "name": "vsgkugelberg",
+  "version": "1.0.0",
+  "description": "This is the monorepo for the sports club VSG Kugelberg e.V. website and related projects.",
+  "scripts": {},
+  "author": "René Wagner",
+  "license": "ISC"
+}
