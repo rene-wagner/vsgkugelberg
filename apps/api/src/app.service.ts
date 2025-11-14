@@ -10,6 +10,6 @@ export class AppService {
   }
 
   async getUsers() {
-    return this.prisma.user.findMany();
+    return await this.prisma.user.findMany();
   }
 }
