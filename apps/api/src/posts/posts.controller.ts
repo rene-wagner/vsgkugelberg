@@ -23,11 +23,15 @@ export class PostsController {
   }
 
   @Get()
-  findAll(@Query('published') published?: string) {
+  findAll(
+    @Query('published') published?: string,
+    @Query('category') category?: string,
+    @Query('tag') tag?: string,
+  ) {
     // Convert query string to boolean if present
     const publishedFilter =
       published === 'true' ? true : published === 'false' ? false : undefined;
-    return this.postsService.findAll(publishedFilter);
+    return this.postsService.findAll(publishedFilter, category, tag);
   }
 
   @Get(':slug')

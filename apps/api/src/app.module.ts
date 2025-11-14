@@ -6,9 +6,17 @@ import { PrismaModule } from 'nestjs-prisma';
 import { PasswordService } from './common/services/password.service';
 import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
+import { CategoriesModule } from './categories/categories.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
-  imports: [PrismaModule.forRoot({ isGlobal: true }), UsersModule, PostsModule],
+  imports: [
+    PrismaModule.forRoot({ isGlobal: true }),
+    UsersModule,
+    PostsModule,
+    CategoriesModule,
+    TagsModule,
+  ],
   controllers: [AppController, HealthController],
   providers: [AppService, PasswordService],
 })

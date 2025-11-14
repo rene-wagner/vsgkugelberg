@@ -70,40 +70,15 @@ The system SHALL define a User model for storing user account information.
 
 ### Requirement: Post Model
 
-The system SHALL define a Post model for storing blog posts and content.
+The system SHALL extend the Post model to support taxonomic classification via categories and tags.
 
-#### Scenario: Post model fields
+#### Scenario: Post taxonomy relations
 
-**Given** the Post model definition  
-**When** the schema is defined  
-**Then** the Post model must have an auto-incrementing `id` field as primary key  
-**And** must have a `title` field of type String  
-**And** must have a `slug` field of type String  
-**And** must have a `content` field of type String (for markdown)  
-**And** must have a `published` field of type Boolean with default value `false`  
-**And** must have a `createdAt` field of type DateTime with default value `now()`  
-**And** must have a `updatedAt` field of type DateTime with `@updatedAt` directive  
-**And** must have an `authorId` field of type Int
-
-#### Scenario: Post slug indexing
-
-**Given** the Post model  
-**When** indexing strategy is defined  
-**Then** the `slug` field must have an index using `@@index([slug])`  
-**And** slug queries must use the index for fast lookups  
-**And** the slug field must be unique using `@unique` constraint
-
-#### Scenario: Post-User relationship
-
-**Given** the Post and User models  
-**When** relationships are defined  
-**Then** Post must have an `author` field as many-to-one relation to User  
-**And** the relation must use `authorId` as the foreign key field  
-**And** the relation must reference `id` field on User  
-**And** one Post must have exactly one User as author  
-**And** the `authorId` field must be required (not nullable)
-
----
+**Given** the Post model with Category and Tag models  
+**When** establishing relationships  
+**Then** Post must have a `categories` field of type Category[] for many-to-many relation  
+**And** Post must have a `tags` field of type Tag[] for many-to-many relation  
+**And** both relations must be optional (posts can exist without categories/tags)
 
 ### Requirement: Prisma Migrations
 
@@ -164,4 +139,65 @@ The system SHALL integrate Prisma Client with NestJS dependency injection.
 **Then** PrismaService must connect to the database on application initialization  
 **And** connection errors must be logged and prevent startup  
 **And** the connection must be closed on application shutdown
+
+### Requirement: Category Model
+
+The system SHALL define a Category model for organizing posts into broad content classifications.
+
+#### Scenario: Category model fields
+
+**Given** the Category model definition  
+**When** the schema is defined  
+**Then** the Category model must have an auto-incrementing `id` field as primary key  
+**And** must have a `name` field of type String with unique constraint  
+**And** must have a `slug` field of type String with unique constraint  
+**And** must have a `description` field of type String? (optional)  
+**And** must have a `createdAt` field of type DateTime with default value `now()`  
+**And** must have an `updatedAt` field of type DateTime with `@updatedAt` directive
+
+#### Scenario: Category slug indexing
+
+**Given** the Category model definition  
+**When** querying categories by slug  
+**Then** the `slug` field must have a database index for fast lookups  
+**And** slug uniqueness must be enforced at database level
+
+#### Scenario: Category to Post relation
+
+**Given** the Category and Post models  
+**When** establishing relationships  
+**Then** Category must have a `posts` field of type Post[] for implicit many-to-many relation  
+**And** Prisma must auto-generate a join table `_CategoryToPost`
+
+---
+
+### Requirement: Tag Model
+
+The system SHALL define a Tag model for flexible cross-cutting labeling of posts.
+
+#### Scenario: Tag model fields
+
+**Given** the Tag model definition  
+**When** the schema is defined  
+**Then** the Tag model must have an auto-incrementing `id` field as primary key  
+**And** must have a `name` field of type String with unique constraint  
+**And** must have a `slug` field of type String with unique constraint  
+**And** must have a `createdAt` field of type DateTime with default value `now()`  
+**And** must have an `updatedAt` field of type DateTime with `@updatedAt` directive
+
+#### Scenario: Tag slug indexing
+
+**Given** the Tag model definition  
+**When** querying tags by slug  
+**Then** the `slug` field must have a database index for fast lookups  
+**And** slug uniqueness must be enforced at database level
+
+#### Scenario: Tag to Post relation
+
+**Given** the Tag and Post models  
+**When** establishing relationships  
+**Then** Tag must have a `posts` field of type Post[] for implicit many-to-many relation  
+**And** Prisma must auto-generate a join table `_PostToTag`
+
+---
 

@@ -1,29 +1,6 @@
-# post-api Specification
+# post-api Specification Delta
 
-## Purpose
-TBD - created by archiving change add-post-api-routes. Update Purpose after archive.
-## Requirements
-### Requirement: Post Module Structure
-
-The API MUST provide a dedicated NestJS module for post management following standard resource organization patterns.
-
-#### Scenario: Posts module registration
-
-**Given** the NestJS application is initialized  
-**When** the application bootstraps  
-**Then** a PostsModule must be imported in AppModule  
-**And** the module must declare PostsController  
-**And** the module must provide PostsService  
-**And** PrismaService must be available through the global PrismaModule
-
-#### Scenario: Service dependency injection
-
-**Given** the PostsController is instantiated  
-**When** processing post requests  
-**Then** PostsService must be injected via constructor  
-**And** PostsService must have access to PrismaService
-
----
+## MODIFIED Requirements
 
 ### Requirement: List Posts Endpoint
 
@@ -151,27 +128,6 @@ The API MUST allow updating category and tag associations for existing posts.
 
 ---
 
-### Requirement: Delete Post Endpoint
-
-The API MUST expose an endpoint to delete post records by slug.
-
-#### Scenario: Delete existing post
-
-**Given** a post with slug "my-post" exists in the database  
-**When** a DELETE request is made to `/posts/my-post`  
-**Then** the response must have status 200  
-**And** the post must be removed from the database  
-**And** the response body must contain the deleted post object
-
-#### Scenario: Delete non-existent post
-
-**Given** no post with slug "nonexistent-post" exists  
-**When** a DELETE request is made to `/posts/nonexistent-post`  
-**Then** the response must have status 404  
-**And** the response body must contain an error message
-
----
-
 ### Requirement: Data Transfer Objects
 
 The API MUST extend post DTOs to support taxonomy associations.
@@ -193,41 +149,3 @@ The API MUST extend post DTOs to support taxonomy associations.
 **And** must accept an optional `tagIds` field of type number[]  
 **And** must validate categoryIds elements are positive integers  
 **And** must validate tagIds elements are positive integers
-
-### Requirement: Slug Generation and Uniqueness
-
-The API MUST automatically generate URL-safe slugs from post titles and ensure uniqueness.
-
-#### Scenario: Generate slug from title on creation
-
-**Given** a new post is being created with title "My Awesome Post!"  
-**When** the slugify utility is called  
-**Then** the slug must be "my-awesome-post"  
-**And** the slug must be stored in the database
-
-#### Scenario: Ensure slug uniqueness on creation
-
-**Given** a post with slug "hello-world" already exists  
-**And** a new post is being created with title "Hello World"  
-**When** the slug generation process runs  
-**Then** the system must detect the duplicate slug  
-**And** the system must append a unique identifier (counter or timestamp)  
-**And** the final slug must be unique (e.g., "hello-world-2" or "hello-world-1234567890")
-
-#### Scenario: Regenerate slug on title update
-
-**Given** a post with ID 5 and title "Old Title" exists  
-**And** the post is being updated with a new title "New Title"  
-**When** the update process runs  
-**Then** a new slug must be generated from "New Title"  
-**And** uniqueness must be ensured  
-**And** the post must be updated with the new slug
-
-#### Scenario: Preserve slug when title unchanged
-
-**Given** a post with ID 5 and slug "my-post" exists  
-**And** the post is being updated with content or published status  
-**When** the update process runs  
-**Then** the slug must remain "my-post"  
-**And** the slug must not be regenerated
-

@@ -21,15 +21,40 @@ model User {
 }
 
 model Post {
+  id         Int        @id @default(autoincrement())
+  title      String
+  slug       String     @unique
+  content    String?
+  published  Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  authorId   Int
+  author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  categories Category[]
+  tags       Tag[]
+
+  @@index([slug])
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  posts       Post[]
+
+  @@index([slug])
+}
+
+model Tag {
   id        Int      @id @default(autoincrement())
-  title     String
+  name      String   @unique
   slug      String   @unique
-  content   String?
-  published Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  authorId  Int
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  posts     Post[]
 
   @@index([slug])
 }
