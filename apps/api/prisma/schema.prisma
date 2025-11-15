@@ -58,3 +58,15 @@ model Tag {
 
   @@index([slug])
 }
+
+model Department {
+  id               Int      @id @default(autoincrement())
+  name             String   @unique
+  slug             String   @unique
+  shortDescription String
+  longDescription  String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([slug])
+}

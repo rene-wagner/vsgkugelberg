@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { PostsModule } from './posts/posts.module';
 import { CategoriesModule } from './categories/categories.module';
 import { TagsModule } from './tags/tags.module';
+import { DepartmentsModule } from './departments/departments.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TagsModule } from './tags/tags.module';
     PostsModule,
     CategoriesModule,
     TagsModule,
+    DepartmentsModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService, PasswordService],
