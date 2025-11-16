@@ -9,6 +9,7 @@ import { PostsModule } from './posts/posts.module';
 import { CategoriesModule } from './categories/categories.module';
 import { TagsModule } from './tags/tags.module';
 import { DepartmentsModule } from './departments/departments.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DepartmentsModule } from './departments/departments.module';
     CategoriesModule,
     TagsModule,
     DepartmentsModule,
+    AuthModule,
   ],
   controllers: [AppController, HealthController],
   providers: [AppService, PasswordService],
