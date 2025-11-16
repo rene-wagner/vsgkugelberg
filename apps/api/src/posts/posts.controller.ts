@@ -12,6 +12,7 @@ import {
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { Public } from '../auth/decorators';
 
 @Controller('posts')
 export class PostsController {
@@ -22,6 +23,7 @@ export class PostsController {
     return this.postsService.create(createPostDto);
   }
 
+  @Public()
   @Get()
   findAll(
     @Query('published') published?: string,
@@ -34,6 +36,7 @@ export class PostsController {
     return this.postsService.findAll(publishedFilter, category, tag);
   }
 
+  @Public()
   @Get(':slug')
   findBySlug(@Param('slug') slug: string) {
     return this.postsService.findBySlug(slug);

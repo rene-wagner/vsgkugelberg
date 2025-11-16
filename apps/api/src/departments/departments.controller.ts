@@ -11,6 +11,7 @@ import {
 import { DepartmentsService } from './departments.service';
 import { CreateDepartmentDto } from './dto/create-department.dto';
 import { UpdateDepartmentDto } from './dto/update-department.dto';
+import { Public } from '../auth/decorators';
 
 @Controller('departments')
 export class DepartmentsController {
@@ -24,11 +25,13 @@ export class DepartmentsController {
     return this.departmentsService.create(createDepartmentDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.departmentsService.findAll();
   }
 
+  @Public()
   @Get(':slug')
   findBySlug(@Param('slug') slug: string) {
     return this.departmentsService.findBySlug(slug);

@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+import { Public } from '../auth/decorators';
 
 interface HealthResponse {
   status: string;
@@ -6,6 +7,7 @@ interface HealthResponse {
 
 @Controller('health')
 export class HealthController {
+  @Public()
   @Get()
   check(): HealthResponse {
     return { status: 'ok' };

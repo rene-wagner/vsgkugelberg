@@ -215,3 +215,102 @@ The API MUST provide a dedicated NestJS module for authentication following stan
 **And** both strategies must be injectable services
 
 ---
+
+### Requirement: Global Authentication Guard
+
+The authentication system MUST provide a global JWT guard that automatically protects all routes except those explicitly marked as public.
+
+#### Scenario: Register global JWT guard
+
+**Given** the authentication module is configured  
+**When** the application initializes  
+**Then** the JwtAuthGuard must be registered as APP_GUARD provider  
+**And** the guard must be applied to all routes by default  
+**And** the guard must have access to Reflector for metadata checking
+
+#### Scenario: Global guard validates JWT on protected routes
+
+**Given** the global JWT guard is active  
+**And** a route handler does not have public metadata  
+**When** a request is made without Authorization header  
+**Then** the response must have status 401  
+**And** the response must contain UnauthorizedException message
+
+#### Scenario: Global guard allows public routes
+
+**Given** the global JWT guard is active  
+**And** a route handler has IS_PUBLIC_KEY metadata set to true  
+**When** a request is made without Authorization header  
+**Then** the guard must return true immediately  
+**And** the route handler must be executed  
+**And** no authentication check must be performed
+
+---
+
+### Requirement: Public Route Decorator
+
+The authentication system MUST provide a decorator to mark routes as publicly accessible without authentication.
+
+#### Scenario: Define public decorator
+
+**Given** the decorator system is available  
+**When** the Public decorator is created  
+**Then** it must use SetMetadata with key "isPublic"  
+**And** it must set the metadata value to true  
+**And** it must be exported from auth/decorators module
+
+#### Scenario: Apply public decorator to route
+
+**Given** the @Public() decorator exists  
+**When** applied to a controller method or class  
+**Then** the IS_PUBLIC_KEY metadata must be set on that handler  
+**And** the global guard must skip authentication for that route
+
+#### Scenario: Public decorator on login endpoint
+
+**Given** the login endpoint at POST /auth/login exists  
+**When** the @Public() decorator is applied  
+**Then** the endpoint must be accessible without JWT token  
+**And** authentication must not be required  
+**And** the local authentication guard must still validate credentials
+
+---
+
+### Requirement: Protected Mutating Routes
+
+All POST, PATCH, and DELETE routes MUST require JWT authentication. GET routes and explicitly marked public routes remain accessible without authentication.
+
+#### Scenario: POST route requires authentication
+
+**Given** the global JWT guard is active  
+**And** any POST endpoint exists that is not marked public  
+**When** a request is made without valid JWT token  
+**Then** the response must have status 401  
+**And** the response must contain UnauthorizedException
+
+#### Scenario: PATCH route requires authentication
+
+**Given** the global JWT guard is active  
+**And** any PATCH endpoint exists  
+**When** a request is made without valid JWT token  
+**Then** the response must have status 401  
+**And** the response must contain UnauthorizedException
+
+#### Scenario: DELETE route requires authentication
+
+**Given** the global JWT guard is active  
+**And** any DELETE endpoint exists  
+**When** a request is made without valid JWT token  
+**Then** the response must have status 401  
+**And** the response must contain UnauthorizedException
+
+#### Scenario: GET routes remain public when marked
+
+**Given** the global JWT guard is active  
+**And** a GET endpoint has @Public() decorator  
+**When** a request is made without JWT token  
+**Then** the request must succeed  
+**And** the response must return the requested data  
+**And** no authentication must be required
+
+---

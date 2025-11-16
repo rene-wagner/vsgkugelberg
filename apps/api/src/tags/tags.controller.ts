@@ -11,6 +11,7 @@ import {
 import { TagsService } from './tags.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
+import { Public } from '../auth/decorators';
 
 @Controller('tags')
 export class TagsController {
@@ -23,11 +24,13 @@ export class TagsController {
     return this.tagsService.create(createTagDto);
   }
 
+  @Public()
   @Get()
   findAll() {
     return this.tagsService.findAll();
   }
 
+  @Public()
   @Get(':slug')
   findBySlug(@Param('slug') slug: string) {
     return this.tagsService.findBySlug(slug);
