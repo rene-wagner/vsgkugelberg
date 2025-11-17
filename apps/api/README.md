@@ -204,3 +204,115 @@ Required environment variables:
 - `DATABASE_URL` - PostgreSQL connection string
 
 See `.env.example` for all required variables.
+
+## End-to-End Testing
+
+The API includes comprehensive end-to-end tests using Jest, Supertest, and @nestjs/testing to ensure all endpoints work correctly.
+
+### Test Database Setup
+
+E2E tests use a separate PostgreSQL database to isolate test data from development data.
+
+1. **Create the test database:**
+```bash
+createdb vsgkugelberg_test
+```
+
+2. **Run migrations on test database:**
+```bash
+cd apps/api
+DATABASE_URL="postgresql://user:secret@localhost:5432/vsgkugelberg_test" pnpm prisma migrate deploy
+```
+
+The test database connection string is configured in `apps/api/.env.test`.
+
+### Running E2E Tests
+
+```bash
+# Run all E2E tests
+pnpm test:e2e
+
+# Run with coverage report
+pnpm test:e2e:cov
+
+# Run in watch mode
+pnpm test:e2e:watch
+
+# Run with debugger
+pnpm test:e2e:debug
+```
+
+### Test Structure
+
+E2E tests are located in `apps/api/test/e2e/` with one test file per controller:
+
+- `health.e2e-spec.ts` - Health check endpoint (2 tests)
+- `auth.e2e-spec.ts` - Authentication flows (6 tests)
+- `users.e2e-spec.ts` - User CRUD operations (10 tests)
+- `posts.e2e-spec.ts` - Post management and filtering (11 tests)
+- `categories.e2e-spec.ts` - Category CRUD (9 tests)
+- `tags.e2e-spec.ts` - Tag CRUD (9 tests)
+- `departments.e2e-spec.ts` - Department CRUD (9 tests)
+
+**Total: 56 tests covering all API endpoints**
+
+### Test Helpers
+
+The test suite includes reusable helpers in `apps/api/test/helpers/`:
+
+- `test-app.ts` - Creates and configures NestJS test application
+- `auth-helper.ts` - Authentication utilities for protected routes
+- `setup-test-db.ts` - Database cleanup and reset functions
+- `test/fixtures/test-data.ts` - Centralized test data fixtures
+
+### Test Patterns
+
+Each test suite follows this pattern:
+
+```typescript
+describe('Controller E2E Tests', () => {
+  let app: INestApplication;
+  let authCookie: string;
+
+  beforeAll(async () => {
+    app = await createTestApp(); // Initialize NestJS app
+    await app.init();
+  });
+
+  beforeEach(async () => {
+    await cleanDatabase(); // Clean DB before each test
+    const result = await createAuthenticatedUser(app); // Create admin user
+    authCookie = result.cookie;
+  });
+
+  afterAll(async () => {
+    await app.close(); // Cleanup
+  });
+
+  it('should test endpoint', () => {
+    return request(app.getHttpServer())
+      .get('/endpoint')
+      .set('Cookie', authCookie) // Use authenticated cookie
+      .expect(200);
+  });
+});
+```
+
+### Troubleshooting
+
+**Database connection errors:**
+- Ensure PostgreSQL is running: `pg_isready`
+- Verify test database exists: `psql -l | grep vsgkugelberg_test`
+- Check `.env.test` has correct credentials
+
+**Test failures after schema changes:**
+```bash
+# Reset test database
+cd apps/api
+DATABASE_URL="postgresql://user:secret@localhost:5432/vsgkugelberg_test" pnpm prisma migrate reset --force
+```
+
+**Port already in use:**
+- Tests run sequentially with `--runInBand` to avoid port conflicts
+- If issues persist, check for orphaned processes: `lsof -i :3000`
+
