@@ -60,3 +60,49 @@ jobs:
 
       - name: Run format check
         run: pnpm format
+
+  api-e2e:
+    name: API E2E Tests
+    runs-on: ubuntu-latest
+    needs:
+      - lint
+      - format-check
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: database
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U user -d database"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://user:secret@localhost:5432/database
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.22.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Apply Prisma migrations
+        run: pnpm --filter api prisma migrate deploy
+
+      - name: Run API e2e tests
+        run: pnpm --filter api test:e2e
