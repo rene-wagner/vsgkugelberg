@@ -12,9 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      # pnpm/action-setup is a third-party action
-      # It is not certified by GitHub and is governed by
-      # separate terms of service, privacy policy, and support documentation
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -41,9 +38,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
 
-      # pnpm/action-setup is a third-party action
-      # It is not certified by GitHub and is governed by
-      # separate terms of service, privacy policy, and support documentation
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
