@@ -102,7 +102,7 @@ jobs:
         run: pnpm install
 
       - name: Apply Prisma migrations
-        run: pnpm --filter api prisma migrate deploy
+        run: pnpm --filter api prisma:migrate
 
       - name: Run API e2e tests
         run: pnpm --filter api test:e2e
