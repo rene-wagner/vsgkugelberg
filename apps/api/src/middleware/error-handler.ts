@@ -2,18 +2,12 @@ import { Request, Response, NextFunction } from 'express'
 import { HttpException } from '../errors/http-errors'
 import { Prisma } from '@prisma/client'
 
-/**
- * Global Error Handler Middleware
- * Catches all errors and formats them into consistent HTTP responses
- * Mimics NestJS exception filter behavior
- */
 export const errorHandler = (
   err: Error,
   req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
-  // HttpException (NotFoundException, ConflictException, etc.)
   if (err instanceof HttpException) {
     return res.status(err.statusCode).json({
       statusCode: err.statusCode,
@@ -22,7 +16,6 @@ export const errorHandler = (
     })
   }
 
-  // Prisma Known Request Errors
   if (err instanceof Prisma.PrismaClientKnownRequestError) {
     switch (err.code) {
       case 'P2002': // Unique constraint violation
@@ -57,7 +50,6 @@ export const errorHandler = (
     }
   }
 
-  // Prisma Validation Error
   if (err instanceof Prisma.PrismaClientValidationError) {
     return res.status(400).json({
       statusCode: 400,
@@ -66,7 +58,6 @@ export const errorHandler = (
     })
   }
 
-  // Default to 500 server error
   console.error('Unhandled error:', err)
   return res.status(500).json({
     statusCode: 500,
@@ -77,14 +68,10 @@ export const errorHandler = (
   })
 }
 
-/**
- * 404 Not Found Handler
- * Handles routes that don't exist
- */
 export const notFoundHandler = (
   req: Request,
   res: Response,
-  next: NextFunction,
+  _next: NextFunction,
 ) => {
   res.status(404).json({
     statusCode: 404,

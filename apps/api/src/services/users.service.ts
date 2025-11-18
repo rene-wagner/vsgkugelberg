@@ -3,20 +3,12 @@ import { PasswordService } from './password.service'
 import { NotFoundException, ConflictException } from '../errors/http-errors'
 import { CreateUserDto, UpdateUserDto, UserResponse } from '../types/user.types'
 
-/**
- * Users Service
- * Handles all business logic for user operations
- * Mirrors the NestJS UsersService functionality
- */
 export class UsersService {
   constructor(
     private readonly prisma: PrismaClient,
     private readonly passwordService: PasswordService,
   ) {}
 
-  /**
-   * Get all users (excludes password field)
-   */
   async findAll(): Promise<UserResponse[]> {
     const users = await this.prisma.user.findMany({
       select: {
@@ -30,10 +22,6 @@ export class UsersService {
     return users
   }
 
-  /**
-   * Get a single user by ID (excludes password field)
-   * @throws NotFoundException if user not found
-   */
   async findOne(id: number): Promise<UserResponse> {
     const user = await this.prisma.user.findUnique({
       where: { id },
@@ -53,10 +41,6 @@ export class UsersService {
     return user
   }
 
-  /**
-   * Create a new user with hashed password
-   * @throws ConflictException if username or email already exists
-   */
   async create(createUserDto: CreateUserDto): Promise<UserResponse> {
     const hashedPassword = await this.passwordService.hash(
       createUserDto.password,
@@ -92,13 +76,7 @@ export class UsersService {
     }
   }
 
-  /**
-   * Update a user by ID
-   * @throws NotFoundException if user not found
-   * @throws ConflictException if username or email already exists
-   */
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponse> {
-    // Check if user exists first
     await this.findOne(id)
 
     const updateData: Prisma.UserUpdateInput = {}
@@ -144,12 +122,7 @@ export class UsersService {
     }
   }
 
-  /**
-   * Delete a user by ID
-   * @throws NotFoundException if user not found
-   */
   async remove(id: number): Promise<UserResponse> {
-    // Check if user exists first
     await this.findOne(id)
 
     try {

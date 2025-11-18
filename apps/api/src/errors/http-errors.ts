@@ -1,8 +1,3 @@
-/**
- * Custom HTTP Error Classes
- * These mirror NestJS exception classes
- */
-
 export class HttpException extends Error {
   constructor(
     public readonly message: string,

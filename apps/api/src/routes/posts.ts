@@ -4,7 +4,6 @@ import { Router } from 'express'
 const router = Router()
 const prisma = new PrismaClient()
 
-// POST /api/posts - Create a new post
 router.post('/', async (req, res) => {
   const { title, slug, content, authorEmail } = req.body
   const result = await prisma.post.create({
@@ -18,7 +17,6 @@ router.post('/', async (req, res) => {
   res.json(result)
 })
 
-// GET /api/posts/feed - Get published posts with filtering
 router.get('/feed', async (req, res) => {
   const { searchString, skip, take, orderBy } = req.query
 
@@ -47,7 +45,6 @@ router.get('/feed', async (req, res) => {
   res.json(posts)
 })
 
-// GET /api/posts/:id - Get a specific post
 router.get('/:id', async (req, res) => {
   const { id }: { id?: string } = req.params
 
@@ -57,7 +54,6 @@ router.get('/:id', async (req, res) => {
   res.json(post)
 })
 
-// PUT /api/posts/:id/views - Increment post views
 router.put('/:id/views', async (req, res) => {
   const { id } = req.params
 
@@ -77,7 +73,6 @@ router.put('/:id/views', async (req, res) => {
   }
 })
 
-// PUT /api/posts/:id/publish - Toggle post publish status
 router.put('/:id/publish', async (req, res) => {
   const { id } = req.params
 
@@ -99,7 +94,6 @@ router.put('/:id/publish', async (req, res) => {
   }
 })
 
-// DELETE /api/posts/:id - Delete a post
 router.delete('/:id', async (req, res) => {
   const { id } = req.params
   const post = await prisma.post.delete({

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import request from 'supertest'
 import { app } from '@/app'
 import { getPrismaClient } from '../helpers'
@@ -6,21 +6,17 @@ import { getPrismaClient } from '../helpers'
 const prisma = getPrismaClient()
 
 describe('Users API Integration Tests', () => {
-  let testUser: any
-
-  beforeEach(async () => {
-    // Seed test data before each test
-    testUser = await prisma.user.create({
-      data: {
-        username: 'testuser',
-        email: 'test@example.com',
-        password: 'hashedpassword123', // This would normally be hashed
-      },
-    })
-  })
 
   describe('GET /api/users', () => {
     it('should return all users without passwords', async () => {
+      await prisma.user.create({
+        data: {
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'hashedpassword123', // This would normally be hashed
+        },
+      })
+
       const response = await request(app).get('/api/users')
 
       expect(response.status).toBe(200)
@@ -35,6 +31,14 @@ describe('Users API Integration Tests', () => {
 
   describe('GET /api/users/:id', () => {
     it('should return a specific user without password', async () => {
+      const testUser = await prisma.user.create({
+        data: {
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'hashedpassword123', // This would normally be hashed
+        },
+      })
+
       const response = await request(app).get(`/api/users/${testUser.id}`)
 
       expect(response.status).toBe(200)
@@ -80,12 +84,11 @@ describe('Users API Integration Tests', () => {
       expect(response.body).toHaveProperty('id')
       expect(response.body).not.toHaveProperty('password')
 
-      // Verify user was created in database
       const user = await prisma.user.findUnique({
         where: { id: response.body.id },
       })
       expect(user).toBeTruthy()
-      expect(user?.password).not.toBe(newUser.password) // Password should be hashed
+      expect(user?.password).not.toBe(newUser.password)
     })
 
     it('should return 400 for missing username', async () => {
@@ -119,6 +122,14 @@ describe('Users API Integration Tests', () => {
     })
 
     it('should return 409 for duplicate username', async () => {
+      await prisma.user.create({
+        data: {
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'hashedpassword123', // This would normally be hashed
+        },
+      })
+
       const response = await request(app).post('/api/users').send({
         username: 'testuser', // Already exists from beforeEach
         email: 'different@example.com',
@@ -131,6 +142,14 @@ describe('Users API Integration Tests', () => {
     })
 
     it('should return 409 for duplicate email', async () => {
+      await prisma.user.create({
+        data: {
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'hashedpassword123', // This would normally be hashed
+        },
+      })
+
       const response = await request(app).post('/api/users').send({
         username: 'differentuser',
         email: 'test@example.com', // Already exists from beforeEach
@@ -145,6 +164,14 @@ describe('Users API Integration Tests', () => {
 
   describe('PATCH /api/users/:id', () => {
     it('should update user username', async () => {
+      const testUser = await prisma.user.create({
+        data: {
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'hashedpassword123', // This would normally be hashed
+        },
+      })
+
       const response = await request(app)
         .patch(`/api/users/${testUser.id}`)
         .send({
@@ -161,6 +188,14 @@ describe('Users API Integration Tests', () => {
     })
 
     it('should update user email', async () => {
+      const testUser = await prisma.user.create({
+        data: {
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'hashedpassword123', // This would normally be hashed
+        },
+      })
+
       const response = await request(app)
         .patch(`/api/users/${testUser.id}`)
         .send({
@@ -172,6 +207,14 @@ describe('Users API Integration Tests', () => {
     })
 
     it('should update user password', async () => {
+      const testUser = await prisma.user.create({
+        data: {
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'hashedpassword123', // This would normally be hashed
+        },
+      })
+
       const newPassword = 'NewPassword123'
       const response = await request(app)
         .patch(`/api/users/${testUser.id}`)
@@ -181,7 +224,6 @@ describe('Users API Integration Tests', () => {
 
       expect(response.status).toBe(200)
 
-      // Verify password was hashed
       const user = await prisma.user.findUnique({
         where: { id: testUser.id },
       })
@@ -189,6 +231,14 @@ describe('Users API Integration Tests', () => {
     })
 
     it('should update multiple fields at once', async () => {
+      const testUser = await prisma.user.create({
+        data: {
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'hashedpassword123', // This would normally be hashed
+        },
+      })
+
       const response = await request(app)
         .patch(`/api/users/${testUser.id}`)
         .send({
@@ -212,11 +262,19 @@ describe('Users API Integration Tests', () => {
     })
 
     it('should return 409 for duplicate username', async () => {
-      const anotherUser = await prisma.user.create({
+      await prisma.user.create({
         data: {
           username: 'another',
           email: 'another@example.com',
           password: 'password123',
+        },
+      })
+
+      const testUser = await prisma.user.create({
+        data: {
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'hashedpassword123', // This would normally be hashed
         },
       })
 
@@ -232,6 +290,14 @@ describe('Users API Integration Tests', () => {
 
   describe('DELETE /api/users/:id', () => {
     it('should delete a user', async () => {
+      const testUser = await prisma.user.create({
+        data: {
+          username: 'testuser',
+          email: 'test@example.com',
+          password: 'hashedpassword123', // This would normally be hashed
+        },
+      })
+
       const response = await request(app).delete(`/api/users/${testUser.id}`)
 
       expect(response.status).toBe(200)
@@ -240,7 +306,6 @@ describe('Users API Integration Tests', () => {
         username: 'testuser',
       })
 
-      // Verify user was deleted
       const deletedUser = await prisma.user.findUnique({
         where: { id: testUser.id },
       })

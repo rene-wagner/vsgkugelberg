@@ -13,14 +13,8 @@ import {
 const router = Router()
 const prisma = new PrismaClient()
 
-// Initialize the users service
 const usersService = new UsersService(prisma, passwordService)
 
-/**
- * POST /api/users - Create a new user
- * @body username, email, password
- * @returns UserResponse (excludes password)
- */
 router.post(
   '/',
   createUserValidator,
@@ -31,11 +25,6 @@ router.post(
   }),
 )
 
-/**
- * GET /api/users - Get all users
- * @returns UserResponse[] (excludes passwords)
- * Note: Public route in NestJS
- */
 router.get(
   '/',
   asyncHandler(async (req, res) => {
@@ -44,12 +33,6 @@ router.get(
   }),
 )
 
-/**
- * GET /api/users/:id - Get a single user by ID
- * @param id - User ID
- * @returns UserResponse (excludes password)
- * Note: Public route in NestJS
- */
 router.get(
   '/:id',
   idParamValidator,
@@ -60,12 +43,6 @@ router.get(
   }),
 )
 
-/**
- * PATCH /api/users/:id - Update a user
- * @param id - User ID
- * @body username?, email?, password? (all optional)
- * @returns UserResponse (excludes password)
- */
 router.patch(
   '/:id',
   idParamValidator,
@@ -77,11 +54,6 @@ router.patch(
   }),
 )
 
-/**
- * DELETE /api/users/:id - Delete a user
- * @param id - User ID
- * @returns UserResponse (excludes password)
- */
 router.delete(
   '/:id',
   idParamValidator,
@@ -92,12 +64,6 @@ router.delete(
   }),
 )
 
-/**
- * GET /api/users/:id/drafts - Get user's draft posts
- * @param id - User ID
- * @returns Post[] (draft posts by user)
- * Note: Legacy route from original implementation
- */
 router.get(
   '/:id/drafts',
   idParamValidator,

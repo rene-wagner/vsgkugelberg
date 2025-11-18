@@ -1,8 +1,3 @@
-/**
- * User DTOs and Types
- * These mirror the NestJS DTOs
- */
-
 export interface CreateUserDto {
   username: string
   email: string

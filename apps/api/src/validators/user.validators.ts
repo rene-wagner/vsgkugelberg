@@ -1,9 +1,5 @@
 import { body, param } from 'express-validator'
 
-/**
- * Validation rules for creating a user
- * Mirrors CreateUserDto validation from NestJS
- */
 export const createUserValidator = [
   body('username')
     .trim()
@@ -33,11 +29,6 @@ export const createUserValidator = [
     ),
 ]
 
-/**
- * Validation rules for updating a user
- * Mirrors UpdateUserDto validation from NestJS
- * All fields are optional
- */
 export const updateUserValidator = [
   body('username')
     .optional()
@@ -64,10 +55,6 @@ export const updateUserValidator = [
     ),
 ]
 
-/**
- * Validation rule for numeric ID parameter
- * Used in routes like GET /users/:id, PATCH /users/:id, DELETE /users/:id
- */
 export const idParamValidator = [
   param('id')
     .isInt({ min: 1 })
