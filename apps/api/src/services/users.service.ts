@@ -1,7 +1,7 @@
 import { PrismaClient, Prisma } from '@prisma/client'
 import { PasswordService } from './password.service'
-import { NotFoundException, ConflictException } from '../errors/http-errors'
-import { CreateUserDto, UpdateUserDto, UserResponse } from '../types/user.types'
+import { NotFoundException, ConflictException } from '@/errors/http-errors'
+import { CreateUserDto, UpdateUserDto, UserResponse } from '@/types/user.types'
 
 export class UsersService {
   constructor(

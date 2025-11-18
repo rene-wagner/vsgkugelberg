@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
-import { HttpException } from '../errors/http-errors'
+import { HttpException } from '@/errors/http-errors'
 import { Prisma } from '@prisma/client'
 
-export const errorHandler = (
+export const errorHandlerMiddleware = (
   err: Error,
   req: Request,
   res: Response,
