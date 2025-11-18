@@ -5,6 +5,7 @@ import { postsRouter } from './posts.routes'
 import { categoriesRouter } from './categories.routes'
 import { tagsRouter } from './tags.routes'
 import { departmentsRouter } from './departments.routes'
+import { healthRouter } from './health.routes'
 
 const router = Router()
 
@@ -14,5 +15,6 @@ router.use('/posts', postsRouter)
 router.use('/categories', categoriesRouter)
 router.use('/tags', tagsRouter)
 router.use('/departments', departmentsRouter)
+router.use('/health', healthRouter)
 
 export { router }
