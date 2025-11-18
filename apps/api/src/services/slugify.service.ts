@@ -1,11 +1,55 @@
 import slugify from 'slugify'
+import { PrismaClient } from '@prisma/client'
 
 export class SlugifyService {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  /**
+   * Generates a URL-friendly slug from a string
+   * @param text - The text to convert to a slug
+   * @returns A slugified string
+   */
   slugify(text: string): string {
-    return slugify(text, {
+    // Pre-process to remove special characters that slugify would otherwise translate
+    const cleaned = text.replace(/[&]/g, ' ')
+    
+    return slugify(cleaned, {
       lower: true,
       strict: true,
-      locale: 'de',
+      remove: /[*+~.()'"!:@?]/g,
+      replacement: '-',
     })
+  }
+
+  /**
+   * Generates a unique slug for a post
+   * If the slug already exists, appends a number to make it unique
+   * @param title - The post title
+   * @param excludePostId - Optional post ID to exclude from uniqueness check (for updates)
+   * @returns A unique slug
+   */
+  async generateUniqueSlug(
+    title: string,
+    excludePostId?: number,
+  ): Promise<string> {
+    const baseSlug = this.slugify(title)
+    let slug = baseSlug
+    let counter = 1
+
+    while (true) {
+      const existingPost = await this.prisma.post.findUnique({
+        where: { slug },
+        select: { id: true },
+      })
+
+      // If no post exists with this slug, or it's the same post we're updating
+      if (!existingPost || (excludePostId && existingPost.id === excludePostId)) {
+        return slug
+      }
+
+      // Slug exists, try with counter
+      slug = `${baseSlug}-${counter}`
+      counter++
+    }
   }
 }

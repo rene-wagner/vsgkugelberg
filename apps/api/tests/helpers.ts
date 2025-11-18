@@ -17,6 +17,8 @@ export async function cleanupDatabase() {
   // Delete in correct order: child tables first, then parent tables
   await prisma.$transaction([
     prisma.post.deleteMany(),
+    prisma.category.deleteMany(),
+    prisma.tag.deleteMany(),
     prisma.user.deleteMany(),
   ])
 }
