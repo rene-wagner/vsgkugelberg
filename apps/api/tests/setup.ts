@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import path from 'path'
 
 // Load test environment variables
-dotenv.config({ path: path.resolve(__dirname, '../../.env.test') })
+dotenv.config({ path: path.resolve(__dirname, '../.env.test'), override: true })
 
 // Verify test database is configured
 if (!process.env.DATABASE_URL?.includes('test')) {
