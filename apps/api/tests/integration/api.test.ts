@@ -14,14 +14,16 @@ describe('API Integration Tests', () => {
     // Seed test data before each test
     testUser = await prisma.user.create({
       data: {
-        name: 'Test User',
+        username: 'testuser',
         email: 'test@example.com',
+        password: 'hashedpassword123',
       },
     })
 
     testPost = await prisma.post.create({
       data: {
         title: 'Test Post',
+        slug: 'test-post',
         content: 'Test content',
         published: true,
         authorId: testUser.id,
@@ -29,84 +31,76 @@ describe('API Integration Tests', () => {
     })
   })
 
-  describe('GET /users', () => {
+  describe('GET /api/users', () => {
     it('should return all users', async () => {
-      const response = await request(app).get('/users')
+      const response = await request(app).get('/api/users')
 
       expect(response.status).toBe(200)
       expect(response.body).toHaveLength(1)
       expect(response.body[0]).toMatchObject({
-        name: 'Test User',
+        username: 'testuser',
         email: 'test@example.com',
       })
+      expect(response.body[0]).not.toHaveProperty('password')
     })
   })
 
-  describe('POST /signup', () => {
+  describe('POST /api/users', () => {
     it('should create a new user', async () => {
       const newUser = {
-        name: 'Alice',
+        username: 'alice',
         email: 'alice@example.com',
+        password: 'Password123',
       }
 
-      const response = await request(app).post('/signup').send(newUser)
+      const response = await request(app).post('/api/users').send(newUser)
 
-      expect(response.status).toBe(200)
-      expect(response.body).toMatchObject(newUser)
+      expect(response.status).toBe(201)
+      expect(response.body).toMatchObject({
+        username: 'alice',
+        email: 'alice@example.com',
+      })
       expect(response.body).toHaveProperty('id')
+      expect(response.body).not.toHaveProperty('password')
     })
 
-    it('should create a new user with posts', async () => {
+    it('should return 400 for invalid user data', async () => {
       const newUser = {
-        name: 'Bob',
-        email: 'bob@example.com',
-        posts: [
-          {
-            title: 'Bob First Post',
-            content: 'Hello world',
-          },
-        ],
+        username: 'ab', // Too short
+        email: 'invalid-email',
+        password: 'weak',
       }
 
-      const response = await request(app).post('/signup').send(newUser)
+      const response = await request(app).post('/api/users').send(newUser)
 
-      expect(response.status).toBe(200)
-      expect(response.body).toMatchObject({
-        name: 'Bob',
-        email: 'bob@example.com',
-      })
-
-      // Verify post was created
-      const posts = await prisma.post.findMany({
-        where: { authorId: response.body.id },
-      })
-      expect(posts).toHaveLength(1)
-      expect(posts[0].title).toBe('Bob First Post')
+      expect(response.status).toBe(400)
     })
   })
 
-  describe('POST /post', () => {
+  describe('POST /api/posts', () => {
     it('should create a new post for existing user', async () => {
       const newPost = {
         title: 'New Post',
+        slug: 'new-post',
         content: 'New content',
         authorEmail: testUser.email,
       }
 
-      const response = await request(app).post('/post').send(newPost)
+      const response = await request(app).post('/api/posts').send(newPost)
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
         title: 'New Post',
+        slug: 'new-post',
         content: 'New content',
         authorId: testUser.id,
       })
     })
   })
 
-  describe('GET /post/:id', () => {
+  describe('GET /api/posts/:id', () => {
     it('should return a specific post', async () => {
-      const response = await request(app).get(`/post/${testPost.id}`)
+      const response = await request(app).get(`/api/posts/${testPost.id}`)
 
       expect(response.status).toBe(200)
       expect(response.body).toMatchObject({
@@ -116,27 +110,27 @@ describe('API Integration Tests', () => {
     })
 
     it('should return null for non-existent post', async () => {
-      const response = await request(app).get('/post/99999')
+      const response = await request(app).get('/api/posts/99999')
 
       expect(response.status).toBe(200)
       expect(response.body).toBeNull()
     })
   })
 
-  describe('PUT /post/:id/views', () => {
+  describe('PUT /api/posts/:id/views', () => {
     it('should increment post view count', async () => {
-      const response = await request(app).put(`/post/${testPost.id}/views`)
+      const response = await request(app).put(`/api/posts/${testPost.id}/views`)
 
       expect(response.status).toBe(200)
       expect(response.body.viewCount).toBe(1)
 
       // Increment again
-      const response2 = await request(app).put(`/post/${testPost.id}/views`)
+      const response2 = await request(app).put(`/api/posts/${testPost.id}/views`)
       expect(response2.body.viewCount).toBe(2)
     })
 
     it('should return error for non-existent post', async () => {
-      const response = await request(app).put('/post/99999/views')
+      const response = await request(app).put('/api/posts/99999/views')
 
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('error')
@@ -144,42 +138,43 @@ describe('API Integration Tests', () => {
     })
   })
 
-  describe('PUT /publish/:id', () => {
+  describe('PUT /api/posts/:id/publish', () => {
     it('should toggle post published status', async () => {
       // Initially published
       expect(testPost.published).toBe(true)
 
       // Toggle to unpublished
-      const response = await request(app).put(`/publish/${testPost.id}`)
+      const response = await request(app).put(`/api/posts/${testPost.id}/publish`)
       expect(response.status).toBe(200)
       expect(response.body.published).toBe(false)
 
       // Toggle back to published
-      const response2 = await request(app).put(`/publish/${testPost.id}`)
+      const response2 = await request(app).put(`/api/posts/${testPost.id}/publish`)
       expect(response2.body.published).toBe(true)
     })
 
     it('should return error for non-existent post', async () => {
-      const response = await request(app).put('/publish/99999')
+      const response = await request(app).put('/api/posts/99999/publish')
 
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty('error')
     })
   })
 
-  describe('GET /user/:id/drafts', () => {
+  describe('GET /api/users/:id/drafts', () => {
     it('should return user drafts', async () => {
       // Create a draft post
       await prisma.post.create({
         data: {
           title: 'Draft Post',
+          slug: 'draft-post',
           content: 'Draft content',
           published: false,
           authorId: testUser.id,
         },
       })
 
-      const response = await request(app).get(`/user/${testUser.id}/drafts`)
+      const response = await request(app).get(`/api/users/${testUser.id}/drafts`)
 
       expect(response.status).toBe(200)
       expect(response.body).toHaveLength(1)
@@ -188,7 +183,7 @@ describe('API Integration Tests', () => {
     })
 
     it('should not return published posts', async () => {
-      const response = await request(app).get(`/user/${testUser.id}/drafts`)
+      const response = await request(app).get(`/api/users/${testUser.id}/drafts`)
 
       expect(response.status).toBe(200)
       // Should not include the published testPost
@@ -196,27 +191,28 @@ describe('API Integration Tests', () => {
     })
   })
 
-  describe('GET /feed', () => {
+  describe('GET /api/posts/feed', () => {
     it('should return published posts', async () => {
-      const response = await request(app).get('/feed')
+      const response = await request(app).get('/api/posts/feed')
 
       expect(response.status).toBe(200)
       expect(response.body).toHaveLength(1)
       expect(response.body[0]).toHaveProperty('author')
-      expect(response.body[0].author.name).toBe('Test User')
+      expect(response.body[0].author.username).toBe('testuser')
     })
 
     it('should filter posts by search string', async () => {
       await prisma.post.create({
         data: {
           title: 'Unique Title',
+          slug: 'unique-title',
           content: 'Content',
           published: true,
           authorId: testUser.id,
         },
       })
 
-      const response = await request(app).get('/feed?searchString=Unique')
+      const response = await request(app).get('/api/posts/feed?searchString=Unique')
 
       expect(response.status).toBe(200)
       expect(response.body).toHaveLength(1)
@@ -229,12 +225,14 @@ describe('API Integration Tests', () => {
         data: [
           {
             title: 'Post 2',
+            slug: 'post-2',
             content: 'Content 2',
             published: true,
             authorId: testUser.id,
           },
           {
             title: 'Post 3',
+            slug: 'post-3',
             content: 'Content 3',
             published: true,
             authorId: testUser.id,
@@ -242,16 +240,16 @@ describe('API Integration Tests', () => {
         ],
       })
 
-      const response = await request(app).get('/feed?take=2&skip=1')
+      const response = await request(app).get('/api/posts/feed?take=2&skip=1')
 
       expect(response.status).toBe(200)
       expect(response.body).toHaveLength(2)
     })
   })
 
-  describe('DELETE /post/:id', () => {
+  describe('DELETE /api/posts/:id', () => {
     it('should delete a post', async () => {
-      const response = await request(app).delete(`/post/${testPost.id}`)
+      const response = await request(app).delete(`/api/posts/${testPost.id}`)
 
       expect(response.status).toBe(200)
       expect(response.body.id).toBe(testPost.id)

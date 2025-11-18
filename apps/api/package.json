@@ -19,6 +19,7 @@
     "postinstall": "prisma generate"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.5",
     "@types/node": "^24.10.1",
     "@types/supertest": "^6.0.3",
@@ -32,7 +33,9 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.3",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "express-validator": "^7.3.0"
   }
 }
