@@ -1,3 +1,5 @@
+import { Category as PrismaCategory } from '@prisma/client'
+
 export interface CreateCategoryDto {
   name: string;
   description?: string;
@@ -8,11 +10,4 @@ export interface UpdateCategoryDto {
   description?: string;
 }
 
-export interface Category {
-  id: string;
-  name: string;
-  slug: string;
-  description: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type Category = PrismaCategory

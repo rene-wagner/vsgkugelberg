@@ -1,3 +1,5 @@
+import { Tag as PrismaTag } from '@prisma/client'
+
 export interface CreateTagDto {
   name: string;
 }
@@ -6,13 +8,7 @@ export interface UpdateTagDto {
   name?: string;
 }
 
-export interface Tag {
-  id: number;
-  name: string;
-  slug: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export type Tag = PrismaTag
 
 export interface TagWithCount extends Tag {
   _count: {

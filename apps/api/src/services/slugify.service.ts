@@ -62,7 +62,7 @@ export class SlugifyService {
    */
   async generateUniqueCategorySlug(
     name: string,
-    excludeCategoryId?: string,
+    excludeCategoryId?: number,
   ): Promise<string> {
     const baseSlug = this.slugify(name)
     let slug = baseSlug
