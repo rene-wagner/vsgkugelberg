@@ -7,6 +7,10 @@
   "private": true,
   "scripts": {
     "dev": "node -r tsconfig-paths/register -r ts-node/register src/index.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --check \"src/**/*.{js,ts,json,md}\"",
+    "format:fix": "prettier --write \"src/**/*.{js,ts,json,md}\"",
     "test": "vitest",
     "test:ci": "vitest run",
     "test:ui": "vitest --ui",
@@ -19,6 +23,7 @@
     "postinstall": "prisma generate"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.1",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/express": "^5.0.5",
@@ -27,13 +32,20 @@
     "@types/passport": "^1.0.17",
     "@types/passport-local": "^1.0.38",
     "@types/supertest": "^6.0.3",
+    "@typescript-eslint/eslint-plugin": "^8.46.4",
+    "@typescript-eslint/parser": "^8.46.4",
     "@vitest/coverage-v8": "^4.0.10",
     "@vitest/ui": "^4.0.10",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.5.0",
     "prisma": "^6.19.0",
     "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.4",
     "vitest": "^4.0.10"
   },
   "dependencies": {

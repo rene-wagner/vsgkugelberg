@@ -26,6 +26,7 @@ export default defineConfig(
   },
   {
     rules: {
+      'no-case-declarations': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
@@ -42,6 +43,13 @@ export default defineConfig(
       }],
       '@typescript-eslint/require-await': 'off',
       'prettier/prettier': ['error', { endOfLine: 'auto' }],
+    },
+  },
+  {
+    files: ['tests/**/*.ts', 'tests/**/*.test.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
     },
   },
 );

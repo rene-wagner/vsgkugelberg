@@ -1,4 +1,4 @@
-import { Category as PrismaCategory } from '@prisma/client'
+import { Category as PrismaCategory } from '@prisma/client';
 
 export interface CreateCategoryDto {
   name: string;
@@ -10,4 +10,4 @@ export interface UpdateCategoryDto {
   description?: string;
 }
 
-export type Category = PrismaCategory
+export type Category = PrismaCategory;

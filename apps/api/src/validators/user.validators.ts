@@ -1,4 +1,4 @@
-import { body, param } from 'express-validator'
+import { body, param } from 'express-validator';
 
 export const createUserValidator = [
   body('username')
@@ -8,7 +8,9 @@ export const createUserValidator = [
     .isLength({ min: 3, max: 50 })
     .withMessage('Username must be between 3 and 50 characters')
     .matches(/^[a-zA-Z0-9_-]+$/)
-    .withMessage('Username can only contain letters, numbers, underscores, and hyphens'),
+    .withMessage(
+      'Username can only contain letters, numbers, underscores, and hyphens',
+    ),
 
   body('email')
     .trim()
@@ -27,7 +29,7 @@ export const createUserValidator = [
     .withMessage(
       'Password must contain at least one lowercase letter, one uppercase letter, and one number',
     ),
-]
+];
 
 export const updateUserValidator = [
   body('username')
@@ -36,7 +38,9 @@ export const updateUserValidator = [
     .isLength({ min: 3, max: 50 })
     .withMessage('Username must be between 3 and 50 characters')
     .matches(/^[a-zA-Z0-9_-]+$/)
-    .withMessage('Username can only contain letters, numbers, underscores, and hyphens'),
+    .withMessage(
+      'Username can only contain letters, numbers, underscores, and hyphens',
+    ),
 
   body('email')
     .optional()
@@ -53,11 +57,11 @@ export const updateUserValidator = [
     .withMessage(
       'Password must contain at least one lowercase letter, one uppercase letter, and one number',
     ),
-]
+];
 
 export const idParamValidator = [
   param('id')
     .isInt({ min: 1 })
     .withMessage('ID must be a positive integer')
     .toInt(),
-]
+];

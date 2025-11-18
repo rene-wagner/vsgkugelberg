@@ -1,35 +1,41 @@
-import { beforeAll, afterAll, afterEach } from 'vitest'
-import { cleanupDatabase, disconnectDatabase, getPrismaClient } from './helpers'
-import dotenv from 'dotenv'
-import path from 'path'
+import { beforeAll, afterAll, afterEach } from 'vitest';
+import {
+  cleanupDatabase,
+  disconnectDatabase,
+  getPrismaClient,
+} from './helpers';
+import dotenv from 'dotenv';
+import path from 'path';
 
 dotenv.config({
   path: path.resolve(__dirname, '../.env.test'),
   override: true,
   quiet: true,
-})
+});
 
 if (!process.env.DATABASE_URL?.includes('test')) {
-  console.warn('⚠️  Warning: DATABASE_URL does not contain "test" - you may be using your development database!')
+  console.warn(
+    '⚠️  Warning: DATABASE_URL does not contain "test" - you may be using your development database!',
+  );
 }
 
 beforeAll(async () => {
-  const prisma = getPrismaClient()
-  
+  const prisma = getPrismaClient();
+
   try {
-    await prisma.$connect()
-    await cleanupDatabase()
+    await prisma.$connect();
+    await cleanupDatabase();
   } catch (error) {
-    console.error('❌ Failed to connect to test database:', error)
-    throw error
+    console.error('❌ Failed to connect to test database:', error);
+    throw error;
   }
-})
+});
 
 afterEach(async () => {
-  await cleanupDatabase()
-})
+  await cleanupDatabase();
+});
 
 afterAll(async () => {
-  await cleanupDatabase()
-  await disconnectDatabase()
-})
+  await cleanupDatabase();
+  await disconnectDatabase();
+});

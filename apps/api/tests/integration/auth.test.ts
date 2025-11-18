@@ -1,552 +1,514 @@
-import { describe, it, expect } from 'vitest'
-import request from 'supertest'
-import jwt from 'jsonwebtoken'
-import { app } from '@/app'
-import { jwtConfig } from '@/config/jwt.config'
+import { describe, it, expect } from 'vitest';
+import request from 'supertest';
+import jwt from 'jsonwebtoken';
+import { app } from '@/app';
+import { jwtConfig } from '@/config/jwt.config';
 import {
   createTestUserWithPassword,
   extractCookieValue,
   parseCookieAttributes,
-} from '../helpers'
+} from '../helpers';
 
 describe('Auth API Integration Tests', () => {
-  const testPassword = 'Password123'
-  const authUsername = 'auth_testuser'
-  const authEmail = 'auth_test@example.com'
+  const testPassword = 'Password123';
+  const authUsername = 'auth_testuser';
+  const authEmail = 'auth_test@example.com';
 
   describe('POST /api/auth/login - Success Cases', () => {
     it('should login successfully with valid username and password', async () => {
-      const user =await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      const user = await createTestUserWithPassword(
+        authUsername,
+        authEmail,
+        testPassword,
+      );
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      expect(response.status).toBe(200)
-      expect(response.body).toHaveProperty('user')
-      expect(response.body.user).toHaveProperty('id', user.id)
-      expect(response.body.user).toHaveProperty('username', authUsername)
-      expect(response.body.user).toHaveProperty('email', authEmail)
-      expect(response.body.user).toHaveProperty('createdAt')
-      expect(response.body.user).toHaveProperty('updatedAt')
-      expect(response.headers['set-cookie']).toBeDefined()
-    })
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user).toHaveProperty('id', user.id);
+      expect(response.body.user).toHaveProperty('username', authUsername);
+      expect(response.body.user).toHaveProperty('email', authEmail);
+      expect(response.body.user).toHaveProperty('createdAt');
+      expect(response.body.user).toHaveProperty('updatedAt');
+      expect(response.headers['set-cookie']).toBeDefined();
+    });
 
     it('should login successfully with valid email and password', async () => {
-      const user = await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      const user = await createTestUserWithPassword(
+        authUsername,
+        authEmail,
+        testPassword,
+      );
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authEmail, // Using email in username field
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authEmail, // Using email in username field
+        password: testPassword,
+      });
 
-      expect(response.status).toBe(200)
-      expect(response.body).toHaveProperty('user')
-      expect(response.body.user).toHaveProperty('id', user.id)
-      expect(response.body.user).toHaveProperty('username', authUsername)
-      expect(response.body.user).toHaveProperty('email', authEmail)
-      expect(response.body.user).toHaveProperty('createdAt')
-      expect(response.body.user).toHaveProperty('updatedAt')
-      expect(response.headers['set-cookie']).toBeDefined()
-    })
-  })
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty('user');
+      expect(response.body.user).toHaveProperty('id', user.id);
+      expect(response.body.user).toHaveProperty('username', authUsername);
+      expect(response.body.user).toHaveProperty('email', authEmail);
+      expect(response.body.user).toHaveProperty('createdAt');
+      expect(response.body.user).toHaveProperty('updatedAt');
+      expect(response.headers['set-cookie']).toBeDefined();
+    });
+  });
 
   describe('POST /api/auth/login - Failure Cases', () => {
     it('should return 401 for invalid username', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: 'nonexistent',
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: 'nonexistent',
+        password: testPassword,
+      });
 
-      expect(response.status).toBe(401)
-    })
+      expect(response.status).toBe(401);
+    });
 
     it('should return 401 for invalid email', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: 'nonexistent@example.com',
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: 'nonexistent@example.com',
+        password: testPassword,
+      });
 
-      expect(response.status).toBe(401)
-    })
+      expect(response.status).toBe(401);
+    });
 
     it('should return 401 for incorrect password', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: 'WrongPassword123',
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: 'WrongPassword123',
+      });
 
-      expect(response.status).toBe(401)
-    })
+      expect(response.status).toBe(401);
+    });
 
     it('should return 400 for missing username field', async () => {
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        password: testPassword,
+      });
 
-      expect(response.status).toBe(400)
-    })
+      expect(response.status).toBe(400);
+    });
 
     it('should return 400 for missing password field', async () => {
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+      });
 
-      expect(response.status).toBe(400)
-    })
+      expect(response.status).toBe(400);
+    });
 
     it('should return 400 for empty username', async () => {
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: '',
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: '',
+        password: testPassword,
+      });
 
-      expect(response.status).toBe(400)
-    })
+      expect(response.status).toBe(400);
+    });
 
     it('should return 400 for empty password', async () => {
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: '',
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: '',
+      });
 
-      expect(response.status).toBe(400)
-    })
+      expect(response.status).toBe(400);
+    });
 
     it('should not leak user existence information', async () => {
       // Response for non-existent user should be similar to wrong password
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
       const nonExistentResponse = await request(app)
         .post('/api/auth/login')
         .send({
           username: 'nonexistent',
           password: testPassword,
-        })
+        });
 
       const wrongPasswordResponse = await request(app)
         .post('/api/auth/login')
         .send({
           username: authUsername,
           password: 'WrongPassword123',
-        })
+        });
 
       // Both should return 401
-      expect(nonExistentResponse.status).toBe(401)
-      expect(wrongPasswordResponse.status).toBe(401)
-    })
-  })
+      expect(nonExistentResponse.status).toBe(401);
+      expect(wrongPasswordResponse.status).toBe(401);
+    });
+  });
 
   describe('POST /api/auth/login - Cookie Validation', () => {
     it('should set access_token cookie with correct attributes', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      expect(response.status).toBe(200)
+      expect(response.status).toBe(200);
 
-      const cookies = response.headers['set-cookie']
-      expect(cookies).toBeDefined()
+      const cookies = response.headers['set-cookie'];
+      expect(cookies).toBeDefined();
 
       const accessTokenCookie = Array.isArray(cookies)
         ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies
+        : cookies;
 
-      expect(accessTokenCookie).toBeDefined()
-    })
+      expect(accessTokenCookie).toBeDefined();
+    });
 
     it('should set httpOnly cookie attribute', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      const cookies = response.headers['set-cookie']
+      const cookies = response.headers['set-cookie'];
       const accessTokenCookie = Array.isArray(cookies)
         ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies
+        : cookies;
 
-      expect(accessTokenCookie).toContain('HttpOnly')
-    })
+      expect(accessTokenCookie).toContain('HttpOnly');
+    });
 
     it('should set sameSite=strict attribute', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      const cookies = response.headers['set-cookie']
+      const cookies = response.headers['set-cookie'];
       const accessTokenCookie = Array.isArray(cookies)
         ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies
+        : cookies;
 
-      const attributes = parseCookieAttributes(accessTokenCookie!)
-      expect(attributes.sameSite).toBe('strict')
-    })
+      const attributes = parseCookieAttributes(accessTokenCookie);
+      expect(attributes.sameSite).toBe('strict');
+    });
 
     it('should set maxAge to 1 hour (3600000ms)', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      const cookies = response.headers['set-cookie']
+      const cookies = response.headers['set-cookie'];
       const accessTokenCookie = Array.isArray(cookies)
         ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies
+        : cookies;
 
-      const attributes = parseCookieAttributes(accessTokenCookie!)
+      const attributes = parseCookieAttributes(accessTokenCookie);
       // maxAge in cookie is in seconds, so 3600000ms = 3600s
-      expect(attributes.maxAge).toBe(3600)
-    })
+      expect(attributes.maxAge).toBe(3600);
+    });
 
     it('should set secure flag based on NODE_ENV', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      const cookies = response.headers['set-cookie']
+      const cookies = response.headers['set-cookie'];
       const accessTokenCookie = Array.isArray(cookies)
         ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies
+        : cookies;
 
-      const attributes = parseCookieAttributes(accessTokenCookie!)
-      
+      const attributes = parseCookieAttributes(accessTokenCookie);
+
       // In test environment, secure should be false
       if (process.env.NODE_ENV === 'production') {
-        expect(attributes.secure).toBe(true)
+        expect(attributes.secure).toBe(true);
       } else {
-        expect(attributes.secure).toBe(false)
+        expect(attributes.secure).toBe(false);
       }
-    })
+    });
 
     it('should contain a valid JWT token in the cookie', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      const token = extractCookieValue(response, 'access_token')
-      expect(token).toBeDefined()
+      const token = extractCookieValue(response, 'access_token');
+      expect(token).toBeDefined();
 
       // Verify the token can be decoded
-      const decoded = jwt.verify(token!, jwtConfig.secret) as jwt.JwtPayload
-      expect(decoded).toHaveProperty('username', authUsername)
-      expect(decoded).toHaveProperty('sub')
-      expect(decoded).toHaveProperty('iat')
-      expect(decoded).toHaveProperty('exp')
-    })
+      const decoded = jwt.verify(token!, jwtConfig.secret) as jwt.JwtPayload;
+      expect(decoded).toHaveProperty('username', authUsername);
+      expect(decoded).toHaveProperty('sub');
+      expect(decoded).toHaveProperty('iat');
+      expect(decoded).toHaveProperty('exp');
+    });
 
     it('should have JWT token with correct expiration', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      const token = extractCookieValue(response, 'access_token')
-      const decoded = jwt.verify(token!, jwtConfig.secret) as jwt.JwtPayload
+      const token = extractCookieValue(response, 'access_token');
+      const decoded = jwt.verify(token!, jwtConfig.secret) as jwt.JwtPayload;
 
       // Token should expire in approximately 1 hour
-      const now = Math.floor(Date.now() / 1000)
-      const expiresIn = decoded.exp! - now
-      
+      const now = Math.floor(Date.now() / 1000);
+      const expiresIn = decoded.exp! - now;
+
       // Allow some tolerance (between 59 and 61 minutes)
-      expect(expiresIn).toBeGreaterThan(3540) // 59 minutes
-      expect(expiresIn).toBeLessThan(3660) // 61 minutes
-    })
+      expect(expiresIn).toBeGreaterThan(3540); // 59 minutes
+      expect(expiresIn).toBeLessThan(3660); // 61 minutes
+    });
 
     it('should have JWT token with user ID in sub claim', async () => {
       const user = await createTestUserWithPassword(
         authUsername,
         authEmail,
         testPassword,
-      )
+      );
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      const token = extractCookieValue(response, 'access_token')
-      const decoded = jwt.verify(token!, jwtConfig.secret) as jwt.JwtPayload
+      const token = extractCookieValue(response, 'access_token');
+      const decoded = jwt.verify(token!, jwtConfig.secret) as jwt.JwtPayload;
 
-      expect(decoded.sub).toBe(user.id)
-    })
-  })
+      expect(decoded.sub).toBe(user.id);
+    });
+  });
 
   describe('POST /api/auth/logout', () => {
     it('should clear the access_token cookie', async () => {
-      const response = await request(app).post('/api/auth/logout')
+      const response = await request(app).post('/api/auth/logout');
 
-      expect(response.status).toBe(200)
-      expect(response.body).toHaveProperty('message', 'Logged out successfully')
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty(
+        'message',
+        'Logged out successfully',
+      );
 
-      const cookies = response.headers['set-cookie']
-      expect(cookies).toBeDefined()
+      const cookies = response.headers['set-cookie'];
+      expect(cookies).toBeDefined();
 
       const accessTokenCookie = Array.isArray(cookies)
         ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies
+        : cookies;
 
-      expect(accessTokenCookie).toBeDefined()
+      expect(accessTokenCookie).toBeDefined();
       // Cookie should be cleared (empty value or expired)
-      expect(accessTokenCookie).toMatch(/access_token=;/)
-    })
+      expect(accessTokenCookie).toMatch(/access_token=;/);
+    });
 
     it('should work even when not logged in', async () => {
-      const response = await request(app).post('/api/auth/logout')
+      const response = await request(app).post('/api/auth/logout');
 
-      expect(response.status).toBe(200)
-      expect(response.body).toHaveProperty('message', 'Logged out successfully')
-    })
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveProperty(
+        'message',
+        'Logged out successfully',
+      );
+    });
 
     it('should return success message', async () => {
-      const response = await request(app).post('/api/auth/logout')
+      const response = await request(app).post('/api/auth/logout');
 
-      expect(response.status).toBe(200)
+      expect(response.status).toBe(200);
       expect(response.body).toEqual({
         message: 'Logged out successfully',
-      })
-    })
-  })
+      });
+    });
+  });
 
   describe('POST /api/auth/login - Security Tests', () => {
     it('should handle SQL injection attempts in username', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: "' OR '1'='1",
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: "' OR '1'='1",
+        password: testPassword,
+      });
 
-      expect(response.status).toBe(401)
-    })
+      expect(response.status).toBe(401);
+    });
 
     it('should handle SQL injection attempts in password', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: "' OR '1'='1",
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: "' OR '1'='1",
+      });
 
-      expect(response.status).toBe(401)
-    })
+      expect(response.status).toBe(401);
+    });
 
     it('should handle special characters in username', async () => {
       await createTestUserWithPassword(
         'user<script>alert(1)</script>',
         authEmail,
         testPassword,
-      )
+      );
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: 'user<script>alert(1)</script>',
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: 'user<script>alert(1)</script>',
+        password: testPassword,
+      });
 
-      expect(response.status).toBe(200)
-      expect(response.body.user.username).toBe('user<script>alert(1)</script>')
-    })
+      expect(response.status).toBe(200);
+      expect(response.body.user.username).toBe('user<script>alert(1)</script>');
+    });
 
     it('should handle very long username gracefully', async () => {
-      const longUsername = 'a'.repeat(1000)
+      const longUsername = 'a'.repeat(1000);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: longUsername,
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: longUsername,
+        password: testPassword,
+      });
 
       // Should return 401 (not found) or 400 (validation error)
-      expect([400, 401]).toContain(response.status)
-    })
+      expect([400, 401]).toContain(response.status);
+    });
 
     it('should handle very long password gracefully', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const longPassword = 'a'.repeat(1000)
+      const longPassword = 'a'.repeat(1000);
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: longPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: longPassword,
+      });
 
-      expect(response.status).toBe(401)
-    })
+      expect(response.status).toBe(401);
+    });
 
     it('should handle null values in request', async () => {
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: null,
-          password: null,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: null,
+        password: null,
+      });
 
-      expect(response.status).toBe(400)
-    })
+      expect(response.status).toBe(400);
+    });
 
     it('should handle undefined values in request', async () => {
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({})
+      const response = await request(app).post('/api/auth/login').send({});
 
-      expect(response.status).toBe(400)
-    })
-  })
+      expect(response.status).toBe(400);
+    });
+  });
 
   describe('POST /api/auth/login - Edge Cases', () => {
     it('should be case-sensitive for username', async () => {
-      await createTestUserWithPassword('auth_TestUser', authEmail, testPassword)
+      await createTestUserWithPassword(
+        'auth_TestUser',
+        authEmail,
+        testPassword,
+      );
 
-      const response = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername, // lowercase: auth_testuser
-          password: testPassword,
-        })
+      const response = await request(app).post('/api/auth/login').send({
+        username: authUsername, // lowercase: auth_testuser
+        password: testPassword,
+      });
 
-      expect(response.status).toBe(401)
-    })
+      expect(response.status).toBe(401);
+    });
 
     it('should handle whitespace in credentials', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
       const response = await request(app)
         .post('/api/auth/login')
         .send({
           username: ` ${authUsername} `, // with whitespace
           password: testPassword,
-        })
+        });
 
       // Should fail since username doesn't match exactly
-      expect(response.status).toBe(401)
-    })
+      expect(response.status).toBe(401);
+    });
 
     it('should handle multiple login attempts for same user', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
       // First login
-      const response1 = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response1 = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      expect(response1.status).toBe(200)
+      expect(response1.status).toBe(200);
 
       // Second login
-      const response2 = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: testPassword,
-        })
+      const response2 = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: testPassword,
+      });
 
-      expect(response2.status).toBe(200)
+      expect(response2.status).toBe(200);
 
       // Both should have valid tokens
-      const token1 = extractCookieValue(response1, 'access_token')
-      const token2 = extractCookieValue(response2, 'access_token')
+      const token1 = extractCookieValue(response1, 'access_token');
+      const token2 = extractCookieValue(response2, 'access_token');
 
-      expect(token1).toBeDefined()
-      expect(token2).toBeDefined()
-      
+      expect(token1).toBeDefined();
+      expect(token2).toBeDefined();
+
       // Both tokens should be valid and decodable
-      const decoded1 = jwt.verify(token1!, jwtConfig.secret) as jwt.JwtPayload
-      const decoded2 = jwt.verify(token2!, jwtConfig.secret) as jwt.JwtPayload
-      
-      expect(decoded1.username).toBe(authUsername)
-      expect(decoded2.username).toBe(authUsername)
-    })
+      const decoded1 = jwt.verify(token1!, jwtConfig.secret) as jwt.JwtPayload;
+      const decoded2 = jwt.verify(token2!, jwtConfig.secret) as jwt.JwtPayload;
+
+      expect(decoded1.username).toBe(authUsername);
+      expect(decoded2.username).toBe(authUsername);
+    });
 
     it('should handle rapid successive login attempts', async () => {
-      await createTestUserWithPassword(authUsername, authEmail, testPassword)
+      await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
       const promises = Array(5)
         .fill(null)
         .map(() =>
-          request(app)
-            .post('/api/auth/login')
-            .send({
-              username: authUsername,
-              password: testPassword,
-            }),
-        )
+          request(app).post('/api/auth/login').send({
+            username: authUsername,
+            password: testPassword,
+          }),
+        );
 
-      const responses = await Promise.all(promises)
+      const responses = await Promise.all(promises);
 
       // All should succeed
       responses.forEach((response) => {
-        expect(response.status).toBe(200)
-      })
-    })
-  })
-})
+        expect(response.status).toBe(200);
+      });
+    });
+  });
+});

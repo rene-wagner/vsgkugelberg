@@ -1,5 +1,5 @@
-import slugify from 'slugify'
-import { PrismaClient } from '@prisma/client'
+import slugify from 'slugify';
+import { PrismaClient } from '@prisma/client';
 
 export class SlugifyService {
   constructor(private readonly prisma: PrismaClient) {}
@@ -11,14 +11,14 @@ export class SlugifyService {
    */
   slugify(text: string): string {
     // Pre-process to remove special characters that slugify would otherwise translate
-    const cleaned = text.replace(/[&]/g, ' ')
-    
+    const cleaned = text.replace(/[&]/g, ' ');
+
     return slugify(cleaned, {
       lower: true,
       strict: true,
       remove: /[*+~.()'"!:@?]/g,
       replacement: '-',
-    })
+    });
   }
 
   /**
@@ -32,24 +32,27 @@ export class SlugifyService {
     title: string,
     excludePostId?: number,
   ): Promise<string> {
-    const baseSlug = this.slugify(title)
-    let slug = baseSlug
-    let counter = 1
+    const baseSlug = this.slugify(title);
+    let slug = baseSlug;
+    let counter = 1;
 
     while (true) {
       const existingPost = await this.prisma.post.findUnique({
         where: { slug },
         select: { id: true },
-      })
+      });
 
       // If no post exists with this slug, or it's the same post we're updating
-      if (!existingPost || (excludePostId && existingPost.id === excludePostId)) {
-        return slug
+      if (
+        !existingPost ||
+        (excludePostId && existingPost.id === excludePostId)
+      ) {
+        return slug;
       }
 
       // Slug exists, try with counter
-      slug = `${baseSlug}-${counter}`
-      counter++
+      slug = `${baseSlug}-${counter}`;
+      counter++;
     }
   }
 
@@ -64,24 +67,27 @@ export class SlugifyService {
     name: string,
     excludeCategoryId?: number,
   ): Promise<string> {
-    const baseSlug = this.slugify(name)
-    let slug = baseSlug
-    let counter = 1
+    const baseSlug = this.slugify(name);
+    let slug = baseSlug;
+    let counter = 1;
 
     while (true) {
       const existingCategory = await this.prisma.category.findUnique({
         where: { slug },
         select: { id: true },
-      })
+      });
 
       // If no category exists with this slug, or it's the same category we're updating
-      if (!existingCategory || (excludeCategoryId && existingCategory.id === excludeCategoryId)) {
-        return slug
+      if (
+        !existingCategory ||
+        (excludeCategoryId && existingCategory.id === excludeCategoryId)
+      ) {
+        return slug;
       }
 
       // Slug exists, try with counter
-      slug = `${baseSlug}-${counter}`
-      counter++
+      slug = `${baseSlug}-${counter}`;
+      counter++;
     }
   }
 
@@ -96,24 +102,24 @@ export class SlugifyService {
     name: string,
     excludeTagId?: number,
   ): Promise<string> {
-    const baseSlug = this.slugify(name)
-    let slug = baseSlug
-    let counter = 1
+    const baseSlug = this.slugify(name);
+    let slug = baseSlug;
+    let counter = 1;
 
     while (true) {
       const existingTag = await this.prisma.tag.findUnique({
         where: { slug },
         select: { id: true },
-      })
+      });
 
       // If no tag exists with this slug, or it's the same tag we're updating
       if (!existingTag || (excludeTagId && existingTag.id === excludeTagId)) {
-        return slug
+        return slug;
       }
 
       // Slug exists, try with counter
-      slug = `${baseSlug}-${counter}`
-      counter++
+      slug = `${baseSlug}-${counter}`;
+      counter++;
     }
   }
 
@@ -128,24 +134,27 @@ export class SlugifyService {
     name: string,
     excludeDepartmentId?: number,
   ): Promise<string> {
-    const baseSlug = this.slugify(name)
-    let slug = baseSlug
-    let counter = 1
+    const baseSlug = this.slugify(name);
+    let slug = baseSlug;
+    let counter = 1;
 
     while (true) {
       const existingDepartment = await this.prisma.department.findUnique({
         where: { slug },
         select: { id: true },
-      })
+      });
 
       // If no department exists with this slug, or it's the same department we're updating
-      if (!existingDepartment || (excludeDepartmentId && existingDepartment.id === excludeDepartmentId)) {
-        return slug
+      if (
+        !existingDepartment ||
+        (excludeDepartmentId && existingDepartment.id === excludeDepartmentId)
+      ) {
+        return slug;
       }
 
       // Slug exists, try with counter
-      slug = `${baseSlug}-${counter}`
-      counter++
+      slug = `${baseSlug}-${counter}`;
+      counter++;
     }
   }
 }

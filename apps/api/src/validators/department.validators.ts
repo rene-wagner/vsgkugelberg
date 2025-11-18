@@ -1,4 +1,4 @@
-import { body, param } from 'express-validator'
+import { body, param } from 'express-validator';
 
 export const createDepartmentValidator = [
   body('name')
@@ -21,7 +21,7 @@ export const createDepartmentValidator = [
     .withMessage('Long description is required')
     .isLength({ min: 20, max: 5000 })
     .withMessage('Long description must be between 20 and 5000 characters'),
-]
+];
 
 export const updateDepartmentValidator = [
   body('name')
@@ -41,7 +41,7 @@ export const updateDepartmentValidator = [
     .trim()
     .isLength({ min: 20, max: 5000 })
     .withMessage('Long description must be between 20 and 5000 characters'),
-]
+];
 
 export const slugParamValidator = [
   param('slug')
@@ -50,4 +50,4 @@ export const slugParamValidator = [
     .withMessage('Slug is required')
     .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
     .withMessage('Slug must be lowercase alphanumeric with hyphens'),
-]
+];

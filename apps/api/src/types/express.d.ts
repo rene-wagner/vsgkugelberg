@@ -1,8 +1,8 @@
-import { UserPayload } from '../services/auth.service'
+import { UserPayload } from '@/services/auth.service';
 
 declare global {
   namespace Express {
-    // This extends the User type used by Passport
+    /* eslint-disable-next-line @typescript-eslint/no-empty-object-type */
     interface User extends UserPayload {}
   }
 }
@@ -11,11 +11,11 @@ declare global {
 declare module 'express-serve-static-core' {
   interface Request {
     user?: {
-      id: number
-      username: string
-      email?: string
-      createdAt?: Date
-      updatedAt?: Date
-    }
+      id: number;
+      username: string;
+      email?: string;
+      createdAt?: Date;
+      updatedAt?: Date;
+    };
   }
 }

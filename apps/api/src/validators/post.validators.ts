@@ -1,4 +1,4 @@
-import { body, param, query } from 'express-validator'
+import { body, param, query } from 'express-validator';
 
 export const createPostValidator = [
   body('title')
@@ -8,10 +8,7 @@ export const createPostValidator = [
     .isLength({ min: 3, max: 200 })
     .withMessage('Title must be between 3 and 200 characters'),
 
-  body('content')
-    .optional()
-    .isString()
-    .withMessage('Content must be a string'),
+  body('content').optional().isString().withMessage('Content must be a string'),
 
   body('published')
     .optional()
@@ -37,17 +34,14 @@ export const createPostValidator = [
     .withMessage('Each category ID must be a positive integer')
     .toInt(),
 
-  body('tagIds')
-    .optional()
-    .isArray()
-    .withMessage('Tag IDs must be an array'),
+  body('tagIds').optional().isArray().withMessage('Tag IDs must be an array'),
 
   body('tagIds.*')
     .optional()
     .isInt({ min: 1 })
     .withMessage('Each tag ID must be a positive integer')
     .toInt(),
-]
+];
 
 export const updatePostValidator = [
   body('title')
@@ -56,10 +50,7 @@ export const updatePostValidator = [
     .isLength({ min: 3, max: 200 })
     .withMessage('Title must be between 3 and 200 characters'),
 
-  body('content')
-    .optional()
-    .isString()
-    .withMessage('Content must be a string'),
+  body('content').optional().isString().withMessage('Content must be a string'),
 
   body('published')
     .optional()
@@ -78,17 +69,14 @@ export const updatePostValidator = [
     .withMessage('Each category ID must be a positive integer')
     .toInt(),
 
-  body('tagIds')
-    .optional()
-    .isArray()
-    .withMessage('Tag IDs must be an array'),
+  body('tagIds').optional().isArray().withMessage('Tag IDs must be an array'),
 
   body('tagIds.*')
     .optional()
     .isInt({ min: 1 })
     .withMessage('Each tag ID must be a positive integer')
     .toInt(),
-]
+];
 
 export const slugParamValidator = [
   param('slug')
@@ -97,7 +85,7 @@ export const slugParamValidator = [
     .withMessage('Slug is required')
     .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
     .withMessage('Slug must be lowercase alphanumeric with hyphens'),
-]
+];
 
 export const postsQueryValidator = [
   query('published')
@@ -116,4 +104,4 @@ export const postsQueryValidator = [
     .trim()
     .notEmpty()
     .withMessage('Tag slug cannot be empty'),
-]
+];

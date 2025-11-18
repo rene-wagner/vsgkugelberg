@@ -1,10 +1,14 @@
-import { Request, Response, NextFunction } from 'express'
-import { UnauthorizedException } from '@/errors/http-errors'
+import { Request, Response, NextFunction } from 'express';
+import { UnauthorizedException } from '@/errors/http-errors';
 
-export const authGuardMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authGuardMiddleware = (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) => {
   if (!req.user) {
-    return next(new UnauthorizedException('Authentication required'))
+    return next(new UnauthorizedException('Authentication required'));
   }
 
-  next()
-}
+  next();
+};

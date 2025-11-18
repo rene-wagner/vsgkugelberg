@@ -1,4 +1,4 @@
-import { body, param } from 'express-validator'
+import { body, param } from 'express-validator';
 
 export const createTagValidator = [
   body('name')
@@ -7,7 +7,7 @@ export const createTagValidator = [
     .withMessage('Name is required')
     .isLength({ min: 2, max: 50 })
     .withMessage('Name must be between 2 and 50 characters'),
-]
+];
 
 export const updateTagValidator = [
   body('name')
@@ -15,7 +15,7 @@ export const updateTagValidator = [
     .trim()
     .isLength({ min: 2, max: 50 })
     .withMessage('Name must be between 2 and 50 characters'),
-]
+];
 
 export const slugParamValidator = [
   param('slug')
@@ -24,4 +24,4 @@ export const slugParamValidator = [
     .withMessage('Slug is required')
     .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
     .withMessage('Slug must be lowercase alphanumeric with hyphens'),
-]
+];

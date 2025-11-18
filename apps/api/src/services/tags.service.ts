@@ -1,13 +1,19 @@
-import { PrismaClient, Prisma } from '@prisma/client'
-import { NotFoundException, ConflictException } from '@/errors/http-errors'
-import { CreateTagDto, UpdateTagDto, Tag, TagWithCount, TagWithPosts } from '@/types/tag.types'
-import { SlugifyService } from '@/services/slugify.service'
+import { PrismaClient, Prisma } from '@prisma/client';
+import { NotFoundException, ConflictException } from '@/errors/http-errors';
+import {
+  CreateTagDto,
+  UpdateTagDto,
+  Tag,
+  TagWithCount,
+  TagWithPosts,
+} from '@/types/tag.types';
+import { SlugifyService } from '@/services/slugify.service';
 
 export class TagsService {
-  private readonly slugifyService: SlugifyService
+  private readonly slugifyService: SlugifyService;
 
   constructor(private readonly prisma: PrismaClient) {
-    this.slugifyService = new SlugifyService(prisma)
+    this.slugifyService = new SlugifyService(prisma);
   }
 
   async findAll(): Promise<TagWithCount[]> {
@@ -20,9 +26,9 @@ export class TagsService {
       orderBy: {
         name: 'asc',
       },
-    })
+    });
 
-    return tags as TagWithCount[]
+    return tags as TagWithCount[];
   }
 
   async findBySlug(slug: string): Promise<TagWithPosts> {
@@ -46,13 +52,13 @@ export class TagsService {
           },
         },
       },
-    })
+    });
 
     if (!tag) {
-      throw new NotFoundException(`Tag with slug "${slug}" not found`)
+      throw new NotFoundException(`Tag with slug "${slug}" not found`);
     }
 
-    return tag as TagWithPosts
+    return tag as TagWithPosts;
   }
 
   async create(createTagDto: CreateTagDto): Promise<Tag> {
@@ -64,18 +70,18 @@ export class TagsService {
           mode: 'insensitive',
         },
       },
-    })
+    });
 
     if (existingTag) {
       throw new ConflictException(
         `Tag with name "${createTagDto.name}" already exists`,
-      )
+      );
     }
 
     // Generate unique slug from name
     const slug = await this.slugifyService.generateUniqueTagSlug(
       createTagDto.name,
-    )
+    );
 
     try {
       const tag = await this.prisma.tag.create({
@@ -83,9 +89,9 @@ export class TagsService {
           name: createTagDto.name,
           slug,
         },
-      })
+      });
 
-      return tag as Tag
+      return tag;
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -93,9 +99,9 @@ export class TagsService {
       ) {
         throw new ConflictException(
           `Tag with name "${createTagDto.name}" already exists`,
-        )
+        );
       }
-      throw error
+      throw error;
     }
   }
 
@@ -104,19 +110,19 @@ export class TagsService {
     const existingTag = await this.prisma.tag.findUnique({
       where: { slug },
       select: { id: true, name: true },
-    })
+    });
 
     if (!existingTag) {
-      throw new NotFoundException(`Tag with slug "${slug}" not found`)
+      throw new NotFoundException(`Tag with slug "${slug}" not found`);
     }
 
     // If name is being updated, regenerate slug
-    let newSlug = slug
+    let newSlug = slug;
     if (updateTagDto.name && updateTagDto.name !== existingTag.name) {
       newSlug = await this.slugifyService.generateUniqueTagSlug(
         updateTagDto.name,
         existingTag.id,
-      )
+      );
     }
 
     try {
@@ -126,9 +132,9 @@ export class TagsService {
           name: updateTagDto.name,
           slug: newSlug,
         },
-      })
+      });
 
-      return tag as Tag
+      return tag;
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
@@ -136,15 +142,15 @@ export class TagsService {
       ) {
         throw new ConflictException(
           `Tag with name "${updateTagDto.name}" already exists`,
-        )
+        );
       }
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
-        throw new NotFoundException(`Tag with slug "${slug}" not found`)
+        throw new NotFoundException(`Tag with slug "${slug}" not found`);
       }
-      throw error
+      throw error;
     }
   }
 
@@ -157,33 +163,33 @@ export class TagsService {
           select: { posts: true },
         },
       },
-    })
+    });
 
     if (!existingTag) {
-      throw new NotFoundException(`Tag with slug "${slug}" not found`)
+      throw new NotFoundException(`Tag with slug "${slug}" not found`);
     }
 
     // Check if tag has posts
     if (existingTag._count.posts > 0) {
       throw new ConflictException(
         `Cannot delete tag "${existingTag.name}" - ${existingTag._count.posts} posts still reference it`,
-      )
+      );
     }
 
     try {
       const tag = await this.prisma.tag.delete({
         where: { id: existingTag.id },
-      })
+      });
 
-      return tag as Tag
+      return tag;
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2025'
       ) {
-        throw new NotFoundException(`Tag with slug "${slug}" not found`)
+        throw new NotFoundException(`Tag with slug "${slug}" not found`);
       }
-      throw error
+      throw error;
     }
   }
 }
