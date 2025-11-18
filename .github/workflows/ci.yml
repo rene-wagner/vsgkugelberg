@@ -8,6 +8,8 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    env:
+      PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -34,6 +36,8 @@ jobs:
   format-check:
     name: Format Check
     runs-on: ubuntu-latest
+    env:
+      PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -76,6 +80,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     env:
+      PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
       DATABASE_URL: postgresql://user:secret@localhost:5432/database_test
     steps:
       - name: Checkout code
