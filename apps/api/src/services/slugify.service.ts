@@ -116,4 +116,36 @@ export class SlugifyService {
       counter++
     }
   }
+
+  /**
+   * Generates a unique slug for a department
+   * If the slug already exists, appends a number to make it unique
+   * @param name - The department name
+   * @param excludeDepartmentId - Optional department ID to exclude from uniqueness check (for updates)
+   * @returns A unique slug
+   */
+  async generateUniqueDepartmentSlug(
+    name: string,
+    excludeDepartmentId?: number,
+  ): Promise<string> {
+    const baseSlug = this.slugify(name)
+    let slug = baseSlug
+    let counter = 1
+
+    while (true) {
+      const existingDepartment = await this.prisma.department.findUnique({
+        where: { slug },
+        select: { id: true },
+      })
+
+      // If no department exists with this slug, or it's the same department we're updating
+      if (!existingDepartment || (excludeDepartmentId && existingDepartment.id === excludeDepartmentId)) {
+        return slug
+      }
+
+      // Slug exists, try with counter
+      slug = `${baseSlug}-${counter}`
+      counter++
+    }
+  }
 }

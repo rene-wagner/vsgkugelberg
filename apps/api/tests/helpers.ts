@@ -19,6 +19,7 @@ export async function cleanupDatabase() {
     prisma.post.deleteMany(),
     prisma.category.deleteMany(),
     prisma.tag.deleteMany(),
+    prisma.department.deleteMany(),
     prisma.user.deleteMany(),
   ])
 }
