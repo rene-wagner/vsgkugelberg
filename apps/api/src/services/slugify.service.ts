@@ -52,4 +52,36 @@ export class SlugifyService {
       counter++
     }
   }
+
+  /**
+   * Generates a unique slug for a category
+   * If the slug already exists, appends a number to make it unique
+   * @param name - The category name
+   * @param excludeCategoryId - Optional category ID to exclude from uniqueness check (for updates)
+   * @returns A unique slug
+   */
+  async generateUniqueCategorySlug(
+    name: string,
+    excludeCategoryId?: string,
+  ): Promise<string> {
+    const baseSlug = this.slugify(name)
+    let slug = baseSlug
+    let counter = 1
+
+    while (true) {
+      const existingCategory = await this.prisma.category.findUnique({
+        where: { slug },
+        select: { id: true },
+      })
+
+      // If no category exists with this slug, or it's the same category we're updating
+      if (!existingCategory || (excludeCategoryId && existingCategory.id === excludeCategoryId)) {
+        return slug
+      }
+
+      // Slug exists, try with counter
+      slug = `${baseSlug}-${counter}`
+      counter++
+    }
+  }
 }
