@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import request from 'supertest'
-import { app } from '../app'
-import { getPrismaClient } from '../test/helpers'
+import { app } from '@/app'
+import { getPrismaClient } from '../helpers'
 
 const prisma = getPrismaClient()
 
