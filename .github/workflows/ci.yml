@@ -101,7 +101,7 @@ jobs:
         run: pnpm install
 
       - name: Apply Prisma migrations
-        run: pnpm --filter api prisma:migrate
+        run: pnpm --filter api prisma:deploy
 
       - name: Run API tests
         run: pnpm --filter api test:ci
