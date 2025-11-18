@@ -81,7 +81,7 @@ jobs:
           --health-retries 5
     env:
       PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
-      DATABASE_URL: postgresql://user:secret@localhost:5432/database_test
+      DATABASE_URL: postgresql://user:secret@localhost:5432/database_test?schema=public
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
