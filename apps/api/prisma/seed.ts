@@ -1,46 +1,70 @@
-import { PrismaClient } from '@prisma/client';
-import { PasswordService } from '../src/common/services/password.service';
+import { PrismaClient, Prisma } from '@prisma/client'
 
-const prisma = new PrismaClient();
-const passwordService = new PasswordService();
+const prisma = new PrismaClient()
+
+const userData: Prisma.UserCreateInput[] = [
+  {
+    name: 'Alice',
+    email: 'alice@prisma.io',
+    posts: {
+      create: [
+        {
+          title: 'Join the Prisma Discord',
+          content: 'https://pris.ly/discord',
+          published: true,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Nilu',
+    email: 'nilu@prisma.io',
+    posts: {
+      create: [
+        {
+          title: 'Follow Prisma on Twitter',
+          content: 'https://www.twitter.com/prisma',
+          published: true,
+        },
+      ],
+    },
+  },
+  {
+    name: 'Mahmoud',
+    email: 'mahmoud@prisma.io',
+    posts: {
+      create: [
+        {
+          title: 'Ask a question about Prisma on GitHub',
+          content: 'https://www.github.com/prisma/prisma/discussions',
+          published: true,
+        },
+        {
+          title: 'Prisma on YouTube',
+          content: 'https://pris.ly/youtube',
+        },
+      ],
+    },
+  },
+]
 
 async function main() {
-  console.log('Seeding database...');
-
-  const users = [
-    {
-      username: 'admin',
-      email: 'admin@vsgkugelberg.local',
-      password: await passwordService.hash('Admin123!'),
-    },
-    {
-      username: 'john.doe',
-      email: 'john.doe@example.com',
-      password: await passwordService.hash('password123'),
-    },
-    {
-      username: 'test.user',
-      email: 'test@example.com',
-      password: await passwordService.hash('testpass'),
-    },
-  ];
-
-  for (const user of users) {
-    await prisma.user.upsert({
-      where: { email: user.email },
-      update: {},
-      create: user,
-    });
+  console.log(`Start seeding ...`)
+  for (const u of userData) {
+    const user = await prisma.user.create({
+      data: u,
+    })
+    console.log(`Created user with id: ${user.id}`)
   }
-
-  console.log('✓ Seeded users:', users.map((u) => u.username).join(', '));
+  console.log(`Seeding finished.`)
 }
 
 main()
-  .catch((e) => {
-    console.error('Error seeding database:', e);
-    process.exit(1);
+  .then(async () => {
+    await prisma.$disconnect()
   })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })
