@@ -84,4 +84,36 @@ export class SlugifyService {
       counter++
     }
   }
+
+  /**
+   * Generates a unique slug for a tag
+   * If the slug already exists, appends a number to make it unique
+   * @param name - The tag name
+   * @param excludeTagId - Optional tag ID to exclude from uniqueness check (for updates)
+   * @returns A unique slug
+   */
+  async generateUniqueTagSlug(
+    name: string,
+    excludeTagId?: number,
+  ): Promise<string> {
+    const baseSlug = this.slugify(name)
+    let slug = baseSlug
+    let counter = 1
+
+    while (true) {
+      const existingTag = await this.prisma.tag.findUnique({
+        where: { slug },
+        select: { id: true },
+      })
+
+      // If no tag exists with this slug, or it's the same tag we're updating
+      if (!existingTag || (excludeTagId && existingTag.id === excludeTagId)) {
+        return slug
+      }
+
+      // Slug exists, try with counter
+      slug = `${baseSlug}-${counter}`
+      counter++
+    }
+  }
 }
