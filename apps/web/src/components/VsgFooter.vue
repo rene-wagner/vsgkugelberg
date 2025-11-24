@@ -11,9 +11,7 @@ const year = computed(() => new Date().getFullYear());
       <div className="grid md:grid-cols-2 gap-8">
         <!-- Kontakt -->
         <div>
-          <h3 className="text-lg font-semibold mb-4">
-            Kontakt
-          </h3>
+          <h3 className="text-lg font-semibold mb-4">Kontakt</h3>
           <div className="space-y-2 text-gray-300">
             <p>Sportverein e.V.</p>
             <p>Musterstraße 123</p>
@@ -25,9 +23,7 @@ const year = computed(() => new Date().getFullYear());
 
         <!-- Links -->
         <div>
-          <h3 className="text-lg font-semibold mb-4">
-            Rechtliches
-          </h3>
+          <h3 className="text-lg font-semibold mb-4">Rechtliches</h3>
           <div className="space-y-2">
             <RouterLink
               to="/impressum"
