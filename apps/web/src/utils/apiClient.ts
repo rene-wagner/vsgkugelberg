@@ -11,6 +11,51 @@ export type ApiUser = {
   updatedAt: string;
 };
 
+export type ApiCategory = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+export type ApiTag = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
+export type ApiPost = {
+  id: number;
+  title: string;
+  slug: string;
+  content: string | null;
+  published: boolean;
+  createdAt: string;
+  updatedAt: string;
+  author: Omit<ApiUser, 'email'>;
+  categories: ApiCategory[];
+  tags: ApiTag[];
+};
+
+export type PaginationMeta = {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
+
+export type PostsResponse = {
+  data: ApiPost[];
+  meta: PaginationMeta;
+};
+
+export type PostsFilters = {
+  published?: boolean;
+  category?: string;
+  tag?: string;
+  page?: number;
+  limit?: number;
+};
+
 const getApiBaseUrl = (): string => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000';
   return baseUrl.replace(/\/$/, '');
@@ -62,4 +107,39 @@ export const logout = async (): Promise<void> => {
   if (!response.ok) {
     throw new Error('Logout request failed');
   }
+};
+
+export const fetchPosts = async (filters: PostsFilters = {}): Promise<PostsResponse> => {
+  const baseUrl = getApiBaseUrl();
+  const params = new URLSearchParams();
+
+  if (filters.published !== undefined) {
+    params.set('published', String(filters.published));
+  }
+  if (filters.category) {
+    params.set('category', filters.category);
+  }
+  if (filters.tag) {
+    params.set('tag', filters.tag);
+  }
+  if (filters.page !== undefined) {
+    params.set('page', String(filters.page));
+  }
+  if (filters.limit !== undefined) {
+    params.set('limit', String(filters.limit));
+  }
+
+  const queryString = params.toString();
+  const url = `${baseUrl}/api/posts${queryString ? `?${queryString}` : ''}`;
+
+  const response = await fetch(url, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch posts');
+  }
+
+  return (await response.json()) as PostsResponse;
 };
