@@ -17,25 +17,31 @@ const router = Router();
 const prisma = new PrismaClient();
 const postsService = new PostsService(prisma);
 
-// Public route - List all posts with optional filters
+// Public route - List all posts with optional filters and pagination
 router.get(
   '/',
   postsQueryValidator,
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
-    const { published, category, tag } = req.query;
+    const { published, category, tag, page, limit } = req.query;
 
     // Convert query string to boolean if present
     const publishedFilter =
       published === 'true' ? true : published === 'false' ? false : undefined;
 
-    const posts = await postsService.findAll(
+    // Parse pagination params with defaults (express-validator toInt() converts them)
+    const pageNum = page ? Number(page) : 1;
+    const limitNum = limit ? Number(limit) : 10;
+
+    const result = await postsService.findAll(
       publishedFilter,
       category as string | undefined,
       tag as string | undefined,
+      pageNum,
+      limitNum,
     );
 
-    res.json(posts);
+    res.json(result);
   }),
 );
 

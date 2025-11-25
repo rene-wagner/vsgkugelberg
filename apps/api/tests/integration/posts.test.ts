@@ -69,7 +69,7 @@ describe('Posts API Integration Tests', () => {
   }
 
   describe('GET /api/posts', () => {
-    it('should return all posts', async () => {
+    it('should return paginated posts with metadata', async () => {
       const { user } = await createAuthenticatedUser();
 
       await prisma.post.create({
@@ -95,15 +95,23 @@ describe('Posts API Integration Tests', () => {
       const response = await request(app).get('/api/posts');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(2);
-      expect(response.body[0]).toHaveProperty('title');
-      expect(response.body[0]).toHaveProperty('slug');
-      expect(response.body[0]).toHaveProperty('content');
-      expect(response.body[0]).toHaveProperty('published');
-      expect(response.body[0]).toHaveProperty('author');
-      expect(response.body[0]).toHaveProperty('categories');
-      expect(response.body[0]).toHaveProperty('tags');
-      expect(response.body[0].author).not.toHaveProperty('password');
+      expect(response.body).toHaveProperty('data');
+      expect(response.body).toHaveProperty('meta');
+      expect(response.body.data).toHaveLength(2);
+      expect(response.body.data[0]).toHaveProperty('title');
+      expect(response.body.data[0]).toHaveProperty('slug');
+      expect(response.body.data[0]).toHaveProperty('content');
+      expect(response.body.data[0]).toHaveProperty('published');
+      expect(response.body.data[0]).toHaveProperty('author');
+      expect(response.body.data[0]).toHaveProperty('categories');
+      expect(response.body.data[0]).toHaveProperty('tags');
+      expect(response.body.data[0].author).not.toHaveProperty('password');
+      expect(response.body.meta).toMatchObject({
+        total: 2,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      });
     });
 
     it('should filter posts by published status (true)', async () => {
@@ -132,9 +140,10 @@ describe('Posts API Integration Tests', () => {
       const response = await request(app).get('/api/posts?published=true');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].published).toBe(true);
-      expect(response.body[0].title).toBe('Published Post');
+      expect(response.body.data).toHaveLength(1);
+      expect(response.body.data[0].published).toBe(true);
+      expect(response.body.data[0].title).toBe('Published Post');
+      expect(response.body.meta.total).toBe(1);
     });
 
     it('should filter posts by published status (false)', async () => {
@@ -163,9 +172,10 @@ describe('Posts API Integration Tests', () => {
       const response = await request(app).get('/api/posts?published=false');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].published).toBe(false);
-      expect(response.body[0].title).toBe('Draft Post');
+      expect(response.body.data).toHaveLength(1);
+      expect(response.body.data[0].published).toBe(false);
+      expect(response.body.data[0].title).toBe('Draft Post');
+      expect(response.body.meta.total).toBe(1);
     });
 
     it('should filter posts by category slug', async () => {
@@ -201,8 +211,8 @@ describe('Posts API Integration Tests', () => {
       const response = await request(app).get('/api/posts?category=technology');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].title).toBe('Tech Post');
+      expect(response.body.data).toHaveLength(1);
+      expect(response.body.data[0].title).toBe('Tech Post');
     });
 
     it('should filter posts by tag slug', async () => {
@@ -238,8 +248,8 @@ describe('Posts API Integration Tests', () => {
       const response = await request(app).get('/api/posts?tag=javascript');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].title).toBe('JavaScript Post');
+      expect(response.body.data).toHaveLength(1);
+      expect(response.body.data[0].title).toBe('JavaScript Post');
     });
 
     it('should combine filters (published + category + tag)', async () => {
@@ -284,8 +294,8 @@ describe('Posts API Integration Tests', () => {
       );
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0].title).toBe('Matching Post');
+      expect(response.body.data).toHaveLength(1);
+      expect(response.body.data[0].title).toBe('Matching Post');
     });
 
     it('should return empty array when no posts match filters', async () => {
@@ -306,7 +316,128 @@ describe('Posts API Integration Tests', () => {
       );
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(0);
+      expect(response.body.data).toHaveLength(0);
+      expect(response.body.meta.total).toBe(0);
+    });
+
+    it('should paginate posts with custom page and limit', async () => {
+      const { user } = await createAuthenticatedUser();
+
+      // Create 15 posts
+      for (let i = 1; i <= 15; i++) {
+        await prisma.post.create({
+          data: {
+            title: `Post ${i}`,
+            slug: `post-${i}`,
+            content: `Content ${i}`,
+            published: true,
+            authorId: user.id,
+          },
+        });
+      }
+
+      // Request page 2 with limit 5
+      const response = await request(app).get('/api/posts?page=2&limit=5');
+
+      expect(response.status).toBe(200);
+      expect(response.body.data).toHaveLength(5);
+      expect(response.body.meta).toMatchObject({
+        total: 15,
+        page: 2,
+        limit: 5,
+        totalPages: 3,
+      });
+    });
+
+    it('should return correct totalPages calculation', async () => {
+      const { user } = await createAuthenticatedUser();
+
+      // Create 7 posts
+      for (let i = 1; i <= 7; i++) {
+        await prisma.post.create({
+          data: {
+            title: `Post ${i}`,
+            slug: `post-${i}`,
+            content: `Content ${i}`,
+            published: true,
+            authorId: user.id,
+          },
+        });
+      }
+
+      const response = await request(app).get('/api/posts?limit=3');
+
+      expect(response.status).toBe(200);
+      expect(response.body.meta.totalPages).toBe(3); // ceil(7/3) = 3
+    });
+
+    it('should return 400 for invalid page value (0)', async () => {
+      const response = await request(app).get('/api/posts?page=0');
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 for invalid page value (negative)', async () => {
+      const response = await request(app).get('/api/posts?page=-1');
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 for invalid limit value (0)', async () => {
+      const response = await request(app).get('/api/posts?limit=0');
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 for limit exceeding maximum (51)', async () => {
+      const response = await request(app).get('/api/posts?limit=51');
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should apply pagination to filtered results', async () => {
+      const { user } = await createAuthenticatedUser();
+
+      // Create 10 published and 5 draft posts
+      for (let i = 1; i <= 10; i++) {
+        await prisma.post.create({
+          data: {
+            title: `Published Post ${i}`,
+            slug: `published-post-${i}`,
+            content: `Content ${i}`,
+            published: true,
+            authorId: user.id,
+          },
+        });
+      }
+      for (let i = 1; i <= 5; i++) {
+        await prisma.post.create({
+          data: {
+            title: `Draft Post ${i}`,
+            slug: `draft-post-${i}`,
+            content: `Content ${i}`,
+            published: false,
+            authorId: user.id,
+          },
+        });
+      }
+
+      const response = await request(app).get(
+        '/api/posts?published=true&page=1&limit=5',
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body.data).toHaveLength(5);
+      expect(response.body.meta).toMatchObject({
+        total: 10,
+        page: 1,
+        limit: 5,
+        totalPages: 2,
+      });
+      // All returned posts should be published
+      response.body.data.forEach((post: { published: boolean }) => {
+        expect(post.published).toBe(true);
+      });
     });
   });
 

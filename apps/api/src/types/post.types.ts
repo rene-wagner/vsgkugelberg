@@ -22,3 +22,15 @@ export interface Post extends PrismaPost {
   categories: Category[];
   tags: Tag[];
 }
+
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+export interface PaginatedResponse<T> {
+  data: T[];
+  meta: PaginationMeta;
+}

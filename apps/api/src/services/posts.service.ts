@@ -1,6 +1,11 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { NotFoundException } from '@/errors/http-errors';
-import { CreatePostDto, UpdatePostDto, Post } from '@/types/post.types';
+import {
+  CreatePostDto,
+  UpdatePostDto,
+  Post,
+  PaginatedResponse,
+} from '@/types/post.types';
 import { SlugifyService } from '@/services/slugify.service';
 
 export class PostsService {
@@ -14,7 +19,9 @@ export class PostsService {
     published?: boolean,
     categorySlug?: string,
     tagSlug?: string,
-  ): Promise<Post[]> {
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<PaginatedResponse<Post>> {
     const where: Prisma.PostWhereInput = {};
 
     if (published !== undefined) {
@@ -33,27 +40,44 @@ export class PostsService {
       };
     }
 
-    const posts = await this.prisma.post.findMany({
-      where,
-      include: {
-        author: {
-          select: {
-            id: true,
-            username: true,
-            email: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        },
-        categories: true,
-        tags: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-    });
+    const skip = (page - 1) * limit;
 
-    return posts as Post[];
+    const [posts, total] = await Promise.all([
+      this.prisma.post.findMany({
+        where,
+        include: {
+          author: {
+            select: {
+              id: true,
+              username: true,
+              email: true,
+              createdAt: true,
+              updatedAt: true,
+            },
+          },
+          categories: true,
+          tags: true,
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+        skip,
+        take: limit,
+      }),
+      this.prisma.post.count({ where }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: posts as Post[],
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
+      },
+    };
   }
 
   async findBySlug(slug: string): Promise<Post> {
