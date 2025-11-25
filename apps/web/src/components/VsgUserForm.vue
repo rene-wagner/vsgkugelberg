@@ -28,6 +28,7 @@ const isEditMode = computed(() => !!props.initialData);
 const username = ref(props.initialData?.username ?? '');
 const email = ref(props.initialData?.email ?? '');
 const password = ref('');
+const passwordConfirm = ref('');
 
 // Watch for initialData changes to reset form
 watch(
@@ -36,18 +37,23 @@ watch(
     username.value = newData?.username ?? '';
     email.value = newData?.email ?? '';
     password.value = ''; // Never prefill password for security
+    passwordConfirm.value = ''; // Reset confirmation field as well
   }
 );
 
 const usernameError = ref<string | null>(null);
 const emailError = ref<string | null>(null);
 const passwordError = ref<string | null>(null);
+const passwordConfirmError = ref<string | null>(null);
 
 const isValid = computed(() => {
   const hasValidUsername = username.value.trim().length >= 3;
   const hasValidEmail = email.value.trim().length > 0 && email.value.includes('@');
   const hasValidPassword = isEditMode.value || password.value.length >= 6;
-  return hasValidUsername && hasValidEmail && hasValidPassword;
+  const passwordsMatch =
+    password.value === passwordConfirm.value ||
+    (isEditMode.value && !password.value && !passwordConfirm.value);
+  return hasValidUsername && hasValidEmail && hasValidPassword && passwordsMatch;
 });
 
 const validateForm = (): boolean => {
@@ -97,6 +103,18 @@ const validateForm = (): boolean => {
     } else {
       passwordError.value = null;
     }
+  }
+
+  // Validate password confirmation
+  if (password.value || passwordConfirm.value) {
+    if (password.value !== passwordConfirm.value) {
+      passwordConfirmError.value = 'Passwoerter stimmen nicht ueberein';
+      valid = false;
+    } else {
+      passwordConfirmError.value = null;
+    }
+  } else {
+    passwordConfirmError.value = null;
   }
 
   return valid;
@@ -180,9 +198,32 @@ const handleCancel = () => {
         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00295e] focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
         :class="{ 'border-red-500': passwordError }"
         placeholder="Passwort eingeben..."
+        autocomplete="new-password"
         @input="passwordError = null"
       />
       <p v-if="passwordError" class="mt-1 text-sm text-red-500">{{ passwordError }}</p>
+    </div>
+
+    <!-- Password Confirmation Field -->
+    <div class="mb-4">
+      <label for="user-password-confirm" class="block text-sm font-medium text-gray-700 mb-1">
+        Passwort bestaetigen
+        <span v-if="!isEditMode" class="text-red-500">*</span>
+      </label>
+      <input
+        id="user-password-confirm"
+        v-model="passwordConfirm"
+        type="password"
+        :disabled="loading"
+        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00295e] focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
+        :class="{ 'border-red-500': passwordConfirmError }"
+        placeholder="Passwort bestaetigen..."
+        autocomplete="new-password"
+        @input="passwordConfirmError = null"
+      />
+      <p v-if="passwordConfirmError" class="mt-1 text-sm text-red-500">
+        {{ passwordConfirmError }}
+      </p>
     </div>
 
     <!-- Action Buttons -->
