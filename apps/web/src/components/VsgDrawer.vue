@@ -1560,10 +1560,7 @@ const handleUserFormCancel = () => {
                   </div>
 
                   <!-- Empty State -->
-                  <div
-                    v-else-if="users.length === 0"
-                    class="flex items-center justify-center h-32"
-                  >
+                  <div v-else-if="users.length === 0" class="flex items-center justify-center h-32">
                     <p class="text-gray-500">Keine Benutzer gefunden.</p>
                   </div>
 
