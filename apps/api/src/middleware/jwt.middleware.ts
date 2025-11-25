@@ -2,7 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { jwtConfig } from '@/config/jwt.config';
 import { JwtPayload } from '@/services/auth.service';
-import { UnauthorizedException } from '@/errors/http-errors';
+import {
+  HttpException,
+  UnauthorizedException,
+} from '@/errors/http-errors';
 
 export const jwtMiddleware = (
   req: Request,
@@ -47,7 +50,9 @@ export const jwtMiddleware = (
 
     next();
   } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) {
+    if (error instanceof HttpException) {
+      next(error);
+    } else if (error instanceof jwt.JsonWebTokenError) {
       next(new UnauthorizedException('Invalid token'));
     } else if (error instanceof jwt.TokenExpiredError) {
       next(new UnauthorizedException('Token expired'));
