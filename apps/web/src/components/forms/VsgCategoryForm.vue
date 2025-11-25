@@ -1,49 +1,44 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import VsgMarkdownEditor from './VsgMarkdownEditor.vue';
+import VsgMarkdownEditor from '@/components/VsgMarkdownEditor.vue';
 
-export type DepartmentFormPayload = {
+export type CategoryFormPayload = {
   name: string;
-  shortDescription: string;
-  longDescription: string;
+  description: string;
 };
 
-export type DepartmentFormInitialData = {
+export type CategoryFormInitialData = {
   name: string;
-  shortDescription: string;
-  longDescription: string;
+  description: string | null;
 };
 
 const props = defineProps<{
   loading?: boolean;
   error?: string | null;
-  initialData?: DepartmentFormInitialData | null;
+  initialData?: CategoryFormInitialData | null;
 }>();
 
 const emit = defineEmits<{
-  save: [payload: DepartmentFormPayload];
+  save: [payload: CategoryFormPayload];
   cancel: [];
 }>();
 
 const name = ref(props.initialData?.name ?? '');
-const shortDescription = ref(props.initialData?.shortDescription ?? '');
-const longDescription = ref(props.initialData?.longDescription ?? '');
+const description = ref(props.initialData?.description ?? '');
 
 // Watch for initialData changes to reset form
 watch(
   () => props.initialData,
   (newData) => {
     name.value = newData?.name ?? '';
-    shortDescription.value = newData?.shortDescription ?? '';
-    longDescription.value = newData?.longDescription ?? '';
+    description.value = newData?.description ?? '';
   }
 );
 
 const nameError = ref<string | null>(null);
-const shortDescriptionError = ref<string | null>(null);
 
 const isValid = computed(() => {
-  return name.value.trim().length >= 2 && shortDescription.value.trim().length > 0;
+  return name.value.trim().length >= 2;
 });
 
 const validateForm = (): boolean => {
@@ -63,17 +58,6 @@ const validateForm = (): boolean => {
     nameError.value = null;
   }
 
-  // Validate short description
-  if (!shortDescription.value.trim()) {
-    shortDescriptionError.value = 'Kurzbeschreibung ist erforderlich';
-    valid = false;
-  } else if (shortDescription.value.trim().length > 255) {
-    shortDescriptionError.value = 'Kurzbeschreibung darf maximal 255 Zeichen lang sein';
-    valid = false;
-  } else {
-    shortDescriptionError.value = null;
-  }
-
   return valid;
 };
 
@@ -84,8 +68,7 @@ const handleSave = () => {
 
   emit('save', {
     name: name.value.trim(),
-    shortDescription: shortDescription.value.trim(),
-    longDescription: longDescription.value,
+    description: description.value,
   });
 };
 
@@ -95,7 +78,7 @@ const handleCancel = () => {
 </script>
 
 <template>
-  <form class="vsg-department-form" @submit.prevent="handleSave">
+  <form class="vsg-category-form" @submit.prevent="handleSave">
     <!-- Error Alert -->
     <div
       v-if="error"
@@ -106,54 +89,31 @@ const handleCancel = () => {
 
     <!-- Name Field -->
     <div class="mb-4">
-      <label for="department-name" class="block text-sm font-medium text-gray-700 mb-1">
+      <label for="category-name" class="block text-sm font-medium text-gray-700 mb-1">
         Name <span class="text-red-500">*</span>
       </label>
       <input
-        id="department-name"
+        id="category-name"
         v-model="name"
         type="text"
         :disabled="loading"
         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00295e] focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
         :class="{ 'border-red-500': nameError }"
-        placeholder="Abteilungsname eingeben..."
+        placeholder="Kategoriename eingeben..."
         @input="nameError = null"
       />
       <p v-if="nameError" class="mt-1 text-sm text-red-500">{{ nameError }}</p>
     </div>
 
-    <!-- Short Description Field -->
+    <!-- Description Field -->
     <div class="mb-4">
-      <label
-        for="department-short-description"
-        class="block text-sm font-medium text-gray-700 mb-1"
-      >
-        Kurzbeschreibung <span class="text-red-500">*</span>
-      </label>
-      <input
-        id="department-short-description"
-        v-model="shortDescription"
-        type="text"
-        :disabled="loading"
-        class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00295e] focus:border-transparent disabled:bg-gray-100 disabled:cursor-not-allowed"
-        :class="{ 'border-red-500': shortDescriptionError }"
-        placeholder="Kurze Beschreibung der Abteilung..."
-        @input="shortDescriptionError = null"
-      />
-      <p v-if="shortDescriptionError" class="mt-1 text-sm text-red-500">
-        {{ shortDescriptionError }}
-      </p>
-    </div>
-
-    <!-- Long Description Field -->
-    <div class="mb-4">
-      <label for="department-long-description" class="block text-sm font-medium text-gray-700 mb-1">
+      <label for="category-description" class="block text-sm font-medium text-gray-700 mb-1">
         Beschreibung
       </label>
       <VsgMarkdownEditor
-        v-model="longDescription"
+        v-model="description"
         :disabled="loading"
-        placeholder="Ausführliche Beschreibung in Markdown schreiben..."
+        placeholder="Beschreibung in Markdown schreiben..."
       />
     </div>
 
@@ -200,7 +160,7 @@ const handleCancel = () => {
 </template>
 
 <style scoped>
-.vsg-department-form {
+.vsg-category-form {
   padding: 1rem;
 }
 </style>

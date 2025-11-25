@@ -6,10 +6,10 @@ import { useDepartmentsStore } from '@/stores/departments';
 import { useCategoriesStore } from '@/stores/categories';
 import { useUsersAdminStore } from '@/stores/usersAdmin';
 import { useUserStore } from '@/stores/user';
-import VsgPostForm, { type PostFormPayload } from './VsgPostForm.vue';
-import VsgDepartmentForm, { type DepartmentFormPayload } from './VsgDepartmentForm.vue';
-import VsgCategoryForm, { type CategoryFormPayload } from './VsgCategoryForm.vue';
-import VsgUserForm, { type UserFormPayload } from './VsgUserForm.vue';
+import VsgPostForm, { type PostFormPayload } from './forms/VsgPostForm.vue';
+import VsgDepartmentForm, { type DepartmentFormPayload } from './forms/VsgDepartmentForm.vue';
+import VsgCategoryForm, { type CategoryFormPayload } from './forms/VsgCategoryForm.vue';
+import VsgUserForm, { type UserFormPayload } from './forms/VsgUserForm.vue';
 import type { ApiPost, ApiDepartment, ApiCategoryFull, ApiUser } from '@/utils/apiClient';
 
 const props = defineProps<{

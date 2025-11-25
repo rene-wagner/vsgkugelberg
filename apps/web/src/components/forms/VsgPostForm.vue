@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import VsgMarkdownEditor from './VsgMarkdownEditor.vue';
+import VsgMarkdownEditor from '@/components/VsgMarkdownEditor.vue';
 
 export type PostFormPayload = {
   title: string;
