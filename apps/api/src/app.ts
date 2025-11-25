@@ -2,17 +2,20 @@ import { PrismaClient } from '@prisma/client';
 import express from 'express';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import { router } from './routes';
 import {
   errorHandlerMiddleware,
   notFoundHandler,
 } from './middleware/error-handler.middleware';
 import './strategies/local.strategy';
+import { createCorsOptions } from './config/cors.config';
 
 const prisma = new PrismaClient();
 
 const app = express();
 
+app.use(cors(createCorsOptions()));
 app.use(express.json());
 app.use(cookieParser());
 app.use(passport.initialize());

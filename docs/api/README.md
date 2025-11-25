@@ -195,7 +195,7 @@ pnpm prisma:seed
 - Sensitive routes are protected with authentication middleware
 - SQL injection prevention through Prisma ORM
 - Input validation on all endpoints
-- CORS configuration should be added for production
+- CORS configuration is controlled via the `CORS_ORIGINS` environment variable (with `http://localhost:5173` allowed by default in development)
 
 ## Author
 
