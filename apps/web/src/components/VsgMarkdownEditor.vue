@@ -51,7 +51,7 @@ const handleChange = (value: string) => {
       language="en-US"
       :preview="false"
       :no-mermaid="true"
-      :no-katex="false"
+      :no-katex="true"
       :no-highlight="false"
       @update:model-value="handleChange"
     />
