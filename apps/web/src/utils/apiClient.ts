@@ -69,6 +69,61 @@ export type UpdatePostPayload = {
   published?: boolean;
 };
 
+export type ApiDepartment = {
+  id: number;
+  name: string;
+  slug: string;
+  shortDescription: string;
+  longDescription: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateDepartmentPayload = {
+  name: string;
+  shortDescription: string;
+  longDescription: string;
+};
+
+export type UpdateDepartmentPayload = {
+  name?: string;
+  shortDescription?: string;
+  longDescription?: string;
+};
+
+// Full category type with all fields (for CRUD operations)
+export type ApiCategoryFull = {
+  id: number;
+  name: string;
+  slug: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateCategoryPayload = {
+  name: string;
+  description?: string;
+};
+
+export type UpdateCategoryPayload = {
+  name?: string;
+  description?: string;
+};
+
+// User types for admin operations (reuses ApiUser for the response)
+export type CreateUserPayload = {
+  username: string;
+  email: string;
+  password: string;
+};
+
+export type UpdateUserPayload = {
+  username?: string;
+  email?: string;
+  password?: string;
+};
+
 const getApiBaseUrl = (): string => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000';
   return baseUrl.replace(/\/$/, '');
@@ -208,4 +263,219 @@ export const deletePost = async (slug: string): Promise<ApiPost> => {
   }
 
   return (await response.json()) as ApiPost;
+};
+
+// Department API functions
+
+export const fetchDepartments = async (): Promise<ApiDepartment[]> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/departments`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch departments');
+  }
+
+  return (await response.json()) as ApiDepartment[];
+};
+
+export const createDepartment = async (
+  payload: CreateDepartmentPayload
+): Promise<ApiDepartment> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/departments`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to create department');
+  }
+
+  return (await response.json()) as ApiDepartment;
+};
+
+export const updateDepartment = async (
+  slug: string,
+  payload: UpdateDepartmentPayload
+): Promise<ApiDepartment> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/departments/${slug}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to update department');
+  }
+
+  return (await response.json()) as ApiDepartment;
+};
+
+export const deleteDepartment = async (slug: string): Promise<ApiDepartment> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/departments/${slug}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to delete department');
+  }
+
+  return (await response.json()) as ApiDepartment;
+};
+
+// Category API functions
+
+export const fetchCategories = async (): Promise<ApiCategoryFull[]> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/categories`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch categories');
+  }
+
+  return (await response.json()) as ApiCategoryFull[];
+};
+
+export const createCategory = async (payload: CreateCategoryPayload): Promise<ApiCategoryFull> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/categories`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to create category');
+  }
+
+  return (await response.json()) as ApiCategoryFull;
+};
+
+export const updateCategory = async (
+  slug: string,
+  payload: UpdateCategoryPayload
+): Promise<ApiCategoryFull> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/categories/${slug}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to update category');
+  }
+
+  return (await response.json()) as ApiCategoryFull;
+};
+
+export const deleteCategory = async (slug: string): Promise<ApiCategoryFull> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/categories/${slug}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to delete category');
+  }
+
+  return (await response.json()) as ApiCategoryFull;
+};
+
+// User API functions (admin operations)
+
+export const fetchUsers = async (): Promise<ApiUser[]> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/users`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch users');
+  }
+
+  return (await response.json()) as ApiUser[];
+};
+
+export const createUser = async (payload: CreateUserPayload): Promise<ApiUser> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/users`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to create user');
+  }
+
+  return (await response.json()) as ApiUser;
+};
+
+export const updateUser = async (id: number, payload: UpdateUserPayload): Promise<ApiUser> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/users/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to update user');
+  }
+
+  return (await response.json()) as ApiUser;
+};
+
+export const deleteUser = async (id: number): Promise<ApiUser> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/users/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to delete user');
+  }
+
+  return (await response.json()) as ApiUser;
 };
