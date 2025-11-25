@@ -2,6 +2,8 @@
 import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { usePostsStore, type PublishedFilter } from '@/stores/posts';
+import { useUserStore } from '@/stores/user';
+import VsgPostForm, { type PostFormPayload } from './VsgPostForm.vue';
 
 const props = defineProps<{
   isOpen: boolean;
@@ -14,10 +16,21 @@ const emit = defineEmits<{
 }>();
 
 const isPostsPanelOpen = ref(false);
+const isCreatingPost = ref(false);
 const postsStore = usePostsStore();
+const userStore = useUserStore();
 
-const { posts, loading, error, meta, publishedFilter, categoryFilter, tagFilter } =
-  storeToRefs(postsStore);
+const {
+  posts,
+  loading,
+  error,
+  meta,
+  publishedFilter,
+  categoryFilter,
+  tagFilter,
+  creating,
+  createError,
+} = storeToRefs(postsStore);
 
 const quickLinks = [
   { label: 'Mein Profil', path: '/profil' },
@@ -26,12 +39,14 @@ const quickLinks = [
   { label: 'Hilfe', path: '/hilfe' },
 ];
 
-// Reset posts panel when drawer closes
+// Reset posts panel and form state when drawer closes
 watch(
   () => props.isOpen,
   (isOpen) => {
     if (!isOpen) {
       isPostsPanelOpen.value = false;
+      isCreatingPost.value = false;
+      postsStore.clearCreateError();
     }
   }
 );
@@ -61,6 +76,40 @@ const openPostsPanel = () => {
 
 const closePostsPanel = () => {
   isPostsPanelOpen.value = false;
+  isCreatingPost.value = false;
+  postsStore.clearCreateError();
+};
+
+// Post creation handlers
+const openCreatePostForm = () => {
+  isCreatingPost.value = true;
+  postsStore.clearCreateError();
+};
+
+const closeCreatePostForm = () => {
+  isCreatingPost.value = false;
+  postsStore.clearCreateError();
+};
+
+const handlePostFormSave = async (payload: PostFormPayload) => {
+  if (!userStore.user) {
+    return;
+  }
+
+  const success = await postsStore.createPost({
+    title: payload.title,
+    content: payload.content,
+    published: payload.published,
+    authorId: userStore.user.id,
+  });
+
+  if (success) {
+    isCreatingPost.value = false;
+  }
+};
+
+const handlePostFormCancel = () => {
+  closeCreatePostForm();
 };
 
 // Filter handlers
@@ -106,222 +155,267 @@ const formatDate = (dateString: string): string => {
             <!-- Posts Panel Header -->
             <div class="p-4 border-b border-gray-200">
               <div class="flex items-center justify-between">
-                <h2 class="text-lg font-semibold text-gray-900">Beiträge</h2>
-                <button
-                  type="button"
-                  class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-                  aria-label="Panel schliessen"
-                  @click="closePostsPanel"
-                >
-                  <svg
-                    class="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
+                <h2 class="text-lg font-semibold text-gray-900">
+                  {{ isCreatingPost ? 'Neuer Beitrag' : 'Beiträge' }}
+                </h2>
+                <div class="flex items-center gap-2">
+                  <!-- New Post Button (only show when viewing list) -->
+                  <button
+                    v-if="!isCreatingPost"
+                    type="button"
+                    class="px-3 py-1.5 text-sm bg-[#00295e] text-white hover:bg-[#003d8a] rounded-lg transition-colors flex items-center gap-1"
+                    @click="openCreatePostForm"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                    <span>Neuer Beitrag</span>
+                  </button>
+                  <!-- Close Button -->
+                  <button
+                    type="button"
+                    class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+                    aria-label="Panel schliessen"
+                    @click="closePostsPanel"
+                  >
+                    <svg
+                      class="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
 
             <!-- Posts Panel Content -->
             <div class="flex flex-col h-[calc(100%-65px)]">
-              <!-- Filter Controls -->
-              <div class="p-4 border-b border-gray-200 space-y-3">
-                <div class="flex flex-wrap gap-3">
-                  <!-- Published Status Filter -->
-                  <div class="flex-1 min-w-[140px]">
-                    <label
-                      for="published-filter"
-                      class="block text-xs font-medium text-gray-700 mb-1"
-                    >
-                      Status
-                    </label>
-                    <select
-                      id="published-filter"
-                      :value="publishedFilter"
-                      class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00295e] focus:border-transparent"
-                      @change="handlePublishedFilterChange"
-                    >
-                      <option value="all">Alle</option>
-                      <option value="published">Veröffentlicht</option>
-                      <option value="unpublished">Entwurf</option>
-                    </select>
-                  </div>
-
-                  <!-- Category Filter -->
-                  <div class="flex-1 min-w-[140px]">
-                    <label
-                      for="category-filter"
-                      class="block text-xs font-medium text-gray-700 mb-1"
-                    >
-                      Kategorie
-                    </label>
-                    <input
-                      id="category-filter"
-                      type="text"
-                      :value="categoryFilter"
-                      placeholder="Kategorie..."
-                      class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00295e] focus:border-transparent"
-                      @change="handleCategoryFilterChange"
-                    />
-                  </div>
-
-                  <!-- Tag Filter -->
-                  <div class="flex-1 min-w-[140px]">
-                    <label for="tag-filter" class="block text-xs font-medium text-gray-700 mb-1">
-                      Tag
-                    </label>
-                    <input
-                      id="tag-filter"
-                      type="text"
-                      :value="tagFilter"
-                      placeholder="Tag..."
-                      class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00295e] focus:border-transparent"
-                      @change="handleTagFilterChange"
-                    />
-                  </div>
-                </div>
-
-                <!-- Clear Filters Button -->
-                <button
-                  v-if="postsStore.hasFilters()"
-                  type="button"
-                  class="text-sm text-[#00295e] hover:underline"
-                  @click="postsStore.clearFilters()"
-                >
-                  Filter zurücksetzen
-                </button>
+              <!-- Post Creation Form -->
+              <div v-if="isCreatingPost" class="flex-1 overflow-auto">
+                <VsgPostForm
+                  :loading="creating"
+                  :error="createError"
+                  @save="handlePostFormSave"
+                  @cancel="handlePostFormCancel"
+                />
               </div>
 
-              <!-- Posts Table -->
-              <div class="flex-1 overflow-auto p-4">
-                <!-- Loading State -->
-                <div v-if="loading" class="flex items-center justify-center h-32">
-                  <div class="flex items-center gap-2 text-gray-500">
-                    <svg
-                      class="animate-spin h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                      ></circle>
-                      <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <span>Lade Beiträge...</span>
-                  </div>
-                </div>
+              <!-- Posts List View -->
+              <template v-else>
+                <!-- Filter Controls -->
+                <div class="p-4 border-b border-gray-200 space-y-3">
+                  <div class="flex flex-wrap gap-3">
+                    <!-- Published Status Filter -->
+                    <div class="flex-1 min-w-[140px]">
+                      <label
+                        for="published-filter"
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                      >
+                        Status
+                      </label>
+                      <select
+                        id="published-filter"
+                        :value="publishedFilter"
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00295e] focus:border-transparent"
+                        @change="handlePublishedFilterChange"
+                      >
+                        <option value="all">Alle</option>
+                        <option value="published">Veröffentlicht</option>
+                        <option value="unpublished">Entwurf</option>
+                      </select>
+                    </div>
 
-                <!-- Error State -->
-                <div v-else-if="error" class="flex items-center justify-center h-32">
-                  <div class="text-center">
-                    <p class="text-red-600 mb-2">{{ error }}</p>
-                    <button
-                      type="button"
-                      class="text-sm text-[#00295e] hover:underline"
-                      @click="postsStore.fetchPosts()"
-                    >
-                      Erneut versuchen
-                    </button>
-                  </div>
-                </div>
+                    <!-- Category Filter -->
+                    <div class="flex-1 min-w-[140px]">
+                      <label
+                        for="category-filter"
+                        class="block text-xs font-medium text-gray-700 mb-1"
+                      >
+                        Kategorie
+                      </label>
+                      <input
+                        id="category-filter"
+                        type="text"
+                        :value="categoryFilter"
+                        placeholder="Kategorie..."
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00295e] focus:border-transparent"
+                        @change="handleCategoryFilterChange"
+                      />
+                    </div>
 
-                <!-- Empty State -->
-                <div v-else-if="posts.length === 0" class="flex items-center justify-center h-32">
-                  <p class="text-gray-500">Keine Beiträge gefunden.</p>
+                    <!-- Tag Filter -->
+                    <div class="flex-1 min-w-[140px]">
+                      <label for="tag-filter" class="block text-xs font-medium text-gray-700 mb-1">
+                        Tag
+                      </label>
+                      <input
+                        id="tag-filter"
+                        type="text"
+                        :value="tagFilter"
+                        placeholder="Tag..."
+                        class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00295e] focus:border-transparent"
+                        @change="handleTagFilterChange"
+                      />
+                    </div>
+                  </div>
+
+                  <!-- Clear Filters Button -->
+                  <button
+                    v-if="postsStore.hasFilters()"
+                    type="button"
+                    class="text-sm text-[#00295e] hover:underline"
+                    @click="postsStore.clearFilters()"
+                  >
+                    Filter zurücksetzen
+                  </button>
                 </div>
 
                 <!-- Posts Table -->
-                <table v-else class="w-full text-sm">
-                  <thead>
-                    <tr class="border-b border-gray-200">
-                      <th class="text-left py-2 px-2 font-medium text-gray-700">Titel</th>
-                      <th class="text-left py-2 px-2 font-medium text-gray-700 w-24">Status</th>
-                      <th class="text-left py-2 px-2 font-medium text-gray-700 w-28">Kategorie</th>
-                      <th class="text-left py-2 px-2 font-medium text-gray-700 w-24">Datum</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      v-for="post in posts"
-                      :key="post.id"
-                      class="border-b border-gray-100 hover:bg-gray-50"
-                    >
-                      <td class="py-2 px-2">
-                        <span class="font-medium text-gray-900 line-clamp-1">{{ post.title }}</span>
-                      </td>
-                      <td class="py-2 px-2">
-                        <span
-                          :class="[
-                            'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
-                            post.published
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-yellow-100 text-yellow-800',
-                          ]"
-                        >
-                          {{ post.published ? 'Live' : 'Entwurf' }}
-                        </span>
-                      </td>
-                      <td class="py-2 px-2">
-                        <span class="text-gray-600 line-clamp-1">
-                          {{ post.categories?.[0]?.name ?? '-' }}
-                        </span>
-                      </td>
-                      <td class="py-2 px-2 text-gray-600">
-                        {{ formatDate(post.createdAt) }}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                <div class="flex-1 overflow-auto p-4">
+                  <!-- Loading State -->
+                  <div v-if="loading" class="flex items-center justify-center h-32">
+                    <div class="flex items-center gap-2 text-gray-500">
+                      <svg
+                        class="animate-spin h-5 w-5"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          class="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          stroke-width="4"
+                        ></circle>
+                        <path
+                          class="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      <span>Lade Beiträge...</span>
+                    </div>
+                  </div>
 
-              <!-- Pagination Controls -->
-              <div
-                v-if="!loading && !error && posts.length > 0"
-                class="p-4 border-t border-gray-200"
-              >
-                <div class="flex items-center justify-between">
-                  <span class="text-sm text-gray-600">
-                    Seite {{ meta.page }} von {{ meta.totalPages }}
-                  </span>
-                  <div class="flex gap-2">
-                    <button
-                      type="button"
-                      :disabled="!postsStore.canGoPrevious()"
-                      class="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                      @click="postsStore.previousPage()"
-                    >
-                      Zurück
-                    </button>
-                    <button
-                      type="button"
-                      :disabled="!postsStore.canGoNext()"
-                      class="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                      @click="postsStore.nextPage()"
-                    >
-                      Weiter
-                    </button>
+                  <!-- Error State -->
+                  <div v-else-if="error" class="flex items-center justify-center h-32">
+                    <div class="text-center">
+                      <p class="text-red-600 mb-2">{{ error }}</p>
+                      <button
+                        type="button"
+                        class="text-sm text-[#00295e] hover:underline"
+                        @click="postsStore.fetchPosts()"
+                      >
+                        Erneut versuchen
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Empty State -->
+                  <div v-else-if="posts.length === 0" class="flex items-center justify-center h-32">
+                    <p class="text-gray-500">Keine Beiträge gefunden.</p>
+                  </div>
+
+                  <!-- Posts Table -->
+                  <table v-else class="w-full text-sm">
+                    <thead>
+                      <tr class="border-b border-gray-200">
+                        <th class="text-left py-2 px-2 font-medium text-gray-700">Titel</th>
+                        <th class="text-left py-2 px-2 font-medium text-gray-700 w-24">Status</th>
+                        <th class="text-left py-2 px-2 font-medium text-gray-700 w-28">
+                          Kategorie
+                        </th>
+                        <th class="text-left py-2 px-2 font-medium text-gray-700 w-24">Datum</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="post in posts"
+                        :key="post.id"
+                        class="border-b border-gray-100 hover:bg-gray-50"
+                      >
+                        <td class="py-2 px-2">
+                          <span class="font-medium text-gray-900 line-clamp-1">{{
+                            post.title
+                          }}</span>
+                        </td>
+                        <td class="py-2 px-2">
+                          <span
+                            :class="[
+                              'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium',
+                              post.published
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-yellow-100 text-yellow-800',
+                            ]"
+                          >
+                            {{ post.published ? 'Live' : 'Entwurf' }}
+                          </span>
+                        </td>
+                        <td class="py-2 px-2">
+                          <span class="text-gray-600 line-clamp-1">
+                            {{ post.categories?.[0]?.name ?? '-' }}
+                          </span>
+                        </td>
+                        <td class="py-2 px-2 text-gray-600">
+                          {{ formatDate(post.createdAt) }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- Pagination Controls -->
+                <div
+                  v-if="!loading && !error && posts.length > 0"
+                  class="p-4 border-t border-gray-200"
+                >
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-600">
+                      Seite {{ meta.page }} von {{ meta.totalPages }}
+                    </span>
+                    <div class="flex gap-2">
+                      <button
+                        type="button"
+                        :disabled="!postsStore.canGoPrevious()"
+                        class="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        @click="postsStore.previousPage()"
+                      >
+                        Zurück
+                      </button>
+                      <button
+                        type="button"
+                        :disabled="!postsStore.canGoNext()"
+                        class="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        @click="postsStore.nextPage()"
+                      >
+                        Weiter
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </template>
             </div>
           </div>
         </Transition>

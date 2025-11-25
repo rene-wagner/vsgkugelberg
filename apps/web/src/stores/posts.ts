@@ -1,6 +1,12 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { fetchPosts as fetchPostsApi, type ApiPost, type PaginationMeta } from '@/utils/apiClient';
+import {
+  fetchPosts as fetchPostsApi,
+  createPost as createPostApi,
+  type ApiPost,
+  type PaginationMeta,
+  type CreatePostPayload,
+} from '@/utils/apiClient';
 
 export type PublishedFilter = 'all' | 'published' | 'unpublished';
 
@@ -15,6 +21,10 @@ export const usePostsStore = defineStore('posts', () => {
     limit: 10,
     totalPages: 0,
   });
+
+  // Create post state
+  const creating = ref(false);
+  const createError = ref<string | null>(null);
 
   // Filters
   const publishedFilter = ref<PublishedFilter>('all');
@@ -111,6 +121,28 @@ export const usePostsStore = defineStore('posts', () => {
     }
   }
 
+  async function createPost(payload: CreatePostPayload): Promise<boolean> {
+    creating.value = true;
+    createError.value = null;
+
+    try {
+      await createPostApi(payload);
+      // Reset to first page and refresh posts list
+      meta.value.page = 1;
+      await fetchPosts();
+      return true;
+    } catch (err) {
+      createError.value = err instanceof Error ? err.message : 'Failed to create post';
+      return false;
+    } finally {
+      creating.value = false;
+    }
+  }
+
+  function clearCreateError() {
+    createError.value = null;
+  }
+
   // Computed-like getters
   const canGoNext = () => meta.value.page < meta.value.totalPages;
   const canGoPrevious = () => meta.value.page > 1;
@@ -125,12 +157,17 @@ export const usePostsStore = defineStore('posts', () => {
     loading,
     error,
     meta,
+    // Create post state
+    creating,
+    createError,
     // Filters
     publishedFilter,
     categoryFilter,
     tagFilter,
     // Actions
     fetchPosts,
+    createPost,
+    clearCreateError,
     setPublishedFilter,
     setCategoryFilter,
     setTagFilter,

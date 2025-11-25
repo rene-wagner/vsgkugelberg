@@ -56,6 +56,13 @@ export type PostsFilters = {
   limit?: number;
 };
 
+export type CreatePostPayload = {
+  title: string;
+  content: string;
+  published: boolean;
+  authorId: number;
+};
+
 const getApiBaseUrl = (): string => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000';
   return baseUrl.replace(/\/$/, '');
@@ -142,4 +149,23 @@ export const fetchPosts = async (filters: PostsFilters = {}): Promise<PostsRespo
   }
 
   return (await response.json()) as PostsResponse;
+};
+
+export const createPost = async (payload: CreatePostPayload): Promise<ApiPost> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/posts`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to create post');
+  }
+
+  return (await response.json()) as ApiPost;
 };

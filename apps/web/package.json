@@ -16,6 +16,7 @@
     "format:fix": "prettier --write \"src/**/*.{js,ts,vue,json,css,md}\""
   },
   "dependencies": {
+    "md-editor-v3": "^5.5.4",
     "pinia": "^3.0.3",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
