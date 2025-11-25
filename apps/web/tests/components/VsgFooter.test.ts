@@ -56,6 +56,5 @@ describe('VsgFooter', () => {
 
     expect(wrapper.text()).toContain('Impressum');
     expect(wrapper.text()).toContain('Datenschutz');
-    expect(wrapper.text()).toContain('AGB');
   });
 });

@@ -1,9 +1,7 @@
 {
   "extends": "./tsconfig.app.json",
-  "include": ["src/**/*.ts", "src/**/*.vue", "tests/**/*.ts", "tests/**/*.tsx"],
+  "include": ["tests/**/*.ts", "tests/**/*.tsx"],
   "compilerOptions": {
-    "composite": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "types": ["vitest/globals", "node"]
   }
 }
