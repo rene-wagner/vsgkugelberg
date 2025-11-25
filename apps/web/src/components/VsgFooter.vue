@@ -37,12 +37,6 @@ const year = computed(() => new Date().getFullYear());
             >
               Datenschutz
             </RouterLink>
-            <RouterLink
-              to="/agb"
-              class="block text-gray-300 hover:text-[#ddad1e] transition-colors"
-            >
-              AGB
-            </RouterLink>
           </div>
         </div>
       </div>
