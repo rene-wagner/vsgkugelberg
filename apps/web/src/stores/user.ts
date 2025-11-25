@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-import type { ApiUser } from '@/utils/apiClient';
+import { fetchMe, type ApiUser } from '@/utils/apiClient';
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<ApiUser | null>(null);
@@ -17,11 +17,19 @@ export const useUserStore = defineStore('user', () => {
     user.value = null;
   };
 
+  const loadUser = async () => {
+    const fetchedUser = await fetchMe();
+    if (fetchedUser) {
+      user.value = fetchedUser;
+    }
+  };
+
   return {
     user,
     isAuthenticated,
     username,
     setUser,
     clearUser,
+    loadUser,
   };
 });

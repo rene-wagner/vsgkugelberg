@@ -35,3 +35,19 @@ export const login = async (payload: LoginPayload): Promise<ApiUser> => {
 
   return data.user;
 };
+
+export const fetchMe = async (): Promise<ApiUser | null> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/me`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const data = (await response.json()) as { user: ApiUser };
+
+  return data.user;
+};
