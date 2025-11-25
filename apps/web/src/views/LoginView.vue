@@ -26,8 +26,9 @@ const handleSubmit = async () => {
     const user = await login({ username: username.value, password: password.value });
     userStore.setUser(user);
     await router.push({ name: 'home' });
-  } catch (error) {
-    errorMessage.value = 'Anmeldung fehlgeschlagen. Bitte prüfe deine Eingaben und versuche es erneut.';
+  } catch (_error) {
+    errorMessage.value =
+      'Anmeldung fehlgeschlagen. Bitte prüfe deine Eingaben und versuche es erneut.';
   } finally {
     isSubmitting.value = false;
   }
@@ -35,11 +36,15 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <main
+    class="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+  >
     <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-md">
       <div>
         <h1 class="mt-2 text-center text-3xl font-extrabold text-gray-900">Anmeldung</h1>
-        <p class="mt-2 text-center text-sm text-gray-600">Melde dich mit deinem Benutzernamen an.</p>
+        <p class="mt-2 text-center text-sm text-gray-600">
+          Melde dich mit deinem Benutzernamen an.
+        </p>
       </div>
 
       <div v-if="errorMessage" class="rounded-md bg-red-50 p-4" role="alert">
@@ -49,7 +54,9 @@ const handleSubmit = async () => {
       <form class="mt-8 space-y-6" autocomplete="on" @submit.prevent="handleSubmit">
         <div class="space-y-4">
           <div>
-            <label for="username" class="block text-sm font-medium text-gray-700">Benutzername</label>
+            <label for="username" class="block text-sm font-medium text-gray-700"
+              >Benutzername</label
+            >
             <input
               id="username"
               v-model="username"

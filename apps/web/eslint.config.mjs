@@ -44,19 +44,24 @@ export default defineConfig(
       'no-debugger': 'warn',
       'prefer-const': 'error',
       'no-var': 'error',
-      
+
       // Vue-specific rules
       'vue/multi-word-component-names': 'warn',
       'vue/component-api-style': ['error', ['script-setup', 'composition']],
       'vue/define-macros-order': ['error', {
         order: ['defineOptions', 'defineProps', 'defineEmits', 'defineSlots'],
       }],
-      
+
       // TypeScript rules
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['error', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
+        'args': 'all',
+        'argsIgnorePattern': '^_',
+        'caughtErrors': 'all',
+        'caughtErrorsIgnorePattern': '^_',
+        'destructuredArrayIgnorePattern': '^_',
+        'varsIgnorePattern': '^_',
+        'ignoreRestSiblings': true
       }],
     },
   },

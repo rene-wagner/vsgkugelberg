@@ -2,10 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { jwtConfig } from '@/config/jwt.config';
 import { JwtPayload } from '@/services/auth.service';
-import {
-  HttpException,
-  UnauthorizedException,
-} from '@/errors/http-errors';
+import { HttpException, UnauthorizedException } from '@/errors/http-errors';
 
 export const jwtMiddleware = (
   req: Request,

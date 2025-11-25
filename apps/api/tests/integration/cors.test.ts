@@ -41,7 +41,9 @@ describe('CORS Integration Tests', () => {
         .set('Origin', OTHER_ORIGIN);
 
       expect(response.status).toBe(200);
-      expect(response.headers['access-control-allow-origin']).toBe(OTHER_ORIGIN);
+      expect(response.headers['access-control-allow-origin']).toBe(
+        OTHER_ORIGIN,
+      );
       expect(response.headers['access-control-allow-credentials']).toBe('true');
     });
 
@@ -55,7 +57,9 @@ describe('CORS Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.headers['access-control-allow-origin']).toBeUndefined();
-      expect(response.headers['access-control-allow-credentials']).toBeUndefined();
+      expect(
+        response.headers['access-control-allow-credentials'],
+      ).toBeUndefined();
     });
   });
 
