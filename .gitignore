@@ -11,3 +11,6 @@ node_modules/
 # AI Files - ignore all except workflows
 .github/*
 !.github/workflows/
+
+.opencode/
+openspec/
