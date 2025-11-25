@@ -51,3 +51,15 @@ export const fetchMe = async (): Promise<ApiUser | null> => {
 
   return data.user;
 };
+
+export const logout = async (): Promise<void> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/auth/logout`, {
+    method: 'POST',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Logout request failed');
+  }
+};
