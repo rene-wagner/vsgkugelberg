@@ -1,29 +1,18 @@
-# Project Overview: VSG Kugelberg Monorepo
+<!-- OPENSPEC:START -->
+# OpenSpec Instructions
 
-This is the root of the **VSG Kugelberg e.V.** monorepo, managed with **Turborepo** and **pnpm**. It contains the source code for the sports club's digital ecosystem.
+These instructions are for AI assistants working in this project.
 
-## Structure
+Always open `@/openspec/AGENTS.md` when the request:
+- Mentions planning or proposals (words like proposal, spec, change, plan)
+- Introduces new capabilities, breaking changes, architecture shifts, or big performance/security work
+- Sounds ambiguous and you need the authoritative spec before coding
 
-The project is divided into the following workspaces:
+Use `@/openspec/AGENTS.md` to learn:
+- How to create and apply change proposals
+- Spec format and conventions
+- Project structure and guidelines
 
-- **`apps/api`**: The backend API service.
-- **`apps/web`**: The frontend web application.
+Keep this managed block so 'openspec update' can refresh the instructions.
 
-## Core Technologies
-
-- **Monorepo Manager**: Turborepo
-- **Package Manager**: pnpm
-- **Language**: TypeScript
-
-## Agent Documentation
-
-For detailed information about specific applications, please refer to their respective `AGENTS.md` files:
-
-- [**API Service**](./apps/api/AGENTS.md)
-- [**Web Application**](./apps/web/AGENTS.md)
-
-## Quick Start (Root)
-
-- **Build**: `pnpm build` (runs `turbo build`)
-- **Dev**: `pnpm dev` (runs `turbo dev`)
-- **Lint**: `pnpm lint` (runs `turbo lint`)
+<!-- OPENSPEC:END -->
