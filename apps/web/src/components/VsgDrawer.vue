@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { usePostsStore, type PublishedFilter } from '@/stores/posts';
 import { useUserStore } from '@/stores/user';
 import VsgPostForm, { type PostFormPayload } from './VsgPostForm.vue';
+import type { ApiPost } from '@/utils/apiClient';
 
 const props = defineProps<{
   isOpen: boolean;
@@ -30,7 +31,18 @@ const {
   tagFilter,
   creating,
   createError,
+  selectedPost,
+  updating,
+  updateError,
+  deleting,
+  deleteError,
 } = storeToRefs(postsStore);
+
+// Computed state for edit mode
+const isEditingPost = computed(() => !!selectedPost.value);
+const isShowingForm = computed(() => isCreatingPost.value || isEditingPost.value);
+const formLoading = computed(() => creating.value || updating.value || deleting.value);
+const formError = computed(() => createError.value || updateError.value || deleteError.value);
 
 const quickLinks = [
   { label: 'Mein Profil', path: '/profil' },
@@ -46,7 +58,10 @@ watch(
     if (!isOpen) {
       isPostsPanelOpen.value = false;
       isCreatingPost.value = false;
+      postsStore.selectPost(null);
       postsStore.clearCreateError();
+      postsStore.clearUpdateError();
+      postsStore.clearDeleteError();
     }
   }
 );
@@ -77,7 +92,10 @@ const openPostsPanel = () => {
 const closePostsPanel = () => {
   isPostsPanelOpen.value = false;
   isCreatingPost.value = false;
+  postsStore.selectPost(null);
   postsStore.clearCreateError();
+  postsStore.clearUpdateError();
+  postsStore.clearDeleteError();
 };
 
 // Post creation handlers
@@ -91,25 +109,68 @@ const closeCreatePostForm = () => {
   postsStore.clearCreateError();
 };
 
+// Post editing handlers
+const openEditPostForm = (post: ApiPost) => {
+  postsStore.selectPost(post);
+  postsStore.clearUpdateError();
+  postsStore.clearDeleteError();
+};
+
+const closeEditPostForm = () => {
+  postsStore.selectPost(null);
+  postsStore.clearUpdateError();
+  postsStore.clearDeleteError();
+};
+
 const handlePostFormSave = async (payload: PostFormPayload) => {
   if (!userStore.user) {
     return;
   }
 
-  const success = await postsStore.createPost({
-    title: payload.title,
-    content: payload.content,
-    published: payload.published,
-    authorId: userStore.user.id,
-  });
+  if (isEditingPost.value && selectedPost.value) {
+    // Update existing post
+    const success = await postsStore.updatePost(selectedPost.value.slug, {
+      title: payload.title,
+      content: payload.content,
+      published: payload.published,
+    });
+
+    if (success) {
+      postsStore.selectPost(null);
+    }
+  } else {
+    // Create new post
+    const success = await postsStore.createPost({
+      title: payload.title,
+      content: payload.content,
+      published: payload.published,
+      authorId: userStore.user.id,
+    });
+
+    if (success) {
+      isCreatingPost.value = false;
+    }
+  }
+};
+
+const handleDeletePost = async () => {
+  if (!selectedPost.value) {
+    return;
+  }
+
+  const success = await postsStore.deletePost(selectedPost.value.slug);
 
   if (success) {
-    isCreatingPost.value = false;
+    postsStore.selectPost(null);
   }
 };
 
 const handlePostFormCancel = () => {
-  closeCreatePostForm();
+  if (isEditingPost.value) {
+    closeEditPostForm();
+  } else {
+    closeCreatePostForm();
+  }
 };
 
 // Filter handlers
@@ -156,12 +217,64 @@ const formatDate = (dateString: string): string => {
             <div class="p-4 border-b border-gray-200">
               <div class="flex items-center justify-between">
                 <h2 class="text-lg font-semibold text-gray-900">
-                  {{ isCreatingPost ? 'Neuer Beitrag' : 'Beiträge' }}
+                  {{
+                    isEditingPost
+                      ? 'Beitrag bearbeiten'
+                      : isCreatingPost
+                        ? 'Neuer Beitrag'
+                        : 'Beiträge'
+                  }}
                 </h2>
                 <div class="flex items-center gap-2">
+                  <!-- Delete Button (only show when editing) -->
+                  <button
+                    v-if="isEditingPost"
+                    type="button"
+                    :disabled="formLoading"
+                    class="p-2 text-red-500 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    aria-label="Beitrag loschen"
+                    @click="handleDeletePost"
+                  >
+                    <svg
+                      v-if="deleting"
+                      class="animate-spin h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        class="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        stroke-width="4"
+                      ></circle>
+                      <path
+                        class="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    <svg
+                      v-else
+                      class="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
                   <!-- New Post Button (only show when viewing list) -->
                   <button
-                    v-if="!isCreatingPost"
+                    v-if="!isShowingForm"
                     type="button"
                     class="px-3 py-1.5 text-sm bg-[#00295e] text-white hover:bg-[#003d8a] rounded-lg transition-colors flex items-center gap-1"
                     @click="openCreatePostForm"
@@ -210,11 +323,20 @@ const formatDate = (dateString: string): string => {
 
             <!-- Posts Panel Content -->
             <div class="flex flex-col h-[calc(100%-65px)]">
-              <!-- Post Creation Form -->
-              <div v-if="isCreatingPost" class="flex-1 overflow-auto">
+              <!-- Post Creation/Edit Form -->
+              <div v-if="isShowingForm" class="flex-1 overflow-auto">
                 <VsgPostForm
-                  :loading="creating"
-                  :error="createError"
+                  :loading="formLoading"
+                  :error="formError"
+                  :initial-data="
+                    selectedPost
+                      ? {
+                          title: selectedPost.title,
+                          content: selectedPost.content,
+                          published: selectedPost.published,
+                        }
+                      : null
+                  "
                   @save="handlePostFormSave"
                   @cancel="handlePostFormCancel"
                 />
@@ -354,7 +476,8 @@ const formatDate = (dateString: string): string => {
                       <tr
                         v-for="post in posts"
                         :key="post.id"
-                        class="border-b border-gray-100 hover:bg-gray-50"
+                        class="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                        @click="openEditPostForm(post)"
                       >
                         <td class="py-2 px-2">
                           <span class="font-medium text-gray-900 line-clamp-1">{{

@@ -32,6 +32,8 @@ const toolbars: ToolbarNames[] = [
   '=',
   'revoke',
   'next',
+  '-',
+  'preview',
 ];
 
 const handleChange = (value: string) => {
@@ -49,7 +51,7 @@ const handleChange = (value: string) => {
       language="en-US"
       :preview="false"
       :no-mermaid="true"
-      :no-katex="true"
+      :no-katex="false"
       :no-highlight="false"
       @update:model-value="handleChange"
     />

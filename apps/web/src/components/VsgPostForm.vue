@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import VsgMarkdownEditor from './VsgMarkdownEditor.vue';
 
 export type PostFormPayload = {
@@ -8,9 +8,16 @@ export type PostFormPayload = {
   published: boolean;
 };
 
-defineProps<{
+export type PostFormInitialData = {
+  title: string;
+  content: string | null;
+  published: boolean;
+};
+
+const props = defineProps<{
   loading?: boolean;
   error?: string | null;
+  initialData?: PostFormInitialData | null;
 }>();
 
 const emit = defineEmits<{
@@ -18,9 +25,19 @@ const emit = defineEmits<{
   cancel: [];
 }>();
 
-const title = ref('');
-const content = ref('');
-const published = ref(false);
+const title = ref(props.initialData?.title ?? '');
+const content = ref(props.initialData?.content ?? '');
+const published = ref(props.initialData?.published ?? false);
+
+// Watch for initialData changes to reset form
+watch(
+  () => props.initialData,
+  (newData) => {
+    title.value = newData?.title ?? '';
+    content.value = newData?.content ?? '';
+    published.value = newData?.published ?? false;
+  }
+);
 
 const titleError = ref<string | null>(null);
 const contentError = ref<string | null>(null);

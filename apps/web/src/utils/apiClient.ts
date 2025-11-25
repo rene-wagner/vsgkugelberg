@@ -63,6 +63,12 @@ export type CreatePostPayload = {
   authorId: number;
 };
 
+export type UpdatePostPayload = {
+  title?: string;
+  content?: string;
+  published?: boolean;
+};
+
 const getApiBaseUrl = (): string => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000';
   return baseUrl.replace(/\/$/, '');
@@ -165,6 +171,40 @@ export const createPost = async (payload: CreatePostPayload): Promise<ApiPost> =
   if (!response.ok) {
     const errorData = (await response.json().catch(() => ({}))) as { message?: string };
     throw new Error(errorData.message || 'Failed to create post');
+  }
+
+  return (await response.json()) as ApiPost;
+};
+
+export const updatePost = async (slug: string, payload: UpdatePostPayload): Promise<ApiPost> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/posts/${slug}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to update post');
+  }
+
+  return (await response.json()) as ApiPost;
+};
+
+export const deletePost = async (slug: string): Promise<ApiPost> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/posts/${slug}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to delete post');
   }
 
   return (await response.json()) as ApiPost;
