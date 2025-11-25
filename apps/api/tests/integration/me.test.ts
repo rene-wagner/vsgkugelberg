@@ -26,7 +26,7 @@ describe('Auth API Integration Tests', () => {
 
       const meResponse = await request(app)
         .get('/api/me')
-        .set('Cookie', cookies as string[]);
+        .set('Cookie', cookies as unknown as string[]);
 
       expect(meResponse.status).toBe(200);
       expect(meResponse.body).toHaveProperty('user');
