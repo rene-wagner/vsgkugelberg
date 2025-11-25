@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia';
 import VsgNavigationMenu from './VsgNavigationMenu.vue';
 import VsgDrawer from './VsgDrawer.vue';
 import { useUserStore } from '@/stores/user';
+import { logout } from '@/utils/apiClient';
 
 const menuItems = [
   { label: 'Startseite', path: '/' },
@@ -24,6 +25,12 @@ const openDrawer = () => {
 const closeDrawer = () => {
   isDrawerOpen.value = false;
 };
+
+const handleLogout = async () => {
+  await logout();
+  userStore.clearUser();
+  closeDrawer();
+};
 </script>
 
 <template>
@@ -40,11 +47,7 @@ const closeDrawer = () => {
         <div class="flex items-center space-x-6">
           <VsgNavigationMenu :menu-items="menuItems" />
 
-          <div v-if="isAuthenticated" class="hidden md:flex items-center space-x-4 text-sm">
-            <div class="flex items-center space-x-2">
-              <span class="text-gray-200">Eingeloggt als</span>
-              <span class="font-semibold">{{ username }}</span>
-            </div>
+          <div v-if="isAuthenticated" class="hidden md:flex items-center">
             <button
               type="button"
               class="p-2 text-white hover:bg-[#003d8a] rounded-lg transition-colors"
@@ -71,6 +74,11 @@ const closeDrawer = () => {
       </div>
     </div>
 
-    <VsgDrawer :is-open="isDrawerOpen" @close="closeDrawer" />
+    <VsgDrawer
+      :is-open="isDrawerOpen"
+      :username="username"
+      @close="closeDrawer"
+      @logout="handleLogout"
+    />
   </header>
 </template>
