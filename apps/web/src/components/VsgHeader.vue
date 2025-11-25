@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import VsgNavigationMenu from './VsgNavigationMenu.vue';
+import VsgDrawer from './VsgDrawer.vue';
 import { useUserStore } from '@/stores/user';
 
 const menuItems = [
@@ -12,6 +14,16 @@ const menuItems = [
 
 const userStore = useUserStore();
 const { isAuthenticated, username } = storeToRefs(userStore);
+
+const isDrawerOpen = ref(false);
+
+const openDrawer = () => {
+  isDrawerOpen.value = true;
+};
+
+const closeDrawer = () => {
+  isDrawerOpen.value = false;
+};
 </script>
 
 <template>
@@ -28,12 +40,37 @@ const { isAuthenticated, username } = storeToRefs(userStore);
         <div class="flex items-center space-x-6">
           <VsgNavigationMenu :menu-items="menuItems" />
 
-          <div v-if="isAuthenticated" class="hidden md:flex items-center space-x-2 text-sm">
-            <span class="text-gray-200">Eingeloggt als</span>
-            <span class="font-semibold">{{ username }}</span>
+          <div v-if="isAuthenticated" class="hidden md:flex items-center space-x-4 text-sm">
+            <div class="flex items-center space-x-2">
+              <span class="text-gray-200">Eingeloggt als</span>
+              <span class="font-semibold">{{ username }}</span>
+            </div>
+            <button
+              type="button"
+              class="p-2 text-white hover:bg-[#003d8a] rounded-lg transition-colors"
+              aria-label="Schnellzugriff öffnen"
+              @click="openDrawer"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
     </div>
+
+    <VsgDrawer :is-open="isDrawerOpen" @close="closeDrawer" />
   </header>
 </template>
