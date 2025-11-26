@@ -5,6 +5,7 @@ import { storeToRefs } from 'pinia';
 import VsgNavigationMenu from './VsgNavigationMenu.vue';
 import VsgDrawer from './VsgDrawer.vue';
 import { useUserStore } from '@/stores/user';
+import { useEditModeStore } from '@/stores/editMode';
 import { logout } from '@/utils/apiClient';
 
 const menuItems = [
@@ -15,6 +16,9 @@ const menuItems = [
 
 const userStore = useUserStore();
 const { isAuthenticated, username } = storeToRefs(userStore);
+
+const editModeStore = useEditModeStore();
+const { isEditMode } = storeToRefs(editModeStore);
 
 const isDrawerOpen = ref(false);
 
@@ -47,7 +51,30 @@ const handleLogout = async () => {
         <div class="flex items-center space-x-6">
           <VsgNavigationMenu :menu-items="menuItems" />
 
-          <div v-if="isAuthenticated" class="hidden md:flex items-center">
+          <div v-if="isAuthenticated" class="hidden md:flex items-center space-x-2">
+            <button
+              type="button"
+              class="p-2 text-white hover:bg-[#003d8a] rounded-lg transition-colors"
+              :class="{ 'bg-[#003d8a]': isEditMode }"
+              aria-label="Bearbeitungsmodus umschalten"
+              :aria-pressed="isEditMode"
+              @click="editModeStore.toggleEditMode"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                />
+              </svg>
+            </button>
             <button
               type="button"
               class="p-2 text-white hover:bg-[#003d8a] rounded-lg transition-colors"
