@@ -2,7 +2,7 @@
   "name": "vsgkugelberg",
   "version": "1.0.0",
   "description": "This is the monorepo for the sports club VSG Kugelberg e.V. website and related projects.",
-  "packageManager": "pnpm@10.22.0",
+  "packageManager": "pnpm@10.23.0",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
