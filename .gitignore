@@ -5,8 +5,8 @@ node_modules/
 .turbo/
 
 # Environment variables
-.env
-.env.local
+.env*
+!.env.example
 
 # AI Files - ignore all except workflows
 .github/*
