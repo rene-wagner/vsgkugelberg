@@ -3,7 +3,7 @@ import { defineConfig } from 'prisma/config';
 
 const databaseUrl =
   process.env.DATABASE_URL ||
-  'postgresql://user:secret@localhost:5432/mydb?schema=public';
+  'postgresql://user:secret@localhost:5432/database?schema=public';
 
 export default defineConfig({
   schema: 'prisma/schema.prisma',
@@ -11,7 +11,6 @@ export default defineConfig({
     path: 'prisma/migrations',
     seed: 'ts-node prisma/seed.ts',
   },
-  engine: 'classic',
   datasource: {
     url: databaseUrl,
   },
