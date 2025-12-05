@@ -1,4 +1,4 @@
-import { prisma, Prisma } from '@/lib/prisma.lib'
+import { prisma, Prisma } from '@/lib/prisma.lib';
 
 const userData: Prisma.UserCreateInput[] = [
   {
