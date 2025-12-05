@@ -1,4 +1,4 @@
-import { Department as PrismaDepartment } from '@prisma/client';
+import { Department as PrismaDepartment } from '@/lib/prisma.lib';
 
 export interface CreateDepartmentDto {
   name: string;

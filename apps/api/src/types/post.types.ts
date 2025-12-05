@@ -1,4 +1,4 @@
-import { Post as PrismaPost, User, Category, Tag } from '@prisma/client';
+import { Post as PrismaPost, User, Category, Tag } from '@/lib/prisma.lib';
 
 export interface CreatePostDto {
   title: string;

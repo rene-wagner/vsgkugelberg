@@ -1,4 +1,4 @@
-import { Tag as PrismaTag } from '@prisma/client';
+import { Tag as PrismaTag } from '@/lib/prisma.lib';
 
 export interface CreateTagDto {
   name: string;

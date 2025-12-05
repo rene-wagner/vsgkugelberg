@@ -1,11 +1,9 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { PrismaClient } from '@prisma/client';
 import { AuthService } from '@/services/auth.service';
 import { passwordService } from '@/services/password.service';
 
-const prisma = new PrismaClient();
-const authService = new AuthService(prisma, passwordService);
+const authService = new AuthService(passwordService);
 
 passport.use(
   /* eslint-disable-next-line @typescript-eslint/no-misused-promises */

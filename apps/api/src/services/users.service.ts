@@ -1,16 +1,13 @@
-import { PrismaClient, Prisma } from '@prisma/client';
 import { PasswordService } from './password.service';
 import { NotFoundException, ConflictException } from '@/errors/http-errors';
+import { Prisma, prisma } from '@/lib/prisma.lib';
 import { CreateUserDto, UpdateUserDto, UserResponse } from '@/types/user.types';
 
-export class UsersService {
-  constructor(
-    private readonly prisma: PrismaClient,
-    private readonly passwordService: PasswordService,
-  ) {}
+const passwordService = new PasswordService();
 
+export class UsersService {
   async findAll(): Promise<UserResponse[]> {
-    const users = await this.prisma.user.findMany({
+    const users = await prisma.user.findMany({
       select: {
         id: true,
         username: true,
@@ -23,7 +20,7 @@ export class UsersService {
   }
 
   async findOne(id: number): Promise<UserResponse> {
-    const user = await this.prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id },
       select: {
         id: true,
@@ -42,16 +39,16 @@ export class UsersService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<UserResponse> {
-    const hashedPassword = await this.passwordService.hash(
-      createUserDto.password,
-    );
+    const hashedPassword = await passwordService.hash(createUserDto.password);
 
     try {
-      const user = await this.prisma.user.create({
+      const user = await prisma.user.create({
         data: {
           username: createUserDto.username,
           email: createUserDto.email,
           password: hashedPassword,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
         select: {
           id: true,
@@ -93,13 +90,11 @@ export class UsersService {
     }
 
     if (updateUserDto.password !== undefined) {
-      updateData.password = await this.passwordService.hash(
-        updateUserDto.password,
-      );
+      updateData.password = await passwordService.hash(updateUserDto.password);
     }
 
     try {
-      const user = await this.prisma.user.update({
+      const user = await prisma.user.update({
         where: { id },
         data: updateData,
         select: {
@@ -129,7 +124,7 @@ export class UsersService {
     await this.findOne(id);
 
     try {
-      const user = await this.prisma.user.delete({
+      const user = await prisma.user.delete({
         where: { id },
         select: {
           id: true,

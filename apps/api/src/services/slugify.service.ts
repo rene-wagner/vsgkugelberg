@@ -1,9 +1,7 @@
+import { prisma } from '@/lib/prisma.lib';
 import slugify from 'slugify';
-import { PrismaClient } from '@prisma/client';
 
 export class SlugifyService {
-  constructor(private readonly prisma: PrismaClient) {}
-
   /**
    * Generates a URL-friendly slug from a string
    * @param text - The text to convert to a slug
@@ -37,7 +35,7 @@ export class SlugifyService {
     let counter = 1;
 
     while (true) {
-      const existingPost = await this.prisma.post.findUnique({
+      const existingPost = await prisma.post.findUnique({
         where: { slug },
         select: { id: true },
       });
@@ -72,7 +70,7 @@ export class SlugifyService {
     let counter = 1;
 
     while (true) {
-      const existingCategory = await this.prisma.category.findUnique({
+      const existingCategory = await prisma.category.findUnique({
         where: { slug },
         select: { id: true },
       });
@@ -107,7 +105,7 @@ export class SlugifyService {
     let counter = 1;
 
     while (true) {
-      const existingTag = await this.prisma.tag.findUnique({
+      const existingTag = await prisma.tag.findUnique({
         where: { slug },
         select: { id: true },
       });
@@ -139,7 +137,7 @@ export class SlugifyService {
     let counter = 1;
 
     while (true) {
-      const existingDepartment = await this.prisma.department.findUnique({
+      const existingDepartment = await prisma.department.findUnique({
         where: { slug },
         select: { id: true },
       });

@@ -1,7 +1,5 @@
-import { PrismaClient } from '@prisma/client';
 import { Router } from 'express';
 import { UsersService } from '@/services/users.service';
-import { passwordService } from '@/services/password.service';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { validationMiddleware } from '@/middleware/validation.middleware';
 import {
@@ -10,11 +8,11 @@ import {
   idParamValidator,
 } from '@/validators/user.validators';
 import { CreateUserDto, UpdateUserDto } from '@/types/user.types';
+import { prisma } from '@/lib/prisma.lib';
 
 const router = Router();
-const prisma = new PrismaClient();
 
-const usersService = new UsersService(prisma, passwordService);
+const usersService = new UsersService();
 
 router.post(
   '/',

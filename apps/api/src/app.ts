@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import express from 'express';
 import passport from 'passport';
 import cookieParser from 'cookie-parser';
@@ -11,8 +10,6 @@ import {
 import './strategies/local.strategy';
 import { createCorsOptions } from './config/cors.config';
 
-const prisma = new PrismaClient();
-
 const app = express();
 
 app.use(cors(createCorsOptions()));
@@ -23,4 +20,4 @@ app.use('/api', router);
 app.use(notFoundHandler);
 app.use(errorHandlerMiddleware);
 
-export { app, prisma };
+export { app };

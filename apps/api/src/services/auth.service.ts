@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client';
 import jwt from 'jsonwebtoken';
 import { PasswordService } from './password.service';
 import { jwtConfig } from '@/config/jwt.config';
+import { prisma } from '@/lib/prisma.lib';
 
 export interface JwtPayload {
   username: string;
@@ -24,16 +24,13 @@ export interface LoginResponse {
 }
 
 export class AuthService {
-  constructor(
-    private prisma: PrismaClient,
-    private passwordService: PasswordService,
-  ) {}
+  constructor(private passwordService: PasswordService) {}
 
   async validateUser(
     usernameOrEmail: string,
     password: string,
   ): Promise<UserPayload | null> {
-    const user = await this.prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
       where: {
         OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
       },

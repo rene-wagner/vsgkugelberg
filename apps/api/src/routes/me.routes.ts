@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { jwtMiddleware } from '@/middleware/jwt.middleware';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
+import { prisma } from '@/lib/prisma.lib';
 
 const router = Router();
-const prisma = new PrismaClient();
 
 router.get(
   '/',

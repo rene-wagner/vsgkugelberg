@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { CategoriesService } from '@/services/categories.service';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
@@ -13,8 +12,7 @@ import {
 import { CreateCategoryDto, UpdateCategoryDto } from '@/types/category.types';
 
 const router = Router();
-const prisma = new PrismaClient();
-const categoriesService = new CategoriesService(prisma);
+const categoriesService = new CategoriesService();
 
 // Public route - List all categories
 router.get(

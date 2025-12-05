@@ -8,3 +8,9 @@ prisma/generated/
 
 # Vitest
 .vitest/
+
+/generated/prisma
+
+/generated/prisma
+
+/generated/prisma

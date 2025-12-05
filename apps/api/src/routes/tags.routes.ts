@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { TagsService } from '@/services/tags.service';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
@@ -13,8 +12,7 @@ import {
 import { CreateTagDto, UpdateTagDto } from '@/types/tag.types';
 
 const router = Router();
-const prisma = new PrismaClient();
-const tagsService = new TagsService(prisma);
+const tagsService = new TagsService();
 
 // Public route - List all tags with post counts
 router.get(

@@ -1,4 +1,4 @@
-import { Category as PrismaCategory } from '@prisma/client';
+import { Category as PrismaCategory } from '@/lib/prisma.lib';
 
 export interface CreateCategoryDto {
   name: string;

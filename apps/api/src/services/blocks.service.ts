@@ -1,4 +1,3 @@
-import { PrismaClient, Prisma } from '@prisma/client';
 import { NotFoundException } from '@/errors/http-errors';
 import {
   Block,
@@ -6,6 +5,7 @@ import {
   CreateBlocksDto,
   UpdateBlockDto,
 } from '@/types/block.types';
+import { prisma, Prisma } from '@/lib/prisma.lib';
 
 // Recursive include for children - supports up to 5 levels of nesting
 const childrenInclude: Prisma.BlockInclude = {
@@ -35,10 +35,8 @@ const childrenInclude: Prisma.BlockInclude = {
 };
 
 export class BlocksService {
-  constructor(private readonly prisma: PrismaClient) {}
-
   async findByPage(page: string): Promise<Block[]> {
-    const blocks = await this.prisma.block.findMany({
+    const blocks = await prisma.block.findMany({
       where: {
         page,
         parentId: null, // Only root blocks
@@ -51,7 +49,7 @@ export class BlocksService {
   }
 
   async findById(id: string): Promise<Block> {
-    const block = await this.prisma.block.findUnique({
+    const block = await prisma.block.findUnique({
       where: { id },
       include: childrenInclude,
     });
@@ -65,7 +63,7 @@ export class BlocksService {
 
   async create(dto: CreateBlocksDto): Promise<Block[]> {
     // Delete all existing blocks for this page
-    await this.prisma.block.deleteMany({
+    await prisma.block.deleteMany({
       where: { page: dto.page },
     });
 
@@ -93,13 +91,16 @@ export class BlocksService {
     parentId: string | null,
   ): Promise<Block> {
     // Create the block
-    const block = await this.prisma.block.create({
+    const block = await prisma.block.create({
       data: {
+        id: input.id,
         page,
         type: input.type,
         sort,
         data: input.data ?? Prisma.JsonNull,
         parentId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     });
 
@@ -125,7 +126,7 @@ export class BlocksService {
 
   async update(id: string, dto: UpdateBlockDto): Promise<Block> {
     // First check if block exists
-    const existingBlock = await this.prisma.block.findUnique({
+    const existingBlock = await prisma.block.findUnique({
       where: { id },
     });
 
@@ -159,7 +160,7 @@ export class BlocksService {
       }
     }
 
-    const block = await this.prisma.block.update({
+    const block = await prisma.block.update({
       where: { id },
       data: updateData,
       include: childrenInclude,
@@ -170,7 +171,7 @@ export class BlocksService {
 
   async remove(id: string): Promise<Block> {
     // First check if block exists and get it with children
-    const existingBlock = await this.prisma.block.findUnique({
+    const existingBlock = await prisma.block.findUnique({
       where: { id },
       include: childrenInclude,
     });
@@ -180,7 +181,7 @@ export class BlocksService {
     }
 
     // Delete the block (children cascade via DB)
-    await this.prisma.block.delete({
+    await prisma.block.delete({
       where: { id },
     });
 

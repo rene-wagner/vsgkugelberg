@@ -1,4 +1,3 @@
-import { PrismaClient, Prisma } from '@prisma/client';
 import { NotFoundException, ConflictException } from '@/errors/http-errors';
 import {
   CreateDepartmentDto,
@@ -6,22 +5,19 @@ import {
   Department,
 } from '@/types/department.types';
 import { SlugifyService } from '@/services/slugify.service';
+import { Prisma, prisma } from '@/lib/prisma.lib';
+
+const slugifyService = new SlugifyService();
 
 export class DepartmentsService {
-  private readonly slugifyService: SlugifyService;
-
-  constructor(private readonly prisma: PrismaClient) {
-    this.slugifyService = new SlugifyService(prisma);
-  }
-
   async findAll(): Promise<Department[]> {
-    return this.prisma.department.findMany({
+    return prisma.department.findMany({
       orderBy: { name: 'asc' },
     });
   }
 
   async findBySlug(slug: string): Promise<Department> {
-    const department = await this.prisma.department.findUnique({
+    const department = await prisma.department.findUnique({
       where: { slug },
     });
 
@@ -34,17 +30,19 @@ export class DepartmentsService {
 
   async create(createDepartmentDto: CreateDepartmentDto): Promise<Department> {
     // Generate unique slug from name
-    const slug = await this.slugifyService.generateUniqueDepartmentSlug(
+    const slug = await slugifyService.generateUniqueDepartmentSlug(
       createDepartmentDto.name,
     );
 
     try {
-      return await this.prisma.department.create({
+      return await prisma.department.create({
         data: {
           name: createDepartmentDto.name,
           slug,
           shortDescription: createDepartmentDto.shortDescription,
           longDescription: createDepartmentDto.longDescription,
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       });
     } catch (error) {
@@ -65,7 +63,7 @@ export class DepartmentsService {
     updateDepartmentDto: UpdateDepartmentDto,
   ): Promise<Department> {
     // First, find the department by slug
-    const existingDepartment = await this.prisma.department.findUnique({
+    const existingDepartment = await prisma.department.findUnique({
       where: { slug },
       select: { id: true, name: true },
     });
@@ -79,7 +77,7 @@ export class DepartmentsService {
     // If name is being updated, regenerate slug
     if (updateDepartmentDto.name !== undefined) {
       updateData.name = updateDepartmentDto.name;
-      updateData.slug = await this.slugifyService.generateUniqueDepartmentSlug(
+      updateData.slug = await slugifyService.generateUniqueDepartmentSlug(
         updateDepartmentDto.name,
         existingDepartment.id,
       );
@@ -94,7 +92,7 @@ export class DepartmentsService {
     }
 
     try {
-      return await this.prisma.department.update({
+      return await prisma.department.update({
         where: { id: existingDepartment.id },
         data: updateData,
       });
@@ -119,7 +117,7 @@ export class DepartmentsService {
 
   async remove(slug: string): Promise<Department> {
     // First, find the department by slug
-    const existingDepartment = await this.prisma.department.findUnique({
+    const existingDepartment = await prisma.department.findUnique({
       where: { slug },
       select: { id: true },
     });
@@ -129,7 +127,7 @@ export class DepartmentsService {
     }
 
     try {
-      return await this.prisma.department.delete({
+      return await prisma.department.delete({
         where: { id: existingDepartment.id },
       });
     } catch (error) {

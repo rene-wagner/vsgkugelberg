@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { DepartmentsService } from '@/services/departments.service';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
@@ -16,8 +15,7 @@ import {
 } from '@/types/department.types';
 
 const router = Router();
-const prisma = new PrismaClient();
-const departmentsService = new DepartmentsService(prisma);
+const departmentsService = new DepartmentsService();
 
 // Public route - List all departments
 router.get(

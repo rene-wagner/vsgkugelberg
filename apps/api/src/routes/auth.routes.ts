@@ -1,14 +1,12 @@
 import { Router } from 'express';
 import passport from 'passport';
-import { PrismaClient } from '@prisma/client';
 import { AuthService, UserPayload } from '@/services/auth.service';
 import { passwordService } from '@/services/password.service';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import '@/strategies/local.strategy';
 
 const router = Router();
-const prisma = new PrismaClient();
-const authService = new AuthService(prisma, passwordService);
+const authService = new AuthService(passwordService);
 
 router.post(
   '/login',

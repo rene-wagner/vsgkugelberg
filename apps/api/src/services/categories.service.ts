@@ -1,4 +1,3 @@
-import { PrismaClient, Prisma } from '@prisma/client';
 import { NotFoundException, ConflictException } from '@/errors/http-errors';
 import {
   CreateCategoryDto,
@@ -6,16 +5,13 @@ import {
   Category,
 } from '@/types/category.types';
 import { SlugifyService } from '@/services/slugify.service';
+import { Prisma, prisma } from '@/lib/prisma.lib';
+
+const slugifyService = new SlugifyService();
 
 export class CategoriesService {
-  private readonly slugifyService: SlugifyService;
-
-  constructor(private readonly prisma: PrismaClient) {
-    this.slugifyService = new SlugifyService(prisma);
-  }
-
   async findAll(): Promise<Category[]> {
-    const categories = await this.prisma.category.findMany({
+    const categories = await prisma.category.findMany({
       orderBy: {
         name: 'asc',
       },
@@ -25,7 +21,7 @@ export class CategoriesService {
   }
 
   async findBySlug(slug: string): Promise<Category> {
-    const category = await this.prisma.category.findUnique({
+    const category = await prisma.category.findUnique({
       where: { slug },
     });
 
@@ -38,12 +34,12 @@ export class CategoriesService {
 
   async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
     // Generate unique slug from name
-    const slug = await this.slugifyService.generateUniqueCategorySlug(
+    const slug = await slugifyService.generateUniqueCategorySlug(
       createCategoryDto.name,
     );
 
     // Check if category with the same name already exists
-    const existingCategory = await this.prisma.category.findFirst({
+    const existingCategory = await prisma.category.findFirst({
       where: {
         name: {
           equals: createCategoryDto.name,
@@ -58,7 +54,7 @@ export class CategoriesService {
       );
     }
 
-    const category = await this.prisma.category.create({
+    const category = await prisma.category.create({
       data: {
         name: createCategoryDto.name,
         slug,
@@ -74,7 +70,7 @@ export class CategoriesService {
     updateCategoryDto: UpdateCategoryDto,
   ): Promise<Category> {
     // First, find the category by slug
-    const existingCategory = await this.prisma.category.findUnique({
+    const existingCategory = await prisma.category.findUnique({
       where: { slug },
       select: { id: true, name: true },
     });
@@ -85,7 +81,7 @@ export class CategoriesService {
 
     // If name is being updated, check for conflicts and regenerate slug
     if (updateCategoryDto.name !== undefined) {
-      const conflictingCategory = await this.prisma.category.findFirst({
+      const conflictingCategory = await prisma.category.findFirst({
         where: {
           name: {
             equals: updateCategoryDto.name,
@@ -109,7 +105,7 @@ export class CategoriesService {
     // If name is being updated, regenerate slug
     if (updateCategoryDto.name !== undefined) {
       updateData.name = updateCategoryDto.name;
-      updateData.slug = await this.slugifyService.generateUniqueCategorySlug(
+      updateData.slug = await slugifyService.generateUniqueCategorySlug(
         updateCategoryDto.name,
         existingCategory.id,
       );
@@ -120,7 +116,7 @@ export class CategoriesService {
     }
 
     try {
-      const category = await this.prisma.category.update({
+      const category = await prisma.category.update({
         where: { id: existingCategory.id },
         data: updateData,
       });
@@ -139,7 +135,7 @@ export class CategoriesService {
 
   async remove(slug: string): Promise<Category> {
     // First, find the category by slug
-    const existingCategory = await this.prisma.category.findUnique({
+    const existingCategory = await prisma.category.findUnique({
       where: { slug },
       select: { id: true },
     });
@@ -149,7 +145,7 @@ export class CategoriesService {
     }
 
     try {
-      const category = await this.prisma.category.delete({
+      const category = await prisma.category.delete({
         where: { id: existingCategory.id },
       });
 

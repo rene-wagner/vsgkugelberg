@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { PostsService } from '@/services/posts.service';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
@@ -14,8 +13,7 @@ import {
 import { CreatePostDto, UpdatePostDto } from '@/types/post.types';
 
 const router = Router();
-const prisma = new PrismaClient();
-const postsService = new PostsService(prisma);
+const postsService = new PostsService();
 
 // Public route - List all posts with optional filters and pagination
 router.get(

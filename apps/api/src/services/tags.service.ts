@@ -1,4 +1,3 @@
-import { PrismaClient, Prisma } from '@prisma/client';
 import { NotFoundException, ConflictException } from '@/errors/http-errors';
 import {
   CreateTagDto,
@@ -8,16 +7,13 @@ import {
   TagWithPosts,
 } from '@/types/tag.types';
 import { SlugifyService } from '@/services/slugify.service';
+import { Prisma, prisma } from '@/lib/prisma.lib';
+
+const slugifyService = new SlugifyService();
 
 export class TagsService {
-  private readonly slugifyService: SlugifyService;
-
-  constructor(private readonly prisma: PrismaClient) {
-    this.slugifyService = new SlugifyService(prisma);
-  }
-
   async findAll(): Promise<TagWithCount[]> {
-    const tags = await this.prisma.tag.findMany({
+    const tags = await prisma.tag.findMany({
       include: {
         _count: {
           select: { posts: true },
@@ -32,7 +28,7 @@ export class TagsService {
   }
 
   async findBySlug(slug: string): Promise<TagWithPosts> {
-    const tag = await this.prisma.tag.findUnique({
+    const tag = await prisma.tag.findUnique({
       where: { slug },
       include: {
         posts: {
@@ -63,7 +59,7 @@ export class TagsService {
 
   async create(createTagDto: CreateTagDto): Promise<Tag> {
     // Check if tag with the same name already exists (case-insensitive)
-    const existingTag = await this.prisma.tag.findFirst({
+    const existingTag = await prisma.tag.findFirst({
       where: {
         name: {
           equals: createTagDto.name,
@@ -79,12 +75,10 @@ export class TagsService {
     }
 
     // Generate unique slug from name
-    const slug = await this.slugifyService.generateUniqueTagSlug(
-      createTagDto.name,
-    );
+    const slug = await slugifyService.generateUniqueTagSlug(createTagDto.name);
 
     try {
-      const tag = await this.prisma.tag.create({
+      const tag = await prisma.tag.create({
         data: {
           name: createTagDto.name,
           slug,
@@ -107,7 +101,7 @@ export class TagsService {
 
   async update(slug: string, updateTagDto: UpdateTagDto): Promise<Tag> {
     // First, find the tag by slug
-    const existingTag = await this.prisma.tag.findUnique({
+    const existingTag = await prisma.tag.findUnique({
       where: { slug },
       select: { id: true, name: true },
     });
@@ -119,14 +113,14 @@ export class TagsService {
     // If name is being updated, regenerate slug
     let newSlug = slug;
     if (updateTagDto.name && updateTagDto.name !== existingTag.name) {
-      newSlug = await this.slugifyService.generateUniqueTagSlug(
+      newSlug = await slugifyService.generateUniqueTagSlug(
         updateTagDto.name,
         existingTag.id,
       );
     }
 
     try {
-      const tag = await this.prisma.tag.update({
+      const tag = await prisma.tag.update({
         where: { id: existingTag.id },
         data: {
           name: updateTagDto.name,
@@ -156,7 +150,7 @@ export class TagsService {
 
   async remove(slug: string): Promise<Tag> {
     // First, find the tag by slug with post count
-    const existingTag = await this.prisma.tag.findUnique({
+    const existingTag = await prisma.tag.findUnique({
       where: { slug },
       include: {
         _count: {
@@ -177,7 +171,7 @@ export class TagsService {
     }
 
     try {
-      const tag = await this.prisma.tag.delete({
+      const tag = await prisma.tag.delete({
         where: { id: existingTag.id },
       });
 

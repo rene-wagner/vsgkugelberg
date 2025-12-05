@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { PrismaClient } from '@prisma/client';
 import { BlocksService } from '@/services/blocks.service';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
@@ -14,8 +13,7 @@ import {
 import { CreateBlocksDto, UpdateBlockDto } from '@/types/block.types';
 
 const router = Router();
-const prisma = new PrismaClient();
-const blocksService = new BlocksService(prisma);
+const blocksService = new BlocksService();
 
 // Public route - List blocks by page
 router.get(

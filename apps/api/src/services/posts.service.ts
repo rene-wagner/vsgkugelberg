@@ -1,4 +1,3 @@
-import { PrismaClient, Prisma } from '@prisma/client';
 import { NotFoundException } from '@/errors/http-errors';
 import {
   CreatePostDto,
@@ -7,14 +6,11 @@ import {
   PaginatedResponse,
 } from '@/types/post.types';
 import { SlugifyService } from '@/services/slugify.service';
+import { Prisma, prisma } from '@/lib/prisma.lib';
+
+const slugifyService = new SlugifyService();
 
 export class PostsService {
-  private readonly slugifyService: SlugifyService;
-
-  constructor(private readonly prisma: PrismaClient) {
-    this.slugifyService = new SlugifyService(prisma);
-  }
-
   async findAll(
     published?: boolean,
     categorySlug?: string,
@@ -29,13 +25,13 @@ export class PostsService {
     }
 
     if (categorySlug) {
-      where.categories = {
+      where.Category = {
         some: { slug: categorySlug },
       };
     }
 
     if (tagSlug) {
-      where.tags = {
+      where.Tag = {
         some: { slug: tagSlug },
       };
     }
@@ -43,7 +39,7 @@ export class PostsService {
     const skip = (page - 1) * limit;
 
     const [posts, total] = await Promise.all([
-      this.prisma.post.findMany({
+      prisma.post.findMany({
         where,
         include: {
           author: {
@@ -64,7 +60,7 @@ export class PostsService {
         skip,
         take: limit,
       }),
-      this.prisma.post.count({ where }),
+      prisma.post.count({ where }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -81,7 +77,7 @@ export class PostsService {
   }
 
   async findBySlug(slug: string): Promise<Post> {
-    const post = await this.prisma.post.findUnique({
+    const post = await prisma.post.findUnique({
       where: { slug },
       include: {
         author: {
@@ -107,13 +103,11 @@ export class PostsService {
 
   async create(createPostDto: CreatePostDto): Promise<Post> {
     // Generate unique slug from title
-    const slug = await this.slugifyService.generateUniqueSlug(
-      createPostDto.title,
-    );
+    const slug = await slugifyService.generateUniqueSlug(createPostDto.title);
 
     // Validate category IDs if provided
     if (createPostDto.categoryIds && createPostDto.categoryIds.length > 0) {
-      const categories = await this.prisma.category.findMany({
+      const categories = await prisma.category.findMany({
         where: { id: { in: createPostDto.categoryIds } },
       });
       if (categories.length !== createPostDto.categoryIds.length) {
@@ -127,7 +121,7 @@ export class PostsService {
 
     // Validate tag IDs if provided
     if (createPostDto.tagIds && createPostDto.tagIds.length > 0) {
-      const tags = await this.prisma.tag.findMany({
+      const tags = await prisma.tag.findMany({
         where: { id: { in: createPostDto.tagIds } },
       });
       if (tags.length !== createPostDto.tagIds.length) {
@@ -140,17 +134,17 @@ export class PostsService {
     }
 
     try {
-      const post = await this.prisma.post.create({
+      const post = await prisma.post.create({
         data: {
           title: createPostDto.title,
           slug,
           content: createPostDto.content,
           published: createPostDto.published ?? false,
           authorId: createPostDto.authorId,
-          categories: {
+          Category: {
             connect: createPostDto.categoryIds?.map((id) => ({ id })) || [],
           },
-          tags: {
+          Tag: {
             connect: createPostDto.tagIds?.map((id) => ({ id })) || [],
           },
         },
@@ -185,7 +179,7 @@ export class PostsService {
 
   async update(slug: string, updatePostDto: UpdatePostDto): Promise<Post> {
     // First, find the post by slug
-    const existingPost = await this.prisma.post.findUnique({
+    const existingPost = await prisma.post.findUnique({
       where: { slug },
       select: { id: true, title: true },
     });
@@ -196,7 +190,7 @@ export class PostsService {
 
     // Validate category IDs if provided
     if (updatePostDto.categoryIds && updatePostDto.categoryIds.length > 0) {
-      const categories = await this.prisma.category.findMany({
+      const categories = await prisma.category.findMany({
         where: { id: { in: updatePostDto.categoryIds } },
       });
       if (categories.length !== updatePostDto.categoryIds.length) {
@@ -210,7 +204,7 @@ export class PostsService {
 
     // Validate tag IDs if provided
     if (updatePostDto.tagIds && updatePostDto.tagIds.length > 0) {
-      const tags = await this.prisma.tag.findMany({
+      const tags = await prisma.tag.findMany({
         where: { id: { in: updatePostDto.tagIds } },
       });
       if (tags.length !== updatePostDto.tagIds.length) {
@@ -227,7 +221,7 @@ export class PostsService {
     // If title is being updated, regenerate slug
     if (updatePostDto.title !== undefined) {
       updateData.title = updatePostDto.title;
-      updateData.slug = await this.slugifyService.generateUniqueSlug(
+      updateData.slug = await slugifyService.generateUniqueSlug(
         updatePostDto.title,
         existingPost.id,
       );
@@ -243,20 +237,20 @@ export class PostsService {
 
     // Handle categories - replace all
     if (updatePostDto.categoryIds !== undefined) {
-      updateData.categories = {
+      updateData.Category = {
         set: updatePostDto.categoryIds.map((id) => ({ id })),
       };
     }
 
     // Handle tags - replace all
     if (updatePostDto.tagIds !== undefined) {
-      updateData.tags = {
+      updateData.Tag = {
         set: updatePostDto.tagIds.map((id) => ({ id })),
       };
     }
 
     try {
-      const post = await this.prisma.post.update({
+      const post = await prisma.post.update({
         where: { id: existingPost.id },
         data: updateData,
         include: {
@@ -288,7 +282,7 @@ export class PostsService {
 
   async remove(slug: string): Promise<Post> {
     // First, find the post by slug
-    const existingPost = await this.prisma.post.findUnique({
+    const existingPost = await prisma.post.findUnique({
       where: { slug },
       select: { id: true },
     });
@@ -298,7 +292,7 @@ export class PostsService {
     }
 
     try {
-      const post = await this.prisma.post.delete({
+      const post = await prisma.post.delete({
         where: { id: existingPost.id },
         include: {
           author: {

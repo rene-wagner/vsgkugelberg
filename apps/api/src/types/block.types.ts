@@ -1,6 +1,7 @@
-import { Block as PrismaBlock, Prisma } from '@prisma/client';
+import { Prisma, Block as PrismaBlock } from '@/lib/prisma.lib';
 
 export interface BlockInput {
+  id: string;
   type: string;
   data?: Prisma.JsonValue;
   children?: BlockInput[];
