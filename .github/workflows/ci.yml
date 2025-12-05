@@ -100,9 +100,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Install dependencies
-        run: pnpm --filter api prisma:generate
-
       - name: Apply Prisma migrations
         run: pnpm --filter api prisma:deploy
 
