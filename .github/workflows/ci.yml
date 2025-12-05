@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
+      DATABASE_URL: postgresql://user:secret@localhost:5432/database_test?schema=public
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -27,8 +28,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-        env:
-          DATABASE_URL: postgresql://user:secret@localhost:5432/database
 
       - name: Generate Prisma client
         run: pnpm --filter api prisma:generate
