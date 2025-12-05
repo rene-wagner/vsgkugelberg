@@ -6,7 +6,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
 export default defineConfig(
   {
-    ignores: ['dist/**', 'node_modules/**', '*.d.ts', 'coverage/**', 'eslint.config.mjs'],
+    ignores: ['dist/**', 'node_modules/**', '*.d.ts', 'generated/**', 'coverage/**', 'eslint.config.mjs'],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
