@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { usePageBuilderStore, type BlockType } from '@/stores/pageBuilder';
 import { useEditModeStore } from '@/stores/editMode';
@@ -8,12 +9,17 @@ import VsgBlockPicker from '@/components/VsgBlockPicker.vue';
 
 const pageBuilderStore = usePageBuilderStore();
 const editModeStore = useEditModeStore();
+const route = useRoute();
 const { isEditMode } = storeToRefs(editModeStore);
-const { rootBlocks } = storeToRefs(pageBuilderStore);
+const { rootBlocks, isLoading } = storeToRefs(pageBuilderStore);
 
 const showBlockPicker = ref(false);
 
 const hasContent = computed(() => rootBlocks.value.length > 0);
+
+onMounted(() => {
+  pageBuilderStore.loadBlocks(route.path);
+});
 
 const handleAddClick = () => {
   showBlockPicker.value = true;
@@ -31,7 +37,17 @@ const handlePickerClose = () => {
 
 <template>
   <main class="min-h-screen">
-    <template v-if="hasContent || isEditMode">
+    <div v-if="isLoading" class="flex items-center justify-center h-96">
+      <svg class="w-8 h-8 animate-spin text-gray-500" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+        <path
+          class="opacity-75"
+          fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+        />
+      </svg>
+    </div>
+    <template v-else-if="hasContent || isEditMode">
       <VsgBlockSection
         v-for="block in rootBlocks"
         :key="block.id"
@@ -68,7 +84,7 @@ const handlePickerClose = () => {
     </template>
 
     <div v-else class="flex items-center justify-center h-96 text-gray-500">
-      <p>No content yet. Enable edit mode to start building.</p>
+      <p>Noch kein Inhalt. Aktiviere den Bearbeitungsmodus, um zu beginnen.</p>
     </div>
   </main>
 </template>

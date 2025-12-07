@@ -6,9 +6,22 @@ import { useUserStore } from '@/stores/user';
 import { useEditModeStore } from '@/stores/editMode';
 import { usePageBuilderStore } from '@/stores/pageBuilder';
 
-// Mock the apiClient logout function
+// Mock the apiClient functions
 vi.mock('@/utils/apiClient', () => ({
   logout: vi.fn(),
+  fetchBlocks: vi.fn().mockResolvedValue([]),
+  saveBlocks: vi.fn().mockResolvedValue([]),
+}));
+
+// Mock vue-router
+vi.mock('vue-router', () => ({
+  useRoute: () => ({
+    path: '/test-page',
+  }),
+  RouterLink: {
+    template: '<a><slot /></a>',
+    props: ['to'],
+  },
 }));
 
 const createMockUser = () => ({
@@ -126,7 +139,7 @@ describe('VsgHeader', () => {
       expect(saveButton.exists()).toBe(true);
     });
 
-    it('calls exportPageStructure when clicked', async () => {
+    it('calls saveBlocks when clicked', async () => {
       const userStore = useUserStore();
       userStore.setUser(createMockUser());
 
@@ -134,13 +147,29 @@ describe('VsgHeader', () => {
       editModeStore.toggleEditMode();
 
       const pageBuilderStore = usePageBuilderStore();
-      const exportSpy = vi.spyOn(pageBuilderStore, 'exportPageStructure');
+      const saveSpy = vi.spyOn(pageBuilderStore, 'saveBlocks').mockResolvedValue();
 
       const wrapper = mountHeader();
       const saveButton = wrapper.find('button[aria-label="Seite speichern"]');
       await saveButton.trigger('click');
 
-      expect(exportSpy).toHaveBeenCalled();
+      expect(saveSpy).toHaveBeenCalledWith('/test-page');
+    });
+
+    it('is disabled while saving', async () => {
+      const userStore = useUserStore();
+      userStore.setUser(createMockUser());
+
+      const editModeStore = useEditModeStore();
+      editModeStore.toggleEditMode();
+
+      const pageBuilderStore = usePageBuilderStore();
+      // Simulate loading state
+      pageBuilderStore.$patch({ isLoading: true });
+
+      const wrapper = mountHeader();
+      const saveButton = wrapper.find('button[aria-label="Seite speichern"]');
+      expect(saveButton.attributes('disabled')).toBeDefined();
     });
   });
 });
