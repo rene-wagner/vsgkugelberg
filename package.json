@@ -13,12 +13,14 @@
     "format:fix": "turbo format:fix",
     "test": "turbo test",
     "test:ci": "turbo test:ci",
-    "test:coverage": "turbo test:coverage"
+    "test:coverage": "turbo test:coverage",
+    "prepare": "husky"
   },
   "author": "René Wagner",
   "license": "ISC",
   "devDependencies": {
     "dotenv-cli": "^11.0.0",
+    "husky": "^9.1.7",
     "turbo": "^2.6.1"
   }
 }
