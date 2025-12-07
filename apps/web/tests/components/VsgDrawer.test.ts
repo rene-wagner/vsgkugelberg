@@ -6,7 +6,6 @@ import { usePostsStore } from '@/stores/posts';
 import { useDepartmentsStore } from '@/stores/departments';
 import { useCategoriesStore } from '@/stores/categories';
 import { useUsersAdminStore } from '@/stores/usersAdmin';
-import { useUserStore } from '@/stores/user';
 
 // Mock the apiClient
 vi.mock('@/utils/apiClient', () => ({

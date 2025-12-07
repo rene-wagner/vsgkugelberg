@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { mount, RouterLinkStub } from '@vue/test-utils';
+import { describe, it, expect } from 'vitest';
+import { mount } from '@vue/test-utils';
 import VsgNavigationMenu, { type VsgMenuItem } from '@/components/VsgNavigationMenu.vue';
 
 describe('VsgNavigationMenu', () => {
