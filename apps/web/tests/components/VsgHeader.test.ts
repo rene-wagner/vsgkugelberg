@@ -4,6 +4,7 @@ import { setActivePinia, createPinia } from 'pinia';
 import VsgHeader from '@/components/VsgHeader.vue';
 import { useUserStore } from '@/stores/user';
 import { useEditModeStore } from '@/stores/editMode';
+import { usePageBuilderStore } from '@/stores/pageBuilder';
 
 // Mock the apiClient logout function
 vi.mock('@/utils/apiClient', () => ({
@@ -100,6 +101,46 @@ describe('VsgHeader', () => {
 
       await editButton.trigger('click');
       expect(editButton.classes()).toContain('bg-[#003d8a]');
+    });
+  });
+
+  describe('save button', () => {
+    it('is hidden when edit mode is off', () => {
+      const userStore = useUserStore();
+      userStore.setUser(createMockUser());
+
+      const wrapper = mountHeader();
+      const saveButton = wrapper.find('button[aria-label="Seite speichern"]');
+      expect(saveButton.exists()).toBe(false);
+    });
+
+    it('is visible when edit mode is on', async () => {
+      const userStore = useUserStore();
+      userStore.setUser(createMockUser());
+
+      const editModeStore = useEditModeStore();
+      editModeStore.toggleEditMode();
+
+      const wrapper = mountHeader();
+      const saveButton = wrapper.find('button[aria-label="Seite speichern"]');
+      expect(saveButton.exists()).toBe(true);
+    });
+
+    it('calls exportPageStructure when clicked', async () => {
+      const userStore = useUserStore();
+      userStore.setUser(createMockUser());
+
+      const editModeStore = useEditModeStore();
+      editModeStore.toggleEditMode();
+
+      const pageBuilderStore = usePageBuilderStore();
+      const exportSpy = vi.spyOn(pageBuilderStore, 'exportPageStructure');
+
+      const wrapper = mountHeader();
+      const saveButton = wrapper.find('button[aria-label="Seite speichern"]');
+      await saveButton.trigger('click');
+
+      expect(exportSpy).toHaveBeenCalled();
     });
   });
 });
