@@ -47,8 +47,6 @@ export class UsersService {
           username: createUserDto.username,
           email: createUserDto.email,
           password: hashedPassword,
-          createdAt: new Date(),
-          updatedAt: new Date(),
         },
         select: {
           id: true,
@@ -65,9 +63,7 @@ export class UsersService {
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
       ) {
-        const target = error.meta?.target as string[];
-        const field = target?.[0] || 'field';
-        throw new ConflictException(`User with this ${field} already exists`);
+        throw new ConflictException(`User with this username or email already exists.`);
       }
       throw error;
     }

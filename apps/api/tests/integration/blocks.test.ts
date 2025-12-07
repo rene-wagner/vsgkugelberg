@@ -1,9 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import request from 'supertest';
 import { app } from '@/app';
-import { getPrismaClient, createTestUserWithPassword } from '../helpers';
-
-const prisma = getPrismaClient();
+import { prisma, createTestUserWithPassword } from '../helpers';
 
 describe('Blocks API Integration Tests', () => {
   const testPassword = 'Password123';

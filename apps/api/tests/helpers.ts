@@ -22,13 +22,7 @@ const prisma = new PrismaClient({ adapter });
 
 export { prisma, Prisma, Block, Category, Department, Post, Tag, User };
 
-export function getPrismaClient(): PrismaClient {
-  return prisma;
-}
-
 export async function cleanupDatabase() {
-  const prisma = getPrismaClient();
-
   // Delete in correct order: child tables first, then parent tables
   await prisma.$transaction([
     prisma.block.deleteMany(),
@@ -51,7 +45,6 @@ export async function createTestUserWithPassword(
   email: string,
   password: string,
 ) {
-  const prisma = getPrismaClient();
   const hashedPassword = await passwordService.hash(password);
 
   return prisma.user.create({

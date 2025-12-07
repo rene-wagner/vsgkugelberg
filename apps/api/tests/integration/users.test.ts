@@ -1,9 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import request from 'supertest';
 import { app } from '@/app';
-import { getPrismaClient } from '../helpers';
-
-const prisma = getPrismaClient();
+import { prisma } from '../helpers';
 
 describe('Users API Integration Tests', () => {
   describe('GET /api/users', () => {

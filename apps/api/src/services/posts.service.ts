@@ -25,13 +25,13 @@ export class PostsService {
     }
 
     if (categorySlug) {
-      where.Category = {
+      where.categories = {
         some: { slug: categorySlug },
       };
     }
 
     if (tagSlug) {
-      where.Tag = {
+      where.tags = {
         some: { slug: tagSlug },
       };
     }
@@ -141,10 +141,10 @@ export class PostsService {
           content: createPostDto.content,
           published: createPostDto.published ?? false,
           authorId: createPostDto.authorId,
-          Category: {
+          categories: {
             connect: createPostDto.categoryIds?.map((id) => ({ id })) || [],
           },
-          Tag: {
+          tags: {
             connect: createPostDto.tagIds?.map((id) => ({ id })) || [],
           },
         },
@@ -237,14 +237,14 @@ export class PostsService {
 
     // Handle categories - replace all
     if (updatePostDto.categoryIds !== undefined) {
-      updateData.Category = {
+      updateData.categories = {
         set: updatePostDto.categoryIds.map((id) => ({ id })),
       };
     }
 
     // Handle tags - replace all
     if (updatePostDto.tagIds !== undefined) {
-      updateData.Tag = {
+      updateData.tags = {
         set: updatePostDto.tagIds.map((id) => ({ id })),
       };
     }

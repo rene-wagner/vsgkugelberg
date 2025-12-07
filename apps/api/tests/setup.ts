@@ -1,8 +1,8 @@
 import { beforeAll, afterAll, afterEach } from 'vitest';
 import {
+  prisma,
   cleanupDatabase,
   disconnectDatabase,
-  getPrismaClient,
 } from './helpers';
 import dotenv from 'dotenv';
 import path from 'path';
@@ -20,8 +20,6 @@ if (!process.env.DATABASE_URL?.includes('test')) {
 }
 
 beforeAll(async () => {
-  const prisma = getPrismaClient();
-
   try {
     await prisma.$connect();
     await cleanupDatabase();
