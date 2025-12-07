@@ -124,6 +124,31 @@ export type UpdateUserPayload = {
   password?: string;
 };
 
+// Block types for page builder persistence
+export type ApiBlock = {
+  id: string;
+  page: string;
+  type: string;
+  sort: number;
+  data: Record<string, unknown> | null;
+  parentId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  children: ApiBlock[];
+};
+
+export type ApiBlockInput = {
+  id: string;
+  type: string;
+  data?: Record<string, unknown>;
+  children?: ApiBlockInput[];
+};
+
+export type SaveBlocksPayload = {
+  page: string;
+  blocks: ApiBlockInput[];
+};
+
 const getApiBaseUrl = (): string => {
   const baseUrl = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000';
   return baseUrl.replace(/\/$/, '');
@@ -478,4 +503,40 @@ export const deleteUser = async (id: number): Promise<ApiUser> => {
   }
 
   return (await response.json()) as ApiUser;
+};
+
+// Block API functions (page builder persistence)
+
+export const fetchBlocks = async (pageUrl: string): Promise<ApiBlock[]> => {
+  const baseUrl = getApiBaseUrl();
+  const params = new URLSearchParams({ page: pageUrl });
+  const response = await fetch(`${baseUrl}/api/blocks?${params.toString()}`, {
+    method: 'GET',
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch blocks');
+  }
+
+  return (await response.json()) as ApiBlock[];
+};
+
+export const saveBlocks = async (payload: SaveBlocksPayload): Promise<ApiBlock[]> => {
+  const baseUrl = getApiBaseUrl();
+  const response = await fetch(`${baseUrl}/api/blocks`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    const errorData = (await response.json().catch(() => ({}))) as { message?: string };
+    throw new Error(errorData.message || 'Failed to save blocks');
+  }
+
+  return (await response.json()) as ApiBlock[];
 };

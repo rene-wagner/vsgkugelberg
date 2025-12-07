@@ -1,6 +1,12 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { setActivePinia, createPinia } from 'pinia';
-import { usePageBuilderStore } from '../../src/stores/pageBuilder';
+import {
+  usePageBuilderStore,
+  flattenApiBlocks,
+  buildHierarchy,
+  type BlockNode,
+} from '../../src/stores/pageBuilder';
+import type { ApiBlock } from '../../src/utils/apiClient';
 
 describe('pageBuilder store', () => {
   beforeEach(() => {
@@ -315,5 +321,267 @@ describe('pageBuilder store', () => {
       expect(store.blocks).toHaveLength(0);
       expect(store.rootBlocks).toHaveLength(0);
     });
+  });
+
+  describe('isLoading and error state', () => {
+    it('should have isLoading false initially', () => {
+      const store = usePageBuilderStore();
+      expect(store.isLoading).toBe(false);
+    });
+
+    it('should have error null initially', () => {
+      const store = usePageBuilderStore();
+      expect(store.error).toBeNull();
+    });
+  });
+});
+
+describe('flattenApiBlocks', () => {
+  it('should flatten empty array', () => {
+    const result = flattenApiBlocks([]);
+    expect(result).toEqual([]);
+  });
+
+  it('should flatten single root block without children', () => {
+    const apiBlocks: ApiBlock[] = [
+      {
+        id: 'block-1',
+        page: '/test',
+        type: 'section',
+        sort: 0,
+        data: { isHero: true },
+        parentId: null,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+        children: [],
+      },
+    ];
+
+    const result = flattenApiBlocks(apiBlocks);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({
+      id: 'block-1',
+      type: 'section',
+      parentId: null,
+      order: 0,
+      props: { isHero: true },
+    });
+  });
+
+  it('should flatten nested blocks with children', () => {
+    const apiBlocks: ApiBlock[] = [
+      {
+        id: 'section-1',
+        page: '/test',
+        type: 'section',
+        sort: 0,
+        data: { isHero: false },
+        parentId: null,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+        children: [
+          {
+            id: 'columns-1',
+            page: '/test',
+            type: 'columns',
+            sort: 0,
+            data: { columnCount: 2 },
+            parentId: 'section-1',
+            createdAt: '2024-01-01T00:00:00Z',
+            updatedAt: '2024-01-01T00:00:00Z',
+            children: [
+              {
+                id: 'column-1',
+                page: '/test',
+                type: 'column',
+                sort: 0,
+                data: null,
+                parentId: 'columns-1',
+                createdAt: '2024-01-01T00:00:00Z',
+                updatedAt: '2024-01-01T00:00:00Z',
+                children: [],
+              },
+            ],
+          },
+        ],
+      },
+    ];
+
+    const result = flattenApiBlocks(apiBlocks);
+
+    expect(result).toHaveLength(3);
+    expect(result[0]?.id).toBe('section-1');
+    expect(result[0]?.parentId).toBeNull();
+    expect(result[1]?.id).toBe('columns-1');
+    expect(result[1]?.parentId).toBe('section-1');
+    expect(result[2]?.id).toBe('column-1');
+    expect(result[2]?.parentId).toBe('columns-1');
+  });
+
+  it('should handle null data as empty props', () => {
+    const apiBlocks: ApiBlock[] = [
+      {
+        id: 'block-1',
+        page: '/test',
+        type: 'column',
+        sort: 0,
+        data: null,
+        parentId: null,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+        children: [],
+      },
+    ];
+
+    const result = flattenApiBlocks(apiBlocks);
+
+    expect(result[0]?.props).toEqual({});
+  });
+
+  it('should convert sort to order', () => {
+    const apiBlocks: ApiBlock[] = [
+      {
+        id: 'block-1',
+        page: '/test',
+        type: 'section',
+        sort: 5,
+        data: null,
+        parentId: null,
+        createdAt: '2024-01-01T00:00:00Z',
+        updatedAt: '2024-01-01T00:00:00Z',
+        children: [],
+      },
+    ];
+
+    const result = flattenApiBlocks(apiBlocks);
+
+    expect(result[0]?.order).toBe(5);
+  });
+});
+
+describe('buildHierarchy', () => {
+  it('should build empty hierarchy from empty array', () => {
+    const result = buildHierarchy([]);
+    expect(result).toEqual([]);
+  });
+
+  it('should build hierarchy for single root block', () => {
+    const flatBlocks: BlockNode[] = [
+      {
+        id: 'section-1',
+        type: 'section',
+        parentId: null,
+        order: 0,
+        props: { isHero: true },
+      },
+    ];
+
+    const result = buildHierarchy(flatBlocks);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toEqual({
+      id: 'section-1',
+      type: 'section',
+      data: { isHero: true },
+    });
+  });
+
+  it('should build nested hierarchy with children', () => {
+    const flatBlocks: BlockNode[] = [
+      {
+        id: 'section-1',
+        type: 'section',
+        parentId: null,
+        order: 0,
+        props: { isHero: false },
+      },
+      {
+        id: 'columns-1',
+        type: 'columns',
+        parentId: 'section-1',
+        order: 0,
+        props: { columnCount: 2 },
+      },
+      {
+        id: 'column-1',
+        type: 'column',
+        parentId: 'columns-1',
+        order: 0,
+        props: {},
+      },
+    ];
+
+    const result = buildHierarchy(flatBlocks);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]?.id).toBe('section-1');
+    expect(result[0]?.children).toHaveLength(1);
+    expect(result[0]?.children?.[0]?.id).toBe('columns-1');
+    expect(result[0]?.children?.[0]?.children).toHaveLength(1);
+    expect(result[0]?.children?.[0]?.children?.[0]?.id).toBe('column-1');
+  });
+
+  it('should sort children by order', () => {
+    const flatBlocks: BlockNode[] = [
+      {
+        id: 'section-1',
+        type: 'section',
+        parentId: null,
+        order: 0,
+        props: {},
+      },
+      {
+        id: 'columns-2',
+        type: 'columns',
+        parentId: 'section-1',
+        order: 1,
+        props: {},
+      },
+      {
+        id: 'columns-1',
+        type: 'columns',
+        parentId: 'section-1',
+        order: 0,
+        props: {},
+      },
+    ];
+
+    const result = buildHierarchy(flatBlocks);
+
+    expect(result[0]?.children?.[0]?.id).toBe('columns-1');
+    expect(result[0]?.children?.[1]?.id).toBe('columns-2');
+  });
+
+  it('should omit data field when props are empty', () => {
+    const flatBlocks: BlockNode[] = [
+      {
+        id: 'column-1',
+        type: 'column',
+        parentId: null,
+        order: 0,
+        props: {},
+      },
+    ];
+
+    const result = buildHierarchy(flatBlocks);
+
+    expect(result[0]?.data).toBeUndefined();
+  });
+
+  it('should omit children field when no children exist', () => {
+    const flatBlocks: BlockNode[] = [
+      {
+        id: 'headline-1',
+        type: 'headline',
+        parentId: null,
+        order: 0,
+        props: { level: 1, content: 'Test' },
+      },
+    ];
+
+    const result = buildHierarchy(flatBlocks);
+
+    expect(result[0]?.children).toBeUndefined();
   });
 });
