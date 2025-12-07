@@ -1,9 +1,5 @@
 import { beforeAll, afterAll, afterEach } from 'vitest';
-import {
-  prisma,
-  cleanupDatabase,
-  disconnectDatabase,
-} from './helpers';
+import { prisma, cleanupDatabase, disconnectDatabase } from './helpers';
 import dotenv from 'dotenv';
 import path from 'path';
 
