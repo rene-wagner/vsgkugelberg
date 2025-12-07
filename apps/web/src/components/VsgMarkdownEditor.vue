@@ -48,7 +48,7 @@ const handleChange = (value: string) => {
       :toolbars="toolbars"
       :placeholder="placeholder"
       :disabled="disabled"
-      language="en-US"
+      language="de-DE"
       :preview="false"
       :no-mermaid="true"
       :no-katex="true"
