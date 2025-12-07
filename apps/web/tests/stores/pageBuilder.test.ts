@@ -221,6 +221,88 @@ describe('pageBuilder store', () => {
     });
   });
 
+  describe('removeBlock', () => {
+    it('should remove a leaf block', () => {
+      const store = usePageBuilderStore();
+      const section = store.addBlock('section', null);
+      const columns = store.addBlock('columns', section.id);
+      const column = store.addBlock('column', columns.id);
+      const headline = store.addBlock('headline', column.id);
+
+      expect(store.blocks).toHaveLength(4);
+
+      store.removeBlock(headline.id);
+
+      expect(store.blocks).toHaveLength(3);
+      expect(store.getBlockById(headline.id)).toBeUndefined();
+      expect(store.getChildBlocks(column.id)).toHaveLength(0);
+    });
+
+    it('should remove a container block and all its descendants', () => {
+      const store = usePageBuilderStore();
+      const section = store.addBlock('section', null);
+      const columns = store.addBlock('columns', section.id);
+      const column = store.addBlock('column', columns.id);
+      store.addBlock('headline', column.id);
+      store.addBlock('paragraph', column.id);
+
+      expect(store.blocks).toHaveLength(5);
+
+      store.removeBlock(columns.id);
+
+      expect(store.blocks).toHaveLength(1);
+      expect(store.getBlockById(columns.id)).toBeUndefined();
+      expect(store.getBlockById(column.id)).toBeUndefined();
+      expect(store.getChildBlocks(section.id)).toHaveLength(0);
+    });
+
+    it('should remove a section and all nested descendants', () => {
+      const store = usePageBuilderStore();
+      const section = store.addBlock('section', null);
+      const columns = store.addBlock('columns', section.id);
+      const column1 = store.addBlock('column', columns.id);
+      const column2 = store.addBlock('column', columns.id);
+      store.addBlock('headline', column1.id);
+      store.addBlock('paragraph', column2.id);
+
+      expect(store.blocks).toHaveLength(6);
+
+      store.removeBlock(section.id);
+
+      expect(store.blocks).toHaveLength(0);
+      expect(store.rootBlocks).toHaveLength(0);
+    });
+
+    it('should do nothing when removing non-existent block', () => {
+      const store = usePageBuilderStore();
+      const section = store.addBlock('section', null);
+
+      expect(store.blocks).toHaveLength(1);
+
+      store.removeBlock('non-existent-id');
+
+      expect(store.blocks).toHaveLength(1);
+      expect(store.getBlockById(section.id)).toBeDefined();
+    });
+
+    it('should not affect sibling blocks when removing a block', () => {
+      const store = usePageBuilderStore();
+      const section = store.addBlock('section', null);
+      const columns1 = store.addBlock('columns', section.id);
+      const columns2 = store.addBlock('columns', section.id);
+      const column1 = store.addBlock('column', columns1.id);
+      store.addBlock('headline', column1.id);
+
+      expect(store.blocks).toHaveLength(5);
+
+      store.removeBlock(columns1.id);
+
+      expect(store.blocks).toHaveLength(2);
+      expect(store.getBlockById(columns2.id)).toBeDefined();
+      expect(store.getChildBlocks(section.id)).toHaveLength(1);
+    });
+  });
+
   describe('clearBlocks', () => {
     it('should remove all blocks', () => {
       const store = usePageBuilderStore();
