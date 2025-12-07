@@ -103,6 +103,27 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
     return structure;
   }
 
+  function removeBlock(id: string): void {
+    const block = getBlockById(id);
+    if (!block) {
+      return;
+    }
+
+    // Recursively collect all descendant IDs
+    const idsToRemove = new Set<string>([id]);
+    const collectDescendants = (parentId: string) => {
+      const children = getChildBlocks(parentId);
+      for (const child of children) {
+        idsToRemove.add(child.id);
+        collectDescendants(child.id);
+      }
+    };
+    collectDescendants(id);
+
+    // Remove all collected blocks
+    blocks.value = blocks.value.filter((b) => !idsToRemove.has(b.id));
+  }
+
   function clearBlocks(): void {
     blocks.value = [];
   }
@@ -114,6 +135,7 @@ export const usePageBuilderStore = defineStore('pageBuilder', () => {
     getBlockById,
     getAllowedChildren,
     addBlock,
+    removeBlock,
     exportPageStructure,
     clearBlocks,
   };
