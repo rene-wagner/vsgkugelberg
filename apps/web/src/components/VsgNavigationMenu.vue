@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
+import { VsgIconChevronDown, VsgIconMenu, VsgIconClose } from '@/components/icons';
 
 export type VsgMenuItem = {
   label: string;
@@ -42,20 +43,10 @@ const toggleMobileDropdown = (label: string) => {
             aria-haspopup="true"
           >
             <span>{{ item.label }}</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
+            <VsgIconChevronDown
+              size="h-4 w-4"
+              class="transition-transform duration-200 group-hover:rotate-180"
+            />
           </button>
 
           <!-- Desktop Dropdown -->
@@ -101,36 +92,8 @@ const toggleMobileDropdown = (label: string) => {
         aria-label="Main menu"
         @click="toggleMobileMenu"
       >
-        <svg
-          v-if="!isMobileMenuOpen"
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"
-          />
-        </svg>
-        <svg
-          v-else
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <VsgIconMenu v-if="!isMobileMenuOpen" size="h-6 w-6" />
+        <VsgIconClose v-else size="h-6 w-6" />
       </button>
     </div>
 
@@ -151,21 +114,10 @@ const toggleMobileDropdown = (label: string) => {
               @click="toggleMobileDropdown(item.label)"
             >
               <span class="font-medium text-lg">{{ item.label }}</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 transition-transform duration-200"
+              <VsgIconChevronDown
+                class="transition-transform duration-200"
                 :class="{ 'rotate-180': activeMobileDropdown === item.label }"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+              />
             </button>
 
             <!-- Mobile Dropdown Children -->

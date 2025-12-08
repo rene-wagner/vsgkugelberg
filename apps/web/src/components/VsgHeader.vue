@@ -4,6 +4,7 @@ import { RouterLink, useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import VsgNavigationMenu from './VsgNavigationMenu.vue';
 import VsgDrawer from './VsgDrawer.vue';
+import { VsgIconEdit, VsgIconSave, VsgIconSpinner, VsgIconMenu } from '@/components/icons';
 import { useUserStore } from '@/stores/user';
 import { useEditModeStore } from '@/stores/editMode';
 import { usePageBuilderStore } from '@/stores/pageBuilder';
@@ -74,20 +75,7 @@ const handleSave = async () => {
               :aria-pressed="isEditMode"
               @click="editModeStore.toggleEditMode"
             >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
+              <VsgIconEdit />
             </button>
             <button
               v-if="isEditMode"
@@ -97,42 +85,8 @@ const handleSave = async () => {
               :disabled="isSaving"
               @click="handleSave"
             >
-              <svg
-                v-if="!isSaving"
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
-                />
-              </svg>
-              <svg
-                v-else
-                class="w-5 h-5 animate-spin"
-                fill="none"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <circle
-                  class="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  stroke-width="4"
-                />
-                <path
-                  class="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
+              <VsgIconSave v-if="!isSaving" />
+              <VsgIconSpinner v-else />
             </button>
             <button
               type="button"
@@ -140,20 +94,7 @@ const handleSave = async () => {
               aria-label="Schnellzugriff öffnen"
               @click="openDrawer"
             >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
+              <VsgIconMenu />
             </button>
           </div>
         </div>

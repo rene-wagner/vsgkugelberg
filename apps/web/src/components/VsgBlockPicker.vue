@@ -1,6 +1,15 @@
 <script lang="ts" setup>
-import { ref, computed } from 'vue';
+import { ref, computed, type Component } from 'vue';
 import { usePageBuilderStore, type BlockType } from '@/stores/pageBuilder';
+import {
+  VsgIconChevronLeft,
+  VsgIconBlockSection,
+  VsgIconBlockColumns,
+  VsgIconBlockColumn,
+  VsgIconBlockHeadline,
+  VsgIconBlockParagraph,
+  VsgIconBlockImage,
+} from '@/components/icons';
 
 const props = defineProps<{
   parentId: string | null;
@@ -29,15 +38,13 @@ const blockTypeLabels: Record<BlockType, string> = {
   image: 'Image',
 };
 
-const blockTypeIcons: Record<BlockType, string> = {
-  section:
-    'M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z',
-  columns: 'M9 4h6v16H9V4zM4 4h3v16H4V4zM17 4h3v16h-3V4z',
-  column: 'M9 4h6v16H9V4z',
-  headline: 'M4 6h16M4 12h16M4 18h7',
-  paragraph: 'M4 6h16M4 10h16M4 14h16M4 18h10',
-  image:
-    'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
+const blockTypeIcons: Record<BlockType, Component> = {
+  section: VsgIconBlockSection,
+  columns: VsgIconBlockColumns,
+  column: VsgIconBlockColumn,
+  headline: VsgIconBlockHeadline,
+  paragraph: VsgIconBlockParagraph,
+  image: VsgIconBlockImage,
 };
 
 const handleBlockTypeClick = (type: BlockType) => {
@@ -88,20 +95,7 @@ const handleClose = () => {
           class="w-full flex items-center gap-2 px-3 py-2 text-left text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
           @click="handleBlockTypeClick(type)"
         >
-          <svg
-            class="w-5 h-5 text-gray-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              :d="blockTypeIcons[type]"
-            />
-          </svg>
+          <component :is="blockTypeIcons[type]" class="text-gray-500" />
           <span>{{ blockTypeLabels[type] }}</span>
         </button>
       </div>
@@ -122,14 +116,7 @@ const handleClose = () => {
           aria-label="Back"
           @click="handleBackClick"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <VsgIconChevronLeft size="w-4 h-4" />
         </button>
         <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
           Section Type
@@ -167,14 +154,7 @@ const handleClose = () => {
           aria-label="Back"
           @click="handleBackClick"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 19l-7-7 7-7"
-            />
-          </svg>
+          <VsgIconChevronLeft size="w-4 h-4" />
         </button>
         <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">
           Column Count
