@@ -10,6 +10,13 @@ import VsgPostForm, { type PostFormPayload } from './forms/VsgPostForm.vue';
 import VsgDepartmentForm, { type DepartmentFormPayload } from './forms/VsgDepartmentForm.vue';
 import VsgCategoryForm, { type CategoryFormPayload } from './forms/VsgCategoryForm.vue';
 import VsgUserForm, { type UserFormPayload } from './forms/VsgUserForm.vue';
+import {
+  VsgIconSpinner,
+  VsgIconTrash,
+  VsgIconPlus,
+  VsgIconClose,
+  VsgIconChevronRight,
+} from '@/components/icons';
 import type { ApiPost, ApiDepartment, ApiCategoryFull, ApiUser } from '@/utils/apiClient';
 
 const props = defineProps<{
@@ -627,42 +634,8 @@ const handleUserFormCancel = () => {
                     aria-label="Beitrag loschen"
                     @click="handleDeletePost"
                   >
-                    <svg
-                      v-if="deleting"
-                      class="animate-spin h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                      ></circle>
-                      <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <svg
-                      v-else
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
+                    <VsgIconSpinner v-if="deleting" />
+                    <VsgIconTrash v-else />
                   </button>
                   <!-- New Post Button (only show when viewing list) -->
                   <button
@@ -671,20 +644,7 @@ const handleUserFormCancel = () => {
                     class="px-3 py-1.5 text-sm bg-[#00295e] text-white hover:bg-[#003d8a] rounded-lg transition-colors flex items-center gap-1"
                     @click="openCreatePostForm"
                   >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
+                    <VsgIconPlus size="w-4 h-4" />
                     <span>Neuer Beitrag</span>
                   </button>
                   <!-- Close Button -->
@@ -694,20 +654,7 @@ const handleUserFormCancel = () => {
                     aria-label="Panel schliessen"
                     @click="closePostsPanel"
                   >
-                    <svg
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
+                    <VsgIconClose />
                   </button>
                 </div>
               </div>
@@ -809,26 +756,7 @@ const handleUserFormCancel = () => {
                   <!-- Loading State -->
                   <div v-if="loading" class="flex items-center justify-center h-32">
                     <div class="flex items-center gap-2 text-gray-500">
-                      <svg
-                        class="animate-spin h-5 w-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          class="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          stroke-width="4"
-                        ></circle>
-                        <path
-                          class="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
+                      <VsgIconSpinner />
                       <span>Lade Beiträge...</span>
                     </div>
                   </div>
@@ -963,42 +891,8 @@ const handleUserFormCancel = () => {
                     aria-label="Abteilung loschen"
                     @click="handleDeleteDepartment"
                   >
-                    <svg
-                      v-if="departmentsDeleting"
-                      class="animate-spin h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                      ></circle>
-                      <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <svg
-                      v-else
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
+                    <VsgIconSpinner v-if="departmentsDeleting" />
+                    <VsgIconTrash v-else />
                   </button>
                   <!-- New Department Button (only show when viewing list) -->
                   <button
@@ -1007,20 +901,7 @@ const handleUserFormCancel = () => {
                     class="px-3 py-1.5 text-sm bg-[#00295e] text-white hover:bg-[#003d8a] rounded-lg transition-colors flex items-center gap-1"
                     @click="openCreateDepartmentForm"
                   >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
+                    <VsgIconPlus size="w-4 h-4" />
                     <span>Neue Abteilung</span>
                   </button>
                   <!-- Close Button -->
@@ -1030,20 +911,7 @@ const handleUserFormCancel = () => {
                     aria-label="Panel schliessen"
                     @click="closeDepartmentsPanel"
                   >
-                    <svg
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
+                    <VsgIconClose />
                   </button>
                 </div>
               </div>
@@ -1077,26 +945,7 @@ const handleUserFormCancel = () => {
                   <!-- Loading State -->
                   <div v-if="departmentsLoading" class="flex items-center justify-center h-32">
                     <div class="flex items-center gap-2 text-gray-500">
-                      <svg
-                        class="animate-spin h-5 w-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          class="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          stroke-width="4"
-                        ></circle>
-                        <path
-                          class="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
+                      <VsgIconSpinner />
                       <span>Lade Abteilungen...</span>
                     </div>
                   </div>
@@ -1187,42 +1036,8 @@ const handleUserFormCancel = () => {
                     aria-label="Kategorie loschen"
                     @click="handleDeleteCategory"
                   >
-                    <svg
-                      v-if="categoriesDeleting"
-                      class="animate-spin h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                      ></circle>
-                      <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <svg
-                      v-else
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
+                    <VsgIconSpinner v-if="categoriesDeleting" />
+                    <VsgIconTrash v-else />
                   </button>
                   <!-- New Category Button (only show when viewing list) -->
                   <button
@@ -1231,20 +1046,7 @@ const handleUserFormCancel = () => {
                     class="px-3 py-1.5 text-sm bg-[#00295e] text-white hover:bg-[#003d8a] rounded-lg transition-colors flex items-center gap-1"
                     @click="openCreateCategoryForm"
                   >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
+                    <VsgIconPlus size="w-4 h-4" />
                     <span>Neue Kategorie</span>
                   </button>
                   <!-- Close Button -->
@@ -1254,20 +1056,7 @@ const handleUserFormCancel = () => {
                     aria-label="Panel schliessen"
                     @click="closeCategoriesPanel"
                   >
-                    <svg
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
+                    <VsgIconClose />
                   </button>
                 </div>
               </div>
@@ -1300,26 +1089,7 @@ const handleUserFormCancel = () => {
                   <!-- Loading State -->
                   <div v-if="categoriesLoading" class="flex items-center justify-center h-32">
                     <div class="flex items-center gap-2 text-gray-500">
-                      <svg
-                        class="animate-spin h-5 w-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          class="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          stroke-width="4"
-                        ></circle>
-                        <path
-                          class="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
+                      <VsgIconSpinner />
                       <span>Lade Kategorien...</span>
                     </div>
                   </div>
@@ -1408,42 +1178,8 @@ const handleUserFormCancel = () => {
                     aria-label="Benutzer loschen"
                     @click="handleDeleteUser"
                   >
-                    <svg
-                      v-if="usersDeleting"
-                      class="animate-spin h-5 w-5"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle
-                        class="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        stroke-width="4"
-                      ></circle>
-                      <path
-                        class="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
-                    <svg
-                      v-else
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
+                    <VsgIconSpinner v-if="usersDeleting" />
+                    <VsgIconTrash v-else />
                   </button>
                   <!-- New User Button (only show when viewing list) -->
                   <button
@@ -1452,20 +1188,7 @@ const handleUserFormCancel = () => {
                     class="px-3 py-1.5 text-sm bg-[#00295e] text-white hover:bg-[#003d8a] rounded-lg transition-colors flex items-center gap-1"
                     @click="openCreateUserForm"
                   >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
+                    <VsgIconPlus size="w-4 h-4" />
                     <span>Neuer Benutzer</span>
                   </button>
                   <!-- Close Button -->
@@ -1475,20 +1198,7 @@ const handleUserFormCancel = () => {
                     aria-label="Panel schliessen"
                     @click="closeUsersPanel"
                   >
-                    <svg
-                      class="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 18L18 6M6 6l12 12"
-                      />
-                    </svg>
+                    <VsgIconClose />
                   </button>
                 </div>
               </div>
@@ -1521,26 +1231,7 @@ const handleUserFormCancel = () => {
                   <!-- Loading State -->
                   <div v-if="usersLoading" class="flex items-center justify-center h-32">
                     <div class="flex items-center gap-2 text-gray-500">
-                      <svg
-                        class="animate-spin h-5 w-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          class="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          stroke-width="4"
-                        ></circle>
-                        <path
-                          class="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
+                      <VsgIconSpinner />
                       <span>Lade Benutzer...</span>
                     </div>
                   </div>
@@ -1612,20 +1303,7 @@ const handleUserFormCancel = () => {
                 aria-label="Drawer schliessen"
                 @click="handleCloseClick"
               >
-                <svg
-                  class="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                <VsgIconClose />
               </button>
             </div>
             <p class="mt-2 text-sm text-gray-600">
@@ -1642,20 +1320,7 @@ const handleUserFormCancel = () => {
               @click="openPostsPanel"
             >
               <span>Beiträge</span>
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+              <VsgIconChevronRight />
             </button>
 
             <!-- Abteilungen Action Button -->
@@ -1665,20 +1330,7 @@ const handleUserFormCancel = () => {
               @click="openDepartmentsPanel"
             >
               <span>Abteilungen</span>
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+              <VsgIconChevronRight />
             </button>
 
             <!-- Kategorien Action Button -->
@@ -1688,20 +1340,7 @@ const handleUserFormCancel = () => {
               @click="openCategoriesPanel"
             >
               <span>Kategorien</span>
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+              <VsgIconChevronRight />
             </button>
 
             <!-- Benutzer Action Button -->
@@ -1711,20 +1350,7 @@ const handleUserFormCancel = () => {
               @click="openUsersPanel"
             >
               <span>Benutzer</span>
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+              <VsgIconChevronRight />
             </button>
 
             <ul class="space-y-1">

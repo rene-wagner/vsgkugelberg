@@ -1,0 +1,16 @@
+export { default as VsgIconSpinner } from './VsgIconSpinner.vue';
+export { default as VsgIconPlus } from './VsgIconPlus.vue';
+export { default as VsgIconTrash } from './VsgIconTrash.vue';
+export { default as VsgIconClose } from './VsgIconClose.vue';
+export { default as VsgIconChevronRight } from './VsgIconChevronRight.vue';
+export { default as VsgIconChevronDown } from './VsgIconChevronDown.vue';
+export { default as VsgIconChevronLeft } from './VsgIconChevronLeft.vue';
+export { default as VsgIconMenu } from './VsgIconMenu.vue';
+export { default as VsgIconEdit } from './VsgIconEdit.vue';
+export { default as VsgIconSave } from './VsgIconSave.vue';
+export { default as VsgIconBlockSection } from './VsgIconBlockSection.vue';
+export { default as VsgIconBlockColumns } from './VsgIconBlockColumns.vue';
+export { default as VsgIconBlockColumn } from './VsgIconBlockColumn.vue';
+export { default as VsgIconBlockHeadline } from './VsgIconBlockHeadline.vue';
+export { default as VsgIconBlockParagraph } from './VsgIconBlockParagraph.vue';
+export { default as VsgIconBlockImage } from './VsgIconBlockImage.vue';
