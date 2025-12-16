@@ -281,9 +281,9 @@ describe('Auth API Integration Tests', () => {
       const now = Math.floor(Date.now() / 1000);
       const expiresIn = decoded.exp! - now;
 
-      // Allow some tolerance (between 59 and 61 minutes)
-      expect(expiresIn).toBeGreaterThan(3540); // 59 minutes
-      expect(expiresIn).toBeLessThan(3660); // 61 minutes
+      // Allow some tolerance
+      expect(expiresIn).toBeGreaterThan(43140); // 12h - 1 minutes
+      expect(expiresIn).toBeLessThan(43260); // 12h + 1 minutes
     });
 
     it('should have JWT token with user ID in sub claim', async () => {
