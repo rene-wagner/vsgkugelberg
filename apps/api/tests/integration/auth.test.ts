@@ -277,7 +277,7 @@ describe('Auth API Integration Tests', () => {
       const token = extractCookieValue(response, 'access_token');
       const decoded = jwt.verify(token!, jwtConfig.secret) as jwt.JwtPayload;
 
-      // Token should expire in approximately 1 hour
+      // Token should expire in approximately 12 hours
       const now = Math.floor(Date.now() / 1000);
       const expiresIn = decoded.exp! - now;
 
