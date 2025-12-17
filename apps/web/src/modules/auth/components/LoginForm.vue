@@ -20,10 +20,10 @@ async function handleSubmit() {
     if (success) {
       router.push('/');
     } else {
-      error.value = 'Invalid email or password';
+      error.value = 'Ungultige E-Mail oder Passwort';
     }
   } catch {
-    error.value = 'An error occurred. Please try again.';
+    error.value = 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
   } finally {
     isLoading.value = false;
   }
@@ -32,44 +32,58 @@ async function handleSubmit() {
 
 <template>
   <form class="space-y-6" @submit.prevent="handleSubmit">
-    <div v-if="error" class="rounded-md bg-red-50 p-4">
-      <p class="text-sm text-red-700">{{ error }}</p>
+    <div
+      v-if="error"
+      class="rounded-lg bg-red-500/20 border border-red-500/30 p-4"
+    >
+      <p class="text-sm text-red-300">{{ error }}</p>
     </div>
 
-    <div>
-      <label for="email" class="block text-sm font-medium text-gray-700">
-        Email address
+    <!-- Email Input -->
+    <div class="animate-slide-up delay-300">
+      <label
+        for="email"
+        class="block font-body font-extralight text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
+      >
+        E-Mail Adresse
       </label>
       <input
         id="email"
         v-model="email"
         type="email"
         required
-        class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        placeholder="you@example.com"
+        class="form-input-custom w-full px-4 py-3 bg-vsg-blue-800/50 border border-vsg-gold-400/30 rounded-lg text-white placeholder-vsg-blue-300 focus:outline-none focus:border-vsg-gold-400"
+        placeholder="deine@email.de"
       />
     </div>
 
-    <div>
-      <label for="password" class="block text-sm font-medium text-gray-700">
-        Password
+    <!-- Password Input -->
+    <div class="animate-slide-up delay-400">
+      <label
+        for="password"
+        class="block font-body font-extralight text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
+      >
+        Passwort
       </label>
       <input
         id="password"
         v-model="password"
         type="password"
         required
-        class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-        placeholder="Enter your password"
+        class="form-input-custom w-full px-4 py-3 bg-vsg-blue-800/50 border border-vsg-gold-400/30 rounded-lg text-white placeholder-vsg-blue-300 focus:outline-none focus:border-vsg-gold-400"
+        placeholder="********"
       />
     </div>
 
-    <button
-      type="submit"
-      :disabled="isLoading"
-      class="w-full rounded-md bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      {{ isLoading ? 'Signing in...' : 'Sign in' }}
-    </button>
+    <!-- Submit Button -->
+    <div class="animate-slide-up delay-500">
+      <button
+        type="submit"
+        :disabled="isLoading"
+        class="btn-primary w-full bg-vsg-gold-400 text-vsg-blue-900 px-6 py-4 font-display text-xl tracking-wider rounded-lg gold-glow disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+      >
+        {{ isLoading ? 'ANMELDEN...' : 'ANMELDEN' }}
+      </button>
+    </div>
   </form>
 </template>

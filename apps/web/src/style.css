@@ -191,6 +191,15 @@ body {
   box-shadow: 0 0 30px rgba(252, 211, 77, 0.5);
 }
 
+/* Form input styling */
+.form-input-custom {
+  transition: all 0.3s ease;
+}
+
+.form-input-custom:focus {
+  box-shadow: 0 0 0 3px rgba(252, 211, 77, 0.3);
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
