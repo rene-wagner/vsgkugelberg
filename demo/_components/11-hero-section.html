@@ -1,0 +1,113 @@
+<!--
+  Hero Section Component
+  
+  Full-screen hero with gradient background, decorative elements, and animated content.
+  
+  Customization:
+  - {{badge_text}}: Text in the top badge (e.g., "Sportverein seit 1920")
+  - {{title_line_1}}: Large title first line (e.g., "VSG")
+  - {{title_line_2}}: Gold colored second line (e.g., "KUGELBERG")
+  - {{description}}: Paragraph text below title
+  - {{description_highlight}}: Highlighted text below description
+  - {{primary_button_text}}: Primary CTA button text
+  - {{secondary_button_text}}: Secondary button text
+  
+  Dependencies:
+  - Requires Tailwind CSS config with vsg-blue and vsg-gold colors
+  - Requires .gold-glow, .text-glow CSS classes
+  - Requires .btn-primary CSS class
+  - Requires .animate-slide-up, .delay-* animation classes
+-->
+
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+  <!-- Background gradient overlay -->
+  <div class="absolute inset-0 bg-gradient-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"></div>
+  
+  <!-- Decorative elements -->
+  <div class="absolute top-1/4 right-0 w-96 h-96 bg-vsg-gold-500/10 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-1/4 left-0 w-80 h-80 bg-vsg-blue-500/20 rounded-full blur-3xl"></div>
+  
+  <div class="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
+    <div class="animate-slide-up">
+      <span class="inline-block font-body font-extralight text-sm tracking-[0.5em] text-vsg-gold-400 uppercase mb-6 border border-vsg-gold-500/30 px-6 py-2">
+        {{badge_text}}
+      </span>
+    </div>
+    
+    <h1 class="font-display text-[8rem] md:text-[12rem] lg:text-[16rem] leading-[0.85] tracking-tight text-white animate-slide-up delay-200 text-glow">
+      {{title_line_1}}
+    </h1>
+    
+    <h2 class="font-display text-[4rem] md:text-[6rem] lg:text-[8rem] leading-[0.9] tracking-[0.15em] text-vsg-gold-400 animate-slide-up delay-300">
+      {{title_line_2}}
+    </h2>
+    
+    <p class="max-w-2xl mx-auto mt-8 font-body font-extralight text-lg md:text-xl text-vsg-blue-200 leading-relaxed animate-slide-up delay-400">
+      {{description}}
+      <span class="block mt-2 text-vsg-gold-500">{{description_highlight}}</span>
+    </p>
+    
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12 animate-slide-up delay-500">
+      <button class="btn-primary bg-vsg-gold-500 text-vsg-blue-900 px-10 py-4 font-display text-2xl tracking-wider gold-glow">
+        {{primary_button_text}}
+      </button>
+      <button class="border-2 border-vsg-gold-500/50 text-vsg-gold-400 px-10 py-4 font-display text-2xl tracking-wider hover:bg-vsg-gold-500/10 transition-colors">
+        {{secondary_button_text}}
+      </button>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce delay-700">
+      <svg class="w-8 h-8 text-vsg-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!--
+  Example Usage:
+  
+  <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"></div>
+    <div class="absolute top-1/4 right-0 w-96 h-96 bg-vsg-gold-500/10 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-1/4 left-0 w-80 h-80 bg-vsg-blue-500/20 rounded-full blur-3xl"></div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
+      <div class="animate-slide-up">
+        <span class="inline-block font-body font-extralight text-sm tracking-[0.5em] text-vsg-gold-400 uppercase mb-6 border border-vsg-gold-500/30 px-6 py-2">
+          Sportverein seit 1920
+        </span>
+      </div>
+      
+      <h1 class="font-display text-[8rem] md:text-[12rem] lg:text-[16rem] leading-[0.85] tracking-tight text-white animate-slide-up delay-200 text-glow">
+        VSG
+      </h1>
+      
+      <h2 class="font-display text-[4rem] md:text-[6rem] lg:text-[8rem] leading-[0.9] tracking-[0.15em] text-vsg-gold-400 animate-slide-up delay-300">
+        KUGELBERG
+      </h2>
+      
+      <p class="max-w-2xl mx-auto mt-8 font-body font-extralight text-lg md:text-xl text-vsg-blue-200 leading-relaxed animate-slide-up delay-400">
+        Tradition trifft Leidenschaft. Gemeinsam stark in Weißenfels.
+        <span class="block mt-2 text-vsg-gold-500">Dein Verein. Deine Heimat.</span>
+      </p>
+      
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-6 mt-12 animate-slide-up delay-500">
+        <button class="btn-primary bg-vsg-gold-500 text-vsg-blue-900 px-10 py-4 font-display text-2xl tracking-wider gold-glow">
+          JETZT BEITRETEN
+        </button>
+        <button class="border-2 border-vsg-gold-500/50 text-vsg-gold-400 px-10 py-4 font-display text-2xl tracking-wider hover:bg-vsg-gold-500/10 transition-colors">
+          MEHR ERFAHREN
+        </button>
+      </div>
+      
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce delay-700">
+        <svg class="w-8 h-8 text-vsg-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+      </div>
+    </div>
+  </section>
+-->

@@ -1,0 +1,70 @@
+<!--
+  Section Header Component
+  
+  Reusable section header with small label and large title.
+  Used at the top of content sections (Departments, News, etc.)
+  
+  Variants:
+  1. Centered (default) - for sections like Departments
+  2. Left-aligned with link - for sections like News
+  
+  Customization:
+  - {{label}}: Small uppercase label text (e.g., "Unsere Abteilungen")
+  - {{title}}: Large display title (e.g., "ABTEILUNGEN")
+  - {{link_text}}: Optional link text for variant 2
+  - {{link_href}}: Optional link URL for variant 2
+  
+  Color variants:
+  - Light background (white/gray): text-vsg-blue-600, text-vsg-blue-900
+  - Dark background: text-vsg-gold-400, text-white
+  
+  Dependencies:
+  - Requires Tailwind CSS config with vsg-blue colors
+  - Requires font-body and font-display font families
+-->
+
+<!-- Variant 1: Centered Section Header -->
+<div class="text-center mb-20">
+  <span class="font-body font-extralight text-sm tracking-[0.4em] text-vsg-blue-600 uppercase">{{label}}</span>
+  <h3 class="font-display text-6xl md:text-8xl text-vsg-blue-900 mt-4 tracking-wider">{{title}}</h3>
+</div>
+
+<!-- Variant 2: Left-aligned with Link (Flex Layout) -->
+<div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16">
+  <div>
+    <span class="font-body font-extralight text-sm tracking-[0.4em] text-vsg-blue-600 uppercase">{{label}}</span>
+    <h3 class="font-display text-6xl md:text-8xl text-vsg-blue-900 mt-4 tracking-wider">{{title}}</h3>
+  </div>
+  <a href="{{link_href}}" class="inline-flex items-center gap-2 mt-6 md:mt-0 font-body font-bold text-sm tracking-wider text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors uppercase">
+    {{link_text}}
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+    </svg>
+  </a>
+</div>
+
+<!--
+  Example Usage - Centered:
+  
+  <div class="text-center mb-20">
+    <span class="font-body font-extralight text-sm tracking-[0.4em] text-vsg-blue-600 uppercase">Unsere Abteilungen</span>
+    <h3 class="font-display text-6xl md:text-8xl text-vsg-blue-900 mt-4 tracking-wider">ABTEILUNGEN</h3>
+  </div>
+-->
+
+<!--
+  Example Usage - With Link:
+  
+  <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16">
+    <div>
+      <span class="font-body font-extralight text-sm tracking-[0.4em] text-vsg-blue-600 uppercase">Aktuelles</span>
+      <h3 class="font-display text-6xl md:text-8xl text-vsg-blue-900 mt-4 tracking-wider">NEWS</h3>
+    </div>
+    <a href="#" class="inline-flex items-center gap-2 mt-6 md:mt-0 font-body font-bold text-sm tracking-wider text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors uppercase">
+      Alle Neuigkeiten
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+      </svg>
+    </a>
+  </div>
+-->

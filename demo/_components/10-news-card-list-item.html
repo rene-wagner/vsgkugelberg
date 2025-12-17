@@ -1,0 +1,70 @@
+<!--
+  Component: News Card List Item
+  Description: Compact news card with border accent, date, and title
+  
+  Dependencies:
+  - Tailwind CSS
+  - Google Fonts: Bebas Neue, Archivo
+  - CSS for card-hover effect
+  
+  Usage:
+  - News list alongside featured article
+  - Recent posts sidebar
+  - Archive listings
+  
+  Customization:
+  - Update date and title
+  - Change border color for different accents
+-->
+
+<!-- Required CSS -->
+<style>
+  .card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 60px rgba(252, 211, 77, 0.15);
+  }
+</style>
+
+<!-- News List Item - Light variant (for white/light backgrounds) -->
+<a href="#" class="card-hover block bg-gray-50 border-l-4 border-vsg-blue-600 p-6 group">
+  <span class="font-body font-extralight text-sm text-vsg-blue-500">12. December 2024</span>
+  <h5 class="font-display text-xl text-vsg-blue-900 tracking-wider mt-1 group-hover:text-vsg-blue-600 transition-colors">
+    News headline goes here with enough text to wrap
+  </h5>
+</a>
+
+<!-- News List Item - Dark variant (for blue backgrounds) -->
+<a href="#" class="card-hover block bg-gradient-to-r from-vsg-blue-800/40 to-transparent border-l-4 border-vsg-gold-500 p-6 group">
+  <span class="font-body font-extralight text-sm text-vsg-blue-400">12. December 2024</span>
+  <h5 class="font-display text-xl text-white tracking-wider mt-1 group-hover:text-vsg-gold-400 transition-colors">
+    News headline goes here with enough text to wrap
+  </h5>
+</a>
+
+<!-- Example: Multiple items stacked -->
+<div class="space-y-6">
+  <a href="#" class="card-hover block bg-gray-50 border-l-4 border-vsg-blue-600 p-6 group">
+    <span class="font-body font-extralight text-sm text-vsg-blue-500">12. December 2024</span>
+    <h5 class="font-display text-xl text-vsg-blue-900 tracking-wider mt-1 group-hover:text-vsg-blue-600 transition-colors">
+      First news headline
+    </h5>
+  </a>
+  
+  <a href="#" class="card-hover block bg-gray-50 border-l-4 border-vsg-blue-600 p-6 group">
+    <span class="font-body font-extralight text-sm text-vsg-blue-500">10. December 2024</span>
+    <h5 class="font-display text-xl text-vsg-blue-900 tracking-wider mt-1 group-hover:text-vsg-blue-600 transition-colors">
+      Second news headline
+    </h5>
+  </a>
+  
+  <a href="#" class="card-hover block bg-gray-50 border-l-4 border-vsg-blue-600 p-6 group">
+    <span class="font-body font-extralight text-sm text-vsg-blue-500">8. December 2024</span>
+    <h5 class="font-display text-xl text-vsg-blue-900 tracking-wider mt-1 group-hover:text-vsg-blue-600 transition-colors">
+      Third news headline
+    </h5>
+  </a>
+</div>

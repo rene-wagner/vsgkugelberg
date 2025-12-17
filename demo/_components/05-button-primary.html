@@ -1,0 +1,66 @@
+<!--
+  Component: Primary Button
+  Description: Gold background button with hover animation and shine effect
+  
+  Dependencies:
+  - Tailwind CSS
+  - Google Fonts: Bebas Neue
+  - CSS for btn-primary hover effect
+  
+  Variants:
+  - Default: Standard size
+  - Large: Use px-10 py-4 text-2xl for hero sections
+  - With glow: Add gold-glow class
+  
+  Customization:
+  - Adjust padding and text size for different contexts
+  - Add gold-glow class for emphasis
+-->
+
+<!-- Required CSS (add to your stylesheet) -->
+<style>
+  .btn-primary {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
+  }
+  
+  .btn-primary:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(252, 211, 77, 0.5);
+  }
+  
+  .gold-glow {
+    box-shadow: 0 0 60px rgba(252, 211, 77, 0.3), 0 0 120px rgba(252, 211, 77, 0.1);
+  }
+</style>
+
+<!-- Default Primary Button -->
+<button class="btn-primary bg-vsg-gold-500 text-vsg-blue-900 px-6 py-2 font-display text-lg tracking-wider">
+  BUTTON TEXT
+</button>
+
+<!-- Large Primary Button (for hero sections) -->
+<button class="btn-primary bg-vsg-gold-500 text-vsg-blue-900 px-10 py-4 font-display text-2xl tracking-wider">
+  LARGE BUTTON
+</button>
+
+<!-- Primary Button with Glow -->
+<button class="btn-primary bg-vsg-gold-500 text-vsg-blue-900 px-10 py-4 font-display text-2xl tracking-wider gold-glow">
+  GLOWING BUTTON
+</button>
