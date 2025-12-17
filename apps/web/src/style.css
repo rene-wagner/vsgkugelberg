@@ -200,6 +200,25 @@ body {
   box-shadow: 0 0 0 3px rgba(252, 211, 77, 0.3);
 }
 
+/* Sidebar link active state */
+.sidebar-link.active {
+  background: rgba(252, 211, 77, 0.1);
+  border-left-color: #fcd34d;
+}
+
+.sidebar-link.active span {
+  color: #fcd34d;
+}
+
+.sidebar-link.active svg {
+  color: #fcd34d;
+}
+
+/* Table row hover */
+.table-row-hover:hover {
+  background: rgba(0, 87, 183, 0.05);
+}
+
 /* Scrollbar styling */
 ::-webkit-scrollbar {
   width: 8px;
