@@ -1,5 +1,6 @@
 {
     "vitest.nodeEnv": {
         "DATABASE_URL": "postgresql://user:secret@localhost:5432/vsgkugelberg_test?schema=public"
-    }
+    },
+    "css.lint.unknownAtRules": "ignore"
 }

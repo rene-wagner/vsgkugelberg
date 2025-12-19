@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
 
-const email = ref('');
+const username = ref('');
 const password = ref('');
 const error = ref('');
 const isLoading = ref(false);
@@ -16,11 +16,11 @@ async function handleSubmit() {
   isLoading.value = true;
 
   try {
-    const success = await authStore.login(email.value, password.value);
+    const success = await authStore.login(username.value, password.value);
     if (success) {
-      router.push('/');
+      router.push('/admin');
     } else {
-      error.value = 'Ungultige E-Mail oder Passwort';
+      error.value = 'Ungultiger Benutzername oder Passwort';
     }
   } catch {
     error.value = 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
@@ -39,21 +39,21 @@ async function handleSubmit() {
       <p class="text-sm text-red-300">{{ error }}</p>
     </div>
 
-    <!-- Email Input -->
+    <!-- Username Input -->
     <div class="animate-slide-up delay-300">
       <label
-        for="email"
+        for="username"
         class="block font-body font-extralight text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
       >
-        E-Mail Adresse
+        Benutzername
       </label>
       <input
-        id="email"
-        v-model="email"
-        type="email"
+        id="username"
+        v-model="username"
+        type="text"
         required
         class="form-input-custom w-full px-4 py-3 bg-vsg-blue-800/50 border border-vsg-gold-400/30 rounded-lg text-white placeholder-vsg-blue-300 focus:outline-none focus:border-vsg-gold-400"
-        placeholder="deine@email.de"
+        placeholder="dein_benutzername"
       />
     </div>
 

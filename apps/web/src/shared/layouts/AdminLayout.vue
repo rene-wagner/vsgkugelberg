@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import { RouterLink } from 'vue-router';
+import { RouterLink, useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { useAuthStore } from '@/modules/auth/stores/authStore';
 
 const isUserMenuOpen = ref(false);
+const router = useRouter();
+const authStore = useAuthStore();
+
+async function handleLogout() {
+  await authStore.logout();
+  router.push('/login');
+}
 
 // Navigation items for the sidebar
 const navItems = [
@@ -72,7 +80,7 @@ const navItems = [
           >
             <span
               class="hidden sm:block font-body font-extralight text-sm text-vsg-blue-200"
-              >Max Mustermann</span
+              >{{ authStore.user?.username ?? 'Benutzer' }}</span
             >
             <div
               class="w-10 h-10 bg-vsg-blue-700 rounded-full flex items-center justify-center border-2 border-vsg-gold-400/30"
@@ -108,17 +116,18 @@ const navItems = [
             >
               <div class="py-2">
                 <div class="px-4 py-2 border-b border-vsg-gold-400/10">
-                  <span class="block font-body text-sm text-white"
-                    >Max Mustermann</span
-                  >
+                  <span class="block font-body text-sm text-white">{{
+                    authStore.user?.username ?? 'Benutzer'
+                  }}</span>
                   <span
                     class="block font-body font-extralight text-xs text-vsg-blue-300"
-                    >admin@vsg-kugelberg.de</span
+                    >{{ authStore.user?.email ?? '' }}</span
                   >
                 </div>
-                <RouterLink
-                  to="/login"
-                  class="flex items-center gap-2 px-4 py-2 font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors"
+                <button
+                  type="button"
+                  class="flex items-center gap-2 px-4 py-2 w-full font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors"
+                  @click="handleLogout"
                 >
                   <svg
                     class="w-4 h-4"
@@ -134,7 +143,7 @@ const navItems = [
                     />
                   </svg>
                   Abmelden
-                </RouterLink>
+                </button>
               </div>
             </div>
           </Transition>
