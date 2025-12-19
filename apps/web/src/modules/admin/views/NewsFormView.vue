@@ -38,7 +38,7 @@ onMounted(async () => {
     <!-- Page Header -->
     <div class="mb-8">
       <div
-        class="flex items-center gap-2 text-sm font-body font-extralight text-gray-500 mb-2"
+        class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2"
       >
         <router-link
           to="/admin/news"
@@ -64,7 +64,7 @@ onMounted(async () => {
       <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
         {{ pageTitle }}
       </h1>
-      <p class="font-body font-extralight text-vsg-blue-600 mt-1">
+      <p class="font-body font-normal text-vsg-blue-600 mt-1">
         {{ pageSubtitle }}
       </p>
     </div>

@@ -78,7 +78,7 @@ async function handleDelete() {
   if (!props.tag) return;
 
   const confirmed = window.confirm(
-    `Mochtest du den Tag "${props.tag.name}" wirklich loschen?`,
+    `Mochtest du den Tag "${props.tag.name}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -89,7 +89,7 @@ async function handleDelete() {
   if (success) {
     router.push('/admin/tags');
   } else {
-    error.value = tagsStore.error || 'Fehler beim Loschen des Tags';
+    error.value = tagsStore.error || 'Fehler beim löschen des Tags';
   }
 }
 
@@ -119,7 +119,7 @@ function handleCancel() {
         <div>
           <label
             for="name"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Name <span class="text-red-500">*</span>
           </label>
@@ -155,7 +155,7 @@ function handleCancel() {
           :disabled="isSubmitting"
           @click="handleDelete"
         >
-          Tag loschen
+          Tag löschen
         </button>
         <button
           type="submit"

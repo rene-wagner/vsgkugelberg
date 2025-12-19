@@ -95,7 +95,7 @@ async function handleDelete() {
   if (!props.department) return;
 
   const confirmed = window.confirm(
-    `Mochtest du die Abteilung "${props.department.name}" wirklich loschen?`,
+    `Mochtest du die Abteilung "${props.department.name}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -108,7 +108,7 @@ async function handleDelete() {
   if (success) {
     router.push('/admin/departments');
   } else {
-    error.value = departmentsStore.error || 'Fehler beim Loschen der Abteilung';
+    error.value = departmentsStore.error || 'Fehler beim löschen der Abteilung';
   }
 }
 
@@ -138,7 +138,7 @@ function handleCancel() {
         <div>
           <label
             for="name"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Name <span class="text-red-500">*</span>
           </label>
@@ -156,7 +156,7 @@ function handleCancel() {
         <div>
           <label
             for="shortDescription"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Kurzbeschreibung <span class="text-red-500">*</span>
           </label>
@@ -174,7 +174,7 @@ function handleCancel() {
         <div>
           <label
             for="longDescription"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Langbeschreibung <span class="text-red-500">*</span>
           </label>
@@ -210,7 +210,7 @@ function handleCancel() {
           :disabled="isSubmitting"
           @click="handleDelete"
         >
-          Abteilung loschen
+          Abteilung löschen
         </button>
         <button
           type="submit"

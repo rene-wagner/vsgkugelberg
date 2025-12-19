@@ -30,13 +30,13 @@ const vereinLinks = [
                 >VSG KUGELBERG</span
               >
               <span
-                class="block font-body text-xs font-extralight uppercase tracking-[0.3em] text-vsg-gold-400"
+                class="block font-body text-xs font-normal uppercase tracking-[0.3em] text-vsg-gold-400"
                 >Weißenfels</span
               >
             </div>
           </div>
           <p
-            class="max-w-md font-body font-extralight leading-relaxed text-vsg-blue-300"
+            class="max-w-md font-body font-normal leading-relaxed text-vsg-blue-300"
           >
             Seit über 100 Jahren der Sportverein für Weißenfels und Umgebung.
             Tradition, Gemeinschaft und sportliche Exzellenz.
@@ -77,7 +77,7 @@ const vereinLinks = [
             <li v-for="link in vereinLinks" :key="link.label">
               <a
                 :href="link.href"
-                class="font-body font-extralight text-vsg-blue-300 transition-colors hover:text-vsg-gold-400"
+                class="font-body font-normal text-vsg-blue-300 transition-colors hover:text-vsg-gold-400"
               >
                 {{ link.label }}
               </a>
@@ -93,19 +93,19 @@ const vereinLinks = [
             KONTAKT
           </h5>
           <ul class="space-y-3">
-            <li class="font-body font-extralight text-vsg-blue-300">
+            <li class="font-body font-normal text-vsg-blue-300">
               VSG Kugelberg e.V.<br />
               Kugelbergstraße 15<br />
               06667 Weißenfels
             </li>
-            <li class="font-body font-extralight text-vsg-blue-300">
+            <li class="font-body font-normal text-vsg-blue-300">
               <a
                 href="mailto:info@vsg-kugelberg.de"
                 class="transition-colors hover:text-vsg-gold-400"
                 >info@vsg-kugelberg.de</a
               >
             </li>
-            <li class="font-body font-extralight text-vsg-blue-300">
+            <li class="font-body font-normal text-vsg-blue-300">
               <a
                 href="tel:+493443123456"
                 class="transition-colors hover:text-vsg-gold-400"
@@ -119,18 +119,18 @@ const vereinLinks = [
       <div
         class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-vsg-gold-400/10 pt-8 md:flex-row"
       >
-        <span class="font-body text-sm font-extralight text-vsg-blue-400">
+        <span class="font-body text-sm font-normal text-vsg-blue-400">
           &copy; 2024 VSG Kugelberg e.V. Alle Rechte vorbehalten.
         </span>
         <div class="flex gap-6">
           <a
             href="#"
-            class="font-body text-sm font-extralight text-vsg-blue-400 transition-colors hover:text-vsg-gold-400"
+            class="font-body text-sm font-normal text-vsg-blue-400 transition-colors hover:text-vsg-gold-400"
             >Impressum</a
           >
           <a
             href="#"
-            class="font-body text-sm font-extralight text-vsg-blue-400 transition-colors hover:text-vsg-gold-400"
+            class="font-body text-sm font-normal text-vsg-blue-400 transition-colors hover:text-vsg-gold-400"
             >Datenschutz</a
           >
         </div>

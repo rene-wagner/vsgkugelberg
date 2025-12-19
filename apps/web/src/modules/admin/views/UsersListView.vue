@@ -28,7 +28,7 @@ function formatDate(dateString: string): string {
 
 async function handleDelete(userId: number, username: string) {
   const confirmed = window.confirm(
-    `Mochtest du den Benutzer "${username}" wirklich loschen?`,
+    `Mochtest du den Benutzer "${username}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -44,7 +44,7 @@ async function handleDelete(userId: number, username: string) {
         <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
           BENUTZER
         </h1>
-        <p class="font-body font-extralight text-vsg-blue-600 mt-1">
+        <p class="font-body font-normal text-vsg-blue-600 mt-1">
           Verwalte alle registrierten Benutzer
         </p>
       </div>
@@ -82,22 +82,22 @@ async function handleDelete(userId: number, username: string) {
           <thead>
             <tr class="bg-gray-50 border-b border-gray-200">
               <th
-                class="text-left px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Benutzername
               </th>
               <th
-                class="text-left px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 E-Mail
               </th>
               <th
-                class="text-left px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Registriert
               </th>
               <th
-                class="text-right px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-right px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Aktionen
               </th>
@@ -122,12 +122,12 @@ async function handleDelete(userId: number, username: string) {
                 </div>
               </td>
               <td
-                class="px-6 py-4 font-body font-extralight text-sm text-gray-600"
+                class="px-6 py-4 font-body font-normal text-sm text-gray-600"
               >
                 {{ user.email }}
               </td>
               <td
-                class="px-6 py-4 font-body font-extralight text-sm text-gray-500"
+                class="px-6 py-4 font-body font-normal text-sm text-gray-500"
               >
                 {{ formatDate(user.createdAt) }}
               </td>
@@ -154,7 +154,7 @@ async function handleDelete(userId: number, username: string) {
                   </router-link>
                   <button
                     class="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                    title="Loschen"
+                    title="löschen"
                     @click="handleDelete(user.id, user.username)"
                   >
                     <svg
@@ -194,7 +194,7 @@ async function handleDelete(userId: number, username: string) {
         v-if="usersStore.users.length > 0"
         class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
       >
-        <div class="font-body font-extralight text-sm text-gray-500">
+        <div class="font-body font-normal text-sm text-gray-500">
           Zeige
           <span class="text-vsg-blue-900 font-medium">{{
             usersStore.users.length

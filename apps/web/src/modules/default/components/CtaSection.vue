@@ -15,7 +15,7 @@ import VsgButton from '@shared/components/VsgButton.vue';
         WERDE TEIL DER<br />VSG FAMILIE
       </h3>
       <p
-        class="mx-auto mt-6 max-w-2xl font-body text-xl font-extralight text-vsg-blue-800"
+        class="mx-auto mt-6 max-w-2xl font-body text-xl font-normal text-vsg-blue-800"
       >
         Egal ob aktiver Sportler, Unterstützer oder Förderer – bei uns findet
         jeder seinen Platz. Gemeinsam sind wir stärker.

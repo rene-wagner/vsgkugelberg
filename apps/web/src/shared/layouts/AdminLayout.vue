@@ -63,7 +63,7 @@ const navItems = [
               >VSG KUGELBERG</span
             >
             <span
-              class="block text-[10px] font-body font-extralight tracking-[0.3em] text-vsg-gold-400 uppercase"
+              class="block text-[10px] font-body font-normal tracking-[0.3em] text-vsg-gold-400 uppercase"
               >Admin Dashboard</span
             >
           </div>
@@ -79,7 +79,7 @@ const navItems = [
             class="flex items-center gap-3 p-2 rounded-lg hover:bg-vsg-blue-800 transition-colors"
           >
             <span
-              class="hidden sm:block font-body font-extralight text-sm text-vsg-blue-200"
+              class="hidden sm:block font-body font-normal text-sm text-vsg-blue-200"
               >{{ authStore.user?.username ?? 'Benutzer' }}</span
             >
             <div
@@ -120,13 +120,13 @@ const navItems = [
                     authStore.user?.username ?? 'Benutzer'
                   }}</span>
                   <span
-                    class="block font-body font-extralight text-xs text-vsg-blue-300"
+                    class="block font-body font-normal text-xs text-vsg-blue-300"
                     >{{ authStore.user?.email ?? '' }}</span
                   >
                 </div>
                 <button
                   type="button"
-                  class="flex items-center gap-2 px-4 py-2 w-full font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors"
+                  class="flex items-center gap-2 px-4 py-2 w-full font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors"
                   @click="handleLogout"
                 >
                   <svg
@@ -160,7 +160,7 @@ const navItems = [
         <nav class="py-6">
           <div class="px-4 mb-4">
             <span
-              class="font-body font-extralight text-xs tracking-widest text-vsg-blue-400 uppercase"
+              class="font-body font-normal text-xs tracking-widest text-vsg-blue-400 uppercase"
               >Navigation</span
             >
           </div>
@@ -186,7 +186,7 @@ const navItems = [
                   />
                 </svg>
                 <span
-                  class="font-body font-extralight text-sm text-vsg-blue-200"
+                  class="font-body font-normal text-sm text-vsg-blue-200"
                   >{{ item.name }}</span
                 >
               </RouterLink>

@@ -13,7 +13,7 @@ withDefaults(defineProps<Props>(), {
 <template>
   <div :class="{ 'text-center': centered }">
     <span
-      class="font-body text-sm font-extralight uppercase tracking-[0.4em] text-vsg-blue-600"
+      class="font-body text-sm font-normal uppercase tracking-[0.4em] text-vsg-blue-600"
     >
       {{ subtitle }}
     </span>

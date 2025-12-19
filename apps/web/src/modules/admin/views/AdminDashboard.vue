@@ -9,7 +9,7 @@
       <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
         DASHBOARD
       </h1>
-      <p class="font-body font-extralight text-vsg-blue-600 mt-1">
+      <p class="font-body font-normal text-vsg-blue-600 mt-1">
         Willkommen im Administrationsbereich
       </p>
     </div>

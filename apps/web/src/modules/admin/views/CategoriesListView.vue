@@ -10,7 +10,7 @@ onMounted(() => {
 
 async function handleDelete(slug: string, name: string) {
   const confirmed = window.confirm(
-    `Mochtest du die Kategorie "${name}" wirklich loschen?`,
+    `Mochtest du die Kategorie "${name}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -26,7 +26,7 @@ async function handleDelete(slug: string, name: string) {
         <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
           KATEGORIEN
         </h1>
-        <p class="font-body font-extralight text-vsg-blue-600 mt-1">
+        <p class="font-body font-normal text-vsg-blue-600 mt-1">
           Verwalte alle Kategorien
         </p>
       </div>
@@ -64,22 +64,22 @@ async function handleDelete(slug: string, name: string) {
           <thead>
             <tr class="bg-gray-50 border-b border-gray-200">
               <th
-                class="text-left px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Name
               </th>
               <th
-                class="text-left px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Slug
               </th>
               <th
-                class="text-left px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Beschreibung
               </th>
               <th
-                class="text-right px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-right px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Aktionen
               </th>
@@ -103,7 +103,7 @@ async function handleDelete(slug: string, name: string) {
                 >
               </td>
               <td
-                class="px-6 py-4 font-body font-extralight text-sm text-gray-600"
+                class="px-6 py-4 font-body font-normal text-sm text-gray-600"
               >
                 {{ category.description || '-' }}
               </td>
@@ -130,7 +130,7 @@ async function handleDelete(slug: string, name: string) {
                   </router-link>
                   <button
                     class="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                    title="Loschen"
+                    title="löschen"
                     @click="handleDelete(category.slug, category.name)"
                   >
                     <svg
@@ -173,7 +173,7 @@ async function handleDelete(slug: string, name: string) {
         v-if="categoriesStore.categories.length > 0"
         class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
       >
-        <div class="font-body font-extralight text-sm text-gray-500">
+        <div class="font-body font-normal text-sm text-gray-500">
           Zeige
           <span class="text-vsg-blue-900 font-medium">{{
             categoriesStore.categories.length

@@ -22,7 +22,7 @@ import VsgButton from '@shared/components/VsgButton.vue';
     <div class="relative z-10 mx-auto max-w-7xl px-6 py-20 text-center">
       <div class="animate-slide-up">
         <span
-          class="mb-6 inline-block border border-vsg-gold-400/30 px-6 py-2 font-body text-sm font-extralight uppercase tracking-[0.5em] text-vsg-gold-400"
+          class="mb-6 inline-block border border-vsg-gold-400/30 px-6 py-2 font-body text-sm font-normal uppercase tracking-[0.5em] text-vsg-gold-400"
         >
           Sportverein seit 1920
         </span>
@@ -41,7 +41,7 @@ import VsgButton from '@shared/components/VsgButton.vue';
       </h2>
 
       <p
-        class="animate-slide-up mx-auto mt-8 max-w-2xl font-body text-lg font-extralight leading-relaxed text-vsg-blue-200 delay-400 md:text-xl"
+        class="animate-slide-up mx-auto mt-8 max-w-2xl font-body text-lg font-normal leading-relaxed text-vsg-blue-200 delay-400 md:text-xl"
       >
         Tradition trifft Leidenschaft. Gemeinsam stark in Weißenfels.
         <span class="mt-2 block text-vsg-gold-400"

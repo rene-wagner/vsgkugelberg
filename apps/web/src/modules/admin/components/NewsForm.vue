@@ -129,7 +129,7 @@ async function handleDelete() {
   if (!props.newsItem) return;
 
   const confirmed = window.confirm(
-    `Mochtest du den Artikel "${props.newsItem.title}" wirklich loschen?`,
+    `Mochtest du den Artikel "${props.newsItem.title}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -140,7 +140,7 @@ async function handleDelete() {
   if (success) {
     router.push('/admin/news');
   } else {
-    error.value = newsStore.error || 'Fehler beim Loschen des Artikels';
+    error.value = newsStore.error || 'Fehler beim löschen des Artikels';
   }
 }
 
@@ -188,7 +188,7 @@ function toggleTag(tagId: number) {
         <div>
           <label
             for="title"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Titel <span class="text-red-500">*</span>
           </label>
@@ -206,7 +206,7 @@ function toggleTag(tagId: number) {
         <div>
           <label
             for="content"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Inhalt
           </label>
@@ -222,7 +222,7 @@ function toggleTag(tagId: number) {
         <!-- Author (read-only display) -->
         <div>
           <label
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Autor
           </label>
@@ -243,7 +243,7 @@ function toggleTag(tagId: number) {
           />
           <label
             for="published"
-            class="font-body font-extralight text-sm text-vsg-blue-900"
+            class="font-body font-normal text-sm text-vsg-blue-900"
           >
             Artikel veroffentlichen
           </label>
@@ -284,7 +284,7 @@ function toggleTag(tagId: number) {
           />
           <label
             :for="`category-${category.id}`"
-            class="font-body font-extralight text-sm text-vsg-blue-900 cursor-pointer"
+            class="font-body font-normal text-sm text-vsg-blue-900 cursor-pointer"
           >
             {{ category.name }}
           </label>
@@ -325,7 +325,7 @@ function toggleTag(tagId: number) {
           />
           <label
             :for="`tag-${tag.id}`"
-            class="font-body font-extralight text-sm text-vsg-blue-900 cursor-pointer"
+            class="font-body font-normal text-sm text-vsg-blue-900 cursor-pointer"
           >
             {{ tag.name }}
           </label>
@@ -353,7 +353,7 @@ function toggleTag(tagId: number) {
           :disabled="isSubmitting"
           @click="handleDelete"
         >
-          Artikel loschen
+          Artikel löschen
         </button>
         <button
           type="submit"

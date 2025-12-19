@@ -26,7 +26,7 @@ const stats: Stat[] = [
             {{ stat.value }}
           </span>
           <span
-            class="mt-2 block font-body text-sm font-extralight uppercase tracking-widest text-vsg-blue-800"
+            class="mt-2 block font-body text-sm font-normal uppercase tracking-widest text-vsg-blue-800"
           >
             {{ stat.label }}
           </span>

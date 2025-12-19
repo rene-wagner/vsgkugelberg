@@ -23,7 +23,7 @@ import LoginForm from '../components/LoginForm.vue';
               >VSG KUGELBERG</span
             >
             <span
-              class="text-xs font-body font-extralight tracking-[0.3em] text-vsg-gold-400 uppercase"
+              class="text-xs font-body font-normal tracking-[0.3em] text-vsg-gold-400 uppercase"
               >Weissenfels</span
             >
           </div>
@@ -40,7 +40,7 @@ import LoginForm from '../components/LoginForm.vue';
           >
             ANMELDEN
           </h1>
-          <p class="font-body font-extralight text-vsg-blue-200 mt-2">
+          <p class="font-body font-normal text-vsg-blue-200 mt-2">
             Melde dich im Mitgliederbereich an
           </p>
         </div>
@@ -52,7 +52,7 @@ import LoginForm from '../components/LoginForm.vue';
       <div class="text-center mt-8 animate-slide-up delay-500">
         <RouterLink
           to="/"
-          class="inline-flex items-center gap-2 font-body font-extralight text-sm text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors"
+          class="inline-flex items-center gap-2 font-body font-normal text-sm text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors"
         >
           <svg
             class="w-4 h-4"

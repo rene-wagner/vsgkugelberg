@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@100;200;400;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:wght@400;600;700;900&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
@@ -41,7 +41,7 @@
           },
           fontFamily: {
             'display': ['Bebas Neue', 'sans-serif'],
-            'body': ['Archivo', 'sans-serif'],
+            'body': ['Source Sans 3', 'sans-serif'],
           },
         }
       }
@@ -57,7 +57,7 @@
     }
     
     body {
-      font-family: 'Archivo', sans-serif;
+      font-family: 'Source Sans 3', sans-serif;
       background: #002d5c;
     }
     
@@ -66,7 +66,7 @@
     }
     
     .font-body {
-      font-family: 'Archivo', sans-serif;
+      font-family: 'Source Sans 3', sans-serif;
     }
     
     /* Glow effects */
@@ -223,7 +223,7 @@
           </div>
           <div>
             <span class="font-display text-3xl tracking-wider text-white">VSG KUGELBERG</span>
-            <span class="block text-xs font-body font-extralight tracking-[0.3em] text-vsg-gold-400 uppercase">Weißenfels</span>
+            <span class="block text-xs font-body font-normal tracking-[0.3em] text-vsg-gold-400 uppercase">Weißenfels</span>
           </div>
         </div>
         
@@ -231,7 +231,7 @@
         <div class="hidden md:flex items-center gap-8">
           <!-- Verein Dropdown -->
           <div class="relative group">
-            <button class="font-body font-extralight text-sm tracking-wider text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors uppercase flex items-center gap-1">
+            <button class="font-body font-normal text-sm tracking-wider text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors uppercase flex items-center gap-1">
               Verein
               <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -240,17 +240,17 @@
             <!-- Dropdown Menu -->
             <div class="absolute top-full left-0 mt-2 w-48 bg-vsg-blue-900 border border-vsg-gold-500/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
               <div class="py-2">
-                <a href="#" class="block px-4 py-2 font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Geschichte</a>
-                <a href="#" class="block px-4 py-2 font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Vorstand</a>
-                <a href="#" class="block px-4 py-2 font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Satzung</a>
-                <a href="#" class="block px-4 py-2 font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Mitgliedschaft</a>
-                <a href="#" class="block px-4 py-2 font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Sponsoren</a>
+                <a href="#" class="block px-4 py-2 font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Geschichte</a>
+                <a href="#" class="block px-4 py-2 font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Vorstand</a>
+                <a href="#" class="block px-4 py-2 font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Satzung</a>
+                <a href="#" class="block px-4 py-2 font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Mitgliedschaft</a>
+                <a href="#" class="block px-4 py-2 font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Sponsoren</a>
               </div>
             </div>
           </div>
           <!-- Abteilungen Dropdown -->
           <div class="relative group">
-            <button class="font-body font-extralight text-sm tracking-wider text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors uppercase flex items-center gap-1">
+            <button class="font-body font-normal text-sm tracking-wider text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors uppercase flex items-center gap-1">
               Abteilungen
               <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -259,15 +259,15 @@
             <!-- Dropdown Menu -->
             <div class="absolute top-full left-0 mt-2 w-48 bg-vsg-blue-900 border border-vsg-gold-500/20 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0">
               <div class="py-2">
-                <a href="#" class="block px-4 py-2 font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Badminton</a>
-                <a href="#" class="block px-4 py-2 font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Gymnastik</a>
-                <a href="#" class="block px-4 py-2 font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Tischtennis</a>
-                <a href="#" class="block px-4 py-2 font-body font-extralight text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Volleyball</a>
+                <a href="#" class="block px-4 py-2 font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Badminton</a>
+                <a href="#" class="block px-4 py-2 font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Gymnastik</a>
+                <a href="#" class="block px-4 py-2 font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Tischtennis</a>
+                <a href="#" class="block px-4 py-2 font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors">Volleyball</a>
               </div>
             </div>
           </div>
-          <a href="#" class="font-body font-extralight text-sm tracking-wider text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors uppercase">Termine</a>
-          <a href="#" class="font-body font-extralight text-sm tracking-wider text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors uppercase">Kontakt</a>
+          <a href="#" class="font-body font-normal text-sm tracking-wider text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors uppercase">Termine</a>
+          <a href="#" class="font-body font-normal text-sm tracking-wider text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors uppercase">Kontakt</a>
           <button class="btn-primary bg-vsg-gold-500 text-vsg-blue-900 px-6 py-2 font-display text-lg tracking-wider">
             MITGLIED WERDEN
           </button>
@@ -295,11 +295,11 @@
           </svg>
         </button>
         <div id="mobile-verein-submenu" class="flex flex-col gap-3 mt-4 max-h-0 overflow-hidden transition-all duration-300 pl-4">
-          <a href="#" class="font-body font-extralight text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Geschichte</a>
-          <a href="#" class="font-body font-extralight text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Vorstand</a>
-          <a href="#" class="font-body font-extralight text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Satzung</a>
-          <a href="#" class="font-body font-extralight text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Mitgliedschaft</a>
-          <a href="#" class="font-body font-extralight text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Sponsoren</a>
+          <a href="#" class="font-body font-normal text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Geschichte</a>
+          <a href="#" class="font-body font-normal text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Vorstand</a>
+          <a href="#" class="font-body font-normal text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Satzung</a>
+          <a href="#" class="font-body font-normal text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Mitgliedschaft</a>
+          <a href="#" class="font-body font-normal text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Sponsoren</a>
         </div>
       </div>
       <!-- Abteilungen with submenu -->
@@ -311,10 +311,10 @@
           </svg>
         </button>
         <div id="mobile-abteilungen-submenu" class="flex flex-col gap-3 mt-4 max-h-0 overflow-hidden transition-all duration-300 pl-4">
-          <a href="#" class="font-body font-extralight text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Badminton</a>
-          <a href="#" class="font-body font-extralight text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Gymnastik</a>
-          <a href="#" class="font-body font-extralight text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Tischtennis</a>
-          <a href="#" class="font-body font-extralight text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Volleyball</a>
+          <a href="#" class="font-body font-normal text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Badminton</a>
+          <a href="#" class="font-body font-normal text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Gymnastik</a>
+          <a href="#" class="font-body font-normal text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Tischtennis</a>
+          <a href="#" class="font-body font-normal text-lg text-vsg-gold-300 hover:text-vsg-gold-400 transition-colors">Volleyball</a>
         </div>
       </div>
       <div class="w-full max-w-xs mb-4">
@@ -418,7 +418,7 @@
     
     <div class="relative z-10 max-w-7xl mx-auto px-6 py-20 text-center">
       <div class="animate-slide-up">
-        <span class="inline-block font-body font-extralight text-sm tracking-[0.5em] text-vsg-gold-400 uppercase mb-6 border border-vsg-gold-500/30 px-6 py-2">
+        <span class="inline-block font-body font-normal text-sm tracking-[0.5em] text-vsg-gold-400 uppercase mb-6 border border-vsg-gold-500/30 px-6 py-2">
           Sportverein seit 1920
         </span>
       </div>
@@ -431,7 +431,7 @@
         KUGELBERG
       </h2>
       
-      <p class="max-w-2xl mx-auto mt-8 font-body font-extralight text-lg md:text-xl text-vsg-blue-200 leading-relaxed animate-slide-up delay-400">
+      <p class="max-w-2xl mx-auto mt-8 font-body font-normal text-lg md:text-xl text-vsg-blue-200 leading-relaxed animate-slide-up delay-400">
         Tradition trifft Leidenschaft. Gemeinsam stark in Weißenfels.
         <span class="block mt-2 text-vsg-gold-500">Dein Verein. Deine Heimat.</span>
       </p>
@@ -460,19 +460,19 @@
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
         <div class="text-center animate-scale-in delay-100">
           <span class="font-display text-6xl md:text-8xl text-vsg-blue-600">104</span>
-          <span class="block font-body font-extralight text-sm tracking-widest text-vsg-blue-800 uppercase mt-2">Jahre Tradition</span>
+          <span class="block font-body font-normal text-sm tracking-widest text-vsg-blue-800 uppercase mt-2">Jahre Tradition</span>
         </div>
         <div class="text-center animate-scale-in delay-200">
           <span class="font-display text-6xl md:text-8xl text-vsg-blue-600">850+</span>
-          <span class="block font-body font-extralight text-sm tracking-widest text-vsg-blue-800 uppercase mt-2">Mitglieder</span>
+          <span class="block font-body font-normal text-sm tracking-widest text-vsg-blue-800 uppercase mt-2">Mitglieder</span>
         </div>
         <div class="text-center animate-scale-in delay-300">
           <span class="font-display text-6xl md:text-8xl text-vsg-blue-600">4</span>
-          <span class="block font-body font-extralight text-sm tracking-widest text-vsg-blue-800 uppercase mt-2">Abteilungen</span>
+          <span class="block font-body font-normal text-sm tracking-widest text-vsg-blue-800 uppercase mt-2">Abteilungen</span>
         </div>
         <div class="text-center animate-scale-in delay-400">
           <span class="font-display text-6xl md:text-8xl text-vsg-blue-600">47</span>
-          <span class="block font-body font-extralight text-sm tracking-widest text-vsg-blue-800 uppercase mt-2">Titel</span>
+          <span class="block font-body font-normal text-sm tracking-widest text-vsg-blue-800 uppercase mt-2">Titel</span>
         </div>
       </div>
     </div>
@@ -482,7 +482,7 @@
   <section class="relative py-32 bg-white">
     <div class="max-w-7xl mx-auto px-6">
       <div class="text-center mb-20">
-        <span class="font-body font-extralight text-sm tracking-[0.4em] text-vsg-blue-600 uppercase">Unsere Abteilungen</span>
+        <span class="font-body font-normal text-sm tracking-[0.4em] text-vsg-blue-600 uppercase">Unsere Abteilungen</span>
         <h3 class="font-display text-6xl md:text-8xl text-vsg-blue-900 mt-4 tracking-wider">ABTEILUNGEN</h3>
       </div>
       
@@ -495,7 +495,7 @@
             </svg>
           </div>
           <h4 class="font-display text-3xl text-vsg-blue-900 tracking-wider mb-3">BADMINTON</h4>
-          <p class="font-body font-extralight text-gray-600 leading-relaxed">
+          <p class="font-body font-normal text-gray-600 leading-relaxed">
             Schnelligkeit und Präzision – Badminton für alle Spielstärken.
           </p>
           <a href="#" class="inline-flex items-center gap-2 mt-6 font-body font-bold text-sm tracking-wider text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors uppercase">
@@ -514,7 +514,7 @@
             </svg>
           </div>
           <h4 class="font-display text-3xl text-vsg-blue-900 tracking-wider mb-3">GYMNASTIK</h4>
-          <p class="font-body font-extralight text-gray-600 leading-relaxed">
+          <p class="font-body font-normal text-gray-600 leading-relaxed">
             Beweglichkeit und Fitness – Gymnastik für jedes Alter.
           </p>
           <a href="#" class="inline-flex items-center gap-2 mt-6 font-body font-bold text-sm tracking-wider text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors uppercase">
@@ -534,7 +534,7 @@
             </svg>
           </div>
           <h4 class="font-display text-3xl text-vsg-blue-900 tracking-wider mb-3">TISCHTENNIS</h4>
-          <p class="font-body font-extralight text-gray-600 leading-relaxed">
+          <p class="font-body font-normal text-gray-600 leading-relaxed">
             Reaktion und Taktik – spannende Duelle an der Platte.
           </p>
           <a href="#" class="inline-flex items-center gap-2 mt-6 font-body font-bold text-sm tracking-wider text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors uppercase">
@@ -553,7 +553,7 @@
             </svg>
           </div>
           <h4 class="font-display text-3xl text-vsg-blue-900 tracking-wider mb-3">VOLLEYBALL</h4>
-          <p class="font-body font-extralight text-gray-600 leading-relaxed">
+          <p class="font-body font-normal text-gray-600 leading-relaxed">
             Teamgeist und Dynamik – unsere Volleyballer zeigen vollen Einsatz.
           </p>
           <a href="#" class="inline-flex items-center gap-2 mt-6 font-body font-bold text-sm tracking-wider text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors uppercase">
@@ -572,7 +572,7 @@
     <div class="max-w-7xl mx-auto px-6">
       <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16">
         <div>
-          <span class="font-body font-extralight text-sm tracking-[0.4em] text-vsg-blue-600 uppercase">Aktuelles</span>
+          <span class="font-body font-normal text-sm tracking-[0.4em] text-vsg-blue-600 uppercase">Aktuelles</span>
           <h3 class="font-display text-6xl md:text-8xl text-vsg-blue-900 mt-4 tracking-wider">NEWS</h3>
         </div>
         <a href="#" class="inline-flex items-center gap-2 mt-6 md:mt-0 font-body font-bold text-sm tracking-wider text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors uppercase">
@@ -593,11 +593,11 @@
             </div>
           </div>
           <div class="p-8">
-            <span class="font-body font-extralight text-sm text-vsg-blue-200">15. Dezember 2024</span>
+            <span class="font-body font-normal text-sm text-vsg-blue-200">15. Dezember 2024</span>
             <h4 class="font-display text-3xl text-white tracking-wider mt-2 mb-4 group-hover:text-vsg-gold-400 transition-colors">
               AUFSTIEG IN DIE LANDESKLASSE PERFEKT!
             </h4>
-            <p class="font-body font-extralight text-vsg-blue-100 leading-relaxed">
+            <p class="font-body font-normal text-vsg-blue-100 leading-relaxed">
               Mit einem souveränen 3:1 Sieg gegen den TSV Merseburg sichert sich unsere erste Mannschaft den lang ersehnten Aufstieg.
             </p>
           </div>
@@ -606,28 +606,28 @@
         <!-- News List -->
         <div class="space-y-6">
           <a href="#" class="card-hover block bg-gray-50 border-l-4 border-vsg-blue-600 p-6 group">
-            <span class="font-body font-extralight text-sm text-vsg-blue-500">12. Dezember 2024</span>
+            <span class="font-body font-normal text-sm text-vsg-blue-500">12. Dezember 2024</span>
             <h5 class="font-display text-xl text-vsg-blue-900 tracking-wider mt-1 group-hover:text-vsg-blue-600 transition-colors">
               Jugendtraining startet wieder – Neue Zeiten ab Januar
             </h5>
           </a>
           
           <a href="#" class="card-hover block bg-gray-50 border-l-4 border-vsg-blue-600 p-6 group">
-            <span class="font-body font-extralight text-sm text-vsg-blue-500">10. Dezember 2024</span>
+            <span class="font-body font-normal text-sm text-vsg-blue-500">10. Dezember 2024</span>
             <h5 class="font-display text-xl text-vsg-blue-900 tracking-wider mt-1 group-hover:text-vsg-blue-600 transition-colors">
               Weihnachtsfeier am 21.12. – Alle Mitglieder herzlich eingeladen
             </h5>
           </a>
           
           <a href="#" class="card-hover block bg-gray-50 border-l-4 border-vsg-blue-600 p-6 group">
-            <span class="font-body font-extralight text-sm text-vsg-blue-500">8. Dezember 2024</span>
+            <span class="font-body font-normal text-sm text-vsg-blue-500">8. Dezember 2024</span>
             <h5 class="font-display text-xl text-vsg-blue-900 tracking-wider mt-1 group-hover:text-vsg-blue-600 transition-colors">
               Neue Trikots für die Volleyball-Abteilung eingetroffen
             </h5>
           </a>
           
           <a href="#" class="card-hover block bg-gray-50 border-l-4 border-vsg-blue-600 p-6 group">
-            <span class="font-body font-extralight text-sm text-vsg-blue-500">5. Dezember 2024</span>
+            <span class="font-body font-normal text-sm text-vsg-blue-500">5. Dezember 2024</span>
             <h5 class="font-display text-xl text-vsg-blue-900 tracking-wider mt-1 group-hover:text-vsg-blue-600 transition-colors">
               Hallenturnier der E-Jugend ein voller Erfolg
             </h5>
@@ -645,7 +645,7 @@
       <h3 class="font-display text-5xl md:text-7xl lg:text-8xl text-vsg-blue-900 tracking-wider leading-tight">
         WERDE TEIL DER<br/>VSG FAMILIE
       </h3>
-      <p class="font-body font-extralight text-xl text-vsg-blue-800 mt-6 max-w-2xl mx-auto">
+      <p class="font-body font-normal text-xl text-vsg-blue-800 mt-6 max-w-2xl mx-auto">
         Egal ob aktiver Sportler, Unterstützer oder Förderer – bei uns findet jeder seinen Platz. 
         Gemeinsam sind wir stärker.
       </p>
@@ -672,10 +672,10 @@
             </div>
             <div>
               <span class="font-display text-3xl tracking-wider text-white">VSG KUGELBERG</span>
-              <span class="block text-xs font-body font-extralight tracking-[0.3em] text-vsg-gold-400 uppercase">Weißenfels</span>
+              <span class="block text-xs font-body font-normal tracking-[0.3em] text-vsg-gold-400 uppercase">Weißenfels</span>
             </div>
           </div>
-          <p class="font-body font-extralight text-vsg-blue-300 max-w-md leading-relaxed">
+          <p class="font-body font-normal text-vsg-blue-300 max-w-md leading-relaxed">
             Seit über 100 Jahren der Sportverein für Weißenfels und Umgebung. 
             Tradition, Gemeinschaft und sportliche Exzellenz.
           </p>
@@ -696,11 +696,11 @@
         <div>
           <h5 class="font-display text-xl text-vsg-gold-400 tracking-wider mb-6">VEREIN</h5>
           <ul class="space-y-3">
-            <li><a href="#" class="font-body font-extralight text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors">Geschichte</a></li>
-            <li><a href="#" class="font-body font-extralight text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors">Vorstand</a></li>
-            <li><a href="#" class="font-body font-extralight text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors">Satzung</a></li>
-            <li><a href="#" class="font-body font-extralight text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors">Mitgliedschaft</a></li>
-            <li><a href="#" class="font-body font-extralight text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors">Sponsoren</a></li>
+            <li><a href="#" class="font-body font-normal text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors">Geschichte</a></li>
+            <li><a href="#" class="font-body font-normal text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors">Vorstand</a></li>
+            <li><a href="#" class="font-body font-normal text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors">Satzung</a></li>
+            <li><a href="#" class="font-body font-normal text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors">Mitgliedschaft</a></li>
+            <li><a href="#" class="font-body font-normal text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors">Sponsoren</a></li>
           </ul>
         </div>
         
@@ -708,15 +708,15 @@
         <div>
           <h5 class="font-display text-xl text-vsg-gold-400 tracking-wider mb-6">KONTAKT</h5>
           <ul class="space-y-3">
-            <li class="font-body font-extralight text-vsg-blue-300">
+            <li class="font-body font-normal text-vsg-blue-300">
               VSG Kugelberg e.V.<br/>
               Kugelbergstraße 15<br/>
               06667 Weißenfels
             </li>
-            <li class="font-body font-extralight text-vsg-blue-300">
+            <li class="font-body font-normal text-vsg-blue-300">
               <a href="mailto:info@vsg-kugelberg.de" class="hover:text-vsg-gold-400 transition-colors">info@vsg-kugelberg.de</a>
             </li>
-            <li class="font-body font-extralight text-vsg-blue-300">
+            <li class="font-body font-normal text-vsg-blue-300">
               <a href="tel:+493443123456" class="hover:text-vsg-gold-400 transition-colors">+49 3443 123456</a>
             </li>
           </ul>
@@ -724,12 +724,12 @@
       </div>
       
       <div class="border-t border-vsg-gold-500/10 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-        <span class="font-body font-extralight text-sm text-vsg-blue-400">
+        <span class="font-body font-normal text-sm text-vsg-blue-400">
           &copy; 2024 VSG Kugelberg e.V. Alle Rechte vorbehalten.
         </span>
         <div class="flex gap-6">
-          <a href="#" class="font-body font-extralight text-sm text-vsg-blue-400 hover:text-vsg-gold-400 transition-colors">Impressum</a>
-          <a href="#" class="font-body font-extralight text-sm text-vsg-blue-400 hover:text-vsg-gold-400 transition-colors">Datenschutz</a>
+          <a href="#" class="font-body font-normal text-sm text-vsg-blue-400 hover:text-vsg-gold-400 transition-colors">Impressum</a>
+          <a href="#" class="font-body font-normal text-sm text-vsg-blue-400 hover:text-vsg-gold-400 transition-colors">Datenschutz</a>
         </div>
       </div>
     </div>

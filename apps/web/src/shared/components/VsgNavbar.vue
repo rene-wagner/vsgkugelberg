@@ -65,7 +65,7 @@ function toggleAbteilungen() {
               >VSG KUGELBERG</span
             >
             <span
-              class="block font-body text-xs font-extralight uppercase tracking-[0.3em] text-vsg-gold-400"
+              class="block font-body text-xs font-normal uppercase tracking-[0.3em] text-vsg-gold-400"
               >Weißenfels</span
             >
           </div>
@@ -76,7 +76,7 @@ function toggleAbteilungen() {
           <!-- Verein Dropdown -->
           <div class="group relative">
             <button
-              class="flex items-center gap-1 font-body text-sm font-extralight uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
+              class="flex items-center gap-1 font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             >
               Verein
               <svg
@@ -101,7 +101,7 @@ function toggleAbteilungen() {
                   v-for="item in vereinItems"
                   :key="item.label"
                   :href="item.href"
-                  class="block px-4 py-2 font-body text-sm font-extralight text-vsg-gold-300 transition-colors hover:bg-vsg-blue-800/50 hover:text-vsg-gold-400"
+                  class="block px-4 py-2 font-body text-sm font-normal text-vsg-gold-300 transition-colors hover:bg-vsg-blue-800/50 hover:text-vsg-gold-400"
                 >
                   {{ item.label }}
                 </a>
@@ -112,7 +112,7 @@ function toggleAbteilungen() {
           <!-- Abteilungen Dropdown -->
           <div class="group relative">
             <button
-              class="flex items-center gap-1 font-body text-sm font-extralight uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
+              class="flex items-center gap-1 font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             >
               Abteilungen
               <svg
@@ -137,7 +137,7 @@ function toggleAbteilungen() {
                   v-for="item in abteilungenItems"
                   :key="item.label"
                   :href="item.href"
-                  class="block px-4 py-2 font-body text-sm font-extralight text-vsg-gold-300 transition-colors hover:bg-vsg-blue-800/50 hover:text-vsg-gold-400"
+                  class="block px-4 py-2 font-body text-sm font-normal text-vsg-gold-300 transition-colors hover:bg-vsg-blue-800/50 hover:text-vsg-gold-400"
                 >
                   {{ item.label }}
                 </a>
@@ -147,12 +147,12 @@ function toggleAbteilungen() {
 
           <a
             href="#"
-            class="font-body text-sm font-extralight uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
+            class="font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             >Termine</a
           >
           <a
             href="#"
-            class="font-body text-sm font-extralight uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
+            class="font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             >Kontakt</a
           >
           <VsgButton variant="primary" size="md">MITGLIED WERDEN</VsgButton>
@@ -221,7 +221,7 @@ function toggleAbteilungen() {
             v-for="item in vereinItems"
             :key="item.label"
             :href="item.href"
-            class="font-body text-lg font-extralight text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
+            class="font-body text-lg font-normal text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             @click="closeMenu"
           >
             {{ item.label }}
@@ -259,7 +259,7 @@ function toggleAbteilungen() {
             v-for="item in abteilungenItems"
             :key="item.label"
             :href="item.href"
-            class="font-body text-lg font-extralight text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
+            class="font-body text-lg font-normal text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             @click="closeMenu"
           >
             {{ item.label }}

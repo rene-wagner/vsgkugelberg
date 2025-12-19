@@ -43,7 +43,7 @@ async function handleSubmit() {
     <div class="animate-slide-up delay-300">
       <label
         for="username"
-        class="block font-body font-extralight text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
+        class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
       >
         Benutzername
       </label>
@@ -61,7 +61,7 @@ async function handleSubmit() {
     <div class="animate-slide-up delay-400">
       <label
         for="password"
-        class="block font-body font-extralight text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
+        class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
       >
         Passwort
       </label>

@@ -27,7 +27,7 @@ withDefaults(defineProps<Props>(), {
       </div>
     </div>
     <div class="p-8">
-      <span class="font-body text-sm font-extralight text-vsg-blue-200">
+      <span class="font-body text-sm font-normal text-vsg-blue-200">
         {{ date }}
       </span>
       <h4
@@ -35,7 +35,7 @@ withDefaults(defineProps<Props>(), {
       >
         {{ title }}
       </h4>
-      <p class="font-body font-extralight leading-relaxed text-vsg-blue-100">
+      <p class="font-body font-normal leading-relaxed text-vsg-blue-100">
         {{ excerpt }}
       </p>
     </div>

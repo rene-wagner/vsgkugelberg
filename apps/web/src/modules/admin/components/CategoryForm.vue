@@ -87,7 +87,7 @@ async function handleDelete() {
   if (!props.category) return;
 
   const confirmed = window.confirm(
-    `Mochtest du die Kategorie "${props.category.name}" wirklich loschen?`,
+    `Mochtest du die Kategorie "${props.category.name}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -98,7 +98,7 @@ async function handleDelete() {
   if (success) {
     router.push('/admin/categories');
   } else {
-    error.value = categoriesStore.error || 'Fehler beim Loschen der Kategorie';
+    error.value = categoriesStore.error || 'Fehler beim löschen der Kategorie';
   }
 }
 
@@ -128,7 +128,7 @@ function handleCancel() {
         <div>
           <label
             for="name"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Name <span class="text-red-500">*</span>
           </label>
@@ -146,7 +146,7 @@ function handleCancel() {
         <div>
           <label
             for="description"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Beschreibung
           </label>
@@ -181,7 +181,7 @@ function handleCancel() {
           :disabled="isSubmitting"
           @click="handleDelete"
         >
-          Kategorie loschen
+          Kategorie löschen
         </button>
         <button
           type="submit"

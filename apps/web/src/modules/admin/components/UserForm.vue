@@ -110,7 +110,7 @@ async function handleDelete() {
   if (!props.user) return;
 
   const confirmed = window.confirm(
-    `Mochtest du den Benutzer "${props.user.username}" wirklich loschen?`,
+    `Mochtest du den Benutzer "${props.user.username}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -121,7 +121,7 @@ async function handleDelete() {
   if (success) {
     router.push('/admin/users');
   } else {
-    error.value = usersStore.error || 'Fehler beim Loschen des Benutzers';
+    error.value = usersStore.error || 'Fehler beim löschen des Benutzers';
   }
 }
 
@@ -151,7 +151,7 @@ function handleCancel() {
         <div>
           <label
             for="username"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Benutzername <span class="text-red-500">*</span>
           </label>
@@ -169,7 +169,7 @@ function handleCancel() {
         <div>
           <label
             for="email"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             E-Mail Adresse <span class="text-red-500">*</span>
           </label>
@@ -192,7 +192,7 @@ function handleCancel() {
       </h2>
       <p
         v-if="isEditMode"
-        class="font-body font-extralight text-sm text-gray-500 mb-6"
+        class="font-body font-normal text-sm text-gray-500 mb-6"
       >
         Lasse die Felder leer, um das Passwort nicht zu andern.
       </p>
@@ -202,7 +202,7 @@ function handleCancel() {
         <div>
           <label
             for="password"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             {{ isEditMode ? 'Neues Passwort' : 'Passwort' }}
             <span v-if="!isEditMode" class="text-red-500">*</span>
@@ -221,7 +221,7 @@ function handleCancel() {
         <div>
           <label
             for="confirmPassword"
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Passwort bestatigen
             <span v-if="!isEditMode" class="text-red-500">*</span>
@@ -263,7 +263,7 @@ function handleCancel() {
           :disabled="isSubmitting"
           @click="handleDelete"
         >
-          Benutzer loschen
+          Benutzer löschen
         </button>
         <button
           type="submit"

@@ -30,7 +30,7 @@ withDefaults(defineProps<Props>(), {
     <h4 class="mb-3 font-display text-3xl tracking-wider text-vsg-blue-900">
       {{ title }}
     </h4>
-    <p class="font-body font-extralight leading-relaxed text-gray-600">
+    <p class="font-body font-normal leading-relaxed text-gray-600">
       {{ description }}
     </p>
     <VsgLinkArrow :href="href" class="mt-6">Mehr erfahren</VsgLinkArrow>

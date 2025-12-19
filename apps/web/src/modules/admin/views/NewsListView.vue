@@ -38,7 +38,7 @@ function formatDate(dateString: string): string {
 
 async function handleDelete(item: NewsItem) {
   const confirmed = window.confirm(
-    `Mochtest du den Artikel "${item.title}" wirklich loschen?`,
+    `Mochtest du den Artikel "${item.title}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -56,7 +56,7 @@ const newsCount = computed(() => newsStore.news.length);
         <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
           NEWS
         </h1>
-        <p class="font-body font-extralight text-vsg-blue-600 mt-1">
+        <p class="font-body font-normal text-vsg-blue-600 mt-1">
           Verwalte alle Neuigkeiten
         </p>
       </div>
@@ -94,27 +94,27 @@ const newsCount = computed(() => newsStore.news.length);
           <thead>
             <tr class="bg-gray-50 border-b border-gray-200">
               <th
-                class="text-left px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Titel
               </th>
               <th
-                class="text-left px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Autor
               </th>
               <th
-                class="text-left px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Status
               </th>
               <th
-                class="text-left px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Datum
               </th>
               <th
-                class="text-right px-6 py-4 font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase"
+                class="text-right px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Aktionen
               </th>
@@ -139,7 +139,7 @@ const newsCount = computed(() => newsStore.news.length);
                     {{ getAuthorInitials(item.author.username) }}
                   </div>
                   <span
-                    class="font-body font-extralight text-sm text-gray-600"
+                    class="font-body font-normal text-sm text-gray-600"
                     >{{ item.author.username }}</span
                   >
                 </div>
@@ -153,7 +153,7 @@ const newsCount = computed(() => newsStore.news.length);
                 </span>
               </td>
               <td
-                class="px-6 py-4 font-body font-extralight text-sm text-gray-500"
+                class="px-6 py-4 font-body font-normal text-sm text-gray-500"
               >
                 {{ formatDate(item.createdAt) }}
               </td>
@@ -180,7 +180,7 @@ const newsCount = computed(() => newsStore.news.length);
                   </router-link>
                   <button
                     class="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                    title="Loschen"
+                    title="löschen"
                     @click="handleDelete(item)"
                   >
                     <svg
@@ -220,7 +220,7 @@ const newsCount = computed(() => newsStore.news.length);
         v-if="newsStore.news.length > 0"
         class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
       >
-        <div class="font-body font-extralight text-sm text-gray-500">
+        <div class="font-body font-normal text-sm text-gray-500">
           Zeige
           <span class="text-vsg-blue-900 font-medium">{{ newsCount }}</span>
           Eintrage
