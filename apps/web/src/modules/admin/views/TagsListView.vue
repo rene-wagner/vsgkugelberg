@@ -1,73 +1,62 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onMounted } from 'vue';
+import { useTagsStore } from '../stores/tagsStore';
 
-// Dummy data
-const tags = ref([
-  { id: 1, name: 'Badminton', slug: 'badminton' },
-  { id: 2, name: 'Gymnastik', slug: 'gymnastik' },
-  { id: 3, name: 'Tischtennis', slug: 'tischtennis' },
-  { id: 4, name: 'Volleyball', slug: 'volleyball' },
-  { id: 5, name: 'Turnier', slug: 'turnier' },
-  { id: 6, name: 'Training', slug: 'training' },
-  { id: 7, name: 'Jugend', slug: 'jugend' },
-  { id: 8, name: 'Senioren', slug: 'senioren' },
-]);
+const tagsStore = useTagsStore();
+
+onMounted(() => {
+  tagsStore.fetchTags();
+});
+
+async function handleDelete(slug: string, name: string) {
+  const confirmed = window.confirm(
+    `Mochtest du den Tag "${name}" wirklich loschen?`,
+  );
+  if (!confirmed) return;
+
+  await tagsStore.deleteTag(slug);
+}
 </script>
 
 <template>
   <div>
     <!-- Page Header -->
-    <div class="mb-8">
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
-        TAGS
-      </h1>
-      <p class="font-body font-extralight text-vsg-blue-600 mt-1">
-        Verwalte alle Tags
-      </p>
+    <div class="mb-8 flex items-start justify-between">
+      <div>
+        <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
+          TAGS
+        </h1>
+        <p class="font-body font-extralight text-vsg-blue-600 mt-1">
+          Verwalte alle Tags
+        </p>
+      </div>
+      <router-link
+        to="/admin/tags/new"
+        class="px-6 py-2.5 bg-vsg-gold-400 text-vsg-blue-900 font-display text-sm tracking-wider rounded-lg hover:bg-vsg-gold-300 transition-colors"
+      >
+        TAG HINZUFUGEN
+      </router-link>
     </div>
 
-    <!-- Filters -->
-    <div class="bg-gray-50 border border-gray-200 rounded-xl p-6 mb-6">
-      <div class="flex flex-wrap items-end gap-4">
-        <!-- Search -->
-        <div class="flex-1 min-w-[200px]">
-          <label
-            class="block font-body font-extralight text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-            >Suche</label
-          >
-          <div class="relative">
-            <input
-              type="text"
-              placeholder="Name oder Slug..."
-              class="form-input-custom w-full pl-10 pr-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 placeholder-gray-400 text-sm focus:outline-none focus:border-vsg-blue-600"
-            />
-            <svg
-              class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </div>
-        </div>
+    <!-- Loading State -->
+    <div
+      v-if="tagsStore.isLoading"
+      class="flex items-center justify-center py-12"
+    >
+      <div class="text-vsg-blue-600 font-body">Laden...</div>
+    </div>
 
-        <!-- Filter Button -->
-        <button
-          class="px-6 py-2.5 bg-vsg-gold-400 text-vsg-blue-900 font-display text-sm tracking-wider rounded-lg hover:bg-vsg-gold-300 transition-colors"
-        >
-          FILTERN
-        </button>
-      </div>
+    <!-- Error State -->
+    <div
+      v-else-if="tagsStore.error"
+      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
+    >
+      <p class="text-sm text-red-600 font-body">{{ tagsStore.error }}</p>
     </div>
 
     <!-- Table -->
     <div
+      v-else
       class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
     >
       <div class="overflow-x-auto">
@@ -93,9 +82,9 @@ const tags = ref([
           </thead>
           <tbody class="divide-y divide-gray-100">
             <tr
-              v-for="tag in tags"
+              v-for="tag in tagsStore.tags"
               :key="tag.id"
-              class="table-row-hover transition-colors"
+              class="hover:bg-gray-50 transition-colors"
             >
               <td class="px-6 py-4">
                 <span class="font-body text-sm text-vsg-blue-900 font-medium">{{
@@ -110,7 +99,8 @@ const tags = ref([
               </td>
               <td class="px-6 py-4">
                 <div class="flex items-center justify-end gap-2">
-                  <button
+                  <router-link
+                    :to="`/admin/tags/${tag.slug}/edit`"
                     class="p-2 text-gray-400 hover:text-vsg-blue-600 transition-colors"
                     title="Bearbeiten"
                   >
@@ -127,10 +117,11 @@ const tags = ref([
                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                       />
                     </svg>
-                  </button>
+                  </router-link>
                   <button
                     class="p-2 text-gray-400 hover:text-red-500 transition-colors"
                     title="Loschen"
+                    @click="handleDelete(tag.slug, tag.name)"
                   >
                     <svg
                       class="w-4 h-4"
@@ -153,57 +144,28 @@ const tags = ref([
         </table>
       </div>
 
+      <!-- Empty State -->
+      <div v-if="tagsStore.tags.length === 0" class="px-6 py-12 text-center">
+        <p class="font-body text-gray-500">Keine Tags vorhanden.</p>
+        <router-link
+          to="/admin/tags/new"
+          class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm"
+        >
+          Ersten Tag erstellen
+        </router-link>
+      </div>
+
       <!-- Pagination -->
       <div
+        v-if="tagsStore.tags.length > 0"
         class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
       >
         <div class="font-body font-extralight text-sm text-gray-500">
           Zeige
-          <span class="text-vsg-blue-900 font-medium">1-8</span> von
-          <span class="text-vsg-blue-900 font-medium">8</span> Eintragen
-        </div>
-        <div class="flex items-center gap-2">
-          <button
-            class="p-2 text-gray-400 hover:text-vsg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            disabled
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <button
-            class="w-8 h-8 bg-vsg-blue-600 text-white font-body text-sm rounded"
-          >
-            1
-          </button>
-          <button
-            class="p-2 text-gray-400 hover:text-vsg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            disabled
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
+          <span class="text-vsg-blue-900 font-medium">{{
+            tagsStore.tags.length
+          }}</span>
+          Eintrage
         </div>
       </div>
     </div>
