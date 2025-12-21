@@ -1,3 +1,6 @@
+# IDEs
+.idea/
+
 # Node
 node_modules/
 
@@ -10,6 +13,9 @@ dist/
 # Environment variables
 .env*
 !.env.example
+
+# Old data
+data/
 
 # AI Files - ignore all except workflows
 .github/*
