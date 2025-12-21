@@ -1,31 +1,28 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "username" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-  - You are about to drop the column `viewCount` on the `Post` table. All the data in the column will be lost.
-  - You are about to drop the column `name` on the `User` table. All the data in the column will be lost.
-  - A unique constraint covering the columns `[slug]` on the table `Post` will be added. If there are existing duplicate values, this will fail.
-  - A unique constraint covering the columns `[username]` on the table `User` will be added. If there are existing duplicate values, this will fail.
-  - Added the required column `slug` to the `Post` table without a default value. This is not possible if the table is not empty.
-  - Made the column `authorId` on table `Post` required. This step will fail if there are existing NULL values in that column.
-  - Added the required column `password` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `updatedAt` to the `User` table without a default value. This is not possible if the table is not empty.
-  - Added the required column `username` to the `User` table without a default value. This is not possible if the table is not empty.
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
-*/
--- DropForeignKey
-ALTER TABLE "Post" DROP CONSTRAINT "Post_authorId_fkey";
+-- CreateTable
+CREATE TABLE "Post" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "content" TEXT,
+    "published" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "authorId" INTEGER NOT NULL,
 
--- AlterTable
-ALTER TABLE "Post" DROP COLUMN "viewCount",
-ADD COLUMN     "slug" TEXT NOT NULL,
-ALTER COLUMN "authorId" SET NOT NULL;
-
--- AlterTable
-ALTER TABLE "User" DROP COLUMN "name",
-ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "password" TEXT NOT NULL,
-ADD COLUMN     "updatedAt" TIMESTAMP(3) NOT NULL,
-ADD COLUMN     "username" TEXT NOT NULL;
+    CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Category" (
@@ -64,6 +61,20 @@ CREATE TABLE "Department" (
 );
 
 -- CreateTable
+CREATE TABLE "Block" (
+    "id" TEXT NOT NULL,
+    "page" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+    "data" JSONB,
+    "parentId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Block_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_PostToTag" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL,
@@ -78,6 +89,18 @@ CREATE TABLE "_CategoryToPost" (
 
     CONSTRAINT "_CategoryToPost_AB_pkey" PRIMARY KEY ("A","B")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Post_slug_key" ON "Post"("slug");
+
+-- CreateIndex
+CREATE INDEX "Post_slug_idx" ON "Post"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
@@ -107,22 +130,22 @@ CREATE UNIQUE INDEX "Department_slug_key" ON "Department"("slug");
 CREATE INDEX "Department_slug_idx" ON "Department"("slug");
 
 -- CreateIndex
+CREATE INDEX "Block_page_idx" ON "Block"("page");
+
+-- CreateIndex
+CREATE INDEX "Block_parentId_idx" ON "Block"("parentId");
+
+-- CreateIndex
 CREATE INDEX "_PostToTag_B_index" ON "_PostToTag"("B");
 
 -- CreateIndex
 CREATE INDEX "_CategoryToPost_B_index" ON "_CategoryToPost"("B");
 
--- CreateIndex
-CREATE UNIQUE INDEX "Post_slug_key" ON "Post"("slug");
-
--- CreateIndex
-CREATE INDEX "Post_slug_idx" ON "Post"("slug");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
-
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Block" ADD CONSTRAINT "Block_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Block"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_PostToTag" ADD CONSTRAINT "_PostToTag_A_fkey" FOREIGN KEY ("A") REFERENCES "Post"("id") ON DELETE CASCADE ON UPDATE CASCADE;
