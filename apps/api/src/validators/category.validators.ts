@@ -15,6 +15,11 @@ export const createCategoryValidator = [
     .withMessage('Description must be a string')
     .isLength({ max: 500 })
     .withMessage('Description must not exceed 500 characters'),
+
+  body('parentId')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Parent ID must be a positive integer'),
 ];
 
 export const updateCategoryValidator = [
@@ -31,6 +36,20 @@ export const updateCategoryValidator = [
     .withMessage('Description must be a string')
     .isLength({ max: 500 })
     .withMessage('Description must not exceed 500 characters'),
+
+  body('parentId')
+    .optional({ values: 'null' })
+    .isInt({ min: 1 })
+    .withMessage('Parent ID must be a positive integer or null'),
+];
+
+export const moveCategoryValidator = [
+  body('parentId').custom((value) => {
+    if (value !== null && (!Number.isInteger(value) || value < 1)) {
+      throw new Error('Parent ID must be a positive integer or null');
+    }
+    return true;
+  }),
 ];
 
 export const slugParamValidator = [

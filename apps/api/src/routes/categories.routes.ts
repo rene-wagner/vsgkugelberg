@@ -7,9 +7,14 @@ import { jwtMiddleware } from '@/middleware/jwt.middleware';
 import {
   createCategoryValidator,
   updateCategoryValidator,
+  moveCategoryValidator,
   slugParamValidator,
 } from '@/validators/category.validators';
-import { CreateCategoryDto, UpdateCategoryDto } from '@/types/category.types';
+import {
+  CreateCategoryDto,
+  UpdateCategoryDto,
+  MoveCategoryDto,
+} from '@/types/category.types';
 
 const router = Router();
 const categoriesService = new CategoriesService();
@@ -61,6 +66,22 @@ router.patch(
     const { slug } = req.params;
     const updateCategoryDto: UpdateCategoryDto = req.body;
     const category = await categoriesService.update(slug, updateCategoryDto);
+    res.json(category);
+  }),
+);
+
+// Protected route - Move category to new parent
+router.post(
+  '/:slug/move',
+  jwtMiddleware,
+  authGuardMiddleware,
+  slugParamValidator,
+  moveCategoryValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const { slug } = req.params;
+    const moveCategoryDto: MoveCategoryDto = req.body;
+    const category = await categoriesService.move(slug, moveCategoryDto);
     res.json(category);
   }),
 );
