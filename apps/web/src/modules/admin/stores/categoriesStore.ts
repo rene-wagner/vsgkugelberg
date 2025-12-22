@@ -8,6 +8,8 @@ export interface Category {
   name: string;
   slug: string;
   description: string | null;
+  parentId: number | null;
+  children: Category[];
   createdAt: string;
   updatedAt: string;
 }
@@ -15,11 +17,13 @@ export interface Category {
 export interface CreateCategoryData {
   name: string;
   description?: string;
+  parentId?: number;
 }
 
 export interface UpdateCategoryData {
   name?: string;
   description?: string;
+  parentId?: number | null;
 }
 
 export const useCategoriesStore = defineStore('categories', () => {

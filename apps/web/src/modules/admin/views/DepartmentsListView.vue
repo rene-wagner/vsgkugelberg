@@ -91,9 +91,7 @@ async function handleDelete(slug: string, name: string) {
                   department.name
                 }}</span>
               </td>
-              <td
-                class="px-6 py-4 font-body font-normal text-sm text-gray-600"
-              >
+              <td class="px-6 py-4 font-body font-normal text-sm text-gray-600">
                 {{ department.shortDescription }}
               </td>
               <td class="px-6 py-4">

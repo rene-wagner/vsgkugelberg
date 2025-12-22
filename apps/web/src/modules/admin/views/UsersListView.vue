@@ -121,14 +121,10 @@ async function handleDelete(userId: number, username: string) {
                   }}</span>
                 </div>
               </td>
-              <td
-                class="px-6 py-4 font-body font-normal text-sm text-gray-600"
-              >
+              <td class="px-6 py-4 font-body font-normal text-sm text-gray-600">
                 {{ user.email }}
               </td>
-              <td
-                class="px-6 py-4 font-body font-normal text-sm text-gray-500"
-              >
+              <td class="px-6 py-4 font-body font-normal text-sm text-gray-500">
                 {{ formatDate(user.createdAt) }}
               </td>
               <td class="px-6 py-4">

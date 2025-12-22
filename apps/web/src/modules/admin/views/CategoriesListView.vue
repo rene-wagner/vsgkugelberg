@@ -1,8 +1,40 @@
 <script setup lang="ts">
-import { onMounted } from 'vue';
-import { useCategoriesStore } from '../stores/categoriesStore';
+import { computed, onMounted } from 'vue';
+import { useCategoriesStore, type Category } from '../stores/categoriesStore';
 
 const categoriesStore = useCategoriesStore();
+
+interface FlattenedCategory extends Category {
+  depth: number;
+}
+
+// Recursively flatten the category tree with depth information
+function flattenCategories(
+  categories: Category[],
+  depth: number = 0,
+): FlattenedCategory[] {
+  const result: FlattenedCategory[] = [];
+
+  for (const category of categories) {
+    result.push({ ...category, depth });
+
+    if (category.children && category.children.length > 0) {
+      result.push(...flattenCategories(category.children, depth + 1));
+    }
+  }
+
+  return result;
+}
+
+// Computed flattened categories for display
+const flattenedCategories = computed(() =>
+  flattenCategories(categoriesStore.categories),
+);
+
+// Helper to calculate padding based on depth
+function getPaddingLeft(depth: number): string {
+  return `${depth * 1.5}rem`;
+}
 
 onMounted(() => {
   categoriesStore.fetchCategories();
@@ -87,14 +119,20 @@ async function handleDelete(slug: string, name: string) {
           </thead>
           <tbody class="divide-y divide-gray-100">
             <tr
-              v-for="category in categoriesStore.categories"
+              v-for="category in flattenedCategories"
               :key="category.id"
               class="hover:bg-gray-50 transition-colors"
             >
               <td class="px-6 py-4">
-                <span class="font-body text-sm text-vsg-blue-900 font-medium">{{
-                  category.name
-                }}</span>
+                <span
+                  class="font-body text-sm text-vsg-blue-900 font-medium inline-flex items-center"
+                  :style="{ paddingLeft: getPaddingLeft(category.depth) }"
+                >
+                  <span v-if="category.depth > 0" class="text-gray-300 mr-2"
+                    >└</span
+                  >
+                  {{ category.name }}
+                </span>
               </td>
               <td class="px-6 py-4">
                 <code
@@ -102,9 +140,7 @@ async function handleDelete(slug: string, name: string) {
                   >{{ category.slug }}</code
                 >
               </td>
-              <td
-                class="px-6 py-4 font-body font-normal text-sm text-gray-600"
-              >
+              <td class="px-6 py-4 font-body font-normal text-sm text-gray-600">
                 {{ category.description || '-' }}
               </td>
               <td class="px-6 py-4">
@@ -156,7 +192,7 @@ async function handleDelete(slug: string, name: string) {
 
       <!-- Empty State -->
       <div
-        v-if="categoriesStore.categories.length === 0"
+        v-if="flattenedCategories.length === 0"
         class="px-6 py-12 text-center"
       >
         <p class="font-body text-gray-500">Keine Kategorien vorhanden.</p>
@@ -170,13 +206,13 @@ async function handleDelete(slug: string, name: string) {
 
       <!-- Pagination -->
       <div
-        v-if="categoriesStore.categories.length > 0"
+        v-if="flattenedCategories.length > 0"
         class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
       >
         <div class="font-body font-normal text-sm text-gray-500">
           Zeige
           <span class="text-vsg-blue-900 font-medium">{{
-            categoriesStore.categories.length
+            flattenedCategories.length
           }}</span>
           Eintrage
         </div>

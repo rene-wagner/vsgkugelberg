@@ -138,10 +138,9 @@ const newsCount = computed(() => newsStore.news.length);
                   >
                     {{ getAuthorInitials(item.author.username) }}
                   </div>
-                  <span
-                    class="font-body font-normal text-sm text-gray-600"
-                    >{{ item.author.username }}</span
-                  >
+                  <span class="font-body font-normal text-sm text-gray-600">{{
+                    item.author.username
+                  }}</span>
                 </div>
               </td>
               <td class="px-6 py-4">
@@ -152,9 +151,7 @@ const newsCount = computed(() => newsStore.news.length);
                   {{ getStatusLabel(item.published) }}
                 </span>
               </td>
-              <td
-                class="px-6 py-4 font-body font-normal text-sm text-gray-500"
-              >
+              <td class="px-6 py-4 font-body font-normal text-sm text-gray-500">
                 {{ formatDate(item.createdAt) }}
               </td>
               <td class="px-6 py-4">

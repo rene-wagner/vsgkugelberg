@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   useCategoriesStore,
@@ -7,6 +7,7 @@ import {
   type CreateCategoryData,
   type UpdateCategoryData,
 } from '../stores/categoriesStore';
+import VsgTreeSelect from '@/shared/components/VsgTreeSelect.vue';
 
 const props = defineProps<{
   category: Category | null;
@@ -18,8 +19,48 @@ const categoriesStore = useCategoriesStore();
 
 const name = ref('');
 const description = ref('');
+const selectedParentId = ref<number | null>(null);
 const error = ref('');
 const isSubmitting = ref(false);
+
+// Fetch categories on mount for parent selection
+onMounted(async () => {
+  await categoriesStore.fetchCategories();
+});
+
+// Helper to collect all descendant IDs of a category
+function getDescendantIds(category: Category): number[] {
+  const ids: number[] = [category.id];
+  if (category.children) {
+    for (const child of category.children) {
+      ids.push(...getDescendantIds(child));
+    }
+  }
+  return ids;
+}
+
+// Filter out current category and its descendants to prevent circular references
+function filterCategories(
+  categories: Category[],
+  excludeIds: Set<number>,
+): Category[] {
+  return categories
+    .filter((cat) => !excludeIds.has(cat.id))
+    .map((cat) => ({
+      ...cat,
+      children: cat.children ? filterCategories(cat.children, excludeIds) : [],
+    }));
+}
+
+// Computed available parent categories (excludes self and descendants in edit mode)
+const availableParentCategories = computed(() => {
+  if (!props.isEditMode || !props.category) {
+    return categoriesStore.categories;
+  }
+
+  const excludeIds = new Set(getDescendantIds(props.category));
+  return filterCategories(categoriesStore.categories, excludeIds);
+});
 
 // Watch for category prop changes to populate form
 watch(
@@ -28,6 +69,7 @@ watch(
     if (newCategory) {
       name.value = newCategory.name;
       description.value = newCategory.description || '';
+      selectedParentId.value = newCategory.parentId;
     }
   },
   { immediate: true },
@@ -49,6 +91,7 @@ async function handleSubmit() {
       const updateData: UpdateCategoryData = {
         name: name.value,
         description: description.value || undefined,
+        parentId: selectedParentId.value,
       };
 
       const result = await categoriesStore.updateCategory(
@@ -66,6 +109,7 @@ async function handleSubmit() {
       const createData: CreateCategoryData = {
         name: name.value,
         description: description.value || undefined,
+        parentId: selectedParentId.value || undefined,
       };
 
       const result = await categoriesStore.createCategory(createData);
@@ -157,6 +201,25 @@ function handleCancel() {
             class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600 resize-none"
             placeholder="Optionale Beschreibung der Kategorie..."
           ></textarea>
+        </div>
+
+        <!-- Parent Category -->
+        <div>
+          <label
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
+            Übergeordnete Kategorie
+          </label>
+          <VsgTreeSelect
+            v-model="selectedParentId"
+            :options="availableParentCategories"
+            placeholder="Keine übergeordnete Kategorie"
+            :disabled="categoriesStore.isLoading"
+          />
+          <p class="mt-1.5 text-xs text-gray-500 font-body">
+            Optional: Wähle eine übergeordnete Kategorie, um eine Unterkategorie
+            zu erstellen.
+          </p>
         </div>
       </div>
     </div>

@@ -185,10 +185,9 @@ const navItems = [
                     :d="item.icon"
                   />
                 </svg>
-                <span
-                  class="font-body font-normal text-sm text-vsg-blue-200"
-                  >{{ item.name }}</span
-                >
+                <span class="font-body font-normal text-sm text-vsg-blue-200">{{
+                  item.name
+                }}</span>
               </RouterLink>
             </li>
           </ul>
