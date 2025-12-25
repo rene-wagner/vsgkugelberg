@@ -83,6 +83,7 @@ jobs:
     env:
       PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
       DATABASE_URL: postgresql://user:secret@localhost:5432/database_test?schema=public
+      JWT_EXPIRATION: 12h
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
