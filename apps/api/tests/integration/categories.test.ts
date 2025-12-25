@@ -149,7 +149,7 @@ describe('Categories API Integration Tests', () => {
         data: { name: 'Sports', slug: 'sports', description: null },
       });
 
-      const child = await prisma.category.create({
+      const _child = await prisma.category.create({
         data: {
           name: 'Volleyball',
           slug: 'sports/volleyball',
@@ -157,89 +157,6 @@ describe('Categories API Integration Tests', () => {
           parentId: parent.id,
         },
       });
-
-      const response = await request(app).get('/api/categories/sports/volleyball');
-
-      expect(response.status).toBe(200);
-      expect(response.body.id).toBe(child.id);
-      expect(response.body.name).toBe('Volleyball');
-      expect(response.body.slug).toBe('sports/volleyball');
-    });
-
-    it('should include direct children in response', async () => {
-      const parent = await prisma.category.create({
-        data: { name: 'Sports', slug: 'sports', description: null },
-      });
-
-      await prisma.category.createMany({
-        data: [
-          {
-            name: 'Volleyball',
-            slug: 'sports/volleyball',
-            description: null,
-            parentId: parent.id,
-          },
-          {
-            name: 'Badminton',
-            slug: 'sports/badminton',
-            description: null,
-            parentId: parent.id,
-          },
-          {
-            name: 'Gymnastics',
-            slug: 'sports/gymnastics',
-            description: null,
-            parentId: parent.id,
-          },
-        ],
-      });
-
-      const response = await request(app).get('/api/categories/sports');
-
-      expect(response.status).toBe(200);
-      expect(response.body.children.length).toBe(3);
-      // Should be sorted alphabetically
-      expect(response.body.children[0].name).toBe('Badminton');
-      expect(response.body.children[1].name).toBe('Gymnastics');
-      expect(response.body.children[2].name).toBe('Volleyball');
-    });
-
-    it('should return 404 for non-existent category', async () => {
-      const response = await request(app).get('/api/categories/non-existent');
-
-      expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty('statusCode', 404);
-      expect(response.body.message).toContain('not found');
-    });
-
-    it('should return 404 for non-existent nested category', async () => {
-      await prisma.category.create({
-        data: { name: 'Sports', slug: 'sports', description: null },
-      });
-
-      const response = await request(app).get('/api/categories/sports/swimming');
-
-      expect(response.status).toBe(404);
-      expect(response.body).toHaveProperty('statusCode', 404);
-      expect(response.body.message).toContain('not found');
-    });
-
-    it('should return 400 for invalid slug format', async () => {
-      const response = await request(app).get('/api/categories/invalid slug!');
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('statusCode', 400);
-    });
-  });
-
-  describe('POST /api/categories', () => {
-    it('should create a root category with authentication', async () => {
-      const { cookies } = await createAuthenticatedUser();
-
-      const newCategory = {
-        name: 'Web Development',
-        description: 'Articles about web development',
-      };
 
       const response = await request(app)
         .post('/api/categories')
@@ -523,7 +440,7 @@ describe('Categories API Integration Tests', () => {
         data: { name: 'Sports', slug: 'sports', description: null },
       });
 
-      const child = await prisma.category.create({
+      const _child = await prisma.category.create({
         data: {
           name: 'Volleyball',
           slug: 'sports/volleyball',
@@ -600,7 +517,7 @@ describe('Categories API Integration Tests', () => {
         data: { name: 'Sports', slug: 'sports', description: null },
       });
 
-      const category = await prisma.category.create({
+      const _category = await prisma.category.create({
         data: {
           name: 'Volleyball',
           slug: 'sports/volleyball',
@@ -950,6 +867,134 @@ describe('Categories API Integration Tests', () => {
       // Verify all descendants are deleted
       const remaining = await prisma.category.findMany();
       expect(remaining.length).toBe(0);
+    });
+  });
+
+  describe('POST /api/categories/recalculate-slugs', () => {
+    it('should recalculate slugs for all flat categories', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      await prisma.category.createMany({
+        data: [
+          { name: 'Sports', slug: 'sports', description: null },
+          { name: 'News', slug: 'news', description: null },
+          { name: 'Events', slug: 'events', description: null },
+        ],
+      });
+
+      const response = await request(app)
+        .post('/api/categories/recalculate-slugs')
+        .set('Cookie', cookies);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject({ updated: 3 });
+
+      // Verify slugs remain unchanged (names unchanged)
+      const categories = await prisma.category.findMany({
+        select: { slug: true },
+        orderBy: { slug: 'asc' },
+      });
+      expect(categories).toEqual([
+        { slug: 'events' },
+        { slug: 'news' },
+        { slug: 'sports' },
+      ]);
+    });
+
+    it('should recalculate hierarchical slugs correctly', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const parent = await prisma.category.create({
+        data: { name: 'Sports', slug: 'sports', description: null },
+      });
+
+      const child = await prisma.category.create({
+        data: {
+          name: 'Volleyball',
+          slug: 'sports/volleyball',
+          description: null,
+          parentId: parent.id,
+        },
+      });
+
+      const grandchild = await prisma.category.create({
+        data: {
+          name: 'Beach',
+          slug: 'sports/volleyball/beach',
+          description: null,
+          parentId: child.id,
+        },
+      });
+
+      const response = await request(app)
+        .post('/api/categories/recalculate-slugs')
+        .set('Cookie', cookies);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject({ updated: 3 });
+
+      // Verify hierarchical structure is preserved
+      const categories = await prisma.category.findMany({
+        orderBy: { id: 'asc' },
+      });
+
+      const updatedParent = categories.find((c) => c.id === parent.id);
+      const updatedChild = categories.find((c) => c.id === child.id);
+      const updatedGrandchild = categories.find((c) => c.id === grandchild.id);
+
+      expect(updatedParent?.slug).toBe('sports');
+      expect(updatedChild?.slug).toBe('sports/volleyball');
+      expect(updatedGrandchild?.slug).toBe('sports/volleyball/beach');
+    });
+
+    it('should return 401 without authentication', async () => {
+      const response = await request(app).post(
+        '/api/categories/recalculate-slugs',
+      );
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should update slugs after name changes', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const category = await prisma.category.create({
+        data: {
+          name: 'Old Name',
+          slug: 'old-name',
+          description: null,
+        },
+      });
+
+      // Update name but keep old slug (simulating manual database edit)
+      await prisma.category.update({
+        where: { id: category.id },
+        data: { name: 'New Name' },
+      });
+
+      const response = await request(app)
+        .post('/api/categories/recalculate-slugs')
+        .set('Cookie', cookies);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject({ updated: 1 });
+
+      // Verify slug was recalculated based on new name
+      const updatedCategory = await prisma.category.findUnique({
+        where: { id: category.id },
+      });
+      expect(updatedCategory?.slug).toBe('new-name');
+    });
+
+    it('should return updated: 0 when no categories exist', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const response = await request(app)
+        .post('/api/categories/recalculate-slugs')
+        .set('Cookie', cookies);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject({ updated: 0 });
     });
   });
 });

@@ -28,7 +28,8 @@ function extractSlug(req: Request): string {
   }
 
   // Validate slug format: lowercase alphanumeric with hyphens, segments separated by /
-  const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/;
+  const slugPattern =
+    /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/;
   if (!slugPattern.test(slug)) {
     throw new BadRequestException(
       'Slug must be lowercase alphanumeric with hyphens, segments separated by /',
@@ -62,6 +63,17 @@ router.post(
     const createCategoryDto: CreateCategoryDto = req.body;
     const category = await categoriesService.create(createCategoryDto);
     res.status(201).json(category);
+  }),
+);
+
+// Protected route - Recalculate all category slugs
+router.post(
+  '/recalculate-slugs',
+  jwtMiddleware,
+  authGuardMiddleware,
+  asyncHandlerMiddleware(async (_req, res) => {
+    const result = await categoriesService.recalculateAllSlugs();
+    res.json(result);
   }),
 );
 

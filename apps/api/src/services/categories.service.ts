@@ -323,7 +323,10 @@ export class CategoriesService {
 
     for (const child of children) {
       // Build new slug for this child
-      const newSlug = slugifyService.buildCategorySlug(child.slug, newParentSlug);
+      const newSlug = slugifyService.buildCategorySlug(
+        child.slug,
+        newParentSlug,
+      );
 
       // Update the child's slug
       await prisma.category.update({
@@ -334,5 +337,39 @@ export class CategoriesService {
       // Recursively update this child's descendants
       await this.updateDescendantSlugs(child.id, newSlug);
     }
+  }
+
+  /**
+   * Recalculates slugs for all categories in the database.
+   * Processes categories in depth-first order (root categories first, then descendants).
+   * Returns the count of categories whose slugs were updated.
+   */
+  async recalculateAllSlugs(): Promise<{ updated: number }> {
+    // Fetch all categories ordered by depth (root categories first, then descendants)
+    const categories = await prisma.category.findMany({
+      orderBy: { parentId: 'asc' },
+      select: { id: true, name: true, parentId: true },
+    });
+
+    let updatedCount = 0;
+
+    for (const category of categories) {
+      // Generate a new slug using the existing logic
+      const newSlug = await slugifyService.generateUniqueCategorySlug(
+        category.name,
+        category.parentId,
+        category.id,
+      );
+
+      // Update the category with the recalculated slug
+      await prisma.category.update({
+        where: { id: category.id },
+        data: { slug: newSlug },
+      });
+
+      updatedCount++;
+    }
+
+    return { updated: updatedCount };
   }
 }

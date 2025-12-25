@@ -29,7 +29,9 @@ export interface UpdateCategoryData {
 export const useCategoriesStore = defineStore('categories', () => {
   const categories = ref<Category[]>([]);
   const isLoading = ref(false);
+  const isRecalculating = ref(false);
   const error = ref<string | null>(null);
+  const successMessage = ref<string | null>(null);
 
   async function fetchCategories(): Promise<void> {
     isLoading.value = true;
@@ -156,7 +158,7 @@ export const useCategoriesStore = defineStore('categories', () => {
         throw new Error('Failed to delete category');
       }
 
-      // Re-fetch categories to properly update the nested tree structure
+      // Re-fetch categories to properly update nested tree structure
       await fetchCategories();
       return true;
     } catch (e) {
@@ -167,14 +169,49 @@ export const useCategoriesStore = defineStore('categories', () => {
     }
   }
 
+  async function recalculateSlugs(): Promise<boolean> {
+    isRecalculating.value = true;
+    error.value = null;
+    successMessage.value = null;
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/categories/recalculate-slugs`,
+        {
+          method: 'POST',
+          credentials: 'include',
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to recalculate slugs');
+      }
+
+      const result = (await response.json()) as { updated: number };
+      successMessage.value = `${result.updated} Kategorien aktualisiert`;
+
+      // Refresh categories list after successful recalculation
+      await fetchCategories();
+      return true;
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'An error occurred';
+      return false;
+    } finally {
+      isRecalculating.value = false;
+    }
+  }
+
   return {
     categories,
     isLoading,
+    isRecalculating,
     error,
+    successMessage,
     fetchCategories,
     fetchCategory,
     createCategory,
     updateCategory,
     deleteCategory,
+    recalculateSlugs,
   };
 });

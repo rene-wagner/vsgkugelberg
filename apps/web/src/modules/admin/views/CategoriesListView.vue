@@ -8,6 +8,18 @@ interface FlattenedCategory extends Category {
   depth: number;
 }
 
+// Success message timer
+let successTimer: ReturnType<typeof setTimeout> | null = null;
+
+function clearSuccessMessage() {
+  if (successTimer) {
+    clearTimeout(successTimer);
+  }
+  successTimer = setTimeout(() => {
+    categoriesStore.successMessage = null;
+  }, 5000);
+}
+
 // Recursively flatten the category tree with depth information
 function flattenCategories(
   categories: Category[],
@@ -48,6 +60,18 @@ async function handleDelete(slug: string, name: string) {
 
   await categoriesStore.deleteCategory(slug);
 }
+
+async function handleRecalculateSlugs() {
+  const confirmed = window.confirm(
+    'Mochtest du wirklich alle Slug-Neuberechnungen durchfuhren?',
+  );
+  if (!confirmed) return;
+
+  await categoriesStore.recalculateSlugs();
+  if (categoriesStore.successMessage) {
+    clearSuccessMessage();
+  }
+}
 </script>
 
 <template>
@@ -62,12 +86,25 @@ async function handleDelete(slug: string, name: string) {
           Verwalte alle Kategorien
         </p>
       </div>
-      <router-link
-        to="/admin/categories/new"
-        class="px-6 py-2.5 bg-vsg-gold-400 text-vsg-blue-900 font-display text-sm tracking-wider rounded-lg hover:bg-vsg-gold-300 transition-colors"
-      >
-        KATEGORIE HINZUFUGEN
-      </router-link>
+      <div class="flex gap-3">
+        <button
+          class="px-6 py-2.5 border-2 border-vsg-blue-900 text-vsg-blue-900 font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          :disabled="categoriesStore.isRecalculating"
+          @click="handleRecalculateSlugs"
+        >
+          {{
+            categoriesStore.isRecalculating
+              ? 'Neuberechnung...'
+              : 'Slug-Neuberechnung'
+          }}
+        </button>
+        <router-link
+          to="/admin/categories/new"
+          class="px-6 py-2.5 bg-vsg-gold-400 text-vsg-blue-900 font-display text-sm tracking-wider rounded-lg hover:bg-vsg-gold-300 transition-colors"
+        >
+          KATEGORIE HINZUFUGEN
+        </router-link>
+      </div>
     </div>
 
     <!-- Loading State -->
@@ -84,6 +121,34 @@ async function handleDelete(slug: string, name: string) {
       class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
     >
       <p class="text-sm text-red-600 font-body">{{ categoriesStore.error }}</p>
+    </div>
+
+    <!-- Success State -->
+    <div
+      v-if="categoriesStore.successMessage"
+      class="bg-green-50 border border-green-200 rounded-xl p-6 mb-6 flex items-center justify-between"
+    >
+      <p class="text-sm text-green-600 font-body">
+        {{ categoriesStore.successMessage }}
+      </p>
+      <button
+        class="text-green-600 hover:text-green-700"
+        @click="categoriesStore.successMessage = null"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
     </div>
 
     <!-- Table -->
