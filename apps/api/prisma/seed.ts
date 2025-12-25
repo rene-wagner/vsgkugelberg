@@ -6,6 +6,11 @@ const userData: Prisma.UserCreateInput[] = [
     email: 'john.doe@example.com',
     password: '$2b$10$3reoOhi62GQ8qJenfs82BeSLLFm/MCuxj3zEZ/mgezRNN6YWA1krq',
   },
+  {
+    username: 'jane.doe',
+    email: 'jane.doe@example.com',
+    password: '$2b$10$3reoOhi62GQ8qJenfs82BeSLLFm/MCuxj3zEZ/mgezRNN6YWA1krq',
+  },
 ];
 
 const departmentData: Prisma.DepartmentCreateInput[] = [
