@@ -149,7 +149,7 @@ describe('Categories API Integration Tests', () => {
         data: { name: 'Sports', slug: 'sports', description: null },
       });
 
-      const _child = await prisma.category.create({
+      const child = await prisma.category.create({
         data: {
           name: 'Volleyball',
           slug: 'sports/volleyball',
@@ -158,20 +158,19 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).get(
+        '/api/categories/sports/volleyball',
+      );
 
-      expect(response.status).toBe(201);
+      expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
-        name: 'Web Development',
-        description: 'Articles about web development',
+        id: child.id,
+        name: 'Volleyball',
+        slug: 'sports/volleyball',
       });
-      expect(response.body).toHaveProperty('id');
-      expect(response.body).toHaveProperty('slug');
-      expect(response.body.slug).toBe('web-development');
-      expect(response.body.parentId).toBeNull();
+      expect(response.body).toHaveProperty('children');
+      expect(response.body.children).toEqual([]);
+      expect(response.body.parentId).toBe(parent.id);
     });
 
     it('should create a child category with hierarchical slug', async () => {
