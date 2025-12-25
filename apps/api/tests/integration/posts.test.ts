@@ -100,6 +100,8 @@ describe('Posts API Integration Tests', () => {
       expect(response.body.data[0]).toHaveProperty('slug');
       expect(response.body.data[0]).toHaveProperty('content');
       expect(response.body.data[0]).toHaveProperty('published');
+      expect(response.body.data[0]).toHaveProperty('hits');
+      expect(response.body.data[0]).toHaveProperty('oldPost');
       expect(response.body.data[0]).toHaveProperty('author');
       expect(response.body.data[0]).toHaveProperty('categories');
       expect(response.body.data[0]).toHaveProperty('tags');
@@ -461,6 +463,8 @@ describe('Posts API Integration Tests', () => {
         slug: 'single-post',
         content: 'Test content',
         published: true,
+        hits: 0,
+        oldPost: false,
       });
       expect(response.body).toHaveProperty('author');
       expect(response.body.author).toMatchObject({
@@ -762,6 +766,134 @@ describe('Posts API Integration Tests', () => {
         content: 'Content',
         authorId: user.id,
         published: 'not-a-boolean',
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Cookie', cookies)
+        .send(newPost);
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should create a post with custom hits value', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const newPost = {
+        title: 'Post with Hits',
+        content: 'Content',
+        authorId: user.id,
+        hits: 100,
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Cookie', cookies)
+        .send(newPost);
+
+      expect(response.status).toBe(201);
+      expect(response.body.hits).toBe(100);
+    });
+
+    it('should create a post with oldPost set to true', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const newPost = {
+        title: 'Old Post',
+        content: 'Content',
+        authorId: user.id,
+        oldPost: true,
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Cookie', cookies)
+        .send(newPost);
+
+      expect(response.status).toBe(201);
+      expect(response.body.oldPost).toBe(true);
+    });
+
+    it('should default hits to 0 when not provided', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const newPost = {
+        title: 'Default Hits Post',
+        content: 'Content',
+        authorId: user.id,
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Cookie', cookies)
+        .send(newPost);
+
+      expect(response.status).toBe(201);
+      expect(response.body.hits).toBe(0);
+    });
+
+    it('should default oldPost to false when not provided', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const newPost = {
+        title: 'Default OldPost Post',
+        content: 'Content',
+        authorId: user.id,
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Cookie', cookies)
+        .send(newPost);
+
+      expect(response.status).toBe(201);
+      expect(response.body.oldPost).toBe(false);
+    });
+
+    it('should return 400 for negative hits value', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const newPost = {
+        title: 'Negative Hits',
+        content: 'Content',
+        authorId: user.id,
+        hits: -5,
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Cookie', cookies)
+        .send(newPost);
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 for invalid hits type', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const newPost = {
+        title: 'Invalid Hits',
+        content: 'Content',
+        authorId: user.id,
+        hits: 'not-a-number',
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Cookie', cookies)
+        .send(newPost);
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 for invalid oldPost type', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const newPost = {
+        title: 'Invalid OldPost',
+        content: 'Content',
+        authorId: user.id,
+        oldPost: 'not-a-boolean',
       };
 
       const response = await request(app)
@@ -1091,6 +1223,142 @@ describe('Posts API Integration Tests', () => {
       expect(response.body.title).toBe('Original Title');
       expect(response.body.content).toBe('Original content');
       expect(response.body.published).toBe(true);
+    });
+
+    it('should update hits field', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const post = await prisma.post.create({
+        data: {
+          title: 'Test Post',
+          slug: 'test-post',
+          content: 'Content',
+          hits: 10,
+          authorId: user.id,
+        },
+      });
+
+      const update = {
+        hits: 50,
+      };
+
+      const response = await request(app)
+        .patch(`/api/posts/${post.slug}`)
+        .set('Cookie', cookies)
+        .send(update);
+
+      expect(response.status).toBe(200);
+      expect(response.body.hits).toBe(50);
+    });
+
+    it('should update oldPost field', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const post = await prisma.post.create({
+        data: {
+          title: 'Test Post',
+          slug: 'test-post',
+          content: 'Content',
+          oldPost: false,
+          authorId: user.id,
+        },
+      });
+
+      const update = {
+        oldPost: true,
+      };
+
+      const response = await request(app)
+        .patch(`/api/posts/${post.slug}`)
+        .set('Cookie', cookies)
+        .send(update);
+
+      expect(response.status).toBe(200);
+      expect(response.body.oldPost).toBe(true);
+    });
+
+    it('should update multiple fields including hits and oldPost', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const post = await prisma.post.create({
+        data: {
+          title: 'Original Post',
+          slug: 'original-post',
+          content: 'Original content',
+          published: false,
+          hits: 0,
+          oldPost: false,
+          authorId: user.id,
+        },
+      });
+
+      const update = {
+        title: 'Updated Post',
+        published: true,
+        hits: 100,
+        oldPost: true,
+      };
+
+      const response = await request(app)
+        .patch(`/api/posts/${post.slug}`)
+        .set('Cookie', cookies)
+        .send(update);
+
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject({
+        title: 'Updated Post',
+        published: true,
+        hits: 100,
+        oldPost: true,
+      });
+    });
+
+    it('should return 400 for negative hits in update', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const post = await prisma.post.create({
+        data: {
+          title: 'Test Post',
+          slug: 'test-post',
+          content: 'Content',
+          authorId: user.id,
+        },
+      });
+
+      const update = {
+        hits: -10,
+      };
+
+      const response = await request(app)
+        .patch(`/api/posts/${post.slug}`)
+        .set('Cookie', cookies)
+        .send(update);
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 for invalid oldPost type in update', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const post = await prisma.post.create({
+        data: {
+          title: 'Test Post',
+          slug: 'test-post',
+          content: 'Content',
+          authorId: user.id,
+        },
+      });
+
+      const update = {
+        oldPost: 'not-a-boolean',
+      };
+
+      const response = await request(app)
+        .patch(`/api/posts/${post.slug}`)
+        .set('Cookie', cookies)
+        .send(update);
+
+      expect(response.status).toBe(400);
     });
   });
 
