@@ -4,6 +4,9 @@
 # Node
 node_modules/
 
+# Rust
+target/
+
 # Build outputs
 dist/
 
@@ -16,6 +19,7 @@ dist/
 
 # Old data
 data/
+*.csv
 
 # AI Files - ignore all except workflows
 .github/*
