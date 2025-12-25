@@ -55,38 +55,73 @@ export class SlugifyService {
   }
 
   /**
-   * Generates a unique slug for a category
-   * If the slug already exists, appends a number to make it unique
+   * Generates a hierarchical slug for a category
+   * The slug format is: parentSlug/slugifiedName for nested categories, or just slugifiedName for root categories
+   * Uniqueness is checked within the same parent context (slug + parentId must be unique)
    * @param name - The category name
+   * @param parentId - The parent category ID (null for root categories)
    * @param excludeCategoryId - Optional category ID to exclude from uniqueness check (for updates)
-   * @returns A unique slug
+   * @returns A unique hierarchical slug
    */
   async generateUniqueCategorySlug(
     name: string,
+    parentId: number | null = null,
     excludeCategoryId?: number,
   ): Promise<string> {
-    const baseSlug = this.slugify(name);
+    const nameSlug = this.slugify(name);
+
+    // Get parent's slug if parentId is provided
+    let parentSlug: string | null = null;
+    if (parentId !== null) {
+      const parent = await prisma.category.findUnique({
+        where: { id: parentId },
+        select: { slug: true },
+      });
+      if (parent) {
+        parentSlug = parent.slug;
+      }
+    }
+
+    // Build hierarchical slug
+    const baseSlug = parentSlug ? `${parentSlug}/${nameSlug}` : nameSlug;
     let slug = baseSlug;
     let counter = 1;
 
     while (true) {
-      const existingCategory = await prisma.category.findUnique({
-        where: { slug },
+      // Check uniqueness within the same parent context
+      const existingCategory = await prisma.category.findFirst({
+        where: {
+          slug,
+          parentId,
+          ...(excludeCategoryId && { id: { not: excludeCategoryId } }),
+        },
         select: { id: true },
       });
 
-      // If no category exists with this slug, or it's the same category we're updating
-      if (
-        !existingCategory ||
-        (excludeCategoryId && existingCategory.id === excludeCategoryId)
-      ) {
+      // If no category exists with this slug under the same parent
+      if (!existingCategory) {
         return slug;
       }
 
-      // Slug exists, try with counter
+      // Slug exists under same parent, try with counter
       slug = `${baseSlug}-${counter}`;
       counter++;
     }
+  }
+
+  /**
+   * Rebuilds a category's slug based on a new parent slug
+   * @param currentSlug - The current full slug of the category
+   * @param newParentSlug - The new parent's slug (null for root level)
+   * @returns The new hierarchical slug
+   */
+  buildCategorySlug(currentSlug: string, newParentSlug: string | null): string {
+    // Extract the leaf name from current slug (last segment)
+    const segments = currentSlug.split('/');
+    const leafSlug = segments[segments.length - 1];
+
+    // Build new hierarchical slug
+    return newParentSlug ? `${newParentSlug}/${leafSlug}` : leafSlug;
   }
 
   /**

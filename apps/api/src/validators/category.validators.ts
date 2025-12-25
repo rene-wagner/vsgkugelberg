@@ -43,20 +43,20 @@ export const updateCategoryValidator = [
     .withMessage('Parent ID must be a positive integer or null'),
 ];
 
-export const moveCategoryValidator = [
-  body('parentId').custom((value) => {
-    if (value !== null && (!Number.isInteger(value) || value < 1)) {
-      throw new Error('Parent ID must be a positive integer or null');
-    }
-    return true;
-  }),
-];
-
-export const slugParamValidator = [
-  param('slug')
+/**
+ * Validator for hierarchical slug paths from wildcard routes.
+ * Accepts slugs like "sports", "sports/volleyball", "sports/volleyball/beach".
+ * Each segment must be lowercase alphanumeric with hyphens.
+ */
+export const hierarchicalSlugValidator = [
+  param('slugPath')
     .trim()
     .notEmpty()
     .withMessage('Slug is required')
-    .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
-    .withMessage('Slug must be lowercase alphanumeric with hyphens'),
+    .isLength({ max: 255 })
+    .withMessage('Slug must not exceed 255 characters')
+    .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/)
+    .withMessage(
+      'Slug must be lowercase alphanumeric with hyphens, segments separated by /',
+    ),
 ];

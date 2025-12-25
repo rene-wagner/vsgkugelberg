@@ -35,8 +35,8 @@ model Post {
 
 model Category {
   id          Int        @id @default(autoincrement())
-  name        String     @unique
-  slug        String     @unique
+  name        String
+  slug        String
   description String?
   parentId    Int?
   parent      Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
@@ -45,6 +45,7 @@ model Category {
   updatedAt   DateTime   @updatedAt
   posts       Post[]
 
+  @@unique([slug, parentId])
   @@index([slug])
   @@index([parentId])
 }

@@ -6,7 +6,6 @@ import {
 import {
   CreateCategoryDto,
   UpdateCategoryDto,
-  MoveCategoryDto,
   Category,
   CategoryWithChildren,
   CategoryTreeNode,
@@ -28,7 +27,8 @@ export class CategoriesService {
   }
 
   async findBySlug(slug: string): Promise<CategoryWithChildren> {
-    const category = await prisma.category.findUnique({
+    // Find category by full hierarchical slug path
+    const category = await prisma.category.findFirst({
       where: { slug },
       include: {
         children: {
@@ -47,46 +47,50 @@ export class CategoriesService {
   }
 
   async create(createCategoryDto: CreateCategoryDto): Promise<Category> {
-    // Generate unique slug from name
-    const slug = await slugifyService.generateUniqueCategorySlug(
-      createCategoryDto.name,
-    );
+    const parentId = createCategoryDto.parentId ?? null;
 
-    // Check if category with the same name already exists
+    // Validate parentId if provided
+    if (parentId !== null) {
+      const parentExists = await prisma.category.findUnique({
+        where: { id: parentId },
+      });
+
+      if (!parentExists) {
+        throw new BadRequestException(
+          `Parent category with ID ${parentId} not found`,
+        );
+      }
+    }
+
+    // Check for duplicate name under the same parent
     const existingCategory = await prisma.category.findFirst({
       where: {
         name: {
           equals: createCategoryDto.name,
           mode: 'insensitive',
         },
+        parentId,
       },
     });
 
     if (existingCategory) {
       throw new ConflictException(
-        `Category with name "${createCategoryDto.name}" already exists`,
+        `Category with name "${createCategoryDto.name}" already exists under this parent`,
       );
     }
 
-    // Validate parentId if provided
-    if (createCategoryDto.parentId !== undefined) {
-      const parentExists = await prisma.category.findUnique({
-        where: { id: createCategoryDto.parentId },
-      });
-
-      if (!parentExists) {
-        throw new BadRequestException(
-          `Parent category with ID ${createCategoryDto.parentId} not found`,
-        );
-      }
-    }
+    // Generate hierarchical slug from name and parent
+    const slug = await slugifyService.generateUniqueCategorySlug(
+      createCategoryDto.name,
+      parentId,
+    );
 
     const category = await prisma.category.create({
       data: {
         name: createCategoryDto.name,
         slug,
         description: createCategoryDto.description,
-        parentId: createCategoryDto.parentId ?? null,
+        parentId,
       },
     });
 
@@ -98,37 +102,22 @@ export class CategoriesService {
     updateCategoryDto: UpdateCategoryDto,
   ): Promise<Category> {
     // First, find the category by slug
-    const existingCategory = await prisma.category.findUnique({
+    const existingCategory = await prisma.category.findFirst({
       where: { slug },
-      select: { id: true, name: true },
+      select: { id: true, name: true, slug: true, parentId: true },
     });
 
     if (!existingCategory) {
       throw new NotFoundException(`Category with slug "${slug}" not found`);
     }
 
-    // If name is being updated, check for conflicts and regenerate slug
-    if (updateCategoryDto.name !== undefined) {
-      const conflictingCategory = await prisma.category.findFirst({
-        where: {
-          name: {
-            equals: updateCategoryDto.name,
-            mode: 'insensitive',
-          },
-          id: {
-            not: existingCategory.id,
-          },
-        },
-      });
+    // Determine the new parentId (use existing if not provided)
+    const newParentId =
+      updateCategoryDto.parentId !== undefined
+        ? updateCategoryDto.parentId
+        : existingCategory.parentId;
 
-      if (conflictingCategory) {
-        throw new ConflictException(
-          `Category with name "${updateCategoryDto.name}" already exists`,
-        );
-      }
-    }
-
-    // Validate parentId if provided
+    // Validate parentId if it's being changed
     if (
       updateCategoryDto.parentId !== undefined &&
       updateCategoryDto.parentId !== null
@@ -158,25 +147,73 @@ export class CategoriesService {
       }
     }
 
-    const updateData: Prisma.CategoryUpdateInput = {};
-
-    // If name is being updated, regenerate slug
+    // If name is being updated, check for conflicts under the same parent
     if (updateCategoryDto.name !== undefined) {
-      updateData.name = updateCategoryDto.name;
-      updateData.slug = await slugifyService.generateUniqueCategorySlug(
-        updateCategoryDto.name,
-        existingCategory.id,
-      );
+      const conflictingCategory = await prisma.category.findFirst({
+        where: {
+          name: {
+            equals: updateCategoryDto.name,
+            mode: 'insensitive',
+          },
+          parentId: newParentId,
+          id: {
+            not: existingCategory.id,
+          },
+        },
+      });
+
+      if (conflictingCategory) {
+        throw new ConflictException(
+          `Category with name "${updateCategoryDto.name}" already exists under this parent`,
+        );
+      }
     }
+
+    const updateData: Prisma.CategoryUpdateInput = {};
 
     if (updateCategoryDto.description !== undefined) {
       updateData.description = updateCategoryDto.description;
     }
 
-    if (updateCategoryDto.parentId !== undefined) {
-      updateData.parentId = updateCategoryDto.parentId;
+    // Handle name change - regenerate slug
+    const nameChanged = updateCategoryDto.name !== undefined;
+    const parentChanged =
+      updateCategoryDto.parentId !== undefined &&
+      updateCategoryDto.parentId !== existingCategory.parentId;
+
+    if (nameChanged || parentChanged) {
+      const newName = updateCategoryDto.name ?? existingCategory.name;
+      if (nameChanged) {
+        updateData.name = newName;
+      }
+
+      // Generate new hierarchical slug
+      const newSlug = await slugifyService.generateUniqueCategorySlug(
+        newName,
+        newParentId,
+        existingCategory.id,
+      );
+      updateData.slug = newSlug;
+
+      if (parentChanged) {
+        updateData.parentId = updateCategoryDto.parentId;
+      }
+
+      // Update the category first
+      const category = await prisma.category.update({
+        where: { id: existingCategory.id },
+        data: updateData,
+      });
+
+      // If parent changed or name changed, update all descendant slugs
+      if (parentChanged || nameChanged) {
+        await this.updateDescendantSlugs(existingCategory.id, category.slug);
+      }
+
+      return category;
     }
 
+    // Simple update without slug changes
     try {
       const category = await prisma.category.update({
         where: { id: existingCategory.id },
@@ -195,59 +232,9 @@ export class CategoriesService {
     }
   }
 
-  async move(
-    slug: string,
-    moveCategoryDto: MoveCategoryDto,
-  ): Promise<Category> {
-    // First, find the category by slug
-    const existingCategory = await prisma.category.findUnique({
-      where: { slug },
-      select: { id: true },
-    });
-
-    if (!existingCategory) {
-      throw new NotFoundException(`Category with slug "${slug}" not found`);
-    }
-
-    const { parentId } = moveCategoryDto;
-
-    // Validate the move operation
-    if (parentId !== null) {
-      // Cannot set self as parent
-      if (parentId === existingCategory.id) {
-        throw new BadRequestException('Category cannot be its own parent');
-      }
-
-      // Check if parent exists
-      const parentExists = await prisma.category.findUnique({
-        where: { id: parentId },
-      });
-
-      if (!parentExists) {
-        throw new BadRequestException(
-          `Parent category with ID ${parentId} not found`,
-        );
-      }
-
-      // Check for circular reference
-      if (await this.isDescendant(parentId, existingCategory.id)) {
-        throw new BadRequestException(
-          'Cannot set a descendant category as parent (circular reference)',
-        );
-      }
-    }
-
-    const category = await prisma.category.update({
-      where: { id: existingCategory.id },
-      data: { parentId },
-    });
-
-    return category;
-  }
-
   async remove(slug: string): Promise<Category> {
     // First, find the category by slug
-    const existingCategory = await prisma.category.findUnique({
+    const existingCategory = await prisma.category.findFirst({
       where: { slug },
       select: { id: true },
     });
@@ -318,5 +305,34 @@ export class CategoriesService {
     }
 
     return descendantIds;
+  }
+
+  /**
+   * Recursively updates the slugs of all descendants when a category's slug changes.
+   * @param categoryId - The category whose descendants need slug updates
+   * @param newParentSlug - The new slug of the parent category
+   */
+  private async updateDescendantSlugs(
+    categoryId: number,
+    newParentSlug: string,
+  ): Promise<void> {
+    const children = await prisma.category.findMany({
+      where: { parentId: categoryId },
+      select: { id: true, slug: true },
+    });
+
+    for (const child of children) {
+      // Build new slug for this child
+      const newSlug = slugifyService.buildCategorySlug(child.slug, newParentSlug);
+
+      // Update the child's slug
+      await prisma.category.update({
+        where: { id: child.id },
+        data: { slug: newSlug },
+      });
+
+      // Recursively update this child's descendants
+      await this.updateDescendantSlugs(child.id, newSlug);
+    }
   }
 }

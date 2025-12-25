@@ -12,10 +12,6 @@ export interface UpdateCategoryDto {
   parentId?: number | null;
 }
 
-export interface MoveCategoryDto {
-  parentId: number | null;
-}
-
 export type Category = PrismaCategory;
 
 export interface CategoryWithChildren extends Category {

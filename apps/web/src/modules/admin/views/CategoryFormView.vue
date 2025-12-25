@@ -26,7 +26,9 @@ const breadcrumbAction = computed(() =>
 onMounted(async () => {
   if (isEditMode.value) {
     isLoading.value = true;
-    const slug = route.params.slug as string;
+    // Handle slug as array (Vue Router repeatable params) and join with '/'
+    const slugParam = route.params.slug;
+    const slug = Array.isArray(slugParam) ? slugParam.join('/') : slugParam;
     category.value = await categoriesStore.fetchCategory(slug);
     isLoading.value = false;
   }

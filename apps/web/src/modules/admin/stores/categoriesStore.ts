@@ -156,7 +156,8 @@ export const useCategoriesStore = defineStore('categories', () => {
         throw new Error('Failed to delete category');
       }
 
-      categories.value = categories.value.filter((c) => c.slug !== slug);
+      // Re-fetch categories to properly update the nested tree structure
+      await fetchCategories();
       return true;
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'An error occurred';

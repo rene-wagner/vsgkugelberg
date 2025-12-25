@@ -64,7 +64,7 @@ const routes: RouteRecordRaw[] = [
         component: CategoryFormView,
       },
       {
-        path: 'categories/:slug/edit',
+        path: 'categories/:slug+/edit',
         name: 'admin-category-edit',
         component: CategoryFormView,
       },

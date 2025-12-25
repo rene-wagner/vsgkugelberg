@@ -30,6 +30,7 @@ CREATE TABLE "Category" (
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "description" TEXT,
+    "parentId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -103,13 +104,13 @@ CREATE UNIQUE INDEX "Post_slug_key" ON "Post"("slug");
 CREATE INDEX "Post_slug_idx" ON "Post"("slug");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Category_slug_key" ON "Category"("slug");
-
--- CreateIndex
 CREATE INDEX "Category_slug_idx" ON "Category"("slug");
+
+-- CreateIndex
+CREATE INDEX "Category_parentId_idx" ON "Category"("parentId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Category_slug_parentId_key" ON "Category"("slug", "parentId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Tag_name_key" ON "Tag"("name");
@@ -143,6 +144,9 @@ CREATE INDEX "_CategoryToPost_B_index" ON "_CategoryToPost"("B");
 
 -- AddForeignKey
 ALTER TABLE "Post" ADD CONSTRAINT "Post_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Category" ADD CONSTRAINT "Category_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Block" ADD CONSTRAINT "Block_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Block"("id") ON DELETE CASCADE ON UPDATE CASCADE;
