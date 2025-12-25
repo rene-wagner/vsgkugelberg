@@ -15,8 +15,6 @@ import {
 } from '../generated/prisma/client';
 
 const connectionString = `${process.env.DATABASE_URL}`;
-console.log('Using database connection string:', connectionString);
-
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 

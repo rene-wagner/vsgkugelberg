@@ -16,6 +16,18 @@ export const createPostValidator = [
     .withMessage('Published must be a boolean')
     .toBoolean(),
 
+  body('hits')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Hits must be a non-negative integer')
+    .toInt(),
+
+  body('oldPost')
+    .optional()
+    .isBoolean()
+    .withMessage('Old post must be a boolean')
+    .toBoolean(),
+
   body('authorId')
     .notEmpty()
     .withMessage('Author ID is required')
@@ -56,6 +68,18 @@ export const updatePostValidator = [
     .optional()
     .isBoolean()
     .withMessage('Published must be a boolean')
+    .toBoolean(),
+
+  body('hits')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Hits must be a non-negative integer')
+    .toInt(),
+
+  body('oldPost')
+    .optional()
+    .isBoolean()
+    .withMessage('Old post must be a boolean')
     .toBoolean(),
 
   body('categoryIds')

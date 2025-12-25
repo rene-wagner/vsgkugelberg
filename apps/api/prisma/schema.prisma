@@ -23,6 +23,8 @@ model Post {
   slug       String     @unique
   content    String?
   published  Boolean    @default(false)
+  hits       Int        @default(0)
+  oldPost    Boolean    @default(false)
   createdAt  DateTime   @default(now())
   updatedAt  DateTime   @updatedAt
   authorId   Int

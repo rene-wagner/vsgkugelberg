@@ -4,6 +4,8 @@ export interface CreatePostDto {
   title: string;
   content?: string;
   published?: boolean;
+  hits?: number;
+  oldPost?: boolean;
   authorId: number;
   categoryIds?: number[];
   tagIds?: number[];
@@ -13,6 +15,8 @@ export interface UpdatePostDto {
   title?: string;
   content?: string;
   published?: boolean;
+  hits?: number;
+  oldPost?: boolean;
   categoryIds?: number[];
   tagIds?: number[];
 }

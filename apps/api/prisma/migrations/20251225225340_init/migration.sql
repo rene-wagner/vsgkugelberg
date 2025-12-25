@@ -17,6 +17,8 @@ CREATE TABLE "Post" (
     "slug" TEXT NOT NULL,
     "content" TEXT,
     "published" BOOLEAN NOT NULL DEFAULT false,
+    "hits" INTEGER NOT NULL DEFAULT 0,
+    "oldPost" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "authorId" INTEGER NOT NULL,

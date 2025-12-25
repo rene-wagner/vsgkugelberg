@@ -140,6 +140,8 @@ export class PostsService {
           slug,
           content: createPostDto.content,
           published: createPostDto.published ?? false,
+          hits: createPostDto.hits ?? 0,
+          oldPost: createPostDto.oldPost ?? false,
           authorId: createPostDto.authorId,
           categories: {
             connect: createPostDto.categoryIds?.map((id) => ({ id })) || [],
@@ -233,6 +235,14 @@ export class PostsService {
 
     if (updatePostDto.published !== undefined) {
       updateData.published = updatePostDto.published;
+    }
+
+    if (updatePostDto.hits !== undefined) {
+      updateData.hits = updatePostDto.hits;
+    }
+
+    if (updatePostDto.oldPost !== undefined) {
+      updateData.oldPost = updatePostDto.oldPost;
     }
 
     // Handle categories - replace all
