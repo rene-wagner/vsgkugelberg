@@ -90,3 +90,13 @@ model Block {
   @@index([page])
   @@index([parentId])
 }
+
+model ClubSettings {
+  id           Int      @id @default(1)
+  foundingYear Int?
+  address      String?
+  memberCount  Int?
+  contactEmail String?
+  contactPhone String?
+  updatedAt    DateTime @updatedAt
+}

@@ -11,6 +11,7 @@ import TagsListView from '../views/TagsListView.vue';
 import TagFormView from '../views/TagFormView.vue';
 import NewsListView from '../views/NewsListView.vue';
 import NewsFormView from '../views/NewsFormView.vue';
+import SettingsView from '../views/SettingsView.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -97,6 +98,11 @@ const routes: RouteRecordRaw[] = [
         path: 'news/:slug/edit',
         name: 'admin-news-edit',
         component: NewsFormView,
+      },
+      {
+        path: 'settings',
+        name: 'admin-settings',
+        component: SettingsView,
       },
     ],
   },

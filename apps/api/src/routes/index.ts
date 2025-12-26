@@ -9,6 +9,7 @@ import { departmentsRouter } from './departments.routes';
 import { blocksRouter } from './blocks.routes';
 import { healthRouter } from './health.routes';
 import { meRouter } from './me.routes';
+import { settingsRouter } from './settings.routes';
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.use('/tags', tagsRouter);
 router.use('/departments', departmentsRouter);
 router.use('/blocks', blocksRouter);
 router.use('/health', healthRouter);
+router.use('/settings', settingsRouter);
 
 export { router };
