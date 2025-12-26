@@ -8,6 +8,7 @@ import {
   type UpdateCategoryData,
 } from '../stores/categoriesStore';
 import VsgTreeSelect from '@/shared/components/VsgTreeSelect.vue';
+import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 
 const props = defineProps<{
   category: Category | null;
@@ -189,18 +190,15 @@ function handleCancel() {
         <!-- Description -->
         <div>
           <label
-            for="description"
             class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Beschreibung
           </label>
-          <textarea
-            id="description"
+          <VsgMarkdownEditor
             v-model="description"
-            rows="4"
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600 resize-none"
             placeholder="Optionale Beschreibung der Kategorie..."
-          ></textarea>
+            min-height="200px"
+          />
         </div>
 
         <!-- Parent Category -->
