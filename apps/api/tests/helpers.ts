@@ -8,6 +8,7 @@ import {
   Prisma,
   Block,
   Category,
+  ClubSettings,
   Department,
   Post,
   Tag,
@@ -18,7 +19,17 @@ const connectionString = `${process.env.DATABASE_URL}`;
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-export { prisma, Prisma, Block, Category, Department, Post, Tag, User };
+export {
+  prisma,
+  Prisma,
+  Block,
+  Category,
+  ClubSettings,
+  Department,
+  Post,
+  Tag,
+  User,
+};
 
 export async function cleanupDatabase() {
   // Delete in correct order: child tables first, then parent tables
@@ -28,6 +39,7 @@ export async function cleanupDatabase() {
     prisma.category.deleteMany(),
     prisma.tag.deleteMany(),
     prisma.department.deleteMany(),
+    prisma.clubSettings.deleteMany(),
     prisma.user.deleteMany(),
   ]);
 }

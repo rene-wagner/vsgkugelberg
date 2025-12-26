@@ -5,6 +5,7 @@ import {
   Prisma,
   Block,
   Category,
+  ClubSettings,
   Department,
   Post,
   Tag,
@@ -16,4 +17,14 @@ const connectionString = `${process.env.DATABASE_URL}`;
 const adapter = new PrismaPg({ connectionString });
 const prisma = new PrismaClient({ adapter });
 
-export { prisma, Prisma, Block, Category, Department, Post, Tag, User };
+export {
+  prisma,
+  Prisma,
+  Block,
+  Category,
+  ClubSettings,
+  Department,
+  Post,
+  Tag,
+  User,
+};
