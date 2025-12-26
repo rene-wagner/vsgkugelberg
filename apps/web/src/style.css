@@ -236,3 +236,107 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-vsg-gold-400);
 }
+
+/* EasyMDE Markdown Editor Theme Overrides */
+.EasyMDEContainer {
+  font-family: var(--font-body);
+}
+
+.EasyMDEContainer .CodeMirror {
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  background: #fff;
+  color: var(--color-vsg-blue-900);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  padding: 0.5rem;
+}
+
+.EasyMDEContainer .CodeMirror-focused {
+  border-color: var(--color-vsg-blue-600);
+  box-shadow: 0 0 0 3px rgba(252, 211, 77, 0.3);
+}
+
+.EasyMDEContainer .CodeMirror-placeholder {
+  color: #9ca3af; /* gray-400 */
+}
+
+.EasyMDEContainer .editor-toolbar {
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-bottom: none;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  background: #f9fafb; /* gray-50 */
+  padding: 0.5rem;
+}
+
+.EasyMDEContainer .editor-toolbar button {
+  color: var(--color-vsg-blue-700);
+  border: none;
+  border-radius: 0.25rem;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.25rem;
+  transition: all 0.2s ease;
+}
+
+.EasyMDEContainer .editor-toolbar button:hover {
+  background: var(--color-vsg-blue-100);
+  color: var(--color-vsg-blue-900);
+}
+
+.EasyMDEContainer .editor-toolbar button.active {
+  background: var(--color-vsg-blue-600);
+  color: #fff;
+}
+
+.EasyMDEContainer .editor-toolbar i.separator {
+  border-left-color: #d1d5db;
+  margin: 0 0.5rem;
+}
+
+.EasyMDEContainer .editor-preview {
+  background: #fff;
+  font-family: var(--font-body);
+  padding: 1rem;
+}
+
+.EasyMDEContainer .editor-preview h1,
+.EasyMDEContainer .editor-preview h2,
+.EasyMDEContainer .editor-preview h3,
+.EasyMDEContainer .editor-preview h4,
+.EasyMDEContainer .editor-preview h5,
+.EasyMDEContainer .editor-preview h6 {
+  color: var(--color-vsg-blue-900);
+  font-family: var(--font-display);
+  margin-bottom: 0.5rem;
+}
+
+.EasyMDEContainer .editor-preview a {
+  color: var(--color-vsg-blue-600);
+}
+
+.EasyMDEContainer .editor-preview a:hover {
+  color: var(--color-vsg-gold-500);
+}
+
+.EasyMDEContainer .editor-preview code {
+  background: #f3f4f6; /* gray-100 */
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.EasyMDEContainer .editor-preview pre {
+  background: #f3f4f6; /* gray-100 */
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+/* Disabled state */
+.EasyMDEContainer .CodeMirror-wrap.CodeMirror-readonly {
+  background: #f9fafb; /* gray-50 */
+  cursor: not-allowed;
+}

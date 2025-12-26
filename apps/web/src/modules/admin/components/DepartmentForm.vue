@@ -7,6 +7,7 @@ import {
   type CreateDepartmentData,
   type UpdateDepartmentData,
 } from '../stores/departmentsStore';
+import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 
 const props = defineProps<{
   department: Department | null;
@@ -173,19 +174,15 @@ function handleCancel() {
         <!-- Long Description -->
         <div>
           <label
-            for="longDescription"
             class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Langbeschreibung <span class="text-red-500">*</span>
           </label>
-          <textarea
-            id="longDescription"
+          <VsgMarkdownEditor
             v-model="longDescription"
-            required
-            rows="6"
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600 resize-none"
             placeholder="Ausfuhrliche Beschreibung der Abteilung..."
-          ></textarea>
+            min-height="250px"
+          />
         </div>
       </div>
     </div>

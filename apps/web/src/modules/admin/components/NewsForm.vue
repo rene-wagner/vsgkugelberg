@@ -10,6 +10,7 @@ import {
 import { useCategoriesStore } from '../stores/categoriesStore';
 import { useTagsStore } from '../stores/tagsStore';
 import { useAuthStore } from '@/modules/auth/stores/authStore';
+import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 
 const props = defineProps<{
   newsItem: NewsItem | null;
@@ -205,18 +206,15 @@ function toggleTag(tagId: number) {
         <!-- Content -->
         <div>
           <label
-            for="content"
             class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
           >
             Inhalt
           </label>
-          <textarea
-            id="content"
+          <VsgMarkdownEditor
             v-model="content"
-            rows="8"
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600 resize-none"
             placeholder="Artikelinhalt..."
-          ></textarea>
+            min-height="300px"
+          />
         </div>
 
         <!-- Author (read-only display) -->
