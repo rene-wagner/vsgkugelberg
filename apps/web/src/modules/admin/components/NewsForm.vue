@@ -8,7 +8,6 @@ import {
   type UpdateNewsData,
 } from '../stores/newsStore';
 import { useCategoriesStore } from '../stores/categoriesStore';
-import { useTagsStore } from '../stores/tagsStore';
 import { useAuthStore } from '@/modules/auth/stores/authStore';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 
@@ -20,20 +19,18 @@ const props = defineProps<{
 const router = useRouter();
 const newsStore = useNewsStore();
 const categoriesStore = useCategoriesStore();
-const tagsStore = useTagsStore();
 const authStore = useAuthStore();
 
 const title = ref('');
 const content = ref('');
 const published = ref(false);
 const selectedCategoryIds = ref<number[]>([]);
-const selectedTagIds = ref<number[]>([]);
 const error = ref('');
 const isSubmitting = ref(false);
 
-// Load categories and tags on mount
+// Load categories on mount
 onMounted(async () => {
-  await Promise.all([categoriesStore.fetchCategories(), tagsStore.fetchTags()]);
+  await categoriesStore.fetchCategories();
 });
 
 // Watch for newsItem prop changes to populate form
@@ -45,7 +42,6 @@ watch(
       content.value = newNewsItem.content || '';
       published.value = newNewsItem.published;
       selectedCategoryIds.value = newNewsItem.categories.map((c) => c.id);
-      selectedTagIds.value = newNewsItem.tags.map((t) => t.id);
     }
   },
   { immediate: true },
@@ -83,7 +79,6 @@ async function handleSubmit() {
         content: content.value || undefined,
         published: published.value,
         categoryIds: selectedCategoryIds.value,
-        tagIds: selectedTagIds.value,
       };
 
       const result = await newsStore.updateNews(
@@ -109,7 +104,6 @@ async function handleSubmit() {
         published: published.value,
         authorId: authorId.value,
         categoryIds: selectedCategoryIds.value,
-        tagIds: selectedTagIds.value,
       };
 
       const result = await newsStore.createNews(createData);
@@ -155,15 +149,6 @@ function toggleCategory(categoryId: number) {
     selectedCategoryIds.value.push(categoryId);
   } else {
     selectedCategoryIds.value.splice(index, 1);
-  }
-}
-
-function toggleTag(tagId: number) {
-  const index = selectedTagIds.value.indexOf(tagId);
-  if (index === -1) {
-    selectedTagIds.value.push(tagId);
-  } else {
-    selectedTagIds.value.splice(index, 1);
   }
 }
 </script>
@@ -285,47 +270,6 @@ function toggleTag(tagId: number) {
             class="font-body font-normal text-sm text-vsg-blue-900 cursor-pointer"
           >
             {{ category.name }}
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tags Section -->
-    <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        TAGS
-      </h2>
-
-      <div
-        v-if="tagsStore.isLoading"
-        class="text-vsg-blue-600 font-body text-sm"
-      >
-        Laden...
-      </div>
-      <div
-        v-else-if="tagsStore.tags.length === 0"
-        class="text-gray-500 font-body text-sm"
-      >
-        Keine Tags vorhanden
-      </div>
-      <div v-else class="flex flex-wrap gap-4">
-        <div
-          v-for="tag in tagsStore.tags"
-          :key="tag.id"
-          class="flex items-center gap-2"
-        >
-          <input
-            :id="`tag-${tag.id}`"
-            type="checkbox"
-            :checked="selectedTagIds.includes(tag.id)"
-            class="w-5 h-5 rounded border-gray-300 text-vsg-blue-600 focus:ring-vsg-blue-500"
-            @change="toggleTag(tag.id)"
-          />
-          <label
-            :for="`tag-${tag.id}`"
-            class="font-body font-normal text-sm text-vsg-blue-900 cursor-pointer"
-          >
-            {{ tag.name }}
           </label>
         </div>
       </div>

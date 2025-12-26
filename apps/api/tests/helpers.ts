@@ -12,7 +12,6 @@ import {
   Department,
   Event,
   Post,
-  Tag,
   User,
 } from '../generated/prisma/client';
 
@@ -29,7 +28,6 @@ export {
   Department,
   Event,
   Post,
-  Tag,
   User,
 };
 
@@ -40,7 +38,6 @@ export async function cleanupDatabase() {
     prisma.event.deleteMany(),
     prisma.post.deleteMany(),
     prisma.category.deleteMany(),
-    prisma.tag.deleteMany(),
     prisma.department.deleteMany(),
     prisma.clubSettings.deleteMany(),
     prisma.user.deleteMany(),

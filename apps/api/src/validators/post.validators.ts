@@ -45,14 +45,6 @@ export const createPostValidator = [
     .isInt({ min: 1 })
     .withMessage('Each category ID must be a positive integer')
     .toInt(),
-
-  body('tagIds').optional().isArray().withMessage('Tag IDs must be an array'),
-
-  body('tagIds.*')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Each tag ID must be a positive integer')
-    .toInt(),
 ];
 
 export const updatePostValidator = [
@@ -92,14 +84,6 @@ export const updatePostValidator = [
     .isInt({ min: 1 })
     .withMessage('Each category ID must be a positive integer')
     .toInt(),
-
-  body('tagIds').optional().isArray().withMessage('Tag IDs must be an array'),
-
-  body('tagIds.*')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Each tag ID must be a positive integer')
-    .toInt(),
 ];
 
 export const slugParamValidator = [
@@ -122,12 +106,6 @@ export const postsQueryValidator = [
     .trim()
     .notEmpty()
     .withMessage('Category slug cannot be empty'),
-
-  query('tag')
-    .optional()
-    .trim()
-    .notEmpty()
-    .withMessage('Tag slug cannot be empty'),
 
   query('page')
     .optional()

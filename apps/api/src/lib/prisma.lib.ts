@@ -9,7 +9,6 @@ import {
   Department,
   Event,
   Post,
-  Tag,
   User,
 } from '../../generated/prisma/client';
 
@@ -27,6 +26,5 @@ export {
   Department,
   Event,
   Post,
-  Tag,
   User,
 };

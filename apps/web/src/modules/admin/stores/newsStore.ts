@@ -15,12 +15,6 @@ export interface Category {
   slug: string;
 }
 
-export interface Tag {
-  id: number;
-  name: string;
-  slug: string;
-}
-
 export interface NewsItem {
   id: number;
   title: string;
@@ -30,7 +24,6 @@ export interface NewsItem {
   authorId: number;
   author: Author;
   categories: Category[];
-  tags: Tag[];
   createdAt: string;
   updatedAt: string;
 }
@@ -41,7 +34,6 @@ export interface CreateNewsData {
   published?: boolean;
   authorId: number;
   categoryIds?: number[];
-  tagIds?: number[];
 }
 
 export interface UpdateNewsData {
@@ -49,7 +41,6 @@ export interface UpdateNewsData {
   content?: string;
   published?: boolean;
   categoryIds?: number[];
-  tagIds?: number[];
 }
 
 interface PaginatedResponse {
