@@ -14,7 +14,6 @@ export class PostsService {
   async findAll(
     published?: boolean,
     categorySlug?: string,
-    tagSlug?: string,
     page: number = 1,
     limit: number = 10,
   ): Promise<PaginatedResponse<Post>> {
@@ -27,12 +26,6 @@ export class PostsService {
     if (categorySlug) {
       where.categories = {
         some: { slug: categorySlug },
-      };
-    }
-
-    if (tagSlug) {
-      where.tags = {
-        some: { slug: tagSlug },
       };
     }
 
@@ -52,7 +45,6 @@ export class PostsService {
             },
           },
           categories: true,
-          tags: true,
         },
         orderBy: {
           createdAt: 'desc',
@@ -90,7 +82,6 @@ export class PostsService {
           },
         },
         categories: true,
-        tags: true,
       },
     });
 
@@ -119,20 +110,6 @@ export class PostsService {
       }
     }
 
-    // Validate tag IDs if provided
-    if (createPostDto.tagIds && createPostDto.tagIds.length > 0) {
-      const tags = await prisma.tag.findMany({
-        where: { id: { in: createPostDto.tagIds } },
-      });
-      if (tags.length !== createPostDto.tagIds.length) {
-        const foundIds = tags.map((t) => t.id);
-        const missingId = createPostDto.tagIds.find(
-          (id) => !foundIds.includes(id),
-        );
-        throw new NotFoundException(`Tag with ID ${missingId} not found`);
-      }
-    }
-
     try {
       const post = await prisma.post.create({
         data: {
@@ -146,9 +123,6 @@ export class PostsService {
           categories: {
             connect: createPostDto.categoryIds?.map((id) => ({ id })) || [],
           },
-          tags: {
-            connect: createPostDto.tagIds?.map((id) => ({ id })) || [],
-          },
         },
         include: {
           author: {
@@ -161,7 +135,6 @@ export class PostsService {
             },
           },
           categories: true,
-          tags: true,
         },
       });
 
@@ -204,20 +177,6 @@ export class PostsService {
       }
     }
 
-    // Validate tag IDs if provided
-    if (updatePostDto.tagIds && updatePostDto.tagIds.length > 0) {
-      const tags = await prisma.tag.findMany({
-        where: { id: { in: updatePostDto.tagIds } },
-      });
-      if (tags.length !== updatePostDto.tagIds.length) {
-        const foundIds = tags.map((t) => t.id);
-        const missingId = updatePostDto.tagIds.find(
-          (id) => !foundIds.includes(id),
-        );
-        throw new NotFoundException(`Tag with ID ${missingId} not found`);
-      }
-    }
-
     const updateData: Prisma.PostUpdateInput = {};
 
     // If title is being updated, regenerate slug
@@ -252,13 +211,6 @@ export class PostsService {
       };
     }
 
-    // Handle tags - replace all
-    if (updatePostDto.tagIds !== undefined) {
-      updateData.tags = {
-        set: updatePostDto.tagIds.map((id) => ({ id })),
-      };
-    }
-
     try {
       const post = await prisma.post.update({
         where: { id: existingPost.id },
@@ -274,7 +226,6 @@ export class PostsService {
             },
           },
           categories: true,
-          tags: true,
         },
       });
 
@@ -315,7 +266,6 @@ export class PostsService {
             },
           },
           categories: true,
-          tags: true,
         },
       });
 

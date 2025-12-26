@@ -21,7 +21,7 @@ router.get(
   postsQueryValidator,
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
-    const { published, category, tag, page, limit } = req.query;
+    const { published, category, page, limit } = req.query;
 
     // Convert query string to boolean if present
     const publishedFilter =
@@ -34,7 +34,6 @@ router.get(
     const result = await postsService.findAll(
       publishedFilter,
       category as string | undefined,
-      tag as string | undefined,
       pageNum,
       limitNum,
     );

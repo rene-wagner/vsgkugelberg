@@ -47,25 +47,6 @@ describe('Posts API Integration Tests', () => {
     return { category1, category2 };
   }
 
-  // Helper to create test tags
-  async function createTestTags() {
-    const tag1 = await prisma.tag.create({
-      data: {
-        name: 'JavaScript',
-        slug: 'javascript',
-      },
-    });
-
-    const tag2 = await prisma.tag.create({
-      data: {
-        name: 'Node.js',
-        slug: 'nodejs',
-      },
-    });
-
-    return { tag1, tag2 };
-  }
-
   describe('GET /api/posts', () => {
     it('should return paginated posts with metadata', async () => {
       const { user } = await createAuthenticatedUser();
@@ -104,7 +85,6 @@ describe('Posts API Integration Tests', () => {
       expect(response.body.data[0]).toHaveProperty('oldPost');
       expect(response.body.data[0]).toHaveProperty('author');
       expect(response.body.data[0]).toHaveProperty('categories');
-      expect(response.body.data[0]).toHaveProperty('tags');
       expect(response.body.data[0].author).not.toHaveProperty('password');
       expect(response.body.meta).toMatchObject({
         total: 2,
@@ -215,47 +195,9 @@ describe('Posts API Integration Tests', () => {
       expect(response.body.data[0].title).toBe('Tech Post');
     });
 
-    it('should filter posts by tag slug', async () => {
-      const { user } = await createAuthenticatedUser();
-      const { tag1, tag2 } = await createTestTags();
-
-      await prisma.post.create({
-        data: {
-          title: 'JavaScript Post',
-          slug: 'javascript-post',
-          content: 'Content',
-          published: true,
-          authorId: user.id,
-          tags: {
-            connect: [{ id: tag1.id }],
-          },
-        },
-      });
-
-      await prisma.post.create({
-        data: {
-          title: 'Node.js Post',
-          slug: 'nodejs-post',
-          content: 'Content',
-          published: true,
-          authorId: user.id,
-          tags: {
-            connect: [{ id: tag2.id }],
-          },
-        },
-      });
-
-      const response = await request(app).get('/api/posts?tag=javascript');
-
-      expect(response.status).toBe(200);
-      expect(response.body.data).toHaveLength(1);
-      expect(response.body.data[0].title).toBe('JavaScript Post');
-    });
-
-    it('should combine filters (published + category + tag)', async () => {
+    it('should combine filters (published + category)', async () => {
       const { user } = await createAuthenticatedUser();
       const { category1 } = await createTestCategories();
-      const { tag1 } = await createTestTags();
 
       await prisma.post.create({
         data: {
@@ -266,9 +208,6 @@ describe('Posts API Integration Tests', () => {
           authorId: user.id,
           categories: {
             connect: [{ id: category1.id }],
-          },
-          tags: {
-            connect: [{ id: tag1.id }],
           },
         },
       });
@@ -283,14 +222,11 @@ describe('Posts API Integration Tests', () => {
           categories: {
             connect: [{ id: category1.id }],
           },
-          tags: {
-            connect: [{ id: tag1.id }],
-          },
         },
       });
 
       const response = await request(app).get(
-        '/api/posts?published=true&category=technology&tag=javascript',
+        '/api/posts?published=true&category=technology',
       );
 
       expect(response.status).toBe(200);
@@ -475,10 +411,9 @@ describe('Posts API Integration Tests', () => {
       expect(response.body.author).not.toHaveProperty('password');
     });
 
-    it('should return post with categories and tags', async () => {
+    it('should return post with categories', async () => {
       const { user } = await createAuthenticatedUser();
       const { category1 } = await createTestCategories();
-      const { tag1 } = await createTestTags();
 
       await prisma.post.create({
         data: {
@@ -490,9 +425,6 @@ describe('Posts API Integration Tests', () => {
           categories: {
             connect: [{ id: category1.id }],
           },
-          tags: {
-            connect: [{ id: tag1.id }],
-          },
         },
       });
 
@@ -503,11 +435,6 @@ describe('Posts API Integration Tests', () => {
       expect(response.body.categories[0]).toMatchObject({
         name: 'Technology',
         slug: 'technology',
-      });
-      expect(response.body.tags).toHaveLength(1);
-      expect(response.body.tags[0]).toMatchObject({
-        name: 'JavaScript',
-        slug: 'javascript',
       });
     });
 
@@ -554,7 +481,6 @@ describe('Posts API Integration Tests', () => {
       expect(response.body).toHaveProperty('id');
       expect(response.body).toHaveProperty('author');
       expect(response.body).toHaveProperty('categories');
-      expect(response.body).toHaveProperty('tags');
 
       // Verify in database
       const post = await prisma.post.findUnique({
@@ -563,10 +489,9 @@ describe('Posts API Integration Tests', () => {
       expect(post).toBeTruthy();
     });
 
-    it('should create a post with categories and tags', async () => {
+    it('should create a post with categories', async () => {
       const { user, cookies } = await createAuthenticatedUser();
       const { category1, category2 } = await createTestCategories();
-      const { tag1, tag2 } = await createTestTags();
 
       const newPost = {
         title: 'Post with Relations',
@@ -574,7 +499,6 @@ describe('Posts API Integration Tests', () => {
         published: false,
         authorId: user.id,
         categoryIds: [category1.id, category2.id],
-        tagIds: [tag1.id, tag2.id],
       };
 
       const response = await request(app)
@@ -584,7 +508,6 @@ describe('Posts API Integration Tests', () => {
 
       expect(response.status).toBe(201);
       expect(response.body.categories).toHaveLength(2);
-      expect(response.body.tags).toHaveLength(2);
     });
 
     it('should generate unique slug from title', async () => {
@@ -737,25 +660,6 @@ describe('Posts API Integration Tests', () => {
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('Category');
-    });
-
-    it('should return 404 for non-existent tag', async () => {
-      const { user, cookies } = await createAuthenticatedUser();
-
-      const newPost = {
-        title: 'Invalid Tag',
-        content: 'Content',
-        authorId: user.id,
-        tagIds: [99999],
-      };
-
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
-
-      expect(response.status).toBe(404);
-      expect(response.body.message).toContain('Tag');
     });
 
     it('should return 400 for invalid published type', async () => {
@@ -1047,36 +951,6 @@ describe('Posts API Integration Tests', () => {
       expect(response.body.categories[0].id).toBe(category2.id);
     });
 
-    it('should update tags', async () => {
-      const { user, cookies } = await createAuthenticatedUser();
-      const { tag1, tag2 } = await createTestTags();
-
-      const post = await prisma.post.create({
-        data: {
-          title: 'Test Post',
-          slug: 'test-post',
-          content: 'Content',
-          authorId: user.id,
-          tags: {
-            connect: [{ id: tag1.id }],
-          },
-        },
-      });
-
-      const update = {
-        tagIds: [tag2.id],
-      };
-
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
-
-      expect(response.status).toBe(200);
-      expect(response.body.tags).toHaveLength(1);
-      expect(response.body.tags[0].id).toBe(tag2.id);
-    });
-
     it('should regenerate slug when title changes', async () => {
       const { user, cookies } = await createAuthenticatedUser();
 
@@ -1170,31 +1044,6 @@ describe('Posts API Integration Tests', () => {
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('Category');
-    });
-
-    it('should return 404 for non-existent tag in update', async () => {
-      const { user, cookies } = await createAuthenticatedUser();
-
-      const post = await prisma.post.create({
-        data: {
-          title: 'Test Post',
-          slug: 'test-post',
-          content: 'Content',
-          authorId: user.id,
-        },
-      });
-
-      const update = {
-        tagIds: [99999],
-      };
-
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
-
-      expect(response.status).toBe(404);
-      expect(response.body.message).toContain('Tag');
     });
 
     it('should allow partial updates', async () => {
@@ -1393,10 +1242,9 @@ describe('Posts API Integration Tests', () => {
       expect(deletedPost).toBeNull();
     });
 
-    it('should delete post with categories and tags', async () => {
+    it('should delete post with categories', async () => {
       const { user, cookies } = await createAuthenticatedUser();
       const { category1 } = await createTestCategories();
-      const { tag1 } = await createTestTags();
 
       const post = await prisma.post.create({
         data: {
@@ -1407,9 +1255,6 @@ describe('Posts API Integration Tests', () => {
           categories: {
             connect: [{ id: category1.id }],
           },
-          tags: {
-            connect: [{ id: tag1.id }],
-          },
         },
       });
 
@@ -1419,7 +1264,6 @@ describe('Posts API Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.categories).toHaveLength(1);
-      expect(response.body.tags).toHaveLength(1);
 
       // Verify post is deleted
       const deletedPost = await prisma.post.findUnique({
@@ -1427,13 +1271,11 @@ describe('Posts API Integration Tests', () => {
       });
       expect(deletedPost).toBeNull();
 
-      // Verify categories and tags still exist
+      // Verify category still exists
       const category = await prisma.category.findUnique({
         where: { id: category1.id },
       });
-      const tag = await prisma.tag.findUnique({ where: { id: tag1.id } });
       expect(category).toBeTruthy();
-      expect(tag).toBeTruthy();
     });
 
     it('should return 401 without authentication', async () => {
@@ -1538,7 +1380,7 @@ describe('Posts API Integration Tests', () => {
       expect(response.body.content).toBe('');
     });
 
-    it('should handle empty arrays for categoryIds and tagIds', async () => {
+    it('should handle empty array for categoryIds', async () => {
       const { user, cookies } = await createAuthenticatedUser();
 
       const newPost = {
@@ -1546,7 +1388,6 @@ describe('Posts API Integration Tests', () => {
         content: 'Content',
         authorId: user.id,
         categoryIds: [],
-        tagIds: [],
       };
 
       const response = await request(app)
@@ -1556,7 +1397,6 @@ describe('Posts API Integration Tests', () => {
 
       expect(response.status).toBe(201);
       expect(response.body.categories).toHaveLength(0);
-      expect(response.body.tags).toHaveLength(0);
     });
   });
 });

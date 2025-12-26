@@ -7,8 +7,6 @@ import DepartmentsListView from '../views/DepartmentsListView.vue';
 import DepartmentFormView from '../views/DepartmentFormView.vue';
 import CategoriesListView from '../views/CategoriesListView.vue';
 import CategoryFormView from '../views/CategoryFormView.vue';
-import TagsListView from '../views/TagsListView.vue';
-import TagFormView from '../views/TagFormView.vue';
 import NewsListView from '../views/NewsListView.vue';
 import NewsFormView from '../views/NewsFormView.vue';
 import EventsListView from '../views/EventsListView.vue';
@@ -70,21 +68,6 @@ const routes: RouteRecordRaw[] = [
         path: 'categories/:slug+/edit',
         name: 'admin-category-edit',
         component: CategoryFormView,
-      },
-      {
-        path: 'tags',
-        name: 'admin-tags',
-        component: TagsListView,
-      },
-      {
-        path: 'tags/new',
-        name: 'admin-tag-new',
-        component: TagFormView,
-      },
-      {
-        path: 'tags/:slug/edit',
-        name: 'admin-tag-edit',
-        component: TagFormView,
       },
       {
         path: 'news',

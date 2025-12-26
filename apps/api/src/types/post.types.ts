@@ -1,4 +1,4 @@
-import { Post as PrismaPost, User, Category, Tag } from '@/lib/prisma.lib';
+import { Post as PrismaPost, User, Category } from '@/lib/prisma.lib';
 
 export interface CreatePostDto {
   title: string;
@@ -8,7 +8,6 @@ export interface CreatePostDto {
   oldPost?: boolean;
   authorId: number;
   categoryIds?: number[];
-  tagIds?: number[];
 }
 
 export interface UpdatePostDto {
@@ -18,13 +17,11 @@ export interface UpdatePostDto {
   hits?: number;
   oldPost?: boolean;
   categoryIds?: number[];
-  tagIds?: number[];
 }
 
 export interface Post extends PrismaPost {
   author: Omit<User, 'password'>;
   categories: Category[];
-  tags: Tag[];
 }
 
 export interface PaginationMeta {
