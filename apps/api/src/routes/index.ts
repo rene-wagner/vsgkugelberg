@@ -10,6 +10,7 @@ import { blocksRouter } from './blocks.routes';
 import { healthRouter } from './health.routes';
 import { meRouter } from './me.routes';
 import { settingsRouter } from './settings.routes';
+import { eventsRouter } from './events.routes';
 
 const router = Router();
 
@@ -23,5 +24,6 @@ router.use('/departments', departmentsRouter);
 router.use('/blocks', blocksRouter);
 router.use('/health', healthRouter);
 router.use('/settings', settingsRouter);
+router.use('/events', eventsRouter);
 
 export { router };

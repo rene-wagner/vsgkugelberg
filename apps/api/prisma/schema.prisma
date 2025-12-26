@@ -100,3 +100,21 @@ model ClubSettings {
   contactPhone String?
   updatedAt    DateTime @updatedAt
 }
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  startDate   DateTime
+  endDate     DateTime
+  isFullDay   Boolean  @default(false)
+  location    String?
+  recurrence  String?
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([startDate])
+  @@index([endDate])
+  @@index([category])
+}

@@ -11,6 +11,8 @@ import TagsListView from '../views/TagsListView.vue';
 import TagFormView from '../views/TagFormView.vue';
 import NewsListView from '../views/NewsListView.vue';
 import NewsFormView from '../views/NewsFormView.vue';
+import EventsListView from '../views/EventsListView.vue';
+import EventFormView from '../views/EventFormView.vue';
 import SettingsView from '../views/SettingsView.vue';
 
 const routes: RouteRecordRaw[] = [
@@ -98,6 +100,21 @@ const routes: RouteRecordRaw[] = [
         path: 'news/:slug/edit',
         name: 'admin-news-edit',
         component: NewsFormView,
+      },
+      {
+        path: 'events',
+        name: 'admin-events',
+        component: EventsListView,
+      },
+      {
+        path: 'events/new',
+        name: 'admin-event-new',
+        component: EventFormView,
+      },
+      {
+        path: 'events/:id/edit',
+        name: 'admin-event-edit',
+        component: EventFormView,
       },
       {
         path: 'settings',

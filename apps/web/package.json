@@ -23,6 +23,7 @@
     "easymde": "^2.20.0",
     "pinia": "^2.3.1",
     "tailwindcss": "^4.1.18",
+    "v-calendar": "^3.1.2",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0"
   },
