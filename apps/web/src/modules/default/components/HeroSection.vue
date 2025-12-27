@@ -60,7 +60,7 @@ import VsgButton from '@shared/components/VsgButton.vue';
 
       <!-- Scroll indicator -->
       <div
-        class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce delay-700"
+        class="absolute bottom-1 left-1/2 -translate-x-1/2 animate-bounce delay-700"
       >
         <svg
           class="h-8 w-8 text-vsg-gold-400"
