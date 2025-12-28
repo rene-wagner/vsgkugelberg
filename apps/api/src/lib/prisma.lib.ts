@@ -8,6 +8,7 @@ import {
   ClubSettings,
   Department,
   Event,
+  Media,
   Post,
   User,
 } from '../../generated/prisma/client';
@@ -25,6 +26,7 @@ export {
   ClubSettings,
   Department,
   Event,
+  Media,
   Post,
   User,
 };

@@ -11,6 +11,6 @@ prisma/generated/
 
 /generated/prisma
 
-/generated/prisma
-
-/generated/prisma
+# Uploads (keep .gitkeep)
+uploads/*
+!uploads/.gitkeep
