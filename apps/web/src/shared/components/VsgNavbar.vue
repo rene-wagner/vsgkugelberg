@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
+import { storeToRefs } from 'pinia';
 import VsgButton from './VsgButton.vue';
+import { useDefaultDepartmentsStore } from '@modules/default/stores/departmentsStore';
 
 interface MenuItem {
   label: string;
@@ -12,6 +14,10 @@ const isMenuOpen = ref(false);
 const isVereinOpen = ref(false);
 const isAbteilungenOpen = ref(false);
 
+const departmentsStore = useDefaultDepartmentsStore();
+const { departments, isLoading: departmentsLoading } =
+  storeToRefs(departmentsStore);
+
 const vereinItems: MenuItem[] = [
   { label: 'Geschichte', to: '/verein/geschichte' },
   { label: 'Vorstand', to: '/verein/vorstand' },
@@ -20,12 +26,19 @@ const vereinItems: MenuItem[] = [
   { label: 'Sponsoren', to: '/verein/sponsoren' },
 ];
 
-const abteilungenItems: MenuItem[] = [
-  { label: 'Badminton', to: '#' },
-  { label: 'Gymnastik', to: '#' },
-  { label: 'Tischtennis', to: '#' },
-  { label: 'Volleyball', to: '#' },
-];
+const abteilungenItems = computed<MenuItem[]>(() => {
+  return departments.value.map((dept) => ({
+    label: dept.name,
+    to: `/abteilung/${dept.slug}`,
+  }));
+});
+
+onMounted(() => {
+  // Only fetch if we don't have departments cached
+  if (departments.value.length === 0) {
+    departmentsStore.fetchDepartments();
+  }
+});
 
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value;
@@ -53,7 +66,7 @@ function toggleAbteilungen() {
     <div class="mx-auto max-w-7xl px-6 py-4">
       <div class="flex items-center justify-between">
         <!-- Logo -->
-        <div class="flex items-center gap-4">
+        <RouterLink to="/" class="flex items-center gap-4">
           <div
             class="animate-pulse-gold flex h-12 w-12 items-center justify-center rounded-lg bg-vsg-gold-400"
           >
@@ -67,10 +80,10 @@ function toggleAbteilungen() {
             >
             <span
               class="block font-body text-xs font-normal uppercase tracking-[0.3em] text-vsg-gold-400"
-              >Weißenfels</span
+              >Weissenfels</span
             >
           </div>
-        </div>
+        </RouterLink>
 
         <!-- Desktop Menu -->
         <div class="hidden items-center gap-8 md:flex">
@@ -134,14 +147,30 @@ function toggleAbteilungen() {
               class="invisible absolute left-0 top-full mt-2 w-48 translate-y-2 transform rounded-lg border border-vsg-gold-400/20 bg-vsg-blue-900 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <div class="py-2">
-                <a
+                <!-- Loading state -->
+                <div
+                  v-if="departmentsLoading"
+                  class="px-4 py-2 text-sm text-vsg-gold-300/60"
+                >
+                  Laden...
+                </div>
+                <!-- Empty state -->
+                <div
+                  v-else-if="abteilungenItems.length === 0"
+                  class="px-4 py-2 text-sm text-vsg-gold-300/60"
+                >
+                  Keine Abteilungen
+                </div>
+                <!-- Department links -->
+                <RouterLink
                   v-for="item in abteilungenItems"
-                  :key="item.label"
-                  :href="item.to"
+                  v-else
+                  :key="item.to"
+                  :to="item.to"
                   class="block px-4 py-2 font-body text-sm font-normal text-vsg-gold-300 transition-colors hover:bg-vsg-blue-800/50 hover:text-vsg-gold-400"
                 >
                   {{ item.label }}
-                </a>
+                </RouterLink>
               </div>
             </div>
           </div>
@@ -162,7 +191,7 @@ function toggleAbteilungen() {
         <!-- Mobile Burger Button -->
         <button
           class="group flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
-          :aria-label="isMenuOpen ? 'Menu schließen' : 'Menu öffnen'"
+          :aria-label="isMenuOpen ? 'Menu schliessen' : 'Menu offnen'"
           @click="toggleMenu"
         >
           <span
@@ -256,15 +285,28 @@ function toggleAbteilungen() {
           class="mt-4 flex flex-col gap-3 overflow-hidden pl-4 transition-all duration-300"
           :style="{ maxHeight: isAbteilungenOpen ? '300px' : '0' }"
         >
-          <a
+          <!-- Loading state -->
+          <span v-if="departmentsLoading" class="text-lg text-vsg-gold-300/60">
+            Laden...
+          </span>
+          <!-- Empty state -->
+          <span
+            v-else-if="abteilungenItems.length === 0"
+            class="text-lg text-vsg-gold-300/60"
+          >
+            Keine Abteilungen
+          </span>
+          <!-- Department links -->
+          <RouterLink
             v-for="item in abteilungenItems"
-            :key="item.label"
-            :href="item.to"
+            v-else
+            :key="item.to"
+            :to="item.to"
             class="font-body text-lg font-normal text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             @click="closeMenu"
           >
             {{ item.label }}
-          </a>
+          </RouterLink>
         </div>
       </div>
 
