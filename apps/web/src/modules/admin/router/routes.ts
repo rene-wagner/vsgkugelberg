@@ -11,6 +11,8 @@ import NewsListView from '../views/NewsListView.vue';
 import NewsFormView from '../views/NewsFormView.vue';
 import EventsListView from '../views/EventsListView.vue';
 import EventFormView from '../views/EventFormView.vue';
+import ContactPersonsListView from '../views/ContactPersonsListView.vue';
+import ContactPersonFormView from '../views/ContactPersonFormView.vue';
 import SettingsView from '../views/SettingsView.vue';
 
 const routes: RouteRecordRaw[] = [
@@ -98,6 +100,21 @@ const routes: RouteRecordRaw[] = [
         path: 'events/:id/edit',
         name: 'admin-event-edit',
         component: EventFormView,
+      },
+      {
+        path: 'contact-persons',
+        name: 'admin-contact-persons',
+        component: ContactPersonsListView,
+      },
+      {
+        path: 'contact-persons/new',
+        name: 'admin-contact-person-new',
+        component: ContactPersonFormView,
+      },
+      {
+        path: 'contact-persons/:id/edit',
+        name: 'admin-contact-person-edit',
+        component: ContactPersonFormView,
       },
       {
         path: 'settings',

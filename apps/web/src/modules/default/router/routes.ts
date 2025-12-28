@@ -3,6 +3,7 @@ import DefaultLayout from '@shared/layouts/DefaultLayout.vue';
 import HomeView from '../views/HomeView.vue';
 import ImpressumView from '../views/ImpressumView.vue';
 import DatenschutzView from '../views/DatenschutzView.vue';
+import ContactView from '../views/ContactView.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -23,6 +24,11 @@ const routes: RouteRecordRaw[] = [
         path: 'datenschutz',
         name: 'datenschutz',
         component: DatenschutzView,
+      },
+      {
+        path: 'contact',
+        name: 'contact',
+        component: ContactView,
       },
     ],
   },
