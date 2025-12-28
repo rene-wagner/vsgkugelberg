@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
+import type { MediaItem } from './mediaStore';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -9,6 +10,8 @@ export interface Department {
   slug: string;
   shortDescription: string;
   longDescription: string;
+  iconId: number | null;
+  icon: MediaItem | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -17,12 +20,14 @@ export interface CreateDepartmentData {
   name: string;
   shortDescription: string;
   longDescription: string;
+  iconId?: number;
 }
 
 export interface UpdateDepartmentData {
   name?: string;
   shortDescription?: string;
   longDescription?: string;
+  iconId?: number | null;
 }
 
 export const useDepartmentsStore = defineStore('departments', () => {

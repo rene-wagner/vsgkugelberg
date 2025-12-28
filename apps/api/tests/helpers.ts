@@ -37,14 +37,15 @@ export {
 
 export async function cleanupDatabase() {
   // Delete in correct order: child tables first, then parent tables
+  // Note: department must come before media due to iconId foreign key
   await prisma.$transaction([
     prisma.block.deleteMany(),
     prisma.contactPerson.deleteMany(),
     prisma.event.deleteMany(),
+    prisma.department.deleteMany(),
     prisma.media.deleteMany(),
     prisma.post.deleteMany(),
     prisma.category.deleteMany(),
-    prisma.department.deleteMany(),
     prisma.clubSettings.deleteMany(),
     prisma.user.deleteMany(),
   ]);

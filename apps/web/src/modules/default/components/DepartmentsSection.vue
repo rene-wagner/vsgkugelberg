@@ -3,7 +3,10 @@ import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import VsgSectionHeader from '@shared/components/VsgSectionHeader.vue';
 import DepartmentCard from './DepartmentCard.vue';
-import { useDefaultDepartmentsStore } from '../stores/departmentsStore';
+import {
+  useDefaultDepartmentsStore,
+  getMediaUrl,
+} from '../stores/departmentsStore';
 
 const departmentsStore = useDefaultDepartmentsStore();
 const { departments, isLoading, error } = storeToRefs(departmentsStore);
@@ -63,7 +66,18 @@ onMounted(() => {
           :href="`/abteilungen/${department.slug}`"
         >
           <template #icon>
+            <img
+              v-if="department.icon"
+              :src="getMediaUrl(department.icon)"
+              :alt="department.name"
+              class="h-8 w-8 object-contain"
+              style="
+                filter: invert(27%) sepia(51%) saturate(2878%)
+                  hue-rotate(200deg) brightness(89%) contrast(91%);
+              "
+            />
             <svg
+              v-else
               class="h-8 w-8 text-vsg-blue-600"
               fill="currentColor"
               viewBox="0 0 24 24"

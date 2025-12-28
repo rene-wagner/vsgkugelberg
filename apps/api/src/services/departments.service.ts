@@ -1,8 +1,12 @@
-import { NotFoundException, ConflictException } from '@/errors/http-errors';
+import {
+  NotFoundException,
+  ConflictException,
+  BadRequestException,
+} from '@/errors/http-errors';
 import {
   CreateDepartmentDto,
   UpdateDepartmentDto,
-  Department,
+  DepartmentWithIcon,
 } from '@/types/department.types';
 import { SlugifyService } from '@/services/slugify.service';
 import { Prisma, prisma } from '@/lib/prisma.lib';
@@ -10,15 +14,33 @@ import { Prisma, prisma } from '@/lib/prisma.lib';
 const slugifyService = new SlugifyService();
 
 export class DepartmentsService {
-  async findAll(): Promise<Department[]> {
+  private async validateSvgIcon(iconId: number): Promise<void> {
+    const media = await prisma.media.findUnique({
+      where: { id: iconId },
+    });
+
+    if (!media) {
+      throw new NotFoundException(`Media with ID ${iconId} not found`);
+    }
+
+    if (media.mimetype !== 'image/svg+xml') {
+      throw new BadRequestException(
+        'Icon must be an SVG file (image/svg+xml mimetype)',
+      );
+    }
+  }
+
+  async findAll(): Promise<DepartmentWithIcon[]> {
     return prisma.department.findMany({
       orderBy: { name: 'asc' },
+      include: { icon: true },
     });
   }
 
-  async findBySlug(slug: string): Promise<Department> {
+  async findBySlug(slug: string): Promise<DepartmentWithIcon> {
     const department = await prisma.department.findUnique({
       where: { slug },
+      include: { icon: true },
     });
 
     if (!department) {
@@ -28,7 +50,14 @@ export class DepartmentsService {
     return department;
   }
 
-  async create(createDepartmentDto: CreateDepartmentDto): Promise<Department> {
+  async create(
+    createDepartmentDto: CreateDepartmentDto,
+  ): Promise<DepartmentWithIcon> {
+    // Validate icon if provided
+    if (createDepartmentDto.iconId !== undefined) {
+      await this.validateSvgIcon(createDepartmentDto.iconId);
+    }
+
     // Generate unique slug from name
     const slug = await slugifyService.generateUniqueDepartmentSlug(
       createDepartmentDto.name,
@@ -41,9 +70,11 @@ export class DepartmentsService {
           slug,
           shortDescription: createDepartmentDto.shortDescription,
           longDescription: createDepartmentDto.longDescription,
+          iconId: createDepartmentDto.iconId,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
+        include: { icon: true },
       });
     } catch (error) {
       if (
@@ -61,7 +92,7 @@ export class DepartmentsService {
   async update(
     slug: string,
     updateDepartmentDto: UpdateDepartmentDto,
-  ): Promise<Department> {
+  ): Promise<DepartmentWithIcon> {
     // First, find the department by slug
     const existingDepartment = await prisma.department.findUnique({
       where: { slug },
@@ -70,6 +101,14 @@ export class DepartmentsService {
 
     if (!existingDepartment) {
       throw new NotFoundException(`Department with slug "${slug}" not found`);
+    }
+
+    // Validate icon if provided (not null)
+    if (
+      updateDepartmentDto.iconId !== undefined &&
+      updateDepartmentDto.iconId !== null
+    ) {
+      await this.validateSvgIcon(updateDepartmentDto.iconId);
     }
 
     const updateData: Prisma.DepartmentUpdateInput = {};
@@ -91,10 +130,16 @@ export class DepartmentsService {
       updateData.longDescription = updateDepartmentDto.longDescription;
     }
 
+    // Handle iconId: can be set to a value, or explicitly set to null to remove
+    if (updateDepartmentDto.iconId !== undefined) {
+      updateData.iconId = updateDepartmentDto.iconId;
+    }
+
     try {
       return await prisma.department.update({
         where: { id: existingDepartment.id },
         data: updateData,
+        include: { icon: true },
       });
     } catch (error) {
       if (
