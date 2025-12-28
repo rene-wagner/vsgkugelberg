@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue';
 import ImpressumView from '../views/ImpressumView.vue';
 import DatenschutzView from '../views/DatenschutzView.vue';
 import ContactView from '../views/ContactView.vue';
+import DepartmentDetailView from '../views/DepartmentDetailView.vue';
 import HistoryView from '../views/verein/HistoryView.vue';
 import BoardView from '../views/verein/BoardView.vue';
 import StatutesView from '../views/verein/StatutesView.vue';
@@ -59,6 +60,11 @@ const routes: RouteRecordRaw[] = [
         path: 'verein/sponsoren',
         name: 'verein-sponsoren',
         component: SponsorsView,
+      },
+      {
+        path: 'abteilung/:slug',
+        name: 'department-detail',
+        component: DepartmentDetailView,
       },
     ],
   },

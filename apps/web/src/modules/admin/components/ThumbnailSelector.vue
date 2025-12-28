@@ -24,7 +24,7 @@ const thumbnailUrl = computed(() => {
   if (props.thumbnail) {
     return mediaStore.getMediaUrl(props.thumbnail);
   }
-  return null;
+  return undefined;
 });
 
 function openMediaLibrary() {

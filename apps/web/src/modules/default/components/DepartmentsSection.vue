@@ -63,7 +63,7 @@ onMounted(() => {
           :key="department.id"
           :title="department.name.toUpperCase()"
           :description="department.shortDescription"
-          :href="`/abteilungen/${department.slug}`"
+          :href="`/abteilung/${department.slug}`"
         >
           <template #icon>
             <img
