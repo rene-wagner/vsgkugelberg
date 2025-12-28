@@ -5,7 +5,7 @@ import VsgButton from './VsgButton.vue';
 
 interface MenuItem {
   label: string;
-  href: string;
+  to: string;
 }
 
 const isMenuOpen = ref(false);
@@ -13,18 +13,18 @@ const isVereinOpen = ref(false);
 const isAbteilungenOpen = ref(false);
 
 const vereinItems: MenuItem[] = [
-  { label: 'Geschichte', href: '#' },
-  { label: 'Vorstand', href: '#' },
-  { label: 'Satzung', href: '#' },
-  { label: 'Mitgliedschaft', href: '#' },
-  { label: 'Sponsoren', href: '#' },
+  { label: 'Geschichte', to: '/verein/geschichte' },
+  { label: 'Vorstand', to: '/verein/vorstand' },
+  { label: 'Satzung', to: '/verein/satzung' },
+  { label: 'Mitgliedschaft', to: '/verein/mitgliedschaft' },
+  { label: 'Sponsoren', to: '/verein/sponsoren' },
 ];
 
 const abteilungenItems: MenuItem[] = [
-  { label: 'Badminton', href: '#' },
-  { label: 'Gymnastik', href: '#' },
-  { label: 'Tischtennis', href: '#' },
-  { label: 'Volleyball', href: '#' },
+  { label: 'Badminton', to: '#' },
+  { label: 'Gymnastik', to: '#' },
+  { label: 'Tischtennis', to: '#' },
+  { label: 'Volleyball', to: '#' },
 ];
 
 function toggleMenu() {
@@ -98,14 +98,14 @@ function toggleAbteilungen() {
               class="invisible absolute left-0 top-full mt-2 w-48 translate-y-2 transform rounded-lg border border-vsg-gold-400/20 bg-vsg-blue-900 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
             >
               <div class="py-2">
-                <a
+                <RouterLink
                   v-for="item in vereinItems"
                   :key="item.label"
-                  :href="item.href"
+                  :to="item.to"
                   class="block px-4 py-2 font-body text-sm font-normal text-vsg-gold-300 transition-colors hover:bg-vsg-blue-800/50 hover:text-vsg-gold-400"
                 >
                   {{ item.label }}
-                </a>
+                </RouterLink>
               </div>
             </div>
           </div>
@@ -137,7 +137,7 @@ function toggleAbteilungen() {
                 <a
                   v-for="item in abteilungenItems"
                   :key="item.label"
-                  :href="item.href"
+                  :href="item.to"
                   class="block px-4 py-2 font-body text-sm font-normal text-vsg-gold-300 transition-colors hover:bg-vsg-blue-800/50 hover:text-vsg-gold-400"
                 >
                   {{ item.label }}
@@ -218,15 +218,15 @@ function toggleAbteilungen() {
           class="mt-4 flex flex-col gap-3 overflow-hidden pl-4 transition-all duration-300"
           :style="{ maxHeight: isVereinOpen ? '300px' : '0' }"
         >
-          <a
+          <RouterLink
             v-for="item in vereinItems"
             :key="item.label"
-            :href="item.href"
+            :to="item.to"
             class="font-body text-lg font-normal text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             @click="closeMenu"
           >
             {{ item.label }}
-          </a>
+          </RouterLink>
         </div>
       </div>
 
@@ -259,7 +259,7 @@ function toggleAbteilungen() {
           <a
             v-for="item in abteilungenItems"
             :key="item.label"
-            :href="item.href"
+            :href="item.to"
             class="font-body text-lg font-normal text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             @click="closeMenu"
           >
