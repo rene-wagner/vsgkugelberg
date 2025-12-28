@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import VsgButton from './VsgButton.vue';
 
 interface MenuItem {
@@ -150,10 +151,10 @@ function toggleAbteilungen() {
             class="font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             >Termine</a
           >
-          <a
-            href="#"
+          <RouterLink
+            to="/contact"
             class="font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
-            >Kontakt</a
+            >Kontakt</RouterLink
           >
           <VsgButton variant="primary" size="md">MITGLIED WERDEN</VsgButton>
         </div>
@@ -276,11 +277,11 @@ function toggleAbteilungen() {
         >
       </div>
       <div class="mb-4 w-full max-w-xs">
-        <a
-          href="#"
+        <RouterLink
+          to="/contact"
           class="block font-display text-4xl tracking-wider text-white transition-colors hover:text-vsg-gold-400"
           @click="closeMenu"
-          >KONTAKT</a
+          >KONTAKT</RouterLink
         >
       </div>
       <button

@@ -7,7 +7,7 @@ const vereinLinks = [
   { label: 'Satzung', href: '#' },
   { label: 'Mitgliedschaft', href: '#' },
   { label: 'Sponsoren', href: '#' },
-  { label: 'Ansprechpartner', href: '/contact', isRouter: true },
+  { label: 'Kontakt', href: '/contact', isRouter: true },
 ];
 </script>
 
