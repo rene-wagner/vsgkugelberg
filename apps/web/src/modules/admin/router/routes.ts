@@ -13,6 +13,7 @@ import EventsListView from '../views/EventsListView.vue';
 import EventFormView from '../views/EventFormView.vue';
 import ContactPersonsListView from '../views/ContactPersonsListView.vue';
 import ContactPersonFormView from '../views/ContactPersonFormView.vue';
+import MediaLibraryView from '../views/MediaLibraryView.vue';
 import SettingsView from '../views/SettingsView.vue';
 
 const routes: RouteRecordRaw[] = [
@@ -115,6 +116,11 @@ const routes: RouteRecordRaw[] = [
         path: 'contact-persons/:id/edit',
         name: 'admin-contact-person-edit',
         component: ContactPersonFormView,
+      },
+      {
+        path: 'media',
+        name: 'admin-media',
+        component: MediaLibraryView,
       },
       {
         path: 'settings',

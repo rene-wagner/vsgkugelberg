@@ -118,3 +118,18 @@ model ContactPerson {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Media {
+  id           Int      @id @default(autoincrement())
+  filename     String   @unique
+  originalName String
+  path         String
+  mimetype     String
+  size         Int
+  type         String   @default("IMAGE")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([type])
+  @@index([createdAt])
+}

@@ -12,6 +12,7 @@ import {
   ContactPerson,
   Department,
   Event,
+  Media,
   Post,
   User,
 } from '../generated/prisma/client';
@@ -29,6 +30,7 @@ export {
   ContactPerson,
   Department,
   Event,
+  Media,
   Post,
   User,
 };
@@ -39,6 +41,7 @@ export async function cleanupDatabase() {
     prisma.block.deleteMany(),
     prisma.contactPerson.deleteMany(),
     prisma.event.deleteMany(),
+    prisma.media.deleteMany(),
     prisma.post.deleteMany(),
     prisma.category.deleteMany(),
     prisma.department.deleteMany(),

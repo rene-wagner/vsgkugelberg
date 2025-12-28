@@ -1,0 +1,85 @@
+import { Router } from 'express';
+import { MediaService } from '@/services/media.service';
+import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
+import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
+import { validationMiddleware } from '@/middleware/validation.middleware';
+import { jwtMiddleware } from '@/middleware/jwt.middleware';
+import {
+  mediaQueryValidator,
+  mediaIdParamValidator,
+} from '@/validators/media.validators';
+import { upload } from '@/config/upload.config';
+import { BadRequestException } from '@/errors/http-errors';
+
+const router = Router();
+const mediaService = new MediaService();
+
+// Protected route - List all media with pagination
+router.get(
+  '/',
+  jwtMiddleware,
+  authGuardMiddleware,
+  mediaQueryValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const page = req.query.page ? Number(req.query.page) : 1;
+    const limit = req.query.limit ? Number(req.query.limit) : 24;
+
+    const result = await mediaService.findAll(page, limit);
+    res.json(result);
+  }),
+);
+
+// Protected route - Get single media by ID
+router.get(
+  '/:id',
+  jwtMiddleware,
+  authGuardMiddleware,
+  mediaIdParamValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const id = Number(req.params.id);
+    const media = await mediaService.findById(id);
+    res.json(media);
+  }),
+);
+
+// Protected route - Upload new media
+router.post(
+  '/',
+  jwtMiddleware,
+  authGuardMiddleware,
+  upload.single('file'),
+  asyncHandlerMiddleware(async (req, res) => {
+    if (!req.file) {
+      throw new BadRequestException('No file uploaded');
+    }
+
+    const media = await mediaService.create({
+      filename: req.file.filename,
+      originalName: req.file.originalname,
+      path: req.file.filename, // Just the filename, path is constructed from UPLOAD_DIR
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      type: 'IMAGE',
+    });
+
+    res.status(201).json(media);
+  }),
+);
+
+// Protected route - Delete media by ID
+router.delete(
+  '/:id',
+  jwtMiddleware,
+  authGuardMiddleware,
+  mediaIdParamValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const id = Number(req.params.id);
+    const media = await mediaService.remove(id);
+    res.json(media);
+  }),
+);
+
+export { router as mediaRouter };

@@ -11,6 +11,7 @@ import { meRouter } from './me.routes';
 import { settingsRouter } from './settings.routes';
 import { eventsRouter } from './events.routes';
 import { contactPersonsRouter } from './contact-persons.routes';
+import { mediaRouter } from './media.routes';
 
 const router = Router();
 
@@ -25,5 +26,6 @@ router.use('/health', healthRouter);
 router.use('/settings', settingsRouter);
 router.use('/events', eventsRouter);
 router.use('/contact-persons', contactPersonsRouter);
+router.use('/media', mediaRouter);
 
 export { router };
