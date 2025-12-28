@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router';
+
 const vereinLinks = [
   { label: 'Geschichte', href: '#' },
   { label: 'Vorstand', href: '#' },
@@ -98,15 +100,15 @@ const vereinLinks = [
           &copy; 2024 VSG Kugelberg e.V. Alle Rechte vorbehalten.
         </span>
         <div class="flex gap-6">
-          <a
-            href="#"
+          <RouterLink
+            to="/impressum"
             class="font-body text-sm font-normal text-vsg-blue-400 transition-colors hover:text-vsg-gold-400"
-            >Impressum</a
+            >Impressum</RouterLink
           >
-          <a
-            href="#"
+          <RouterLink
+            to="/datenschutz"
             class="font-body text-sm font-normal text-vsg-blue-400 transition-colors hover:text-vsg-gold-400"
-            >Datenschutz</a
+            >Datenschutz</RouterLink
           >
         </div>
       </div>
