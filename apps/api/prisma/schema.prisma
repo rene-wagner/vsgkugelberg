@@ -18,18 +18,20 @@ model User {
 }
 
 model Post {
-  id         Int        @id @default(autoincrement())
-  title      String
-  slug       String     @unique
-  content    String?
-  published  Boolean    @default(false)
-  hits       Int        @default(0)
-  oldPost    Boolean    @default(false)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  authorId   Int
-  author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  categories Category[]
+  id          Int        @id @default(autoincrement())
+  title       String
+  slug        String     @unique
+  content     String?
+  published   Boolean    @default(false)
+  hits        Int        @default(0)
+  oldPost     Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  authorId    Int
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  thumbnailId Int?
+  thumbnail   Media?     @relation(fields: [thumbnailId], references: [id], onDelete: SetNull)
+  categories  Category[]
 
   @@index([slug])
 }
@@ -132,6 +134,7 @@ model Media {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   departments  Department[]
+  posts        Post[]
 
   @@index([type])
   @@index([createdAt])

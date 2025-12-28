@@ -45,6 +45,11 @@ export const createPostValidator = [
     .isInt({ min: 1 })
     .withMessage('Each category ID must be a positive integer')
     .toInt(),
+
+  body('thumbnailId')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Thumbnail ID must be a positive integer'),
 ];
 
 export const updatePostValidator = [
@@ -84,6 +89,14 @@ export const updatePostValidator = [
     .isInt({ min: 1 })
     .withMessage('Each category ID must be a positive integer')
     .toInt(),
+
+  body('thumbnailId')
+    .optional({ nullable: true })
+    .custom((value) => {
+      if (value === null) return true;
+      if (Number.isInteger(value) && value >= 1) return true;
+      throw new Error('Thumbnail ID must be a positive integer or null');
+    }),
 ];
 
 export const slugParamValidator = [

@@ -47,6 +47,20 @@ describe('Posts API Integration Tests', () => {
     return { category1, category2 };
   }
 
+  // Helper to create test media
+  async function createTestMedia(filename: string = 'test-image.jpg') {
+    return await prisma.media.create({
+      data: {
+        filename,
+        originalName: filename,
+        path: `/uploads/${filename}`,
+        mimetype: 'image/jpeg',
+        size: 1024,
+        type: 'IMAGE',
+      },
+    });
+  }
+
   describe('GET /api/posts', () => {
     it('should return paginated posts with metadata', async () => {
       const { user } = await createAuthenticatedUser();
@@ -85,6 +99,7 @@ describe('Posts API Integration Tests', () => {
       expect(response.body.data[0]).toHaveProperty('oldPost');
       expect(response.body.data[0]).toHaveProperty('author');
       expect(response.body.data[0]).toHaveProperty('categories');
+      expect(response.body.data[0]).toHaveProperty('thumbnail');
       expect(response.body.data[0].author).not.toHaveProperty('password');
       expect(response.body.meta).toMatchObject({
         total: 2,
@@ -375,6 +390,49 @@ describe('Posts API Integration Tests', () => {
         expect(post.published).toBe(true);
       });
     });
+
+    it('should include thumbnail data in posts list', async () => {
+      const { user } = await createAuthenticatedUser();
+      const media = await createTestMedia('thumbnail-list.jpg');
+
+      await prisma.post.create({
+        data: {
+          title: 'Post with Thumbnail',
+          slug: 'post-with-thumbnail',
+          content: 'Content',
+          published: true,
+          authorId: user.id,
+          thumbnailId: media.id,
+        },
+      });
+
+      await prisma.post.create({
+        data: {
+          title: 'Post without Thumbnail',
+          slug: 'post-without-thumbnail',
+          content: 'Content',
+          published: true,
+          authorId: user.id,
+        },
+      });
+
+      const response = await request(app).get('/api/posts');
+
+      expect(response.status).toBe(200);
+      expect(response.body.data).toHaveLength(2);
+
+      const postWithThumb = response.body.data.find(
+        (p: { slug: string }) => p.slug === 'post-with-thumbnail',
+      );
+      const postWithoutThumb = response.body.data.find(
+        (p: { slug: string }) => p.slug === 'post-without-thumbnail',
+      );
+
+      expect(postWithThumb.thumbnail).toBeTruthy();
+      expect(postWithThumb.thumbnail.id).toBe(media.id);
+      expect(postWithThumb.thumbnail.filename).toBe('thumbnail-list.jpg');
+      expect(postWithoutThumb.thumbnail).toBeNull();
+    });
   });
 
   describe('GET /api/posts/:slug', () => {
@@ -451,6 +509,51 @@ describe('Posts API Integration Tests', () => {
 
       expect(response.status).toBe(400);
       expect(response.body).toHaveProperty('statusCode', 400);
+    });
+
+    it('should return post with thumbnail data', async () => {
+      const { user } = await createAuthenticatedUser();
+      const media = await createTestMedia('post-thumbnail.jpg');
+
+      await prisma.post.create({
+        data: {
+          title: 'Post with Thumbnail',
+          slug: 'post-with-thumbnail',
+          content: 'Content',
+          published: true,
+          authorId: user.id,
+          thumbnailId: media.id,
+        },
+      });
+
+      const response = await request(app).get('/api/posts/post-with-thumbnail');
+
+      expect(response.status).toBe(200);
+      expect(response.body.thumbnail).toBeTruthy();
+      expect(response.body.thumbnail.id).toBe(media.id);
+      expect(response.body.thumbnail.filename).toBe('post-thumbnail.jpg');
+      expect(response.body.thumbnail.mimetype).toBe('image/jpeg');
+    });
+
+    it('should return post with null thumbnail when none set', async () => {
+      const { user } = await createAuthenticatedUser();
+
+      await prisma.post.create({
+        data: {
+          title: 'Post without Thumbnail',
+          slug: 'post-without-thumbnail',
+          content: 'Content',
+          published: true,
+          authorId: user.id,
+        },
+      });
+
+      const response = await request(app).get(
+        '/api/posts/post-without-thumbnail',
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body.thumbnail).toBeNull();
     });
   });
 
@@ -806,6 +909,67 @@ describe('Posts API Integration Tests', () => {
         .send(newPost);
 
       expect(response.status).toBe(400);
+    });
+
+    it('should create a post with valid thumbnailId', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+      const media = await createTestMedia('create-thumbnail.jpg');
+
+      const newPost = {
+        title: 'Post with Thumbnail',
+        content: 'Content',
+        authorId: user.id,
+        thumbnailId: media.id,
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Cookie', cookies)
+        .send(newPost);
+
+      expect(response.status).toBe(201);
+      expect(response.body.thumbnailId).toBe(media.id);
+      expect(response.body.thumbnail).toBeTruthy();
+      expect(response.body.thumbnail.id).toBe(media.id);
+      expect(response.body.thumbnail.filename).toBe('create-thumbnail.jpg');
+    });
+
+    it('should create a post without thumbnailId (null)', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const newPost = {
+        title: 'Post without Thumbnail',
+        content: 'Content',
+        authorId: user.id,
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Cookie', cookies)
+        .send(newPost);
+
+      expect(response.status).toBe(201);
+      expect(response.body.thumbnailId).toBeNull();
+      expect(response.body.thumbnail).toBeNull();
+    });
+
+    it('should return 404 for non-existent thumbnailId', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const newPost = {
+        title: 'Post with Invalid Thumbnail',
+        content: 'Content',
+        authorId: user.id,
+        thumbnailId: 99999,
+      };
+
+      const response = await request(app)
+        .post('/api/posts')
+        .set('Cookie', cookies)
+        .send(newPost);
+
+      expect(response.status).toBe(404);
+      expect(response.body.message).toContain('Media');
     });
   });
 
@@ -1208,6 +1372,122 @@ describe('Posts API Integration Tests', () => {
         .send(update);
 
       expect(response.status).toBe(400);
+    });
+
+    it('should update post to add thumbnail', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+      const media = await createTestMedia('add-thumbnail.jpg');
+
+      const post = await prisma.post.create({
+        data: {
+          title: 'Post without Thumbnail',
+          slug: 'post-without-thumbnail',
+          content: 'Content',
+          authorId: user.id,
+        },
+      });
+
+      const update = {
+        thumbnailId: media.id,
+      };
+
+      const response = await request(app)
+        .patch(`/api/posts/${post.slug}`)
+        .set('Cookie', cookies)
+        .send(update);
+
+      expect(response.status).toBe(200);
+      expect(response.body.thumbnailId).toBe(media.id);
+      expect(response.body.thumbnail).toBeTruthy();
+      expect(response.body.thumbnail.filename).toBe('add-thumbnail.jpg');
+    });
+
+    it('should update post to remove thumbnail (set null)', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+      const media = await createTestMedia('remove-thumbnail.jpg');
+
+      const post = await prisma.post.create({
+        data: {
+          title: 'Post with Thumbnail',
+          slug: 'post-with-thumbnail',
+          content: 'Content',
+          authorId: user.id,
+          thumbnailId: media.id,
+        },
+      });
+
+      const update = {
+        thumbnailId: null,
+      };
+
+      const response = await request(app)
+        .patch(`/api/posts/${post.slug}`)
+        .set('Cookie', cookies)
+        .send(update);
+
+      expect(response.status).toBe(200);
+      expect(response.body.thumbnailId).toBeNull();
+      expect(response.body.thumbnail).toBeNull();
+    });
+
+    it('should update post to change thumbnail', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+      const media1 = await createTestMedia('old-thumbnail.jpg');
+      const media2 = await createTestMedia('new-thumbnail.jpg');
+
+      const post = await prisma.post.create({
+        data: {
+          title: 'Post with Thumbnail',
+          slug: 'post-with-thumbnail',
+          content: 'Content',
+          authorId: user.id,
+          thumbnailId: media1.id,
+        },
+      });
+
+      const update = {
+        thumbnailId: media2.id,
+      };
+
+      const response = await request(app)
+        .patch(`/api/posts/${post.slug}`)
+        .set('Cookie', cookies)
+        .send(update);
+
+      expect(response.status).toBe(200);
+      expect(response.body.thumbnailId).toBe(media2.id);
+      expect(response.body.thumbnail.filename).toBe('new-thumbnail.jpg');
+
+      // Verify old media still exists
+      const oldMedia = await prisma.media.findUnique({
+        where: { id: media1.id },
+      });
+      expect(oldMedia).toBeTruthy();
+    });
+
+    it('should return 404 for non-existent thumbnailId in update', async () => {
+      const { user, cookies } = await createAuthenticatedUser();
+
+      const post = await prisma.post.create({
+        data: {
+          title: 'Test Post',
+          slug: 'test-post',
+          content: 'Content',
+          authorId: user.id,
+        },
+      });
+
+      const update = {
+        thumbnailId: 99999,
+      };
+
+      const response = await request(app)
+        .patch(`/api/posts/${post.slug}`)
+        .set('Cookie', cookies)
+        .send(update);
+
+      expect(response.status).toBe(404);
+      expect(response.body.message).toContain('Media');
     });
   });
 

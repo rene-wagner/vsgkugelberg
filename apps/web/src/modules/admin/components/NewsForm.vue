@@ -6,10 +6,13 @@ import {
   type NewsItem,
   type CreateNewsData,
   type UpdateNewsData,
+  type Thumbnail,
 } from '../stores/newsStore';
 import { useCategoriesStore } from '../stores/categoriesStore';
 import { useAuthStore } from '@/modules/auth/stores/authStore';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
+import ThumbnailSelector from './ThumbnailSelector.vue';
+import type { MediaItem } from '../stores/mediaStore';
 
 const props = defineProps<{
   newsItem: NewsItem | null;
@@ -25,6 +28,8 @@ const title = ref('');
 const content = ref('');
 const published = ref(false);
 const selectedCategoryIds = ref<number[]>([]);
+const thumbnailId = ref<number | null>(null);
+const thumbnail = ref<Thumbnail | null>(null);
 const error = ref('');
 const isSubmitting = ref(false);
 
@@ -42,6 +47,8 @@ watch(
       content.value = newNewsItem.content || '';
       published.value = newNewsItem.published;
       selectedCategoryIds.value = newNewsItem.categories.map((c) => c.id);
+      thumbnailId.value = newNewsItem.thumbnailId;
+      thumbnail.value = newNewsItem.thumbnail;
     }
   },
   { immediate: true },
@@ -79,6 +86,7 @@ async function handleSubmit() {
         content: content.value || undefined,
         published: published.value,
         categoryIds: selectedCategoryIds.value,
+        thumbnailId: thumbnailId.value,
       };
 
       const result = await newsStore.updateNews(
@@ -104,6 +112,7 @@ async function handleSubmit() {
         published: published.value,
         authorId: authorId.value,
         categoryIds: selectedCategoryIds.value,
+        thumbnailId: thumbnailId.value,
       };
 
       const result = await newsStore.createNews(createData);
@@ -150,6 +159,14 @@ function toggleCategory(categoryId: number) {
   } else {
     selectedCategoryIds.value.splice(index, 1);
   }
+}
+
+function updateThumbnailId(id: number | null) {
+  thumbnailId.value = id;
+}
+
+function updateThumbnail(media: MediaItem | null) {
+  thumbnail.value = media as Thumbnail | null;
 }
 </script>
 
@@ -214,6 +231,21 @@ function toggleCategory(categoryId: number) {
           >
             {{ authorName }}
           </div>
+        </div>
+
+        <!-- Thumbnail -->
+        <div>
+          <label
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
+            Beitragsbild
+          </label>
+          <ThumbnailSelector
+            :thumbnail-id="thumbnailId"
+            :thumbnail="thumbnail"
+            @update:thumbnail-id="updateThumbnailId"
+            @update:thumbnail="updateThumbnail"
+          />
         </div>
 
         <!-- Published -->

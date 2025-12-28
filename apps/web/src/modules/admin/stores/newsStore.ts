@@ -15,6 +15,18 @@ export interface Category {
   slug: string;
 }
 
+export interface Thumbnail {
+  id: number;
+  filename: string;
+  originalName: string;
+  path: string;
+  mimetype: string;
+  size: number;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface NewsItem {
   id: number;
   title: string;
@@ -24,6 +36,8 @@ export interface NewsItem {
   authorId: number;
   author: Author;
   categories: Category[];
+  thumbnailId: number | null;
+  thumbnail: Thumbnail | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -34,6 +48,7 @@ export interface CreateNewsData {
   published?: boolean;
   authorId: number;
   categoryIds?: number[];
+  thumbnailId?: number | null;
 }
 
 export interface UpdateNewsData {
@@ -41,6 +56,7 @@ export interface UpdateNewsData {
   content?: string;
   published?: boolean;
   categoryIds?: number[];
+  thumbnailId?: number | null;
 }
 
 interface PaginatedResponse {
