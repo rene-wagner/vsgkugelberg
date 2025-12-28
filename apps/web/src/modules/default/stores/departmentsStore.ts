@@ -3,14 +3,32 @@ import { defineStore } from 'pinia';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+export interface MediaItem {
+  id: number;
+  filename: string;
+  originalName: string;
+  path: string;
+  mimetype: string;
+  size: number;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Department {
   id: number;
   name: string;
   slug: string;
   shortDescription: string;
   longDescription: string;
+  iconId: number | null;
+  icon: MediaItem | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export function getMediaUrl(item: MediaItem): string {
+  return `${API_BASE_URL}/uploads/${item.filename}`;
 }
 
 export const useDefaultDepartmentsStore = defineStore(

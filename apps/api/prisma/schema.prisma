@@ -57,6 +57,8 @@ model Department {
   slug             String   @unique
   shortDescription String
   longDescription  String
+  iconId           Int?
+  icon             Media?   @relation(fields: [iconId], references: [id], onDelete: SetNull)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -120,15 +122,16 @@ model ContactPerson {
 }
 
 model Media {
-  id           Int      @id @default(autoincrement())
-  filename     String   @unique
+  id           Int          @id @default(autoincrement())
+  filename     String       @unique
   originalName String
   path         String
   mimetype     String
   size         Int
-  type         String   @default("IMAGE")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  type         String       @default("IMAGE")
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  departments  Department[]
 
   @@index([type])
   @@index([createdAt])

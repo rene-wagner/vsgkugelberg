@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useDepartmentsStore } from '../stores/departmentsStore';
+import { useMediaStore } from '../stores/mediaStore';
 
 const departmentsStore = useDepartmentsStore();
+const mediaStore = useMediaStore();
 
 onMounted(() => {
   departmentsStore.fetchDepartments();
@@ -64,6 +66,11 @@ async function handleDelete(slug: string, name: string) {
           <thead>
             <tr class="bg-gray-50 border-b border-gray-200">
               <th
+                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase w-16"
+              >
+                Icon
+              </th>
+              <th
                 class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
               >
                 Name
@@ -86,6 +93,17 @@ async function handleDelete(slug: string, name: string) {
               :key="department.id"
               class="hover:bg-gray-50 transition-colors"
             >
+              <td class="px-6 py-4">
+                <div class="w-8 h-8 flex items-center justify-center">
+                  <img
+                    v-if="department.icon"
+                    :src="mediaStore.getMediaUrl(department.icon)"
+                    :alt="department.name"
+                    class="w-6 h-6 object-contain"
+                  />
+                  <span v-else class="text-gray-300">-</span>
+                </div>
+              </td>
               <td class="px-6 py-4">
                 <span class="font-body text-sm text-vsg-blue-900 font-medium">{{
                   department.name

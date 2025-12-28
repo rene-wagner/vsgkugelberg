@@ -21,6 +21,11 @@ export const createDepartmentValidator = [
     .withMessage('Long description is required')
     .isLength({ min: 20, max: 5000 })
     .withMessage('Long description must be between 20 and 5000 characters'),
+
+  body('iconId')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Icon ID must be a positive integer'),
 ];
 
 export const updateDepartmentValidator = [
@@ -41,6 +46,14 @@ export const updateDepartmentValidator = [
     .trim()
     .isLength({ min: 20, max: 5000 })
     .withMessage('Long description must be between 20 and 5000 characters'),
+
+  body('iconId')
+    .optional({ nullable: true })
+    .custom((value) => {
+      if (value === null) return true;
+      if (Number.isInteger(value) && value >= 1) return true;
+      throw new Error('Icon ID must be a positive integer or null');
+    }),
 ];
 
 export const slugParamValidator = [

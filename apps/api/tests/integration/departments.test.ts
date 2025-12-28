@@ -682,6 +682,295 @@ describe('Departments API Integration Tests', () => {
     });
   });
 
+  describe('Icon Support', () => {
+    // Helper to create an SVG media file for tests
+    async function createTestMedia(
+      mimetype: string = 'image/svg+xml',
+      filename: string = 'test-icon.svg',
+    ) {
+      return prisma.media.create({
+        data: {
+          filename,
+          originalName: filename,
+          path: `/uploads/${filename}`,
+          mimetype,
+          size: 1024,
+          type: 'IMAGE',
+        },
+      });
+    }
+
+    describe('Create department with icon', () => {
+      it('should create department with valid SVG icon', async () => {
+        const { cookies } = await createAuthenticatedUser();
+        const svgMedia = await createTestMedia(
+          'image/svg+xml',
+          'badge-icon.svg',
+        );
+
+        const newDepartment = {
+          name: 'Badminton',
+          shortDescription: 'Badminton department for all skill levels',
+          longDescription:
+            'Our badminton department offers training and competitions for players of all ages and abilities',
+          iconId: svgMedia.id,
+        };
+
+        const response = await request(app)
+          .post('/api/departments')
+          .set('Cookie', cookies)
+          .send(newDepartment);
+
+        expect(response.status).toBe(201);
+        expect(response.body.iconId).toBe(svgMedia.id);
+        expect(response.body.icon).toBeTruthy();
+        expect(response.body.icon.mimetype).toBe('image/svg+xml');
+      });
+
+      it('should return 400 when creating department with non-SVG media', async () => {
+        const { cookies } = await createAuthenticatedUser();
+        const pngMedia = await createTestMedia('image/png', 'badge-icon.png');
+
+        const newDepartment = {
+          name: 'Table Tennis',
+          shortDescription: 'Table Tennis department for all skill levels',
+          longDescription:
+            'Our table tennis department offers training for players of all ages',
+          iconId: pngMedia.id,
+        };
+
+        const response = await request(app)
+          .post('/api/departments')
+          .set('Cookie', cookies)
+          .send(newDepartment);
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toContain('SVG');
+      });
+
+      it('should return 404 when creating department with non-existent media', async () => {
+        const { cookies } = await createAuthenticatedUser();
+
+        const newDepartment = {
+          name: 'Volleyball',
+          shortDescription: 'Volleyball department for all skill levels',
+          longDescription:
+            'Our volleyball department offers training for players of all ages',
+          iconId: 99999,
+        };
+
+        const response = await request(app)
+          .post('/api/departments')
+          .set('Cookie', cookies)
+          .send(newDepartment);
+
+        expect(response.status).toBe(404);
+        expect(response.body.message).toContain('not found');
+      });
+
+      it('should create department without icon when iconId is not provided', async () => {
+        const { cookies } = await createAuthenticatedUser();
+
+        const newDepartment = {
+          name: 'Swimming',
+          shortDescription: 'Swimming department for all skill levels',
+          longDescription:
+            'Our swimming department offers training for swimmers of all ages',
+        };
+
+        const response = await request(app)
+          .post('/api/departments')
+          .set('Cookie', cookies)
+          .send(newDepartment);
+
+        expect(response.status).toBe(201);
+        expect(response.body.iconId).toBeNull();
+        expect(response.body.icon).toBeNull();
+      });
+    });
+
+    describe('Update department icon', () => {
+      it('should update department to add icon', async () => {
+        const { cookies } = await createAuthenticatedUser();
+        const svgMedia = await createTestMedia('image/svg+xml', 'new-icon.svg');
+
+        const department = await prisma.department.create({
+          data: {
+            name: 'Gymnastics',
+            slug: 'gymnastics',
+            shortDescription: 'Gymnastics department',
+            longDescription: 'This is the gymnastics department',
+          },
+        });
+
+        const response = await request(app)
+          .patch(`/api/departments/${department.slug}`)
+          .set('Cookie', cookies)
+          .send({ iconId: svgMedia.id });
+
+        expect(response.status).toBe(200);
+        expect(response.body.iconId).toBe(svgMedia.id);
+        expect(response.body.icon).toBeTruthy();
+        expect(response.body.icon.mimetype).toBe('image/svg+xml');
+      });
+
+      it('should update department to remove icon (set null)', async () => {
+        const { cookies } = await createAuthenticatedUser();
+        const svgMedia = await createTestMedia(
+          'image/svg+xml',
+          'remove-icon.svg',
+        );
+
+        const department = await prisma.department.create({
+          data: {
+            name: 'Football',
+            slug: 'football',
+            shortDescription: 'Football department',
+            longDescription: 'This is the football department',
+            iconId: svgMedia.id,
+          },
+        });
+
+        const response = await request(app)
+          .patch(`/api/departments/${department.slug}`)
+          .set('Cookie', cookies)
+          .send({ iconId: null });
+
+        expect(response.status).toBe(200);
+        expect(response.body.iconId).toBeNull();
+        expect(response.body.icon).toBeNull();
+      });
+
+      it('should return 400 when updating department with non-SVG media', async () => {
+        const { cookies } = await createAuthenticatedUser();
+        const jpgMedia = await createTestMedia('image/jpeg', 'photo.jpg');
+
+        const department = await prisma.department.create({
+          data: {
+            name: 'Basketball',
+            slug: 'basketball',
+            shortDescription: 'Basketball department',
+            longDescription: 'This is the basketball department',
+          },
+        });
+
+        const response = await request(app)
+          .patch(`/api/departments/${department.slug}`)
+          .set('Cookie', cookies)
+          .send({ iconId: jpgMedia.id });
+
+        expect(response.status).toBe(400);
+        expect(response.body.message).toContain('SVG');
+      });
+    });
+
+    describe('GET departments with icon data', () => {
+      it('should include icon data in GET all departments', async () => {
+        const svgMedia = await createTestMedia(
+          'image/svg+xml',
+          'list-icon.svg',
+        );
+
+        await prisma.department.create({
+          data: {
+            name: 'Tennis',
+            slug: 'tennis',
+            shortDescription: 'Tennis department',
+            longDescription: 'This is the tennis department',
+            iconId: svgMedia.id,
+          },
+        });
+
+        await prisma.department.create({
+          data: {
+            name: 'Hockey',
+            slug: 'hockey',
+            shortDescription: 'Hockey department',
+            longDescription: 'This is the hockey department',
+          },
+        });
+
+        const response = await request(app).get('/api/departments');
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveLength(2);
+
+        // Find the department with icon
+        const tennisDepart = response.body.find(
+          (d: { name: string }) => d.name === 'Tennis',
+        );
+        const hockeyDepart = response.body.find(
+          (d: { name: string }) => d.name === 'Hockey',
+        );
+
+        expect(tennisDepart.icon).toBeTruthy();
+        expect(tennisDepart.icon.id).toBe(svgMedia.id);
+        expect(hockeyDepart.icon).toBeNull();
+      });
+
+      it('should include icon data in GET department by slug', async () => {
+        const svgMedia = await createTestMedia(
+          'image/svg+xml',
+          'single-icon.svg',
+        );
+
+        await prisma.department.create({
+          data: {
+            name: 'Athletics',
+            slug: 'athletics',
+            shortDescription: 'Athletics department with running events',
+            longDescription:
+              'Our athletics department offers various running and field events',
+            iconId: svgMedia.id,
+          },
+        });
+
+        const response = await request(app).get('/api/departments/athletics');
+
+        expect(response.status).toBe(200);
+        expect(response.body.icon).toBeTruthy();
+        expect(response.body.icon.id).toBe(svgMedia.id);
+        expect(response.body.icon.mimetype).toBe('image/svg+xml');
+      });
+    });
+
+    describe('Media deletion cascade', () => {
+      it('should set department iconId to null when media is deleted', async () => {
+        const svgMedia = await createTestMedia(
+          'image/svg+xml',
+          'cascade-icon.svg',
+        );
+
+        const department = await prisma.department.create({
+          data: {
+            name: 'Cycling',
+            slug: 'cycling',
+            shortDescription: 'Cycling department',
+            longDescription: 'This is the cycling department',
+            iconId: svgMedia.id,
+          },
+        });
+
+        // Verify icon is set
+        const departmentBefore = await prisma.department.findUnique({
+          where: { id: department.id },
+        });
+        expect(departmentBefore?.iconId).toBe(svgMedia.id);
+
+        // Delete the media
+        await prisma.media.delete({
+          where: { id: svgMedia.id },
+        });
+
+        // Verify iconId is now null (due to onDelete: SetNull)
+        const departmentAfter = await prisma.department.findUnique({
+          where: { id: department.id },
+        });
+        expect(departmentAfter?.iconId).toBeNull();
+      });
+    });
+  });
+
   describe('Edge Cases', () => {
     it('should handle departments with same name (unique constraint)', async () => {
       const { cookies } = await createAuthenticatedUser();

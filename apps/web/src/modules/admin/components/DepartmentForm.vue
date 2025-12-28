@@ -8,6 +8,7 @@ import {
   type UpdateDepartmentData,
 } from '../stores/departmentsStore';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
+import SvgIconSelector from './SvgIconSelector.vue';
 
 const props = defineProps<{
   department: Department | null;
@@ -20,6 +21,7 @@ const departmentsStore = useDepartmentsStore();
 const name = ref('');
 const shortDescription = ref('');
 const longDescription = ref('');
+const iconId = ref<number | null>(null);
 const error = ref('');
 const isSubmitting = ref(false);
 
@@ -31,6 +33,7 @@ watch(
       name.value = newDepartment.name;
       shortDescription.value = newDepartment.shortDescription;
       longDescription.value = newDepartment.longDescription;
+      iconId.value = newDepartment.iconId;
     }
   },
   { immediate: true },
@@ -57,6 +60,7 @@ async function handleSubmit() {
         name: name.value,
         shortDescription: shortDescription.value,
         longDescription: longDescription.value,
+        iconId: iconId.value,
       };
 
       const result = await departmentsStore.updateDepartment(
@@ -76,6 +80,10 @@ async function handleSubmit() {
         shortDescription: shortDescription.value,
         longDescription: longDescription.value,
       };
+      // Only include iconId if set
+      if (iconId.value !== null) {
+        createData.iconId = iconId.value;
+      }
 
       const result = await departmentsStore.createDepartment(createData);
       if (result) {
@@ -184,6 +192,25 @@ function handleCancel() {
             min-height="250px"
           />
         </div>
+      </div>
+    </div>
+
+    <!-- Icon Section -->
+    <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
+        ICON
+      </h2>
+
+      <div>
+        <label
+          class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+        >
+          Abteilungs-Icon (SVG)
+        </label>
+        <SvgIconSelector
+          v-model="iconId"
+          :current-icon="department?.icon ?? null"
+        />
       </div>
     </div>
 
