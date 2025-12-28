@@ -1,0 +1,53 @@
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
+export interface ContactPerson {
+  id: number;
+  firstName: string;
+  lastName: string;
+  type: string;
+  email: string | null;
+  address: string | null;
+  phone: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export const useDefaultContactPersonsStore = defineStore(
+  'default-contact-persons',
+  () => {
+    const contactPersons = ref<ContactPerson[]>([]);
+    const isLoading = ref(false);
+    const error = ref<string | null>(null);
+
+    async function fetchContactPersons(): Promise<void> {
+      isLoading.value = true;
+      error.value = null;
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/contact-persons`, {
+          method: 'GET',
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch contact persons');
+        }
+
+        contactPersons.value = (await response.json()) as ContactPerson[];
+      } catch (e) {
+        error.value = e instanceof Error ? e.message : 'An error occurred';
+      } finally {
+        isLoading.value = false;
+      }
+    }
+
+    return {
+      contactPersons,
+      isLoading,
+      error,
+      fetchContactPersons,
+    };
+  },
+);

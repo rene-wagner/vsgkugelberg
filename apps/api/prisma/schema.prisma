@@ -106,3 +106,15 @@ model Event {
   @@index([endDate])
   @@index([category])
 }
+
+model ContactPerson {
+  id        Int      @id @default(autoincrement())
+  firstName String
+  lastName  String
+  type      String
+  email     String?
+  address   String?
+  phone     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

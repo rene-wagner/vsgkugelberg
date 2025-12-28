@@ -7,6 +7,7 @@ const vereinLinks = [
   { label: 'Satzung', href: '#' },
   { label: 'Mitgliedschaft', href: '#' },
   { label: 'Sponsoren', href: '#' },
+  { label: 'Ansprechpartner', href: '/contact', isRouter: true },
 ];
 </script>
 
@@ -52,7 +53,15 @@ const vereinLinks = [
           </h5>
           <ul class="space-y-3">
             <li v-for="link in vereinLinks" :key="link.label">
+              <RouterLink
+                v-if="link.isRouter"
+                :to="link.href"
+                class="font-body font-normal text-vsg-blue-300 transition-colors hover:text-vsg-gold-400"
+              >
+                {{ link.label }}
+              </RouterLink>
               <a
+                v-else
                 :href="link.href"
                 class="font-body font-normal text-vsg-blue-300 transition-colors hover:text-vsg-gold-400"
               >

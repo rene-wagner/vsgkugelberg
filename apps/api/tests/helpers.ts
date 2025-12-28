@@ -9,6 +9,7 @@ import {
   Block,
   Category,
   ClubSettings,
+  ContactPerson,
   Department,
   Event,
   Post,
@@ -25,6 +26,7 @@ export {
   Block,
   Category,
   ClubSettings,
+  ContactPerson,
   Department,
   Event,
   Post,
@@ -35,6 +37,7 @@ export async function cleanupDatabase() {
   // Delete in correct order: child tables first, then parent tables
   await prisma.$transaction([
     prisma.block.deleteMany(),
+    prisma.contactPerson.deleteMany(),
     prisma.event.deleteMany(),
     prisma.post.deleteMany(),
     prisma.category.deleteMany(),
