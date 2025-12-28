@@ -45,6 +45,7 @@ export class PostsService {
             },
           },
           categories: true,
+          thumbnail: true,
         },
         orderBy: {
           createdAt: 'desc',
@@ -82,6 +83,7 @@ export class PostsService {
           },
         },
         categories: true,
+        thumbnail: true,
       },
     });
 
@@ -110,6 +112,18 @@ export class PostsService {
       }
     }
 
+    // Validate thumbnail ID if provided
+    if (createPostDto.thumbnailId) {
+      const media = await prisma.media.findUnique({
+        where: { id: createPostDto.thumbnailId },
+      });
+      if (!media) {
+        throw new NotFoundException(
+          `Media with ID ${createPostDto.thumbnailId} not found`,
+        );
+      }
+    }
+
     try {
       const post = await prisma.post.create({
         data: {
@@ -120,6 +134,7 @@ export class PostsService {
           hits: createPostDto.hits ?? 0,
           oldPost: createPostDto.oldPost ?? false,
           authorId: createPostDto.authorId,
+          thumbnailId: createPostDto.thumbnailId ?? null,
           categories: {
             connect: createPostDto.categoryIds?.map((id) => ({ id })) || [],
           },
@@ -135,6 +150,7 @@ export class PostsService {
             },
           },
           categories: true,
+          thumbnail: true,
         },
       });
 
@@ -177,6 +193,18 @@ export class PostsService {
       }
     }
 
+    // Validate thumbnail ID if provided (and not null)
+    if (updatePostDto.thumbnailId) {
+      const media = await prisma.media.findUnique({
+        where: { id: updatePostDto.thumbnailId },
+      });
+      if (!media) {
+        throw new NotFoundException(
+          `Media with ID ${updatePostDto.thumbnailId} not found`,
+        );
+      }
+    }
+
     const updateData: Prisma.PostUpdateInput = {};
 
     // If title is being updated, regenerate slug
@@ -211,6 +239,11 @@ export class PostsService {
       };
     }
 
+    // Handle thumbnail - can be set, changed, or removed (null)
+    if (updatePostDto.thumbnailId !== undefined) {
+      updateData.thumbnailId = updatePostDto.thumbnailId;
+    }
+
     try {
       const post = await prisma.post.update({
         where: { id: existingPost.id },
@@ -226,6 +259,7 @@ export class PostsService {
             },
           },
           categories: true,
+          thumbnail: true,
         },
       });
 
@@ -266,6 +300,7 @@ export class PostsService {
             },
           },
           categories: true,
+          thumbnail: true,
         },
       });
 
