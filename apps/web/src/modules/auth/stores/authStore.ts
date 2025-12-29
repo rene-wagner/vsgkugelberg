@@ -72,11 +72,70 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  /**
+   * Request a password reset email.
+   * Always returns success to prevent user enumeration.
+   */
+  async function requestPasswordReset(
+    email: string,
+  ): Promise<{ success: boolean; message?: string }> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = (await response.json()) as { message: string };
+      return { success: true, message: data.message };
+    } catch {
+      return {
+        success: false,
+        message: 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.',
+      };
+    }
+  }
+
+  /**
+   * Reset password with a valid token.
+   */
+  async function resetPassword(
+    token: string,
+    password: string,
+  ): Promise<{ success: boolean; message?: string }> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token, password }),
+      });
+
+      const data = (await response.json()) as { message: string };
+
+      if (!response.ok) {
+        return { success: false, message: data.message };
+      }
+
+      return { success: true, message: data.message };
+    } catch {
+      return {
+        success: false,
+        message: 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.',
+      };
+    }
+  }
+
   return {
     isAuthenticated,
     user,
     login,
     logout,
     checkAuth,
+    requestPasswordReset,
+    resetPassword,
   };
 });
