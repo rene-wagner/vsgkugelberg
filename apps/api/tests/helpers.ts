@@ -13,6 +13,7 @@ import {
   Department,
   Event,
   Media,
+  PasswordResetToken,
   Post,
   User,
 } from '../generated/prisma/client';
@@ -31,6 +32,7 @@ export {
   Department,
   Event,
   Media,
+  PasswordResetToken,
   Post,
   User,
 };
@@ -47,6 +49,7 @@ export async function cleanupDatabase() {
     prisma.post.deleteMany(),
     prisma.category.deleteMany(),
     prisma.clubSettings.deleteMany(),
+    prisma.passwordResetToken.deleteMany(),
     prisma.user.deleteMany(),
   ]);
 }

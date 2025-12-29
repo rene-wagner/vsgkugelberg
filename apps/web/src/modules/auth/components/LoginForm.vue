@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, RouterLink } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
 
 const username = ref('');
@@ -73,6 +73,14 @@ async function handleSubmit() {
         class="form-input-custom w-full px-4 py-3 bg-vsg-blue-800/50 border border-vsg-gold-400/30 rounded-lg text-white placeholder-vsg-blue-300 focus:outline-none focus:border-vsg-gold-400"
         placeholder="********"
       />
+      <div class="mt-2 text-right">
+        <RouterLink
+          to="/forgot-password"
+          class="text-sm text-vsg-gold-400/70 hover:text-vsg-gold-400 transition-colors"
+        >
+          Passwort vergessen?
+        </RouterLink>
+      </div>
     </div>
 
     <!-- Submit Button -->
