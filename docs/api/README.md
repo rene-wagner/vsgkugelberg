@@ -22,6 +22,7 @@ This API serves as the backend infrastructure for managing organizational conten
 - Cookie-based session handling
 - Protected routes with authentication guards
 - Support for username or email-based login
+- Password reset via email with secure time-limited tokens
 
 ### Content Management
 - **Posts**: Create, read, update, and delete blog posts or articles
@@ -65,6 +66,8 @@ This API serves as the backend infrastructure for managing organizational conten
 ### Authentication (`/api/auth`)
 - `POST /login` - Authenticate user and receive JWT token
 - `POST /logout` - Invalidate user session
+- `POST /forgot-password` - Request a password reset email
+- `POST /reset-password` - Reset password using a valid token
 
 ### Users (`/api/users`)
 - `GET /users` - List all users (protected)
@@ -129,6 +132,9 @@ Edit `.env` and configure:
 - `JWT_SECRET` - Secret key for JWT token signing
 - `JWT_EXPIRATION` - Token expiration time (e.g., "1h")
 - `NODE_ENV` - Environment (development/production)
+- `APP_URL` - Base URL for the application (used in password reset emails)
+- `EMAIL_PROVIDER` - Email provider: "console" (default, logs to console) or "smtp"
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` - SMTP configuration (required when EMAIL_PROVIDER=smtp)
 
 3. Set up the database:
 ```bash
@@ -196,6 +202,8 @@ pnpm prisma:seed
 - SQL injection prevention through Prisma ORM
 - Input validation on all endpoints
 - CORS configuration is controlled via the `CORS_ORIGINS` environment variable (with `http://localhost:5173` allowed by default in development)
+- Password reset tokens are 256-bit cryptographically random, SHA-256 hashed before storage, and expire after 60 minutes
+- Password reset responses are generic to prevent user enumeration attacks
 
 ## Author
 
