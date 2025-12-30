@@ -80,10 +80,20 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+      mailhog:
+        image: mailhog/mailhog:latest
+        ports:
+          - 1025:1025
+          - 8025:8025
     env:
       PRISMA_ENGINES_CHECKSUM_IGNORE_MISSING: 1
       DATABASE_URL: postgresql://user:secret@localhost:5432/database_test?schema=public
       JWT_EXPIRATION: 12h
+      EMAIL_PROVIDER: smtp
+      SMTP_HOST: localhost
+      SMTP_PORT: 1025
+      SMTP_FROM: noreply@vsg-kugelberg.de
+      MAILHOG_API_URL: http://localhost:8025
     steps:
       - name: Checkout code
         uses: actions/checkout@v5

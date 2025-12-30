@@ -1,8 +1,15 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import request from 'supertest';
 import { app } from '@/app';
 import { createTestUserWithPassword, prisma } from '../helpers';
 import { generateToken, hashToken } from '@/services/password-reset.service';
+import {
+  clearEmails,
+  getEmailsTo,
+  getEmailSubject,
+  getEmailBody,
+  getEmailRecipient,
+} from '../helpers/mailhog';
 
 describe('Password Reset API Integration Tests', () => {
   const testPassword = 'Password123';
@@ -10,14 +17,9 @@ describe('Password Reset API Integration Tests', () => {
   const testEmail = 'reset_test@example.com';
   const testUsername = 'reset_testuser';
 
-  // Suppress console.log during tests for cleaner output
-  beforeEach(() => {
-    vi.spyOn(console, 'log').mockImplementation(() => {});
-    vi.spyOn(console, 'warn').mockImplementation(() => {});
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
+  // Clear MailHog before each test for isolation
+  beforeEach(async () => {
+    await clearEmails();
   });
 
   describe('POST /api/auth/forgot-password', () => {
@@ -472,6 +474,103 @@ describe('Password Reset API Integration Tests', () => {
       expect(token?.tokenHash).toHaveLength(64);
       // Should not contain @ (which would be in email, indicating plaintext)
       expect(token?.tokenHash).not.toContain('@');
+    });
+  });
+
+  describe('Password Reset Email Verification (MailHog)', () => {
+    it('should send password reset email to correct recipient', async () => {
+      await createTestUserWithPassword(testUsername, testEmail, testPassword);
+
+      await request(app)
+        .post('/api/auth/forgot-password')
+        .send({ email: testEmail });
+
+      // Verify email was captured by MailHog
+      const emails = await getEmailsTo(testEmail);
+      expect(emails).toHaveLength(1);
+      expect(getEmailRecipient(emails[0])).toBe(testEmail);
+    });
+
+    it('should send email with correct subject line', async () => {
+      await createTestUserWithPassword(testUsername, testEmail, testPassword);
+
+      await request(app)
+        .post('/api/auth/forgot-password')
+        .send({ email: testEmail });
+
+      const emails = await getEmailsTo(testEmail);
+      expect(emails).toHaveLength(1);
+      expect(getEmailSubject(emails[0])).toBe(
+        'Passwort zuruecksetzen - VSG Kugelberg',
+      );
+    });
+
+    it('should include reset link with valid token in email body', async () => {
+      await createTestUserWithPassword(testUsername, testEmail, testPassword);
+
+      await request(app)
+        .post('/api/auth/forgot-password')
+        .send({ email: testEmail });
+
+      const emails = await getEmailsTo(testEmail);
+      expect(emails).toHaveLength(1);
+
+      const body = getEmailBody(emails[0]);
+
+      // Should contain reset-password URL with token parameter
+      // Note: MailHog uses quoted-printable encoding, so = becomes =3D
+      expect(body).toContain('reset-password?token');
+
+      // Decode quoted-printable: replace =3D with = and remove soft line breaks (=\r\n)
+      const decodedBody = body.replace(/=\r?\n/g, '').replace(/=3D/g, '=');
+
+      // Extract token from decoded body and verify it's a 64-char hex string
+      const tokenMatch = decodedBody.match(
+        /reset-password\?token=([a-f0-9]{64})/,
+      );
+      expect(tokenMatch).not.toBeNull();
+      expect(tokenMatch![1]).toHaveLength(64);
+    });
+
+    it('should not send email for non-existent user', async () => {
+      await request(app)
+        .post('/api/auth/forgot-password')
+        .send({ email: 'nonexistent@example.com' });
+
+      // No email should be captured
+      const emails = await getEmailsTo('nonexistent@example.com');
+      expect(emails).toHaveLength(0);
+    });
+
+    it('should send separate emails for multiple reset requests', async () => {
+      await createTestUserWithPassword(testUsername, testEmail, testPassword);
+
+      // First request
+      await request(app)
+        .post('/api/auth/forgot-password')
+        .send({ email: testEmail });
+
+      // Second request
+      await request(app)
+        .post('/api/auth/forgot-password')
+        .send({ email: testEmail });
+
+      // Should have 2 emails
+      const emails = await getEmailsTo(testEmail);
+      expect(emails).toHaveLength(2);
+
+      // Each email should have a different token
+      // Decode quoted-printable: replace =3D with = and remove soft line breaks
+      const tokens = emails.map((email) => {
+        const body = getEmailBody(email);
+        const decodedBody = body.replace(/=\r?\n/g, '').replace(/=3D/g, '=');
+        const match = decodedBody.match(/reset-password\?token=([a-f0-9]{64})/);
+        return match ? match[1] : null;
+      });
+
+      expect(tokens[0]).not.toBeNull();
+      expect(tokens[1]).not.toBeNull();
+      expect(tokens[0]).not.toBe(tokens[1]);
     });
   });
 });
