@@ -116,9 +116,10 @@ CREATE TABLE "ContactPerson" (
     "firstName" TEXT NOT NULL,
     "lastName" TEXT NOT NULL,
     "type" TEXT NOT NULL,
-    "email" TEXT,
+    "email" TEXT NOT NULL,
     "address" TEXT,
     "phone" TEXT NOT NULL,
+    "profileImageId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -225,6 +226,9 @@ ALTER TABLE "Department" ADD CONSTRAINT "Department_iconId_fkey" FOREIGN KEY ("i
 
 -- AddForeignKey
 ALTER TABLE "Block" ADD CONSTRAINT "Block_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Block"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "ContactPerson" ADD CONSTRAINT "ContactPerson_profileImageId_fkey" FOREIGN KEY ("profileImageId") REFERENCES "Media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_CategoryToPost" ADD CONSTRAINT "_CategoryToPost_A_fkey" FOREIGN KEY ("A") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;

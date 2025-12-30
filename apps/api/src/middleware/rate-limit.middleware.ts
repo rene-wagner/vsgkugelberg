@@ -123,3 +123,17 @@ export const logoutLimiter = createRateLimiter({
   limit: 10,
   keyPrefix: 'logout',
 });
+
+/**
+ * Rate limiter for contact form endpoint.
+ * 5 requests per hour to prevent spam/abuse.
+ */
+const contactFormLimit = parseInt(
+  process.env.CONTACT_FORM_RATE_LIMIT || '5',
+  10,
+);
+export const contactFormLimiter = createRateLimiter({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  limit: contactFormLimit,
+  keyPrefix: 'contact-form',
+});

@@ -4,6 +4,7 @@ import {
   useDefaultContactPersonsStore,
   type ContactPerson,
 } from '../stores/contactPersonsStore';
+import ContactForm from '../components/ContactForm.vue';
 
 const contactPersonsStore = useDefaultContactPersonsStore();
 const selectedContactPersonId = ref<number | null>(null);
@@ -202,11 +203,8 @@ function getProfileImageUrl(cp: ContactPerson): string | null {
                   </div>
                 </div>
 
-                <!-- Email (if available) -->
-                <div
-                  v-if="selectedContactPerson.email"
-                  class="flex items-start gap-4"
-                >
+                <!-- Email -->
+                <div class="flex items-start gap-4">
                   <div
                     class="flex-shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
                   >
@@ -280,6 +278,22 @@ function getProfileImageUrl(cp: ContactPerson): string | null {
                 </div>
               </div>
             </div>
+          </Transition>
+
+          <!-- Contact Form (shown when a contact person is selected) -->
+          <Transition
+            enter-active-class="transition-all duration-300 ease-out delay-150"
+            enter-from-class="opacity-0 translate-y-4"
+            enter-to-class="opacity-100 translate-y-0"
+            leave-active-class="transition-all duration-200 ease-in"
+            leave-from-class="opacity-100 translate-y-0"
+            leave-to-class="opacity-0 translate-y-4"
+          >
+            <ContactForm
+              v-if="selectedContactPerson"
+              :contact-person-id="selectedContactPerson.id"
+              :contact-person-name="`${selectedContactPerson.firstName} ${selectedContactPerson.lastName}`"
+            />
           </Transition>
 
           <!-- Default Message when no selection -->

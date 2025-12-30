@@ -4,7 +4,7 @@ export interface CreateContactPersonDto {
   firstName: string;
   lastName: string;
   type: string;
-  email?: string;
+  email: string;
   address?: string;
   phone: string;
   profileImageId?: number;

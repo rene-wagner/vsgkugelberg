@@ -43,6 +43,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Anna',
           lastName: 'Schmidt',
           type: 'Schatzmeister',
+          email: 'anna@example.com',
           phone: '+49 987 654321',
         },
       });
@@ -65,6 +66,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Zimmermann',
           type: 'Trainer',
+          email: 'max.z@example.com',
           phone: '+49 123 456789',
         },
       });
@@ -74,6 +76,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Anna',
           lastName: 'Albrecht',
           type: 'Schriftführer',
+          email: 'anna.a@example.com',
           phone: '+49 987 654321',
         },
       });
@@ -182,6 +185,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Anna',
         lastName: 'Schmidt',
         type: 'Schatzmeister',
+        email: 'anna.schmidt@example.com',
         phone: '+49 987 654321',
       };
 
@@ -191,8 +195,26 @@ describe('Contact Persons API Integration Tests', () => {
         .send(newContactPerson);
 
       expect(response.status).toBe(201);
-      expect(response.body.email).toBeNull();
+      expect(response.body.email).toBe('anna.schmidt@example.com');
       expect(response.body.address).toBeNull();
+    });
+
+    it('should return 400 for missing email', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const newContactPerson = {
+        firstName: 'Max',
+        lastName: 'Mustermann',
+        type: 'Vorstandsvorsitzender',
+        phone: '+49 123 456789',
+      };
+
+      const response = await request(app)
+        .post('/api/contact-persons')
+        .set('Cookie', cookies)
+        .send(newContactPerson);
+
+      expect(response.status).toBe(400);
     });
 
     it('should return 401 without authentication', async () => {
@@ -200,6 +222,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Max',
         lastName: 'Mustermann',
         type: 'Vorstandsvorsitzender',
+        email: 'max@example.com',
         phone: '+49 123 456789',
       };
 
@@ -216,6 +239,7 @@ describe('Contact Persons API Integration Tests', () => {
       const newContactPerson = {
         lastName: 'Mustermann',
         type: 'Vorstandsvorsitzender',
+        email: 'max@example.com',
         phone: '+49 123 456789',
       };
 
@@ -233,6 +257,7 @@ describe('Contact Persons API Integration Tests', () => {
       const newContactPerson = {
         firstName: 'Max',
         type: 'Vorstandsvorsitzender',
+        email: 'max@example.com',
         phone: '+49 123 456789',
       };
 
@@ -250,6 +275,7 @@ describe('Contact Persons API Integration Tests', () => {
       const newContactPerson = {
         firstName: 'Max',
         lastName: 'Mustermann',
+        email: 'max@example.com',
         phone: '+49 123 456789',
       };
 
@@ -268,6 +294,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Max',
         lastName: 'Mustermann',
         type: 'Vorstandsvorsitzender',
+        email: 'max@example.com',
       };
 
       const response = await request(app)
@@ -285,6 +312,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'M',
         lastName: 'Mustermann',
         type: 'Vorstandsvorsitzender',
+        email: 'max@example.com',
         phone: '+49 123 456789',
       };
 
@@ -325,6 +353,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
         },
       });
@@ -351,6 +380,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
         },
       });
@@ -386,6 +416,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
         },
       });
@@ -453,6 +484,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
         },
       });
@@ -479,6 +511,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
         },
       });
@@ -507,6 +540,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
         },
       });
@@ -569,6 +603,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
           profileImageId: media.id,
         },
@@ -591,6 +626,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
         },
       });
@@ -609,6 +645,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
           profileImageId: media.id,
         },
@@ -633,6 +670,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Max',
         lastName: 'Mustermann',
         type: 'Vorstandsvorsitzender',
+        email: 'max@example.com',
         phone: '+49 123 456789',
         profileImageId: media.id,
       };
@@ -657,6 +695,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Max',
         lastName: 'Mustermann',
         type: 'Vorstandsvorsitzender',
+        email: 'max@example.com',
         phone: '+49 123 456789',
         profileImageId: 99999,
       };
@@ -678,6 +717,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Max',
         lastName: 'Mustermann',
         type: 'Vorstandsvorsitzender',
+        email: 'max@example.com',
         phone: '+49 123 456789',
         profileImageId: media.id,
       };
@@ -703,6 +743,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Test',
           lastName: 'JPEG',
           type: 'Tester',
+          email: 'test.jpeg@example.com',
           phone: '+49 111 111111',
           profileImageId: jpegMedia.id,
         });
@@ -717,6 +758,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Test',
           lastName: 'PNG',
           type: 'Tester',
+          email: 'test.png@example.com',
           phone: '+49 222 222222',
           profileImageId: pngMedia.id,
         });
@@ -731,6 +773,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Test',
           lastName: 'WebP',
           type: 'Tester',
+          email: 'test.webp@example.com',
           phone: '+49 333 333333',
           profileImageId: webpMedia.id,
         });
@@ -746,6 +789,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
         },
       });
@@ -772,6 +816,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
           profileImageId: media1.id,
         },
@@ -801,6 +846,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
           profileImageId: media.id,
         },
@@ -831,6 +877,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
           profileImageId: media.id,
         },
@@ -857,6 +904,7 @@ describe('Contact Persons API Integration Tests', () => {
           firstName: 'Max',
           lastName: 'Mustermann',
           type: 'Vorstandsvorsitzender',
+          email: 'max@example.com',
           phone: '+49 123 456789',
           profileImageId: media.id,
         },
@@ -884,6 +932,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Müller',
         lastName: 'Bäcker',
         type: 'Geschäftsführer',
+        email: 'mueller.baecker@example.com',
         phone: '+49 123 456789',
       };
 
@@ -905,6 +954,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: '  Max  ',
         lastName: '  Mustermann  ',
         type: '  Vorstandsvorsitzender  ',
+        email: '  max@example.com  ',
         phone: '+49 123 456789',
       };
 
@@ -917,6 +967,7 @@ describe('Contact Persons API Integration Tests', () => {
       expect(response.body.firstName).toBe('Max');
       expect(response.body.lastName).toBe('Mustermann');
       expect(response.body.type).toBe('Vorstandsvorsitzender');
+      expect(response.body.email).toBe('max@example.com');
     });
 
     it('should allow multiple contact persons with the same type', async () => {
@@ -926,6 +977,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Max',
         lastName: 'Mustermann',
         type: 'Trainer',
+        email: 'max.trainer@example.com',
         phone: '+49 123 456789',
       };
 
@@ -933,6 +985,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Anna',
         lastName: 'Schmidt',
         type: 'Trainer',
+        email: 'anna.trainer@example.com',
         phone: '+49 987 654321',
       };
 

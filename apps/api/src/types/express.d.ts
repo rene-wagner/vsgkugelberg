@@ -1,4 +1,5 @@
 import { UserPayload } from '@/services/auth.service';
+import type { Request } from 'express';
 
 declare global {
   namespace Express {
@@ -19,3 +20,14 @@ declare module 'express-serve-static-core' {
     };
   }
 }
+
+/**
+ * Typed Express Request with body type parameter
+ * Use this for routes that need typed request bodies
+ */
+export type TypedRequest<T> = Request<
+  Record<string, string>, // params
+  unknown, // res body
+  T, // req body
+  Record<string, string> // query
+>;

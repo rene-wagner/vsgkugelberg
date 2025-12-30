@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import type { ContactFormEmailOptions } from '@/types/contact-form.types';
 
 /**
  * Email service interface for sending emails.
@@ -6,6 +7,7 @@ import nodemailer from 'nodemailer';
  */
 export interface EmailService {
   sendPasswordResetEmail(email: string, resetUrl: string): Promise<void>;
+  sendContactFormEmail(options: ContactFormEmailOptions): Promise<void>;
 }
 
 /**
@@ -39,6 +41,26 @@ class ConsoleEmailService implements EmailService {
     console.log('');
     console.log('Mit sportlichen Gruessen,');
     console.log('VSG Kugelberg');
+    console.log('========================================\n');
+  }
+
+  async sendContactFormEmail(options: ContactFormEmailOptions): Promise<void> {
+    console.log('\n========================================');
+    console.log('CONTACT FORM EMAIL (Development Mode)');
+    console.log('========================================');
+    console.log(`To: ${options.to}`);
+    console.log(`Reply-To: ${options.senderEmail}`);
+    console.log(`Subject: Kontaktanfrage: ${options.subject}`);
+    console.log('----------------------------------------');
+    console.log(`Neue Kontaktanfrage von ${options.senderName}`);
+    console.log(`E-Mail: ${options.senderEmail}`);
+    console.log('');
+    console.log('Nachricht:');
+    console.log('----------------------------------------');
+    console.log(options.message);
+    console.log('----------------------------------------');
+    console.log('');
+    console.log('Sie koennen direkt auf diese E-Mail antworten.');
     console.log('========================================\n');
   }
 }
@@ -99,6 +121,29 @@ Falls du diese Anfrage nicht gestellt hast, ignoriere diese E-Mail.
 
 Mit sportlichen Gruessen,
 VSG Kugelberg`,
+    };
+
+    await this.transporter.sendMail(mailOptions);
+  }
+
+  async sendContactFormEmail(options: ContactFormEmailOptions): Promise<void> {
+    const mailOptions = {
+      from: this.fromAddress,
+      to: options.to,
+      replyTo: options.senderEmail,
+      subject: `Kontaktanfrage: ${options.subject}`,
+      text: `Neue Kontaktanfrage von ${options.senderName}
+E-Mail: ${options.senderEmail}
+
+Nachricht:
+----------------------------------------
+${options.message}
+----------------------------------------
+
+Sie koennen direkt auf diese E-Mail antworten.
+
+--
+Diese Nachricht wurde ueber das Kontaktformular auf der VSG Kugelberg Website gesendet.`,
     };
 
     await this.transporter.sendMail(mailOptions);
