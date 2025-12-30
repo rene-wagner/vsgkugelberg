@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useRouter, RouterLink } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
+import VsgPasswordInput from '@shared/components/VsgPasswordInput.vue';
 
 const username = ref('');
 const password = ref('');
@@ -59,19 +60,12 @@ async function handleSubmit() {
 
     <!-- Password Input -->
     <div class="animate-slide-up delay-400">
-      <label
-        for="password"
-        class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
-      >
-        Passwort
-      </label>
-      <input
+      <VsgPasswordInput
         id="password"
         v-model="password"
-        type="password"
+        label="Passwort"
         required
-        class="form-input-custom w-full px-4 py-3 bg-vsg-blue-800/50 border border-vsg-gold-400/30 rounded-lg text-white placeholder-vsg-blue-300 focus:outline-none focus:border-vsg-gold-400"
-        placeholder="********"
+        variant="auth"
       />
       <div class="mt-2 text-right">
         <RouterLink

@@ -7,6 +7,7 @@ import {
   type CreateUserData,
   type UpdateUserData,
 } from '../stores/usersStore';
+import VsgPasswordInput from '@shared/components/VsgPasswordInput.vue';
 
 const props = defineProps<{
   user: User | null;
@@ -199,42 +200,30 @@ function handleCancel() {
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Password -->
-        <div>
-          <label
-            for="password"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            {{ isEditMode ? 'Neues Passwort' : 'Passwort' }}
-            <span v-if="!isEditMode" class="text-red-500">*</span>
-          </label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            :required="!isEditMode"
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 placeholder-gray-400 text-sm focus:outline-none focus:border-vsg-blue-600"
-            placeholder="********"
-          />
-        </div>
+        <VsgPasswordInput
+          id="password"
+          v-model="password"
+          :label="isEditMode ? 'Neues Passwort' : 'Passwort'"
+          :required="!isEditMode"
+          variant="admin"
+        >
+          <template v-if="!isEditMode" #label-suffix>
+            <span class="text-red-500">*</span>
+          </template>
+        </VsgPasswordInput>
 
         <!-- Confirm Password -->
-        <div>
-          <label
-            for="confirmPassword"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Passwort bestatigen
-            <span v-if="!isEditMode" class="text-red-500">*</span>
-          </label>
-          <input
-            id="confirmPassword"
-            v-model="confirmPassword"
-            type="password"
-            :required="!isEditMode"
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 placeholder-gray-400 text-sm focus:outline-none focus:border-vsg-blue-600"
-            placeholder="********"
-          />
-        </div>
+        <VsgPasswordInput
+          id="confirmPassword"
+          v-model="confirmPassword"
+          label="Passwort bestatigen"
+          :required="!isEditMode"
+          variant="admin"
+        >
+          <template v-if="!isEditMode" #label-suffix>
+            <span class="text-red-500">*</span>
+          </template>
+        </VsgPasswordInput>
       </div>
 
       <!-- Password Error -->
