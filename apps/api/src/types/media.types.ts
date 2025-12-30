@@ -7,9 +7,32 @@ export interface CreateMediaDto {
   mimetype: string;
   size: number;
   type?: string;
+  thumbnails?: ThumbnailsMap | null;
 }
 
 export type Media = PrismaMedia;
+
+export type ThumbnailSize = 'thumb' | 'small' | 'medium' | 'large';
+
+export interface ThumbnailsMap {
+  thumb?: string;
+  small?: string;
+  medium?: string;
+  large?: string;
+}
+
+export interface ThumbnailConfig {
+  name: ThumbnailSize;
+  width: number;
+  height: number;
+}
+
+export interface RegenerateThumbnailsResult {
+  processed: number;
+  succeeded: number;
+  failed: number;
+  skipped: number;
+}
 
 export interface PaginationMeta {
   total: number;

@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import request from 'supertest';
 import path from 'path';
 import fs from 'fs/promises';
+import sharp from 'sharp';
 import { app } from '@/app';
 import { prisma, createTestUserWithPassword } from '../helpers';
 import { UPLOAD_DIR } from '@/config/upload.config';
@@ -79,6 +80,29 @@ describe('Media API Integration Tests', () => {
       0x00, 0x00, 0x03, 0x00, 0x01, 0x00, 0x05, 0xfe, 0xd4, 0xef, 0x00, 0x00,
       0x00, 0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
     ]);
+  }
+
+  // Helper to create a larger test image using Sharp (for thumbnail generation tests)
+  async function createLargeTestImageBuffer(
+    format: 'jpeg' | 'png' | 'webp' = 'jpeg',
+  ): Promise<Buffer> {
+    // Create a 200x200 test image with Sharp
+    const image = sharp({
+      create: {
+        width: 200,
+        height: 200,
+        channels: 3,
+        background: { r: 255, g: 0, b: 0 },
+      },
+    });
+
+    if (format === 'jpeg') {
+      return image.jpeg().toBuffer();
+    } else if (format === 'png') {
+      return image.png().toBuffer();
+    } else {
+      return image.webp().toBuffer();
+    }
   }
 
   // Cleanup uploaded files after each test
@@ -418,6 +442,386 @@ describe('Media API Integration Tests', () => {
         .set('Cookie', cookies);
 
       expect(response.status).toBe(400);
+    });
+
+    it('should delete associated thumbnails when deleting media', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Upload a JPEG image (generates thumbnails)
+      const imageBuffer = await createLargeTestImageBuffer('jpeg');
+      const uploadResponse = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', imageBuffer, 'thumbnail-test.jpg');
+
+      expect(uploadResponse.status).toBe(201);
+      const mediaId = uploadResponse.body.id;
+      const filename = uploadResponse.body.filename;
+      const thumbnails = uploadResponse.body.thumbnails;
+
+      // Verify thumbnails exist
+      expect(thumbnails).not.toBeNull();
+      expect(thumbnails).toHaveProperty('thumb');
+      expect(thumbnails).toHaveProperty('small');
+      expect(thumbnails).toHaveProperty('medium');
+      expect(thumbnails).toHaveProperty('large');
+
+      // Verify thumbnail files exist on disk
+      for (const size of ['thumb', 'small', 'medium', 'large']) {
+        const thumbPath = path.join(
+          UPLOAD_DIR,
+          thumbnails[size as keyof typeof thumbnails],
+        );
+        const stats = await fs.stat(thumbPath);
+        expect(stats.isFile()).toBe(true);
+      }
+
+      // Delete the media
+      const deleteResponse = await request(app)
+        .delete(`/api/media/${mediaId}`)
+        .set('Cookie', cookies);
+
+      expect(deleteResponse.status).toBe(200);
+
+      // Verify original file is deleted
+      const filePath = path.join(UPLOAD_DIR, filename);
+      await expect(fs.stat(filePath)).rejects.toThrow();
+
+      // Verify all thumbnails are deleted
+      for (const size of ['thumb', 'small', 'medium', 'large']) {
+        const thumbPath = path.join(
+          UPLOAD_DIR,
+          thumbnails[size as keyof typeof thumbnails],
+        );
+        await expect(fs.stat(thumbPath)).rejects.toThrow();
+      }
+    });
+  });
+
+  describe('Thumbnail Generation', () => {
+    it('should generate thumbnails for JPEG upload', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const imageBuffer = await createLargeTestImageBuffer('jpeg');
+      const response = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', imageBuffer, 'jpeg-thumbnail-test.jpg');
+
+      expect(response.status).toBe(201);
+      expect(response.body.thumbnails).not.toBeNull();
+      expect(response.body.thumbnails).toHaveProperty('thumb');
+      expect(response.body.thumbnails).toHaveProperty('small');
+      expect(response.body.thumbnails).toHaveProperty('medium');
+      expect(response.body.thumbnails).toHaveProperty('large');
+
+      // Track files for cleanup
+      uploadedFiles.push(response.body.filename);
+      uploadedFiles.push(response.body.thumbnails.thumb);
+      uploadedFiles.push(response.body.thumbnails.small);
+      uploadedFiles.push(response.body.thumbnails.medium);
+      uploadedFiles.push(response.body.thumbnails.large);
+
+      // Verify thumbnail files exist with correct naming convention
+      const basename = path.basename(
+        response.body.filename,
+        path.extname(response.body.filename),
+      );
+      expect(response.body.thumbnails.thumb).toBe(`${basename}-thumb.webp`);
+      expect(response.body.thumbnails.small).toBe(`${basename}-small.webp`);
+      expect(response.body.thumbnails.medium).toBe(`${basename}-medium.webp`);
+      expect(response.body.thumbnails.large).toBe(`${basename}-large.webp`);
+
+      // Verify files exist on disk
+      for (const thumbnailFile of Object.values(response.body.thumbnails)) {
+        const thumbPath = path.join(UPLOAD_DIR, thumbnailFile as string);
+        const stats = await fs.stat(thumbPath);
+        expect(stats.isFile()).toBe(true);
+      }
+    });
+
+    it('should generate thumbnails for PNG upload', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const imageBuffer = await createLargeTestImageBuffer('png');
+      const response = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', imageBuffer, 'png-thumbnail-test.png');
+
+      expect(response.status).toBe(201);
+      expect(response.body.thumbnails).not.toBeNull();
+      expect(response.body.thumbnails).toHaveProperty('thumb');
+      expect(response.body.thumbnails).toHaveProperty('small');
+      expect(response.body.thumbnails).toHaveProperty('medium');
+      expect(response.body.thumbnails).toHaveProperty('large');
+
+      // Track files for cleanup
+      uploadedFiles.push(response.body.filename);
+      uploadedFiles.push(response.body.thumbnails.thumb);
+      uploadedFiles.push(response.body.thumbnails.small);
+      uploadedFiles.push(response.body.thumbnails.medium);
+      uploadedFiles.push(response.body.thumbnails.large);
+
+      // All thumbnails should be WebP format
+      expect(response.body.thumbnails.thumb).toMatch(/\.webp$/);
+    });
+
+    it('should generate thumbnails for WebP upload', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const imageBuffer = await createLargeTestImageBuffer('webp');
+      const response = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', imageBuffer, 'webp-thumbnail-test.webp');
+
+      expect(response.status).toBe(201);
+      expect(response.body.thumbnails).not.toBeNull();
+      expect(response.body.thumbnails).toHaveProperty('thumb');
+      expect(response.body.thumbnails).toHaveProperty('small');
+      expect(response.body.thumbnails).toHaveProperty('medium');
+      expect(response.body.thumbnails).toHaveProperty('large');
+
+      // Track files for cleanup
+      uploadedFiles.push(response.body.filename);
+      uploadedFiles.push(response.body.thumbnails.thumb);
+      uploadedFiles.push(response.body.thumbnails.small);
+      uploadedFiles.push(response.body.thumbnails.medium);
+      uploadedFiles.push(response.body.thumbnails.large);
+    });
+
+    it('should NOT generate thumbnails for SVG upload', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const svgContent =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="red" width="100" height="100"/></svg>';
+
+      const response = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', Buffer.from(svgContent), {
+          filename: 'no-thumbnails.svg',
+          contentType: 'image/svg+xml',
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.thumbnails).toBeNull();
+
+      uploadedFiles.push(response.body.filename);
+    });
+
+    it('should include thumbnails in API response', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const imageBuffer = await createLargeTestImageBuffer('jpeg');
+      const uploadResponse = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', imageBuffer, 'response-test.jpg');
+
+      expect(uploadResponse.status).toBe(201);
+      const mediaId = uploadResponse.body.id;
+
+      // Track files for cleanup
+      uploadedFiles.push(uploadResponse.body.filename);
+      uploadedFiles.push(uploadResponse.body.thumbnails.thumb);
+      uploadedFiles.push(uploadResponse.body.thumbnails.small);
+      uploadedFiles.push(uploadResponse.body.thumbnails.medium);
+      uploadedFiles.push(uploadResponse.body.thumbnails.large);
+
+      // Fetch the media and verify thumbnails are included
+      const getResponse = await request(app)
+        .get(`/api/media/${mediaId}`)
+        .set('Cookie', cookies);
+
+      expect(getResponse.status).toBe(200);
+      expect(getResponse.body.thumbnails).not.toBeNull();
+      expect(getResponse.body.thumbnails).toHaveProperty('thumb');
+      expect(getResponse.body.thumbnails).toHaveProperty('small');
+      expect(getResponse.body.thumbnails).toHaveProperty('medium');
+      expect(getResponse.body.thumbnails).toHaveProperty('large');
+    });
+  });
+
+  describe('POST /api/media/:id/regenerate-thumbnails', () => {
+    it('should regenerate thumbnails for specific media', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Upload image
+      const imageBuffer = await createLargeTestImageBuffer('jpeg');
+      const uploadResponse = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', imageBuffer, 'regenerate-test.jpg');
+
+      expect(uploadResponse.status).toBe(201);
+      const mediaId = uploadResponse.body.id;
+      const originalThumbnails = uploadResponse.body.thumbnails;
+
+      // Track files for cleanup
+      uploadedFiles.push(uploadResponse.body.filename);
+      uploadedFiles.push(originalThumbnails.thumb);
+      uploadedFiles.push(originalThumbnails.small);
+      uploadedFiles.push(originalThumbnails.medium);
+      uploadedFiles.push(originalThumbnails.large);
+
+      // Regenerate thumbnails
+      const regenerateResponse = await request(app)
+        .post(`/api/media/${mediaId}/regenerate-thumbnails`)
+        .set('Cookie', cookies);
+
+      expect(regenerateResponse.status).toBe(200);
+      expect(regenerateResponse.body.thumbnails).not.toBeNull();
+      expect(regenerateResponse.body.thumbnails).toHaveProperty('thumb');
+      expect(regenerateResponse.body.thumbnails).toHaveProperty('small');
+      expect(regenerateResponse.body.thumbnails).toHaveProperty('medium');
+      expect(regenerateResponse.body.thumbnails).toHaveProperty('large');
+
+      // Thumbnails should have same filenames (same original file)
+      expect(regenerateResponse.body.thumbnails.thumb).toBe(
+        originalThumbnails.thumb,
+      );
+    });
+
+    it('should return 404 for non-existent media', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const response = await request(app)
+        .post('/api/media/99999/regenerate-thumbnails')
+        .set('Cookie', cookies);
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should return 401 without authentication', async () => {
+      const response = await request(app).post(
+        '/api/media/1/regenerate-thumbnails',
+      );
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should handle SVG media gracefully (no thumbnails)', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Upload SVG
+      const svgContent =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="blue" width="100" height="100"/></svg>';
+
+      const uploadResponse = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', Buffer.from(svgContent), {
+          filename: 'svg-regenerate.svg',
+          contentType: 'image/svg+xml',
+        });
+
+      expect(uploadResponse.status).toBe(201);
+      const mediaId = uploadResponse.body.id;
+      uploadedFiles.push(uploadResponse.body.filename);
+
+      // Regenerate thumbnails (should succeed but no thumbnails)
+      const regenerateResponse = await request(app)
+        .post(`/api/media/${mediaId}/regenerate-thumbnails`)
+        .set('Cookie', cookies);
+
+      expect(regenerateResponse.status).toBe(200);
+      expect(regenerateResponse.body.thumbnails).toBeNull();
+    });
+  });
+
+  describe('POST /api/media/regenerate-thumbnails', () => {
+    it('should regenerate thumbnails for all media', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Upload multiple images
+      const imageBuffer1 = await createLargeTestImageBuffer('jpeg');
+      const uploadResponse1 = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', imageBuffer1, 'batch-test-1.jpg');
+
+      const imageBuffer2 = await createLargeTestImageBuffer('png');
+      const uploadResponse2 = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', imageBuffer2, 'batch-test-2.png');
+
+      // Track files for cleanup
+      uploadedFiles.push(uploadResponse1.body.filename);
+      uploadedFiles.push(uploadResponse1.body.thumbnails.thumb);
+      uploadedFiles.push(uploadResponse1.body.thumbnails.small);
+      uploadedFiles.push(uploadResponse1.body.thumbnails.medium);
+      uploadedFiles.push(uploadResponse1.body.thumbnails.large);
+      uploadedFiles.push(uploadResponse2.body.filename);
+      uploadedFiles.push(uploadResponse2.body.thumbnails.thumb);
+      uploadedFiles.push(uploadResponse2.body.thumbnails.small);
+      uploadedFiles.push(uploadResponse2.body.thumbnails.medium);
+      uploadedFiles.push(uploadResponse2.body.thumbnails.large);
+
+      // Regenerate all thumbnails
+      const regenerateResponse = await request(app)
+        .post('/api/media/regenerate-thumbnails')
+        .set('Cookie', cookies);
+
+      expect(regenerateResponse.status).toBe(200);
+      expect(regenerateResponse.body).toHaveProperty('processed');
+      expect(regenerateResponse.body).toHaveProperty('succeeded');
+      expect(regenerateResponse.body).toHaveProperty('failed');
+      expect(regenerateResponse.body).toHaveProperty('skipped');
+      expect(regenerateResponse.body.succeeded).toBeGreaterThanOrEqual(2);
+    });
+
+    it('should skip SVG files in batch regeneration', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Upload an SVG
+      const svgContent =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="green" width="100" height="100"/></svg>';
+
+      const svgResponse = await request(app)
+        .post('/api/media')
+        .set('Cookie', cookies)
+        .attach('file', Buffer.from(svgContent), {
+          filename: 'batch-skip.svg',
+          contentType: 'image/svg+xml',
+        });
+
+      uploadedFiles.push(svgResponse.body.filename);
+
+      // Regenerate all thumbnails
+      const regenerateResponse = await request(app)
+        .post('/api/media/regenerate-thumbnails')
+        .set('Cookie', cookies);
+
+      expect(regenerateResponse.status).toBe(200);
+      expect(regenerateResponse.body.skipped).toBeGreaterThanOrEqual(1);
+    });
+
+    it('should return 401 without authentication', async () => {
+      const response = await request(app).post(
+        '/api/media/regenerate-thumbnails',
+      );
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should handle empty media library', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Don't upload any media
+      const regenerateResponse = await request(app)
+        .post('/api/media/regenerate-thumbnails')
+        .set('Cookie', cookies);
+
+      expect(regenerateResponse.status).toBe(200);
+      expect(regenerateResponse.body).toEqual({
+        processed: 0,
+        succeeded: 0,
+        failed: 0,
+        skipped: 0,
+      });
     });
   });
 });

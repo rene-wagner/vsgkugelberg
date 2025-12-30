@@ -82,4 +82,30 @@ router.delete(
   }),
 );
 
+// Protected route - Regenerate thumbnails for all media (batch)
+// NOTE: This route must be defined before /:id/regenerate-thumbnails to avoid route conflicts
+router.post(
+  '/regenerate-thumbnails',
+  jwtMiddleware,
+  authGuardMiddleware,
+  asyncHandlerMiddleware(async (_req, res) => {
+    const result = await mediaService.regenerateAllThumbnails();
+    res.json(result);
+  }),
+);
+
+// Protected route - Regenerate thumbnails for specific media
+router.post(
+  '/:id/regenerate-thumbnails',
+  jwtMiddleware,
+  authGuardMiddleware,
+  mediaIdParamValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const id = Number(req.params.id);
+    const media = await mediaService.regenerateThumbnails(id);
+    res.json(media);
+  }),
+);
+
 export { router as mediaRouter };

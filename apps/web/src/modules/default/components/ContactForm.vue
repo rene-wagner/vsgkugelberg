@@ -213,8 +213,8 @@ const clearSuccess = () => {
               Anfrage!
             </p>
             <button
-              @click="clearSuccess"
               class="mt-2 text-sm text-green-700 hover:text-green-900 underline font-body"
+              @click="clearSuccess"
             >
               Weitere Nachricht senden
             </button>
@@ -258,7 +258,7 @@ const clearSuccess = () => {
     </Transition>
 
     <!-- Form -->
-    <form v-if="!submitSuccess" @submit.prevent="submitForm" class="space-y-5">
+    <form v-if="!submitSuccess" class="space-y-5" @submit.prevent="submitForm">
       <!-- Honeypot field - hidden from users -->
       <div
         class="absolute"
@@ -267,10 +267,10 @@ const clearSuccess = () => {
       >
         <label for="website">Website (Leave this field blank)</label>
         <input
-          type="text"
           id="website"
-          name="website"
           v-model="website"
+          type="text"
+          name="website"
           tabindex="-1"
           autocomplete="off"
         />

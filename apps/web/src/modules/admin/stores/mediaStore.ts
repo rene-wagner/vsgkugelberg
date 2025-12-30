@@ -3,6 +3,13 @@ import { defineStore } from 'pinia';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+export interface ThumbnailsMap {
+  thumb?: string;
+  small?: string;
+  medium?: string;
+  large?: string;
+}
+
 export interface MediaItem {
   id: number;
   filename: string;
@@ -11,8 +18,16 @@ export interface MediaItem {
   mimetype: string;
   size: number;
   type: string;
+  thumbnails?: ThumbnailsMap | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface RegenerateThumbnailsResult {
+  processed: number;
+  succeeded: number;
+  failed: number;
+  skipped: number;
 }
 
 interface PaginatedResponse {
@@ -203,17 +218,129 @@ export const useMediaStore = defineStore('media', () => {
     error.value = null;
   }
 
+  const isRegenerating = ref(false);
+  const regenerateProgress = ref<{
+    current: number;
+    total: number;
+  } | null>(null);
+
+  async function regenerateThumbnails(id: number): Promise<MediaItem | null> {
+    isRegenerating.value = true;
+    error.value = null;
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/media/${id}/regenerate-thumbnails`,
+        {
+          method: 'POST',
+          credentials: 'include',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || 'Thumbnails konnten nicht regeneriert werden',
+        );
+      }
+
+      const updatedMedia = (await response.json()) as MediaItem;
+
+      // Update local state
+      const index = media.value.findIndex((m) => m.id === id);
+      if (index !== -1) {
+        media.value[index] = updatedMedia;
+      }
+
+      return updatedMedia;
+    } catch (e) {
+      error.value =
+        e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
+      return null;
+    } finally {
+      isRegenerating.value = false;
+    }
+  }
+
+  async function regenerateAllThumbnails(): Promise<RegenerateThumbnailsResult | null> {
+    isRegenerating.value = true;
+    error.value = null;
+    regenerateProgress.value = { current: 0, total: media.value.length };
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/media/regenerate-thumbnails`,
+        {
+          method: 'POST',
+          credentials: 'include',
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || 'Thumbnails konnten nicht regeneriert werden',
+        );
+      }
+
+      const result = (await response.json()) as RegenerateThumbnailsResult;
+
+      // Refresh media list to get updated thumbnails
+      await fetchMedia();
+
+      return result;
+    } catch (e) {
+      error.value =
+        e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
+      return null;
+    } finally {
+      isRegenerating.value = false;
+      regenerateProgress.value = null;
+    }
+  }
+
+  function hasThumbnails(item: MediaItem): boolean {
+    return !!(
+      item.thumbnails &&
+      (item.thumbnails.thumb ||
+        item.thumbnails.small ||
+        item.thumbnails.medium ||
+        item.thumbnails.large)
+    );
+  }
+
+  function canHaveThumbnails(item: MediaItem): boolean {
+    return ['image/jpeg', 'image/png', 'image/webp'].includes(item.mimetype);
+  }
+
+  function getThumbnailUrl(
+    item: MediaItem,
+    size: keyof ThumbnailsMap = 'small',
+  ): string | null {
+    if (!item.thumbnails || !item.thumbnails[size]) {
+      return null;
+    }
+    return `${API_BASE_URL}/uploads/${item.thumbnails[size]}`;
+  }
+
   return {
     media,
     isLoading,
     error,
     uploadProgress,
     meta,
+    isRegenerating,
+    regenerateProgress,
     getMediaUrl,
     fetchMedia,
     uploadMedia,
     uploadMultipleMedia,
     deleteMedia,
     clearError,
+    regenerateThumbnails,
+    regenerateAllThumbnails,
+    hasThumbnails,
+    canHaveThumbnails,
+    getThumbnailUrl,
   };
 });
