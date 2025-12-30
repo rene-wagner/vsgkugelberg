@@ -7,6 +7,7 @@ import {
   type CreateContactPersonData,
   type UpdateContactPersonData,
 } from '../stores/contactPersonsStore';
+import ProfileImageSelector from './ProfileImageSelector.vue';
 
 const props = defineProps<{
   contactPerson: ContactPerson | null;
@@ -22,6 +23,7 @@ const type = ref('');
 const email = ref('');
 const address = ref('');
 const phone = ref('');
+const profileImageId = ref<number | null>(null);
 const error = ref('');
 const isSubmitting = ref(false);
 
@@ -36,6 +38,7 @@ watch(
       email.value = newContactPerson.email || '';
       address.value = newContactPerson.address || '';
       phone.value = newContactPerson.phone;
+      profileImageId.value = newContactPerson.profileImageId;
     }
   },
   { immediate: true },
@@ -66,6 +69,7 @@ async function handleSubmit() {
         email: email.value || undefined,
         address: address.value || undefined,
         phone: phone.value,
+        profileImageId: profileImageId.value,
       };
 
       const result = await contactPersonsStore.updateContactPerson(
@@ -89,6 +93,10 @@ async function handleSubmit() {
         address: address.value || undefined,
         phone: phone.value,
       };
+      // Only include profileImageId if set
+      if (profileImageId.value !== null) {
+        createData.profileImageId = profileImageId.value;
+      }
 
       const result = await contactPersonsStore.createContactPerson(createData);
       if (result) {
@@ -257,6 +265,25 @@ function handleCancel() {
             placeholder="z.B. Musterstraße 1, 12345 Musterstadt"
           ></textarea>
         </div>
+      </div>
+    </div>
+
+    <!-- Profile Image Section -->
+    <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
+        PROFILBILD
+      </h2>
+
+      <div>
+        <label
+          class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+        >
+          Profilbild
+        </label>
+        <ProfileImageSelector
+          v-model="profileImageId"
+          :current-image="contactPerson?.profileImage ?? null"
+        />
       </div>
     </div>
 

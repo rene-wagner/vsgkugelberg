@@ -35,6 +35,11 @@ export const createContactPersonValidator = [
     .withMessage('Address must be at most 500 characters'),
 
   body('phone').trim().notEmpty().withMessage('Phone is required'),
+
+  body('profileImageId')
+    .optional()
+    .isInt({ min: 1 })
+    .withMessage('Profile image ID must be a positive integer'),
 ];
 
 export const updateContactPersonValidator = [
@@ -73,6 +78,14 @@ export const updateContactPersonValidator = [
     .trim()
     .notEmpty()
     .withMessage('Phone cannot be empty'),
+
+  body('profileImageId')
+    .optional({ nullable: true })
+    .custom((value) => {
+      if (value === null) return true;
+      if (Number.isInteger(value) && value >= 1) return true;
+      throw new Error('Profile image ID must be a positive integer or null');
+    }),
 ];
 
 export const idParamValidator = [

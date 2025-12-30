@@ -1,21 +1,41 @@
-import { NotFoundException } from '@/errors/http-errors';
+import { NotFoundException, BadRequestException } from '@/errors/http-errors';
 import {
   CreateContactPersonDto,
   UpdateContactPersonDto,
-  ContactPerson,
+  ContactPersonWithImage,
 } from '@/types/contact-person.types';
 import { Prisma, prisma } from '@/lib/prisma.lib';
 
+const ALLOWED_IMAGE_MIMETYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
 export class ContactPersonsService {
-  async findAll(): Promise<ContactPerson[]> {
+  private async validateProfileImage(imageId: number): Promise<void> {
+    const media = await prisma.media.findUnique({
+      where: { id: imageId },
+    });
+
+    if (!media) {
+      throw new NotFoundException(`Media with ID ${imageId} not found`);
+    }
+
+    if (!ALLOWED_IMAGE_MIMETYPES.includes(media.mimetype)) {
+      throw new BadRequestException(
+        'Profile image must be a JPEG, PNG, or WebP file',
+      );
+    }
+  }
+
+  async findAll(): Promise<ContactPersonWithImage[]> {
     return prisma.contactPerson.findMany({
       orderBy: { lastName: 'asc' },
+      include: { profileImage: true },
     });
   }
 
-  async findById(id: number): Promise<ContactPerson> {
+  async findById(id: number): Promise<ContactPersonWithImage> {
     const contactPerson = await prisma.contactPerson.findUnique({
       where: { id },
+      include: { profileImage: true },
     });
 
     if (!contactPerson) {
@@ -27,7 +47,12 @@ export class ContactPersonsService {
 
   async create(
     createContactPersonDto: CreateContactPersonDto,
-  ): Promise<ContactPerson> {
+  ): Promise<ContactPersonWithImage> {
+    // Validate profile image if provided
+    if (createContactPersonDto.profileImageId !== undefined) {
+      await this.validateProfileImage(createContactPersonDto.profileImageId);
+    }
+
     return prisma.contactPerson.create({
       data: {
         firstName: createContactPersonDto.firstName,
@@ -36,14 +61,16 @@ export class ContactPersonsService {
         email: createContactPersonDto.email,
         address: createContactPersonDto.address,
         phone: createContactPersonDto.phone,
+        profileImageId: createContactPersonDto.profileImageId,
       },
+      include: { profileImage: true },
     });
   }
 
   async update(
     id: number,
     updateContactPersonDto: UpdateContactPersonDto,
-  ): Promise<ContactPerson> {
+  ): Promise<ContactPersonWithImage> {
     // First check if contact person exists
     const existingContactPerson = await prisma.contactPerson.findUnique({
       where: { id },
@@ -51,6 +78,14 @@ export class ContactPersonsService {
 
     if (!existingContactPerson) {
       throw new NotFoundException(`Contact person with ID ${id} not found`);
+    }
+
+    // Validate profile image if provided (not null)
+    if (
+      updateContactPersonDto.profileImageId !== undefined &&
+      updateContactPersonDto.profileImageId !== null
+    ) {
+      await this.validateProfileImage(updateContactPersonDto.profileImageId);
     }
 
     const updateData: Prisma.ContactPersonUpdateInput = {};
@@ -79,13 +114,19 @@ export class ContactPersonsService {
       updateData.phone = updateContactPersonDto.phone;
     }
 
+    // Handle profileImageId: can be set to a value, or explicitly set to null to remove
+    if (updateContactPersonDto.profileImageId !== undefined) {
+      updateData.profileImageId = updateContactPersonDto.profileImageId;
+    }
+
     return prisma.contactPerson.update({
       where: { id },
       data: updateData,
+      include: { profileImage: true },
     });
   }
 
-  async remove(id: number): Promise<ContactPerson> {
+  async remove(id: number): Promise<ContactPersonWithImage> {
     // First check if contact person exists
     const existingContactPerson = await prisma.contactPerson.findUnique({
       where: { id },
@@ -97,6 +138,7 @@ export class ContactPersonsService {
 
     return prisma.contactPerson.delete({
       where: { id },
+      include: { profileImage: true },
     });
   }
 }

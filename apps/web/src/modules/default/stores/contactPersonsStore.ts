@@ -3,6 +3,18 @@ import { defineStore } from 'pinia';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+export interface Media {
+  id: number;
+  filename: string;
+  originalName: string;
+  path: string;
+  mimetype: string;
+  size: number;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface ContactPerson {
   id: number;
   firstName: string;
@@ -11,6 +23,8 @@ export interface ContactPerson {
   email: string | null;
   address: string | null;
   phone: string;
+  profileImageId: number | null;
+  profileImage: Media | null;
   createdAt: string;
   updatedAt: string;
 }
