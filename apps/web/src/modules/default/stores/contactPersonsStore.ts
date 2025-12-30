@@ -3,6 +3,13 @@ import { defineStore } from 'pinia';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+export interface ThumbnailsMap {
+  thumb?: string;
+  small?: string;
+  medium?: string;
+  large?: string;
+}
+
 export interface Media {
   id: number;
   filename: string;
@@ -11,6 +18,7 @@ export interface Media {
   mimetype: string;
   size: number;
   type: string;
+  thumbnails?: ThumbnailsMap | null;
   createdAt: string;
   updatedAt: string;
 }

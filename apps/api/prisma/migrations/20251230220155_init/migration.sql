@@ -135,6 +135,7 @@ CREATE TABLE "Media" (
     "mimetype" TEXT NOT NULL,
     "size" INTEGER NOT NULL,
     "type" TEXT NOT NULL DEFAULT 'IMAGE',
+    "thumbnails" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

@@ -37,6 +37,13 @@ function getInitials(cp: ContactPerson): string {
 function getProfileImageUrl(cp: ContactPerson): string | null {
   if (!cp.profileImage) return null;
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+
+  // Use 'small' thumbnail (300x300) for profile images if available
+  // Falls back to original if no thumbnails exist
+  if (cp.profileImage.thumbnails?.small) {
+    return `${apiBaseUrl}/uploads/${cp.profileImage.thumbnails.small}`;
+  }
+
   return `${apiBaseUrl}/uploads/${cp.profileImage.filename}`;
 }
 </script>
