@@ -95,18 +95,28 @@ describe('Health API Integration Tests', () => {
 
   describe('GET /api/health - Edge Cases', () => {
     it('should handle multiple rapid successive requests', async () => {
-      const promises = Array(10)
+      // Make many requests - health endpoint should never be rate limited
+      const promises = Array(20)
         .fill(null)
         .map(() => request(app).get('/api/health'));
 
       const responses = await Promise.all(promises);
 
-      // All should succeed
+      // All should succeed - no 429 responses
       responses.forEach((response) => {
         expect(response.status).toBe(200);
         expect(response.body.status).toBe('ok');
         expect(response.body).toHaveProperty('timestamp');
       });
+    });
+
+    it('should not include rate limit headers (health is not rate limited)', async () => {
+      const response = await request(app).get('/api/health');
+
+      expect(response.status).toBe(200);
+      // Health endpoint should NOT have rate limit headers
+      expect(response.headers).not.toHaveProperty('ratelimit-limit');
+      expect(response.headers).not.toHaveProperty('ratelimit-remaining');
     });
 
     it('should work without authentication', async () => {
