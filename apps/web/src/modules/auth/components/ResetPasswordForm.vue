@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useAuthStore } from '../stores/authStore';
+import VsgPasswordInput from '@shared/components/VsgPasswordInput.vue';
 
 const props = defineProps<{
   token: string;
@@ -100,20 +101,13 @@ async function handleSubmit() {
 
     <!-- New Password Input -->
     <div class="animate-slide-up delay-300">
-      <label
-        for="password"
-        class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
-      >
-        Neues Passwort
-      </label>
-      <input
+      <VsgPasswordInput
         id="password"
         v-model="password"
-        type="password"
+        label="Neues Passwort"
         required
-        minlength="8"
-        class="form-input-custom w-full px-4 py-3 bg-vsg-blue-800/50 border border-vsg-gold-400/30 rounded-lg text-white placeholder-vsg-blue-300 focus:outline-none focus:border-vsg-gold-400"
-        placeholder="********"
+        :minlength="8"
+        variant="auth"
       />
       <p class="mt-1 text-xs text-vsg-blue-300">
         Min. 8 Zeichen, Gross-/Kleinbuchstaben und Zahl
@@ -122,20 +116,13 @@ async function handleSubmit() {
 
     <!-- Confirm Password Input -->
     <div class="animate-slide-up delay-400">
-      <label
-        for="confirmPassword"
-        class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
-      >
-        Passwort bestaetigen
-      </label>
-      <input
+      <VsgPasswordInput
         id="confirmPassword"
         v-model="confirmPassword"
-        type="password"
+        label="Passwort bestaetigen"
         required
-        minlength="8"
-        class="form-input-custom w-full px-4 py-3 bg-vsg-blue-800/50 border border-vsg-gold-400/30 rounded-lg text-white placeholder-vsg-blue-300 focus:outline-none focus:border-vsg-gold-400"
-        placeholder="********"
+        :minlength="8"
+        variant="auth"
       />
     </div>
 
