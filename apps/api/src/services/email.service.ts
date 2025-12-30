@@ -46,6 +46,7 @@ class ConsoleEmailService implements EmailService {
 /**
  * SMTP-based email service for production.
  * Uses nodemailer with SMTP transport.
+ * Supports both authenticated (production) and unauthenticated (MailHog) modes.
  */
 class SmtpEmailService implements EmailService {
   private transporter: nodemailer.Transporter;
@@ -58,21 +59,26 @@ class SmtpEmailService implements EmailService {
     const pass = process.env.SMTP_PASS;
     this.fromAddress = process.env.SMTP_FROM || 'noreply@vsg-kugelberg.de';
 
-    if (!host || !user || !pass) {
-      throw new Error(
-        'SMTP configuration incomplete. Required: SMTP_HOST, SMTP_USER, SMTP_PASS',
-      );
+    if (!host) {
+      throw new Error('SMTP configuration incomplete. Required: SMTP_HOST');
     }
 
-    this.transporter = nodemailer.createTransport({
+    // Build transport config - auth is optional for MailHog and similar local SMTP servers
+    const transportConfig: nodemailer.TransportOptions = {
       host,
       port,
       secure: port === 465,
-      auth: {
+    };
+
+    // Only add auth if both user and pass are provided
+    if (user && pass) {
+      transportConfig.auth = {
         user,
         pass,
-      },
-    });
+      };
+    }
+
+    this.transporter = nodemailer.createTransport(transportConfig);
   }
 
   async sendPasswordResetEmail(email: string, resetUrl: string): Promise<void> {
