@@ -547,6 +547,335 @@ describe('Contact Persons API Integration Tests', () => {
     });
   });
 
+  describe('Profile Image Support', () => {
+    // Helper to create a valid image media record
+    async function createImageMedia(mimetype = 'image/jpeg') {
+      return prisma.media.create({
+        data: {
+          filename: `test-image-${Date.now()}.jpg`,
+          originalName: 'profile.jpg',
+          path: '/uploads/test-image.jpg',
+          mimetype,
+          size: 1024,
+          type: 'IMAGE',
+        },
+      });
+    }
+
+    it('should return profileImage field in GET /api/contact-persons', async () => {
+      const media = await createImageMedia();
+      await prisma.contactPerson.create({
+        data: {
+          firstName: 'Max',
+          lastName: 'Mustermann',
+          type: 'Vorstandsvorsitzender',
+          phone: '+49 123 456789',
+          profileImageId: media.id,
+        },
+      });
+
+      const response = await request(app).get('/api/contact-persons');
+
+      expect(response.status).toBe(200);
+      expect(response.body[0]).toHaveProperty('profileImage');
+      expect(response.body[0].profileImage).toMatchObject({
+        id: media.id,
+        filename: media.filename,
+        mimetype: 'image/jpeg',
+      });
+    });
+
+    it('should return profileImage as null when not set', async () => {
+      await prisma.contactPerson.create({
+        data: {
+          firstName: 'Max',
+          lastName: 'Mustermann',
+          type: 'Vorstandsvorsitzender',
+          phone: '+49 123 456789',
+        },
+      });
+
+      const response = await request(app).get('/api/contact-persons');
+
+      expect(response.status).toBe(200);
+      expect(response.body[0]).toHaveProperty('profileImage');
+      expect(response.body[0].profileImage).toBeNull();
+    });
+
+    it('should return profileImage in GET /api/contact-persons/:id', async () => {
+      const media = await createImageMedia();
+      const contactPerson = await prisma.contactPerson.create({
+        data: {
+          firstName: 'Max',
+          lastName: 'Mustermann',
+          type: 'Vorstandsvorsitzender',
+          phone: '+49 123 456789',
+          profileImageId: media.id,
+        },
+      });
+
+      const response = await request(app).get(
+        `/api/contact-persons/${contactPerson.id}`,
+      );
+
+      expect(response.status).toBe(200);
+      expect(response.body.profileImage).toMatchObject({
+        id: media.id,
+        filename: media.filename,
+      });
+    });
+
+    it('should create contact person with profileImageId', async () => {
+      const { cookies } = await createAuthenticatedUser();
+      const media = await createImageMedia();
+
+      const newContactPerson = {
+        firstName: 'Max',
+        lastName: 'Mustermann',
+        type: 'Vorstandsvorsitzender',
+        phone: '+49 123 456789',
+        profileImageId: media.id,
+      };
+
+      const response = await request(app)
+        .post('/api/contact-persons')
+        .set('Cookie', cookies)
+        .send(newContactPerson);
+
+      expect(response.status).toBe(201);
+      expect(response.body.profileImageId).toBe(media.id);
+      expect(response.body.profileImage).toMatchObject({
+        id: media.id,
+        filename: media.filename,
+      });
+    });
+
+    it('should return 404 when creating with non-existent profileImageId', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const newContactPerson = {
+        firstName: 'Max',
+        lastName: 'Mustermann',
+        type: 'Vorstandsvorsitzender',
+        phone: '+49 123 456789',
+        profileImageId: 99999,
+      };
+
+      const response = await request(app)
+        .post('/api/contact-persons')
+        .set('Cookie', cookies)
+        .send(newContactPerson);
+
+      expect(response.status).toBe(404);
+      expect(response.body.message).toContain('Media');
+    });
+
+    it('should return 400 when creating with non-image media (SVG)', async () => {
+      const { cookies } = await createAuthenticatedUser();
+      const media = await createImageMedia('image/svg+xml');
+
+      const newContactPerson = {
+        firstName: 'Max',
+        lastName: 'Mustermann',
+        type: 'Vorstandsvorsitzender',
+        phone: '+49 123 456789',
+        profileImageId: media.id,
+      };
+
+      const response = await request(app)
+        .post('/api/contact-persons')
+        .set('Cookie', cookies)
+        .send(newContactPerson);
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toContain('JPEG, PNG, or WebP');
+    });
+
+    it('should allow JPEG, PNG, and WebP for profile images', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Test JPEG
+      const jpegMedia = await createImageMedia('image/jpeg');
+      const response1 = await request(app)
+        .post('/api/contact-persons')
+        .set('Cookie', cookies)
+        .send({
+          firstName: 'Test',
+          lastName: 'JPEG',
+          type: 'Tester',
+          phone: '+49 111 111111',
+          profileImageId: jpegMedia.id,
+        });
+      expect(response1.status).toBe(201);
+
+      // Test PNG
+      const pngMedia = await createImageMedia('image/png');
+      const response2 = await request(app)
+        .post('/api/contact-persons')
+        .set('Cookie', cookies)
+        .send({
+          firstName: 'Test',
+          lastName: 'PNG',
+          type: 'Tester',
+          phone: '+49 222 222222',
+          profileImageId: pngMedia.id,
+        });
+      expect(response2.status).toBe(201);
+
+      // Test WebP
+      const webpMedia = await createImageMedia('image/webp');
+      const response3 = await request(app)
+        .post('/api/contact-persons')
+        .set('Cookie', cookies)
+        .send({
+          firstName: 'Test',
+          lastName: 'WebP',
+          type: 'Tester',
+          phone: '+49 333 333333',
+          profileImageId: webpMedia.id,
+        });
+      expect(response3.status).toBe(201);
+    });
+
+    it('should update contact person to set profileImageId', async () => {
+      const { cookies } = await createAuthenticatedUser();
+      const media = await createImageMedia();
+
+      const contactPerson = await prisma.contactPerson.create({
+        data: {
+          firstName: 'Max',
+          lastName: 'Mustermann',
+          type: 'Vorstandsvorsitzender',
+          phone: '+49 123 456789',
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/contact-persons/${contactPerson.id}`)
+        .set('Cookie', cookies)
+        .send({ profileImageId: media.id });
+
+      expect(response.status).toBe(200);
+      expect(response.body.profileImageId).toBe(media.id);
+      expect(response.body.profileImage).toMatchObject({
+        id: media.id,
+      });
+    });
+
+    it('should update contact person to change profileImageId', async () => {
+      const { cookies } = await createAuthenticatedUser();
+      const media1 = await createImageMedia();
+      const media2 = await createImageMedia();
+
+      const contactPerson = await prisma.contactPerson.create({
+        data: {
+          firstName: 'Max',
+          lastName: 'Mustermann',
+          type: 'Vorstandsvorsitzender',
+          phone: '+49 123 456789',
+          profileImageId: media1.id,
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/contact-persons/${contactPerson.id}`)
+        .set('Cookie', cookies)
+        .send({ profileImageId: media2.id });
+
+      expect(response.status).toBe(200);
+      expect(response.body.profileImageId).toBe(media2.id);
+
+      // Verify old media still exists (not deleted)
+      const oldMedia = await prisma.media.findUnique({
+        where: { id: media1.id },
+      });
+      expect(oldMedia).toBeTruthy();
+    });
+
+    it('should update contact person to remove profileImageId by setting to null', async () => {
+      const { cookies } = await createAuthenticatedUser();
+      const media = await createImageMedia();
+
+      const contactPerson = await prisma.contactPerson.create({
+        data: {
+          firstName: 'Max',
+          lastName: 'Mustermann',
+          type: 'Vorstandsvorsitzender',
+          phone: '+49 123 456789',
+          profileImageId: media.id,
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/contact-persons/${contactPerson.id}`)
+        .set('Cookie', cookies)
+        .send({ profileImageId: null });
+
+      expect(response.status).toBe(200);
+      expect(response.body.profileImageId).toBeNull();
+      expect(response.body.profileImage).toBeNull();
+
+      // Verify media still exists (not deleted)
+      const existingMedia = await prisma.media.findUnique({
+        where: { id: media.id },
+      });
+      expect(existingMedia).toBeTruthy();
+    });
+
+    it('should NOT delete media when contact person is deleted', async () => {
+      const { cookies } = await createAuthenticatedUser();
+      const media = await createImageMedia();
+
+      const contactPerson = await prisma.contactPerson.create({
+        data: {
+          firstName: 'Max',
+          lastName: 'Mustermann',
+          type: 'Vorstandsvorsitzender',
+          phone: '+49 123 456789',
+          profileImageId: media.id,
+        },
+      });
+
+      const response = await request(app)
+        .delete(`/api/contact-persons/${contactPerson.id}`)
+        .set('Cookie', cookies);
+
+      expect(response.status).toBe(200);
+
+      // Verify media still exists
+      const existingMedia = await prisma.media.findUnique({
+        where: { id: media.id },
+      });
+      expect(existingMedia).toBeTruthy();
+    });
+
+    it('should set profileImageId to NULL when media is deleted', async () => {
+      const media = await createImageMedia();
+
+      const contactPerson = await prisma.contactPerson.create({
+        data: {
+          firstName: 'Max',
+          lastName: 'Mustermann',
+          type: 'Vorstandsvorsitzender',
+          phone: '+49 123 456789',
+          profileImageId: media.id,
+        },
+      });
+
+      // Delete the media directly
+      await prisma.media.delete({
+        where: { id: media.id },
+      });
+
+      // Verify contact person still exists but profileImageId is null
+      const updatedContactPerson = await prisma.contactPerson.findUnique({
+        where: { id: contactPerson.id },
+      });
+      expect(updatedContactPerson).toBeTruthy();
+      expect(updatedContactPerson?.profileImageId).toBeNull();
+    });
+  });
+
   describe('Edge Cases', () => {
     it('should handle unicode characters in names', async () => {
       const { cookies } = await createAuthenticatedUser();

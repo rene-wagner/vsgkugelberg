@@ -1,4 +1,4 @@
-import { ContactPerson as PrismaContactPerson } from '@/lib/prisma.lib';
+import { ContactPerson as PrismaContactPerson, Prisma } from '@/lib/prisma.lib';
 
 export interface CreateContactPersonDto {
   firstName: string;
@@ -7,6 +7,7 @@ export interface CreateContactPersonDto {
   email?: string;
   address?: string;
   phone: string;
+  profileImageId?: number;
 }
 
 export interface UpdateContactPersonDto {
@@ -16,6 +17,11 @@ export interface UpdateContactPersonDto {
   email?: string;
   address?: string;
   phone?: string;
+  profileImageId?: number | null;
 }
 
 export type ContactPerson = PrismaContactPerson;
+
+export type ContactPersonWithImage = Prisma.ContactPersonGetPayload<{
+  include: { profileImage: true };
+}>;

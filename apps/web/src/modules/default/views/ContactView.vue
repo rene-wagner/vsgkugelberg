@@ -26,6 +26,18 @@ onMounted(() => {
 function formatOptionLabel(cp: ContactPerson): string {
   return `${cp.type}: ${cp.firstName} ${cp.lastName}`;
 }
+
+function getInitials(cp: ContactPerson): string {
+  const firstInitial = cp.firstName.charAt(0).toUpperCase();
+  const lastInitial = cp.lastName.charAt(0).toUpperCase();
+  return `${firstInitial}${lastInitial}`;
+}
+
+function getProfileImageUrl(cp: ContactPerson): string | null {
+  if (!cp.profileImage) return null;
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+  return `${apiBaseUrl}/uploads/${cp.profileImage.filename}`;
+}
 </script>
 
 <template>
@@ -117,19 +129,42 @@ function formatOptionLabel(cp: ContactPerson): string {
               v-if="selectedContactPerson"
               class="bg-vsg-blue-50 border border-vsg-blue-100 rounded-2xl p-8"
             >
-              <!-- Name and Role -->
+              <!-- Profile Image and Name/Role Header -->
               <div class="mb-6 pb-6 border-b border-vsg-blue-200">
-                <h2
-                  class="font-display text-2xl tracking-wider text-vsg-blue-900"
-                >
-                  {{ selectedContactPerson.firstName }}
-                  {{ selectedContactPerson.lastName }}
-                </h2>
-                <span
-                  class="inline-block mt-2 px-3 py-1 bg-vsg-gold-400 text-vsg-blue-900 text-sm font-body rounded-full"
-                >
-                  {{ selectedContactPerson.type }}
-                </span>
+                <div class="flex items-center gap-6">
+                  <!-- Profile Image or Initials Fallback -->
+                  <div
+                    class="flex-shrink-0 w-32 h-32 rounded-full overflow-hidden bg-vsg-blue-100 flex items-center justify-center"
+                  >
+                    <img
+                      v-if="selectedContactPerson.profileImage"
+                      :src="getProfileImageUrl(selectedContactPerson)!"
+                      :alt="`Profilbild von ${selectedContactPerson.firstName} ${selectedContactPerson.lastName}`"
+                      class="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <span
+                      v-else
+                      class="text-3xl font-display text-vsg-blue-400"
+                    >
+                      {{ getInitials(selectedContactPerson) }}
+                    </span>
+                  </div>
+                  <!-- Name and Role -->
+                  <div>
+                    <h2
+                      class="font-display text-2xl tracking-wider text-vsg-blue-900"
+                    >
+                      {{ selectedContactPerson.firstName }}
+                      {{ selectedContactPerson.lastName }}
+                    </h2>
+                    <span
+                      class="inline-block mt-2 px-3 py-1 bg-vsg-gold-400 text-vsg-blue-900 text-sm font-body rounded-full"
+                    >
+                      {{ selectedContactPerson.type }}
+                    </span>
+                  </div>
+                </div>
               </div>
 
               <!-- Contact Information -->
