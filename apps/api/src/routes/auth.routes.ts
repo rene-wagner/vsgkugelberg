@@ -5,6 +5,12 @@ import { passwordService } from '@/services/password.service';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { validationMiddleware } from '@/middleware/validation.middleware';
 import {
+  loginLimiter,
+  logoutLimiter,
+  forgotPasswordLimiter,
+  resetPasswordLimiter,
+} from '@/middleware/rate-limit.middleware';
+import {
   forgotPasswordValidator,
   resetPasswordValidator,
 } from '@/validators/password-reset.validators';
@@ -15,6 +21,7 @@ const authService = new AuthService(passwordService);
 
 router.post(
   '/login',
+  loginLimiter,
   /* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */
   passport.authenticate('local', { session: false }),
   asyncHandlerMiddleware(async (req, res) => {
@@ -34,7 +41,7 @@ router.post(
   }),
 );
 
-router.post('/logout', (_req, res) => {
+router.post('/logout', logoutLimiter, (_req, res) => {
   res.clearCookie('access_token');
   res.json({ message: 'Logged out successfully' });
 });
@@ -45,6 +52,7 @@ router.post('/logout', (_req, res) => {
  */
 router.post(
   '/forgot-password',
+  forgotPasswordLimiter,
   forgotPasswordValidator,
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
@@ -66,6 +74,7 @@ router.post(
  */
 router.post(
   '/reset-password',
+  resetPasswordLimiter,
   resetPasswordValidator,
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
