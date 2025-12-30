@@ -20,7 +20,7 @@ export interface ContactPerson {
   firstName: string;
   lastName: string;
   type: string;
-  email: string | null;
+  email: string;
   address: string | null;
   phone: string;
   profileImageId: number | null;

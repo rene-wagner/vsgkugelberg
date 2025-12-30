@@ -23,8 +23,9 @@ export const createContactPersonValidator = [
     .withMessage('Type must be between 2 and 100 characters'),
 
   body('email')
-    .optional({ values: 'null' })
     .trim()
+    .notEmpty()
+    .withMessage('Email is required')
     .isEmail()
     .withMessage('Email must be a valid email address'),
 
