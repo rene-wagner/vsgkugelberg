@@ -16,3 +16,9 @@ setup:
 	pnpm install
 	pnpm --filter api prisma:generate
 	pnpm --filter api prisma:migrate
+
+bla:
+	make clean
+	pnpm install
+	make clean-migrations
+	pnpm --filter api prisma:seed
