@@ -7,6 +7,7 @@ import mysql from 'mysql2/promise';
 import pg from 'pg';
 import slugify from 'slugify';
 
+// Types
 interface JoomlaCategory {
   id: number;
   name: string;
@@ -31,17 +32,8 @@ interface JoomlaPost {
 }
 
 type CategoryMap = Map<number, number>;
-type PostMap = Map<number, number>;
 
-interface MySqlRow {
-  [key: string]: any;
-}
-
-interface PostgresRow {
-  [key: string]: any;
-}
-
-interface MySqlConfig {
+interface DbConfig {
   host: string;
   port: number;
   user: string;
@@ -49,315 +41,230 @@ interface MySqlConfig {
   database: string;
 }
 
-interface PostgresConfig {
-  host: string;
-  port: number;
-  user: string;
-  password: string;
-  database: string;
-}
+// Configuration
+const getDbConfig = (prefix: 'MYSQL' | 'POSTGRES'): DbConfig => {
+  const defaultPort = prefix === 'MYSQL' ? 3306 : 5432;
 
-const getMySqlConfig = (): MySqlConfig => {
-  const config: MySqlConfig = {
-    host: process.env.MYSQL_HOST || '',
-    port: parseInt(process.env.MYSQL_PORT || '3306'),
-    user: process.env.MYSQL_USER || '',
-    password: process.env.MYSQL_PASSWORD || '',
-    database: process.env.MYSQL_DATABASE || '',
+  const config: DbConfig = {
+    host: process.env[`${prefix}_HOST`] || '',
+    port: parseInt(process.env[`${prefix}_PORT`] || String(defaultPort)),
+    user: process.env[`${prefix}_USER`] || '',
+    password: process.env[`${prefix}_PASSWORD`] || '',
+    database: process.env[`${prefix}_DATABASE`] || '',
   };
 
-  if (!config.host || !config.user || !config.password || !config.database) {
-    throw new Error('Missing required MySQL environment variables');
+  const missingVars = Object.entries(config)
+    .filter(([key, value]) => key !== 'port' && !value)
+    .map(([key]) => `${prefix}_${key.toUpperCase()}`);
+
+  if (missingVars.length > 0) {
+    throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
   }
 
   return config;
 };
 
-const getPostgresConfig = (): PostgresConfig => {
-  const config: PostgresConfig = {
-    host: process.env.POSTGRES_HOST || '',
-    port: parseInt(process.env.POSTGRES_PORT || '5432'),
-    user: process.env.POSTGRES_USER || '',
-    password: process.env.POSTGRES_PASSWORD || '',
-    database: process.env.POSTGRES_DATABASE || '',
-  };
-
-  if (!config.host || !config.user || !config.password || !config.database) {
-    throw new Error('Missing required PostgreSQL environment variables');
-  }
-
-  return config;
+// Database connections (single connections, not pools - this is a one-time script)
+const createMySqlConnection = async (config: DbConfig): Promise<mysql.Connection> => {
+  console.log(`Connecting to MySQL at ${config.host}:${config.port}...`);
+  const connection = await mysql.createConnection(config);
+  console.log('Connected to MySQL');
+  return connection;
 };
 
+const createPostgresClient = async (config: DbConfig): Promise<pg.Client> => {
+  console.log(`Connecting to PostgreSQL at ${config.host}:${config.port}...`);
+  const client = new pg.Client(config);
+  await client.connect();
+  console.log('Connected to PostgreSQL');
+  return client;
+};
+
+// Queries
+const CATEGORY_QUERY = `
+  SELECT
+    id,
+    title as name,
+    path as slug,
+    description,
+    NULLIF(parent_id, 1) as parentId,
+    NOW() as createdAt,
+    NOW() as updatedAt
+  FROM j3x_categories
+  WHERE extension = 'com_content'
+    AND published = 1
+  ORDER BY lft ASC
+  LIMIT 300
+`;
+
+const POST_QUERY = `
+  SELECT
+    id,
+    title,
+    introtext AS content,
+    catid,
+    hits,
+    created,
+    modified,
+    1 AS oldPost,
+    2 AS authorId,
+    1 AS published
+  FROM j3x_content
+  WHERE catid = ?
+    AND state = 1
+  LIMIT 10000
+`;
+
+// Migration functions
 const migrateCategories = async (
-  mysqlConnection: mysql.Pool,
-  postgresConnection: pg.Pool,
+  mysqlConn: mysql.Connection,
+  pgClient: pg.Client,
 ): Promise<CategoryMap> => {
-  console.log('Migrating categories...');
+  console.log('\n--- Migrating Categories ---');
+
+  const [rows] = await mysqlConn.query(CATEGORY_QUERY);
+  const categories = rows as JoomlaCategory[];
+  console.log(`Found ${categories.length} categories`);
 
   const categoryMap: CategoryMap = new Map();
 
-  const categoryQuery = `
-    SELECT
-      id,
-      title as name,
-      path as slug,
-      description,
-      NULLIF(parent_id, 1) as parentId,
-      NOW() as createdAt,
-      NOW() as updatedAt
-    FROM
-      j3x_categories
-    WHERE
-      extension = 'com_content'
-      AND published = 1
-    ORDER BY
-      lft ASC
-    LIMIT 300
-  `;
-
-  const categoryResult = await mysqlConnection.query(categoryQuery);
-  const categories = categoryResult[0] as unknown[] as JoomlaCategory[];
-
-  console.log(`Found ${categories.length} categories to migrate`);
-
   for (const category of categories) {
-    let parentId: number | null = null;
+    const parentId = category.parentId === 1
+      ? null
+      : category.parentId !== null
+        ? categoryMap.get(category.parentId) ?? null
+        : null;
 
-    if (category.parentId === 1) {
-      parentId = null;
-    } else if (category.parentId !== null) {
-      parentId = categoryMap.get(category.parentId) || null;
-
-      if (parentId === null && category.parentId !== null) {
-        console.warn(
-          `Warning: Category "${category.name}" (MySQL ID ${category.id}) has parent_id=${category.parentId} but parent not found in migration. Setting to root.`,
-        );
-      }
+    if (category.parentId !== null && category.parentId !== 1 && parentId === null) {
+      console.warn(`  Warning: Parent not found for "${category.name}" (parent_id=${category.parentId})`);
     }
 
-    console.log('Foo Bar Baz', category);
-
-    const result = await postgresConnection.query(
-      `
-      INSERT INTO "Category" ("name", "slug", "description", "parentId", "createdAt", "updatedAt")
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING id
-      `,
-      [
-        category.name,
-        category.slug,
-        category.description,
-        parentId,
-        new Date(category.createdAt),
-        new Date(category.updatedAt),
-      ],
+    const result = await pgClient.query(
+      `INSERT INTO "Category" ("name", "slug", "description", "parentId", "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING id`,
+      [category.name, category.slug, category.description, parentId, new Date(), new Date()],
     );
-
-    console.log('Foo Bar Baz 2');
 
     const newId = result.rows[0].id;
     categoryMap.set(category.id, newId);
-
-    console.log(
-      `Migrated category: ${category.name} (MySQL ID ${category.id} → Postgres ID ${newId})`,
-    );
+    console.log(`  ${category.name}: MySQL ${category.id} → Postgres ${newId}`);
   }
 
   console.log(`Migrated ${categoryMap.size} categories`);
-
   return categoryMap;
 };
 
 const migratePostsForCategory = async (
-  mysqlConnection: mysql.Pool,
-  postgresConnection: pg.Pool,
-  joomlaCategory: JoomlaCategory,
-  postgresCategoryId: number,
-  categoryMap: CategoryMap,
-): Promise<PostMap> => {
-    const excludedPostIds = new Set([
-      26,
-      42,
-      860,
-      903,
-      902,
-      123,
-      869,
-      1086,
-    ]);
+  mysqlConn: mysql.Connection,
+  pgClient: pg.Client,
+  category: JoomlaCategory,
+): Promise<number> => {
+  const [rows] = await mysqlConn.query(POST_QUERY, [category.id]);
+  const posts = rows as JoomlaPost[];
 
-  const postQuery = `
-    SELECT
-        id,
-        title,
-        introtext AS content,
-        catid,
-        hits,
-        created,
-        modified,
-        1 AS oldPost,
-        2 AS authorId,
-        1 AS published
-    FROM j3x_content
-    WHERE catid = ?
-      AND state = 1
-    LIMIT 10000
-  `;
-
-  console.log(joomlaCategory.id);
-  const postResult = await mysqlConnection.query(postQuery, [joomlaCategory.id]);
-  const posts = postResult[0] as unknown[] as JoomlaPost[];
-
-  console.log(
-    `Found ${posts.length} posts for category "${joomlaCategory.name}"`,
-  );
-
-    const postMap: PostMap = new Map();
-  const batchSize = 100;
-
-  for (let i = 0; i < posts.length; i += batchSize) {
-    const batch = posts.slice(i, i + batchSize);
-
-    const insertPromises = batch.map(async (post) => {
-      const slug = slugify(post.title);
-
-      const result = await postgresConnection.query(
-        `
-        INSERT INTO "Post" ("title", "slug", "content", "published", "hits", "oldPost", "authorId", "createdAt", "updatedAt")
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-        ON CONFLICT ("slug") DO NOTHING
-        RETURNING id
-        `,
-        [
-          post.title,
-          slug,
-          post.content,
-          post.published === 1,
-          post.hits,
-          post.oldPost === 1,
-          post.authorId,
-          new Date(post.created),
-          new Date(post.modified)
-        ],
-      );
-
-      if (result.rows.length > 0) {
-        const newId = result.rows[0].id;
-      postMap.set(post.id, newId);
-
-      console.log(
-        `  Migrated post: ${post.title} (MySQL ID ${post.id} → Postgres ID ${newId})`,
-      );
-      } else {
-        console.log(`Skipped duplicate: ${post.title}`);
-      }
-    });
-
-    await Promise.all(insertPromises);
+  if (posts.length === 0) {
+    return 0;
   }
 
-  console.log(`Migrated ${postMap.size} posts for category "${joomlaCategory.name}"`);
+  let migratedCount = 0;
 
-  return postMap;
-};
+  for (const post of posts) {
+    const slug = slugify(post.title, { lower: true, strict: true });
 
-const main = async (): Promise<void> => {
-  let mysqlConnection: mysql.Pool | null = null;
-  let postgresConnection: pg.Pool | null = null;
-
-  try {
-    console.log('Starting MySQL to PostgreSQL migration...');
-
-    const mysqlConfig = getMySqlConfig();
-    const postgresConfig = getPostgresConfig();
-
-    console.log(`Connecting to MySQL database at ${mysqlConfig.host}:${mysqlConfig.port}`);
-    mysqlConnection = mysql.createPool(mysqlConfig);
-    await mysqlConnection.getConnection();
-    console.log('Connected to MySQL database successfully');
-
-    console.log(`Connecting to PostgreSQL database at ${postgresConfig.host}:${postgresConfig.port}`);
-    postgresConnection = new pg.Pool({
-      host: postgresConfig.host,
-      port: postgresConfig.port,
-      user: postgresConfig.user,
-      password: postgresConfig.password,
-      database: postgresConfig.database,
-    });
-    await postgresConnection.connect();
-    console.log('Connected to PostgreSQL database successfully');
-
-    const categoryQuery = `
-      SELECT
-        id,
-        title as name,
-        path as slug,
-        description,
-        NULLIF(parent_id, 1) as parentId,
-        NOW() as createdAt,
-        NOW() as updatedAt
-      FROM
-        j3x_categories
-      WHERE
-        extension = 'com_content'
-        AND published = 1
-      ORDER BY
-        lft ASC
-      LIMIT 300
-    `;
-
-    const categoryResult = await mysqlConnection.query(categoryQuery);
-    const categories = categoryResult[0] as unknown[] as JoomlaCategory[];
-    console.log(`Found ${categories.length} categories to migrate`);
-
-    const categoryMap = await migrateCategories(
-      mysqlConnection,
-      postgresConnection,
+    const result = await pgClient.query(
+      `INSERT INTO "Post" ("title", "slug", "content", "published", "hits", "oldPost", "authorId", "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+       ON CONFLICT ("slug") DO NOTHING
+       RETURNING id`,
+      [
+        post.title,
+        slug,
+        post.content,
+        post.published === 1,
+        post.hits,
+        post.oldPost === 1,
+        post.authorId,
+        new Date(post.created),
+        new Date(post.modified),
+      ],
     );
 
-    let totalPostsMigrated = 0;
+    if (result.rows.length > 0) {
+      migratedCount++;
+    } else {
+      console.log(`    Skipped duplicate: ${post.title}`);
+    }
+  }
 
-    for (let i = 0; i < categories.length; i++) {
-      const joomlaCategory = categories[i];
-      const postgresCategoryId = categoryMap.get(joomlaCategory.id);
+  return migratedCount;
+};
 
-      if (!postgresCategoryId) {
-        console.warn(
-          `Warning: Skipping category "${joomlaCategory.name}" - no Postgres ID found`,
-        );
-        continue;
-      }
+const migratePosts = async (
+  mysqlConn: mysql.Connection,
+  pgClient: pg.Client,
+  categories: JoomlaCategory[],
+  categoryMap: CategoryMap,
+): Promise<number> => {
+  console.log('\n--- Migrating Posts ---');
 
-      console.log(
-        `\n[${i + 1}/${categories.length}] Migrating posts for category: ${joomlaCategory.name}`,
-      );
+  let totalPosts = 0;
 
-      const postMap = await migratePostsForCategory(
-        mysqlConnection,
-        postgresConnection,
-        joomlaCategory,
-        postgresCategoryId,
-        categoryMap,
-      );
+  for (let i = 0; i < categories.length; i++) {
+    const category = categories[i];
+    const pgCategoryId = categoryMap.get(category.id);
 
-      totalPostsMigrated += postMap.size;
+    if (!pgCategoryId) {
+      console.warn(`  Skipping "${category.name}" - no Postgres ID found`);
+      continue;
     }
 
-    console.log(`\n========== Migration Complete =========`);
-    console.log(`Total categories migrated: ${categoryMap.size}`);
-    console.log(`Total posts migrated: ${totalPostsMigrated}`);
-    console.log(`=======================================`);
+    const count = await migratePostsForCategory(mysqlConn, pgClient, category);
+    totalPosts += count;
+
+    if (count > 0) {
+      console.log(`  [${i + 1}/${categories.length}] ${category.name}: ${count} posts`);
+    }
+  }
+
+  console.log(`Migrated ${totalPosts} posts total`);
+  return totalPosts;
+};
+
+// Main
+const main = async (): Promise<void> => {
+  let mysqlConn: mysql.Connection | null = null;
+  let pgClient: pg.Client | null = null;
+
+  try {
+    console.log('=== MySQL to PostgreSQL Migration ===\n');
+
+    // Connect to databases (single connections, not pools)
+    mysqlConn = await createMySqlConnection(getDbConfig('MYSQL'));
+    pgClient = await createPostgresClient(getDbConfig('POSTGRES'));
+
+    // Fetch categories from MySQL
+    const [categoryRows] = await mysqlConn.query(CATEGORY_QUERY);
+    const categories = categoryRows as JoomlaCategory[];
+
+    // Migrate
+    const categoryMap = await migrateCategories(mysqlConn, pgClient);
+    const totalPosts = await migratePosts(mysqlConn, pgClient, categories, categoryMap);
+
+    // Summary
+    console.log('\n=== Migration Complete ===');
+    console.log(`Categories: ${categoryMap.size}`);
+    console.log(`Posts: ${totalPosts}`);
   } catch (error) {
     console.error('Migration failed:', error);
     throw error;
   } finally {
-    if (postgresConnection) {
-      await postgresConnection.end();
-      console.log('PostgreSQL connection closed');
+    if (pgClient) {
+      await pgClient.end();
+      console.log('\nPostgreSQL connection closed');
     }
-    if (mysqlConnection) {
-      await mysqlConnection.end();
+    if (mysqlConn) {
+      await mysqlConn.end();
       console.log('MySQL connection closed');
     }
   }
