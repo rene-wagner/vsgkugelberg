@@ -112,6 +112,7 @@ const POST_QUERY = `
   FROM j3x_content
   WHERE catid = ?
     AND state = 1
+    AND id NOT IN (26, 42, 123, 860, 869, 902, 903, 940, 1014, 1086, 1095)
   LIMIT 10000
 `;
 
@@ -193,7 +194,7 @@ const migratePostsForCategory = async (
     if (result.rows.length > 0) {
       migratedCount++;
     } else {
-      console.log(`    Skipped duplicate: ${post.title}`);
+      console.log(`    Skipped duplicate: ${post.id} ${post.title}`);
     }
   }
 
