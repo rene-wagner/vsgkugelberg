@@ -4,10 +4,11 @@ clean:
 	find . -type d -name ".turbo" -prune -exec rm -rf '{}' +
 	find . -type d -name "coverage" -prune -exec rm -rf '{}' +
 	find . -type d -name "generated" -prune -exec rm -rf '{}' +
-	rm ./apps/api/uploads/*.{jpg,jpeg,png,webp,svg}
+	find ./apps/api/uploads -type f \( -name "*.jpg" -o -name "*.jpeg" -o -name "*.png" -o -name "*.webp" -o -name "*.svg" \) -delete 2>/dev/null || true
 
 clean-migrations:
 	rm -rvf apps/api/prisma/migrations
+	pnpm --filter api prisma:generate
 	pnpm --filter api exec prisma migrate reset
 	pnpm --filter api exec prisma migrate dev --name init
 
@@ -15,3 +16,9 @@ setup:
 	pnpm install
 	pnpm --filter api prisma:generate
 	pnpm --filter api prisma:migrate
+
+bla:
+	make clean
+	pnpm install
+	make clean-migrations
+	pnpm --filter api prisma:seed
