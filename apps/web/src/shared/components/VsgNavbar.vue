@@ -204,7 +204,7 @@ const editModeLabel = computed(() =>
 
           <button
             v-if="isAuthenticated"
-            class="group relative flex h-10 items-center gap-2 rounded-lg px-3 transition-all duration-300"
+            class="group relative hidden md:flex h-10 items-center gap-2 rounded-lg px-3 transition-all duration-300"
             :class="
               isEditMode
                 ? 'bg-vsg-gold-400 text-vsg-blue-900 shadow-md'
@@ -379,7 +379,7 @@ const editModeLabel = computed(() =>
 
       <div
         v-if="isAuthenticated"
-        class="mt-12 w-full max-w-xs border-t border-vsg-gold-400/20 pt-8"
+        class="mt-12 hidden md:block w-full max-w-xs border-t border-vsg-gold-400/20 pt-8"
       >
         <button
           class="flex w-full items-center justify-between rounded-lg bg-vsg-gold-400/10 px-6 py-4 transition-all duration-300"
