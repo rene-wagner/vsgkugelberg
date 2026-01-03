@@ -45,10 +45,7 @@ function getContactLink(): string {
         :alt="trainer.name"
         class="h-full w-full object-cover"
       />
-      <div
-        v-else
-        class="absolute inset-0 flex items-center justify-center"
-      >
+      <div v-else class="absolute inset-0 flex items-center justify-center">
         <svg
           class="h-32 w-32 text-white/30"
           fill="currentColor"
