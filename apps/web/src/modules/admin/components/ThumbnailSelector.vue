@@ -161,7 +161,7 @@ async function handleFileSelect(event: Event) {
 
       <!-- File Info -->
       <div
-        class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3"
+        class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/60 to-transparent p-3"
       >
         <p class="font-body text-xs text-white truncate">
           {{ thumbnail?.originalName }}

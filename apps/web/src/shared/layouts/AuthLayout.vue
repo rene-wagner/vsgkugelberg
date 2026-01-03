@@ -4,7 +4,7 @@
   <div class="min-h-screen text-white overflow-x-hidden">
     <!-- Background gradient overlay -->
     <div
-      class="fixed inset-0 bg-gradient-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"
+      class="fixed inset-0 bg-linear-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"
     ></div>
 
     <!-- Decorative elements -->

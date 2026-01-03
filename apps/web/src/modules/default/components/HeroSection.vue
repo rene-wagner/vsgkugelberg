@@ -8,7 +8,7 @@ import VsgButton from '@shared/components/VsgButton.vue';
   >
     <!-- Background gradient overlay -->
     <div
-      class="absolute inset-0 bg-gradient-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"
+      class="absolute inset-0 bg-linear-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"
     />
 
     <!-- Decorative elements -->
@@ -24,7 +24,7 @@ import VsgButton from '@shared/components/VsgButton.vue';
         <span
           class="mb-6 inline-block border border-vsg-gold-400/30 px-6 py-2 font-body text-sm font-normal uppercase tracking-[0.5em] text-vsg-gold-400"
         >
-          Sportverein seit 1920
+          Sportverein seit 1985
         </span>
       </div>
 

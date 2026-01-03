@@ -5,7 +5,7 @@ import VsgButton from '@shared/components/VsgButton.vue';
 <template>
   <section class="relative overflow-hidden py-32">
     <div
-      class="absolute inset-0 bg-gradient-to-r from-vsg-gold-600 via-vsg-gold-400 to-vsg-gold-300"
+      class="absolute inset-0 bg-linear-to-r from-vsg-gold-600 via-vsg-gold-400 to-vsg-gold-300"
     />
 
     <div class="relative z-10 mx-auto max-w-4xl px-6 text-center">

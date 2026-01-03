@@ -33,6 +33,19 @@ interface JoomlaPost {
 
 type CategoryMap = Map<number, number>;
 
+interface SeedUser {
+  username: string;
+  email: string;
+  password: string;
+}
+
+interface SeedDepartment {
+  name: string;
+  slug: string;
+  shortDescription: string;
+  longDescription: string;
+}
+
 interface DbConfig {
   host: string;
   port: number;
@@ -115,6 +128,108 @@ const POST_QUERY = `
     AND id NOT IN (26, 42, 123, 860, 869, 902, 903, 940, 1014, 1086, 1095)
   LIMIT 10000
 `;
+
+// Seed data
+const SEED_USERS: SeedUser[] = [
+  {
+    username: 'john.doe',
+    email: 'john.doe@example.com',
+    password: '$2b$10$3reoOhi62GQ8qJenfs82BeSLLFm/MCuxj3zEZ/mgezRNN6YWA1krq',
+  },
+  {
+    username: 'jane.doe',
+    email: 'jane.doe@example.com',
+    password: '$2b$10$3reoOhi62GQ8qJenfs82BeSLLFm/MCuxj3zEZ/mgezRNN6YWA1krq',
+  },
+];
+
+const SEED_DEPARTMENTS: SeedDepartment[] = [
+  {
+    name: 'Badminton',
+    slug: 'badminton',
+    shortDescription:
+      'Dynamic badminton club offering training and competitions for all skill levels.',
+    longDescription:
+      "Our badminton department welcomes players of all ages and abilities. We offer regular training sessions, friendly matches, and competitive tournaments. Whether you're a beginner looking to learn the basics or an experienced player seeking to refine your skills, our qualified coaches and friendly community will help you achieve your goals.",
+  },
+  {
+    name: 'Gymnastics',
+    slug: 'gymnastics',
+    shortDescription:
+      'Comprehensive gymnastics program for children and adults focusing on flexibility and strength.',
+    longDescription:
+      'The gymnastics department provides a safe and encouraging environment for developing physical fitness, coordination, and confidence. Our programs range from introductory classes for young children to advanced training for competitive gymnasts. With state-of-the-art equipment and experienced coaches, we help each athlete reach their full potential while having fun.',
+  },
+  {
+    name: 'Table Tennis',
+    slug: 'table-tennis',
+    shortDescription:
+      'Fast-paced table tennis club with regular training sessions and league competitions.',
+    longDescription:
+      'Join our vibrant table tennis community where players of all levels come together to enjoy this exciting sport. We offer structured training programs, casual play sessions, and opportunities to compete in local and regional leagues. Our modern facilities and dedicated coaching staff ensure that everyone can improve their game while making new friends.',
+  },
+  {
+    name: 'Volleyball',
+    slug: 'volleyball',
+    shortDescription:
+      'Team-oriented volleyball department offering indoor and beach volleyball programs.',
+    longDescription:
+      'Our volleyball department is passionate about developing both individual skills and team spirit. We run programs for juniors and adults, including recreational leagues and competitive teams. From learning basic techniques to advanced tactical play, our experienced coaches provide comprehensive training. We also organize social events and tournaments to bring our volleyball community together.',
+  },
+];
+
+// Seeding functions
+const seedUsers = async (pgClient: pg.Client): Promise<number> => {
+  console.log('\n--- Seeding Users ---');
+
+  let seededCount = 0;
+
+  for (const user of SEED_USERS) {
+    const result = await pgClient.query(
+      `INSERT INTO "User" ("username", "email", "password", "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, NOW(), NOW())
+       ON CONFLICT ("email") DO NOTHING
+       RETURNING id`,
+      [user.username, user.email, user.password],
+    );
+
+    if (result.rows.length > 0) {
+      console.log(`  Created user: ${user.username} (id: ${result.rows[0].id})`);
+      seededCount++;
+    } else {
+      console.log(`  Skipped existing user: ${user.username}`);
+    }
+  }
+
+  console.log(`Seeded ${seededCount} users`);
+  return seededCount;
+};
+
+const seedDepartments = async (pgClient: pg.Client): Promise<number> => {
+  console.log('\n--- Seeding Departments ---');
+
+  let seededCount = 0;
+
+  for (const dept of SEED_DEPARTMENTS) {
+    const result = await pgClient.query(
+      `INSERT INTO "Department" ("name", "slug", "shortDescription", "longDescription", "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, NOW(), NOW())
+       ON CONFLICT ("slug") DO NOTHING
+       RETURNING id`,
+      [dept.name, dept.slug, dept.shortDescription, dept.longDescription],
+    );
+
+    if (result.rows.length > 0) {
+      console.log(`  Created department: ${dept.name} (id: ${result.rows[0].id})`);
+      seededCount++;
+    } else {
+      console.log(`  Skipped existing department: ${dept.name}`);
+    }
+  }
+
+  console.log(`Seeded ${seededCount} departments`);
+  return seededCount;
+};
 
 // Migration functions
 const migrateCategories = async (
@@ -244,6 +359,10 @@ const main = async (): Promise<void> => {
     mysqlConn = await createMySqlConnection(getDbConfig('MYSQL'));
     pgClient = await createPostgresClient(getDbConfig('POSTGRES'));
 
+    // Seed users and departments first
+    const usersSeeded = await seedUsers(pgClient);
+    const departmentsSeeded = await seedDepartments(pgClient);
+
     // Fetch categories from MySQL
     const [categoryRows] = await mysqlConn.query(CATEGORY_QUERY);
     const categories = categoryRows as JoomlaCategory[];
@@ -254,6 +373,8 @@ const main = async (): Promise<void> => {
 
     // Summary
     console.log('\n=== Migration Complete ===');
+    console.log(`Users seeded: ${usersSeeded}`);
+    console.log(`Departments seeded: ${departmentsSeeded}`);
     console.log(`Categories: ${categoryMap.size}`);
     console.log(`Posts: ${totalPosts}`);
   } catch (error) {

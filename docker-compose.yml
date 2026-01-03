@@ -32,7 +32,6 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
-    profiles: [development]
 
   mailhog:
     image: mailhog/mailhog:latest
@@ -40,7 +39,6 @@ services:
     ports:
       - "${MAILHOG_SMTP_PORT:-1025}:1025"
       - "${MAILHOG_UI_PORT:-8025}:8025"
-    profiles: [development, test]
 
 volumes:
   postgres_data:
