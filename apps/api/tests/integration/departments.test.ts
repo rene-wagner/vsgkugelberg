@@ -116,6 +116,132 @@ describe('Departments API Integration Tests', () => {
       });
     });
 
+    it('should return department with all extended relations', async () => {
+      // Create department with all related data
+      const department = await prisma.department.create({
+        data: {
+          name: 'Tischtennis',
+          slug: 'tischtennis',
+          shortDescription: 'Tischtennis department',
+          longDescription: 'This is the table tennis department',
+        },
+      });
+
+      // Create stats
+      await prisma.departmentStat.create({
+        data: {
+          departmentId: department.id,
+          label: 'Aktive Spieler',
+          value: '45',
+          sort: 0,
+        },
+      });
+
+      // Create training group with session
+      const group = await prisma.departmentTrainingGroup.create({
+        data: {
+          departmentId: department.id,
+          name: 'Kinder & Jugend',
+          ageRange: '6 - 17 Jahre',
+          icon: 'youth',
+          variant: 'primary',
+          sort: 0,
+        },
+      });
+
+      await prisma.departmentTrainingSession.create({
+        data: {
+          trainingGroupId: group.id,
+          day: 'Montag',
+          time: '16:00 - 17:30',
+          sort: 0,
+        },
+      });
+
+      // Create location
+      await prisma.departmentLocation.create({
+        data: {
+          departmentId: department.id,
+          name: 'Sporthalle',
+          badge: 'HAUPTHALLE',
+          badgeVariant: 'primary',
+          street: 'Test Street 1',
+          city: 'Test City',
+          mapsUrl: 'https://maps.google.com/?q=test',
+          amenities: [{ text: 'Parkplatz' }],
+          sort: 0,
+        },
+      });
+
+      // Create contact person and trainer
+      const contactPerson = await prisma.contactPerson.create({
+        data: {
+          firstName: 'Michael',
+          lastName: 'Weber',
+          type: 'Trainer',
+          email: 'michael@test.com',
+          phone: '+49 123 456789',
+        },
+      });
+
+      await prisma.departmentTrainer.create({
+        data: {
+          departmentId: department.id,
+          contactPersonId: contactPerson.id,
+          role: 'Cheftrainer',
+          licenses: [{ name: 'DTTB C-Lizenz', variant: 'gold' }],
+          experience: '25 Jahre',
+          quote: 'Sport ist toll',
+          sort: 0,
+        },
+      });
+
+      const response = await request(app).get('/api/departments/tischtennis');
+
+      expect(response.status).toBe(200);
+
+      // Verify stats
+      expect(response.body.stats).toHaveLength(1);
+      expect(response.body.stats[0].label).toBe('Aktive Spieler');
+
+      // Verify training groups with sessions
+      expect(response.body.trainingGroups).toHaveLength(1);
+      expect(response.body.trainingGroups[0].name).toBe('Kinder & Jugend');
+      expect(response.body.trainingGroups[0].sessions).toHaveLength(1);
+      expect(response.body.trainingGroups[0].sessions[0].day).toBe('Montag');
+
+      // Verify locations
+      expect(response.body.locations).toHaveLength(1);
+      expect(response.body.locations[0].name).toBe('Sporthalle');
+      expect(response.body.locations[0].amenities).toEqual([
+        { text: 'Parkplatz' },
+      ]);
+
+      // Verify trainers with contact person
+      expect(response.body.trainers).toHaveLength(1);
+      expect(response.body.trainers[0].role).toBe('Cheftrainer');
+      expect(response.body.trainers[0].contactPerson.firstName).toBe('Michael');
+    });
+
+    it('should return empty arrays when department has no related data', async () => {
+      await prisma.department.create({
+        data: {
+          name: 'Empty Dept',
+          slug: 'empty-dept',
+          shortDescription: 'Empty department',
+          longDescription: 'This department has no related data',
+        },
+      });
+
+      const response = await request(app).get('/api/departments/empty-dept');
+
+      expect(response.status).toBe(200);
+      expect(response.body.stats).toEqual([]);
+      expect(response.body.trainingGroups).toEqual([]);
+      expect(response.body.locations).toEqual([]);
+      expect(response.body.trainers).toEqual([]);
+    });
+
     it('should return 404 for non-existent department', async () => {
       const response = await request(app).get(
         '/api/departments/non-existent-slug',

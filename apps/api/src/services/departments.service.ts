@@ -6,7 +6,9 @@ import {
 import {
   CreateDepartmentDto,
   UpdateDepartmentDto,
+  Department,
   DepartmentWithIcon,
+  DepartmentWithAllRelations,
 } from '@/types/department.types';
 import { SlugifyService } from '@/services/slugify.service';
 import { Prisma, prisma } from '@/lib/prisma.lib';
@@ -37,10 +39,34 @@ export class DepartmentsService {
     });
   }
 
-  async findBySlug(slug: string): Promise<DepartmentWithIcon> {
+  async findBySlug(slug: string): Promise<DepartmentWithAllRelations> {
     const department = await prisma.department.findUnique({
       where: { slug },
-      include: { icon: true },
+      include: {
+        icon: true,
+        stats: {
+          orderBy: { sort: 'asc' },
+        },
+        trainingGroups: {
+          orderBy: { sort: 'asc' },
+          include: {
+            sessions: {
+              orderBy: { sort: 'asc' },
+            },
+          },
+        },
+        locations: {
+          orderBy: { sort: 'asc' },
+        },
+        trainers: {
+          orderBy: { sort: 'asc' },
+          include: {
+            contactPerson: {
+              include: { profileImage: true },
+            },
+          },
+        },
+      },
     });
 
     if (!department) {
