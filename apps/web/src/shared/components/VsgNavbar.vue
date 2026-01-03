@@ -4,8 +4,6 @@ import { RouterLink } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import VsgButton from './VsgButton.vue';
 import { useDefaultDepartmentsStore } from '@modules/default/stores/departmentsStore';
-import { useAuthStore } from '@modules/auth/stores/authStore';
-import { useEditModeStore } from '@modules/default/stores/editModeStore';
 
 interface MenuItem {
   label: string;
@@ -19,11 +17,6 @@ const isAbteilungenOpen = ref(false);
 const departmentsStore = useDefaultDepartmentsStore();
 const { departments, isLoading: departmentsLoading } =
   storeToRefs(departmentsStore);
-
-const authStore = useAuthStore();
-const editModeStore = useEditModeStore();
-const { isAuthenticated } = storeToRefs(authStore);
-const { isEditMode } = storeToRefs(editModeStore);
 
 const vereinItems: MenuItem[] = [
   { label: 'Geschichte', to: '/verein/geschichte' },
@@ -64,14 +57,6 @@ function toggleVerein() {
 function toggleAbteilungen() {
   isAbteilungenOpen.value = !isAbteilungenOpen.value;
 }
-
-function toggleEditMode() {
-  editModeStore.toggleEditMode();
-}
-
-const editModeLabel = computed(() =>
-  isEditMode.value ? 'Edit mode beenden' : 'Edit mode aktivieren',
-);
 </script>
 
 <template>
@@ -201,35 +186,6 @@ const editModeLabel = computed(() =>
             >Kontakt</RouterLink
           >
           <VsgButton variant="primary" size="md">MITGLIED WERDEN</VsgButton>
-
-          <button
-            v-if="isAuthenticated"
-            class="group relative hidden md:flex h-10 items-center gap-2 rounded-lg px-3 transition-all duration-300"
-            :class="
-              isEditMode
-                ? 'bg-vsg-gold-400 text-vsg-blue-900 shadow-md'
-                : 'bg-vsg-gold-400/10 text-vsg-gold-300 hover:bg-vsg-gold-400/20'
-            "
-            :aria-label="editModeLabel"
-            @click="toggleEditMode"
-          >
-            <svg
-              class="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-              />
-            </svg>
-            <span class="text-sm font-semibold uppercase tracking-wide">
-              {{ isEditMode ? 'Beenden' : 'Bearbeiten' }}
-            </span>
-          </button>
         </div>
 
         <!-- Mobile Burger Button -->
@@ -376,43 +332,6 @@ const editModeLabel = computed(() =>
       >
         MITGLIED WERDEN
       </button>
-
-      <div
-        v-if="isAuthenticated"
-        class="mt-12 hidden md:block w-full max-w-xs border-t border-vsg-gold-400/20 pt-8"
-      >
-        <button
-          class="flex w-full items-center justify-between rounded-lg bg-vsg-gold-400/10 px-6 py-4 transition-all duration-300"
-          :class="
-            isEditMode
-              ? 'bg-vsg-gold-400 text-vsg-blue-900'
-              : 'text-vsg-gold-300 hover:bg-vsg-gold-400/20'
-          "
-          @click="
-            () => {
-              toggleEditMode();
-              closeMenu();
-            }
-          "
-        >
-          <span class="font-display text-xl tracking-wider">
-            {{ isEditMode ? 'Beenden' : 'Starten' }}
-          </span>
-          <svg
-            class="h-6 w-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-            />
-          </svg>
-        </button>
-      </div>
     </div>
   </div>
 </template>
