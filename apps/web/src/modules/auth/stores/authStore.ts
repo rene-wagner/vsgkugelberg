@@ -1,6 +1,5 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-import { useEditModeStore } from '@modules/default/stores/editModeStore';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -47,8 +46,6 @@ export const useAuthStore = defineStore('auth', () => {
         credentials: 'include',
       });
     } finally {
-      const editModeStore = useEditModeStore();
-      editModeStore.clearStorage();
       user.value = null;
       isAuthenticated.value = false;
     }

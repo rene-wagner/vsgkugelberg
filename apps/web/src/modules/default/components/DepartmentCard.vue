@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import VsgLinkArrow from '@shared/components/VsgLinkArrow.vue';
-import { useEditModeStore } from '@modules/default/stores/editModeStore';
-import { storeToRefs } from 'pinia';
 
 interface Props {
   title: string;
@@ -12,9 +10,6 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   href: '#',
 });
-
-const editModeStore = useEditModeStore();
-const { isEditMode } = storeToRefs(editModeStore);
 </script>
 
 <template>
@@ -39,23 +34,6 @@ const { isEditMode } = storeToRefs(editModeStore);
       {{ description }}
     </p>
 
-    <div v-if="isEditMode" class="mt-6 flex gap-2">
-      <button
-        class="rounded bg-vsg-blue-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-vsg-blue-700"
-        aria-label="Abteilung bearbeiten"
-      >
-        Bearbeiten
-      </button>
-      <button
-        class="rounded border-2 border-vsg-blue-600 px-4 py-2 text-sm font-semibold text-vsg-blue-600 transition-colors hover:bg-vsg-blue-600/10"
-        aria-label="Abteilung löschen"
-      >
-        Löschen
-      </button>
-    </div>
-
-    <VsgLinkArrow v-if="!isEditMode" :href="href" class="mt-6"
-      >Mehr erfahren</VsgLinkArrow
-    >
+    <VsgLinkArrow :href="href" class="mt-6">Mehr erfahren</VsgLinkArrow>
   </div>
 </template>
