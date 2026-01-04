@@ -98,6 +98,45 @@ describe('Department Trainers API Integration Tests', () => {
       expect(response.body.licenses).toHaveLength(2);
     });
 
+    it('should create a trainer without quote (optional)', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+      const contactPerson = await createTestContactPerson();
+
+      const response = await request(app)
+        .post(`/api/departments/${department.slug}/trainers`)
+        .set('Cookie', cookies)
+        .send({
+          contactPersonId: contactPerson.id,
+          role: 'Trainer',
+          licenses: [{ name: 'C-Lizenz', variant: 'gold' }],
+          experience: '10 Jahre Erfahrung',
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.quote).toBeNull();
+    });
+
+    it('should create a trainer with empty quote', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+      const contactPerson = await createTestContactPerson();
+
+      const response = await request(app)
+        .post(`/api/departments/${department.slug}/trainers`)
+        .set('Cookie', cookies)
+        .send({
+          contactPersonId: contactPerson.id,
+          role: 'Trainer',
+          licenses: [{ name: 'C-Lizenz', variant: 'gold' }],
+          experience: '10 Jahre Erfahrung',
+          quote: '',
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.quote).toBe('');
+    });
+
     it('should return 409 for duplicate trainer association', async () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
@@ -318,6 +357,121 @@ describe('Department Trainers API Integration Tests', () => {
       const response = await request(app).delete(
         `/api/departments/${department.slug}/trainers/${trainer.id}`,
       );
+
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe('PATCH /api/departments/:slug/trainers/reorder', () => {
+    it('should reorder trainers successfully', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+      const contactPerson1 = await createTestContactPerson('person1');
+      const contactPerson2 = await createTestContactPerson('person2');
+
+      const trainer1 = await prisma.departmentTrainer.create({
+        data: {
+          departmentId: department.id,
+          contactPersonId: contactPerson1.id,
+          role: 'First Trainer',
+          licenses: [],
+          experience: 'Experience 1',
+          quote: 'Quote 1',
+          sort: 0,
+        },
+      });
+      const trainer2 = await prisma.departmentTrainer.create({
+        data: {
+          departmentId: department.id,
+          contactPersonId: contactPerson2.id,
+          role: 'Second Trainer',
+          licenses: [],
+          experience: 'Experience 2',
+          quote: 'Quote 2',
+          sort: 1,
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/trainers/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [trainer2.id, trainer1.id] });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveLength(2);
+      expect(response.body[0].id).toBe(trainer2.id);
+      expect(response.body[0].sort).toBe(0);
+      expect(response.body[0].contactPerson).toBeDefined();
+      expect(response.body[1].id).toBe(trainer1.id);
+      expect(response.body[1].sort).toBe(1);
+    });
+
+    it('should return 404 for trainer from different department', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department1 = await createTestDepartment('dept-1');
+      const department2 = await createTestDepartment('dept-2');
+      const contactPerson1 = await createTestContactPerson('person1');
+      const contactPerson2 = await createTestContactPerson('person2');
+
+      const trainer1 = await prisma.departmentTrainer.create({
+        data: {
+          departmentId: department1.id,
+          contactPersonId: contactPerson1.id,
+          role: 'Trainer 1',
+          licenses: [],
+          experience: 'Experience',
+          quote: 'Quote',
+        },
+      });
+      const trainer2 = await prisma.departmentTrainer.create({
+        data: {
+          departmentId: department2.id,
+          contactPersonId: contactPerson2.id,
+          role: 'Trainer 2',
+          licenses: [],
+          experience: 'Experience',
+          quote: 'Quote',
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department1.slug}/trainers/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [trainer1.id, trainer2.id] });
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should return 400 for duplicate ids', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+      const contactPerson = await createTestContactPerson();
+
+      const trainer = await prisma.departmentTrainer.create({
+        data: {
+          departmentId: department.id,
+          contactPersonId: contactPerson.id,
+          role: 'Trainer',
+          licenses: [],
+          experience: 'Experience',
+          quote: 'Quote',
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/trainers/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [trainer.id, trainer.id] });
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 401 without authentication', async () => {
+      const department = await createTestDepartment();
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/trainers/reorder`)
+        .send({ ids: [1, 2] });
 
       expect(response.status).toBe(401);
     });

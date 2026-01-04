@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   useDepartmentsStore,
-  type Department,
+  type DepartmentExtended,
   type CreateDepartmentData,
   type UpdateDepartmentData,
 } from '../stores/departmentsStore';
@@ -11,8 +11,12 @@ import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 import SvgIconSelector from './SvgIconSelector.vue';
 
 const props = defineProps<{
-  department: Department | null;
+  department: DepartmentExtended | null;
   isEditMode: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'saved', department: DepartmentExtended): void;
 }>();
 
 const router = useRouter();
@@ -68,7 +72,13 @@ async function handleSubmit() {
         updateData,
       );
       if (result) {
-        router.push('/admin/departments');
+        // Fetch the full department with relations and emit
+        const fullDepartment = await departmentsStore.fetchDepartment(
+          result.slug,
+        );
+        if (fullDepartment) {
+          emit('saved', fullDepartment);
+        }
       } else {
         error.value =
           departmentsStore.error || 'Fehler beim Aktualisieren der Abteilung';
@@ -87,7 +97,13 @@ async function handleSubmit() {
 
       const result = await departmentsStore.createDepartment(createData);
       if (result) {
-        router.push('/admin/departments');
+        // Fetch the full department with relations and emit
+        const fullDepartment = await departmentsStore.fetchDepartment(
+          result.slug,
+        );
+        if (fullDepartment) {
+          emit('saved', fullDepartment);
+        }
       } else {
         error.value =
           departmentsStore.error || 'Fehler beim Erstellen der Abteilung';

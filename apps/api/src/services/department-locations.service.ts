@@ -34,7 +34,7 @@ export class DepartmentLocationsService {
         badgeVariant: dto.badgeVariant,
         street: dto.street,
         city: dto.city,
-        mapsUrl: dto.mapsUrl,
+        mapsUrl: dto.mapsUrl ?? null,
         amenities: dto.amenities,
         sort: dto.sort ?? 0,
       },
@@ -95,6 +95,43 @@ export class DepartmentLocationsService {
 
     return prisma.departmentLocation.delete({
       where: { id },
+    });
+  }
+
+  async reorder(
+    departmentSlug: string,
+    ids: number[],
+  ): Promise<DepartmentLocation[]> {
+    const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
+
+    // Verify all locations belong to this department
+    const locations = await prisma.departmentLocation.findMany({
+      where: { departmentId },
+    });
+
+    const existingIds = new Set(locations.map((l) => l.id));
+    for (const id of ids) {
+      if (!existingIds.has(id)) {
+        throw new NotFoundException(
+          `Location with ID ${id} not found for this department`,
+        );
+      }
+    }
+
+    // Update sort values based on array index
+    await prisma.$transaction(
+      ids.map((id, index) =>
+        prisma.departmentLocation.update({
+          where: { id },
+          data: { sort: index },
+        }),
+      ),
+    );
+
+    // Return all locations in new order
+    return prisma.departmentLocation.findMany({
+      where: { departmentId },
+      orderBy: { sort: 'asc' },
     });
   }
 }

@@ -34,10 +34,10 @@ export class DepartmentTrainingService {
       data: {
         departmentId,
         name: dto.name,
-        ageRange: dto.ageRange,
+        ageRange: dto.ageRange ?? null,
         icon: dto.icon,
         variant: dto.variant,
-        note: dto.note,
+        note: dto.note ?? null,
         sort: dto.sort ?? 0,
       },
       include: { sessions: true },
@@ -199,6 +199,97 @@ export class DepartmentTrainingService {
 
     return prisma.departmentTrainingSession.delete({
       where: { id },
+    });
+  }
+
+  async reorderGroups(
+    departmentSlug: string,
+    ids: number[],
+  ): Promise<DepartmentTrainingGroupWithSessions[]> {
+    const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
+
+    // Verify all groups belong to this department
+    const groups = await prisma.departmentTrainingGroup.findMany({
+      where: { departmentId },
+    });
+
+    const existingIds = new Set(groups.map((g) => g.id));
+    for (const id of ids) {
+      if (!existingIds.has(id)) {
+        throw new NotFoundException(
+          `Training group with ID ${id} not found for this department`,
+        );
+      }
+    }
+
+    // Update sort values based on array index
+    await prisma.$transaction(
+      ids.map((id, index) =>
+        prisma.departmentTrainingGroup.update({
+          where: { id },
+          data: { sort: index },
+        }),
+      ),
+    );
+
+    // Return all groups in new order with sessions
+    return prisma.departmentTrainingGroup.findMany({
+      where: { departmentId },
+      include: {
+        sessions: {
+          orderBy: { sort: 'asc' },
+        },
+      },
+      orderBy: { sort: 'asc' },
+    });
+  }
+
+  async reorderSessions(
+    departmentSlug: string,
+    groupId: number,
+    ids: number[],
+  ): Promise<DepartmentTrainingSession[]> {
+    const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
+
+    // Verify group belongs to this department
+    const group = await prisma.departmentTrainingGroup.findFirst({
+      where: { id: groupId, departmentId },
+    });
+
+    if (!group) {
+      throw new NotFoundException(
+        `Training group with ID ${groupId} not found for this department`,
+      );
+    }
+
+    // Verify all sessions belong to this group
+    const sessions = await prisma.departmentTrainingSession.findMany({
+      where: { trainingGroupId: groupId },
+    });
+
+    const existingIds = new Set(sessions.map((s) => s.id));
+    for (const id of ids) {
+      if (!existingIds.has(id)) {
+        throw new NotFoundException(
+          `Training session with ID ${id} not found for this training group`,
+        );
+      }
+    }
+
+    // Update sort values based on array index
+    await prisma.$transaction(
+      ids.map((id, index) =>
+        prisma.departmentTrainingSession.update({
+          where: { id },
+          data: { sort: index },
+        }),
+      ),
+    );
+
+    // Return all sessions in new order
+    return prisma.departmentTrainingSession.findMany({
+      where: { trainingGroupId: groupId },
+      orderBy: { sort: 'asc' },
     });
   }
 }

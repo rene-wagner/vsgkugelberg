@@ -10,7 +10,7 @@ export interface CreateDepartmentLocationDto {
   badgeVariant: 'primary' | 'secondary';
   street: string;
   city: string;
-  mapsUrl: string;
+  mapsUrl?: string;
   amenities: LocationAmenity[];
   sort?: number;
 }

@@ -291,4 +291,124 @@ describe('Department Stats API Integration Tests', () => {
       expect(response.status).toBe(401);
     });
   });
+
+  describe('PATCH /api/departments/:slug/stats/reorder', () => {
+    it('should reorder stats successfully', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+
+      const stat1 = await prisma.departmentStat.create({
+        data: {
+          departmentId: department.id,
+          label: 'First',
+          value: '1',
+          sort: 0,
+        },
+      });
+      const stat2 = await prisma.departmentStat.create({
+        data: {
+          departmentId: department.id,
+          label: 'Second',
+          value: '2',
+          sort: 1,
+        },
+      });
+      const stat3 = await prisma.departmentStat.create({
+        data: {
+          departmentId: department.id,
+          label: 'Third',
+          value: '3',
+          sort: 2,
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/stats/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [stat3.id, stat1.id, stat2.id] });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveLength(3);
+      expect(response.body[0].id).toBe(stat3.id);
+      expect(response.body[0].sort).toBe(0);
+      expect(response.body[1].id).toBe(stat1.id);
+      expect(response.body[1].sort).toBe(1);
+      expect(response.body[2].id).toBe(stat2.id);
+      expect(response.body[2].sort).toBe(2);
+    });
+
+    it('should return 404 for non-existent stat ID', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+
+      const stat = await prisma.departmentStat.create({
+        data: { departmentId: department.id, label: 'Test', value: '1' },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/stats/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [stat.id, 99999] });
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should return 404 for stat from different department', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department1 = await createTestDepartment('dept-1');
+      const department2 = await createTestDepartment('dept-2');
+
+      const stat1 = await prisma.departmentStat.create({
+        data: { departmentId: department1.id, label: 'Test1', value: '1' },
+      });
+      const stat2 = await prisma.departmentStat.create({
+        data: { departmentId: department2.id, label: 'Test2', value: '2' },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department1.slug}/stats/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [stat1.id, stat2.id] });
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should return 400 for empty ids array', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/stats/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [] });
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 for duplicate ids', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+
+      const stat = await prisma.departmentStat.create({
+        data: { departmentId: department.id, label: 'Test', value: '1' },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/stats/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [stat.id, stat.id] });
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 401 without authentication', async () => {
+      const department = await createTestDepartment();
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/stats/reorder`)
+        .send({ ids: [1, 2] });
+
+      expect(response.status).toBe(401);
+    });
+  });
 });

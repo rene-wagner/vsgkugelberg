@@ -8,6 +8,7 @@ import {
   createDepartmentStatValidator,
   updateDepartmentStatValidator,
   statIdParamValidator,
+  reorderDepartmentStatsValidator,
 } from '@/validators/department-stat.validators';
 import {
   CreateDepartmentStatDto,
@@ -30,6 +31,21 @@ router.post(
     const dto: CreateDepartmentStatDto = req.body;
     const stat = await statsService.create(slug, dto);
     res.status(201).json(stat);
+  }),
+);
+
+// Protected route - Reorder stats (must be before /:id routes)
+router.patch(
+  '/reorder',
+  jwtMiddleware,
+  authGuardMiddleware,
+  reorderDepartmentStatsValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const { slug } = req.params;
+    const { ids } = req.body;
+    const stats = await statsService.reorder(slug, ids);
+    res.json(stats);
   }),
 );
 

@@ -11,6 +11,8 @@ import {
   updateTrainingSessionValidator,
   groupIdParamValidator,
   sessionIdParamValidator,
+  reorderTrainingGroupsValidator,
+  reorderTrainingSessionsValidator,
 } from '@/validators/department-training.validators';
 import {
   CreateDepartmentTrainingGroupDto,
@@ -37,6 +39,21 @@ router.post(
     const dto: CreateDepartmentTrainingGroupDto = req.body;
     const group = await trainingService.createGroup(slug, dto);
     res.status(201).json(group);
+  }),
+);
+
+// Protected route - Reorder training groups (must be before /:groupId routes)
+router.patch(
+  '/reorder',
+  jwtMiddleware,
+  authGuardMiddleware,
+  reorderTrainingGroupsValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const { slug } = req.params;
+    const { ids } = req.body;
+    const groups = await trainingService.reorderGroups(slug, ids);
+    res.json(groups);
   }),
 );
 
@@ -78,6 +95,26 @@ router.delete(
 );
 
 // ======== Training Sessions ========
+
+// Protected route - Reorder sessions within a training group (must be before /:groupId/sessions/:id routes)
+router.patch(
+  '/:groupId/sessions/reorder',
+  jwtMiddleware,
+  authGuardMiddleware,
+  groupIdParamValidator,
+  reorderTrainingSessionsValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const { slug, groupId } = req.params;
+    const { ids } = req.body;
+    const sessions = await trainingService.reorderSessions(
+      slug,
+      parseInt(groupId, 10),
+      ids,
+    );
+    res.json(sessions);
+  }),
+);
 
 // Protected route - Create session for training group
 router.post(

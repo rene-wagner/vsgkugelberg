@@ -13,7 +13,7 @@ export interface CreateDepartmentTrainerDto {
   role: string;
   licenses: TrainerLicense[];
   experience: string;
-  quote: string;
+  quote?: string;
   sort?: number;
 }
 

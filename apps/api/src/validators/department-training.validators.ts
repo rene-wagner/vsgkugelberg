@@ -10,11 +10,11 @@ export const createTrainingGroupValidator = [
     .withMessage('Name must be between 1 and 100 characters'),
 
   body('ageRange')
+    .optional({ values: 'undefined' })
+    .isString()
     .trim()
-    .notEmpty()
-    .withMessage('Age range is required')
-    .isLength({ min: 1, max: 50 })
-    .withMessage('Age range must be between 1 and 50 characters'),
+    .isLength({ max: 50 })
+    .withMessage('Age range must be at most 50 characters'),
 
   body('icon')
     .trim()
@@ -33,8 +33,8 @@ export const createTrainingGroupValidator = [
   body('note')
     .optional({ values: 'null' })
     .trim()
-    .isLength({ max: 500 })
-    .withMessage('Note must be at most 500 characters'),
+    .isLength({ max: 5000 })
+    .withMessage('Note must be at most 5000 characters'),
 
   body('sort')
     .optional()
@@ -52,12 +52,12 @@ export const updateTrainingGroupValidator = [
     .withMessage('Name must be between 1 and 100 characters'),
 
   body('ageRange')
-    .optional()
-    .trim()
-    .notEmpty()
-    .withMessage('Age range cannot be empty')
-    .isLength({ min: 1, max: 50 })
-    .withMessage('Age range must be between 1 and 50 characters'),
+    .optional({ nullable: true })
+    .custom((value) => {
+      if (value === null || value === '') return true;
+      if (typeof value === 'string' && value.length <= 50) return true;
+      throw new Error('Age range must be at most 50 characters or null');
+    }),
 
   body('icon')
     .optional()
@@ -75,9 +75,9 @@ export const updateTrainingGroupValidator = [
     .optional({ nullable: true })
     .custom((value) => {
       if (value === null) return true;
-      if (typeof value === 'string' && value.length <= 500) return true;
+      if (typeof value === 'string' && value.length <= 5000) return true;
       throw new Error(
-        'Note must be a string of at most 500 characters or null',
+        'Note must be a string of at most 5000 characters or null',
       );
     }),
 
@@ -140,4 +140,36 @@ export const groupIdParamValidator = [
 
 export const sessionIdParamValidator = [
   param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer'),
+];
+
+export const reorderTrainingGroupsValidator = [
+  body('ids').isArray({ min: 1 }).withMessage('IDs must be a non-empty array'),
+
+  body('ids.*')
+    .isInt({ min: 1 })
+    .withMessage('Each ID must be a positive integer'),
+
+  body('ids').custom((ids: number[]) => {
+    const uniqueIds = new Set(ids);
+    if (uniqueIds.size !== ids.length) {
+      throw new Error('IDs array must not contain duplicates');
+    }
+    return true;
+  }),
+];
+
+export const reorderTrainingSessionsValidator = [
+  body('ids').isArray({ min: 1 }).withMessage('IDs must be a non-empty array'),
+
+  body('ids.*')
+    .isInt({ min: 1 })
+    .withMessage('Each ID must be a positive integer'),
+
+  body('ids').custom((ids: number[]) => {
+    const uniqueIds = new Set(ids);
+    if (uniqueIds.size !== ids.length) {
+      throw new Error('IDs array must not contain duplicates');
+    }
+    return true;
+  }),
 ];

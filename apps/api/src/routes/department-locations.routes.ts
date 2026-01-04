@@ -8,6 +8,7 @@ import {
   createDepartmentLocationValidator,
   updateDepartmentLocationValidator,
   locationIdParamValidator,
+  reorderDepartmentLocationsValidator,
 } from '@/validators/department-location.validators';
 import {
   CreateDepartmentLocationDto,
@@ -30,6 +31,21 @@ router.post(
     const dto: CreateDepartmentLocationDto = req.body;
     const location = await locationsService.create(slug, dto);
     res.status(201).json(location);
+  }),
+);
+
+// Protected route - Reorder locations (must be before /:id routes)
+router.patch(
+  '/reorder',
+  jwtMiddleware,
+  authGuardMiddleware,
+  reorderDepartmentLocationsValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const { slug } = req.params;
+    const { ids } = req.body;
+    const locations = await locationsService.reorder(slug, ids);
+    res.json(locations);
   }),
 );
 

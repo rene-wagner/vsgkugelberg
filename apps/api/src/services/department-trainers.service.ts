@@ -47,7 +47,7 @@ export class DepartmentTrainersService {
           role: dto.role,
           licenses: dto.licenses,
           experience: dto.experience,
-          quote: dto.quote,
+          quote: dto.quote ?? null,
           sort: dto.sort ?? 0,
         },
         include: {
@@ -128,6 +128,48 @@ export class DepartmentTrainersService {
           include: { profileImage: true },
         },
       },
+    });
+  }
+
+  async reorder(
+    departmentSlug: string,
+    ids: number[],
+  ): Promise<DepartmentTrainerWithContactPerson[]> {
+    const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
+
+    // Verify all trainers belong to this department
+    const trainers = await prisma.departmentTrainer.findMany({
+      where: { departmentId },
+    });
+
+    const existingIds = new Set(trainers.map((t) => t.id));
+    for (const id of ids) {
+      if (!existingIds.has(id)) {
+        throw new NotFoundException(
+          `Trainer with ID ${id} not found for this department`,
+        );
+      }
+    }
+
+    // Update sort values based on array index
+    await prisma.$transaction(
+      ids.map((id, index) =>
+        prisma.departmentTrainer.update({
+          where: { id },
+          data: { sort: index },
+        }),
+      ),
+    );
+
+    // Return all trainers in new order with contact person data
+    return prisma.departmentTrainer.findMany({
+      where: { departmentId },
+      include: {
+        contactPerson: {
+          include: { profileImage: true },
+        },
+      },
+      orderBy: { sort: 'asc' },
     });
   }
 }

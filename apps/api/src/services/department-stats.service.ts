@@ -82,4 +82,41 @@ export class DepartmentStatsService {
       where: { id },
     });
   }
+
+  async reorder(
+    departmentSlug: string,
+    ids: number[],
+  ): Promise<DepartmentStat[]> {
+    const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
+
+    // Verify all stats belong to this department
+    const stats = await prisma.departmentStat.findMany({
+      where: { departmentId },
+    });
+
+    const existingIds = new Set(stats.map((s) => s.id));
+    for (const id of ids) {
+      if (!existingIds.has(id)) {
+        throw new NotFoundException(
+          `Stat with ID ${id} not found for this department`,
+        );
+      }
+    }
+
+    // Update sort values based on array index
+    await prisma.$transaction(
+      ids.map((id, index) =>
+        prisma.departmentStat.update({
+          where: { id },
+          data: { sort: index },
+        }),
+      ),
+    );
+
+    // Return all stats in new order
+    return prisma.departmentStat.findMany({
+      where: { departmentId },
+      orderBy: { sort: 'asc' },
+    });
+  }
 }

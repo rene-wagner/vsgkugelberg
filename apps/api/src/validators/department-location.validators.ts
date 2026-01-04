@@ -3,8 +3,8 @@ import { body, param } from 'express-validator';
 const amenitiesValidator = (isRequired: boolean) =>
   body('amenities')
     .optional(!isRequired)
-    .isArray({ min: 0, max: 3 })
-    .withMessage('Amenities must be an array with at most 3 items')
+    .isArray({ min: 0 })
+    .withMessage('Amenities must be an array')
     .custom((amenities: unknown[]) => {
       if (!Array.isArray(amenities)) return true;
       for (const amenity of amenities) {
@@ -60,13 +60,21 @@ export const createDepartmentLocationValidator = [
     .withMessage('City must be between 1 and 100 characters'),
 
   body('mapsUrl')
+    .optional({ values: 'undefined' })
+    .isString()
     .trim()
-    .notEmpty()
-    .withMessage('Maps URL is required')
-    .isURL()
-    .withMessage('Maps URL must be a valid URL'),
+    .custom((value) => {
+      if (!value || value === '') return true;
+      // Basic URL validation
+      try {
+        new URL(value);
+        return true;
+      } catch {
+        throw new Error('Maps URL must be a valid URL');
+      }
+    }),
 
-  amenitiesValidator(true).notEmpty().withMessage('Amenities is required'),
+  amenitiesValidator(true),
 
   body('sort')
     .optional()
@@ -114,10 +122,17 @@ export const updateDepartmentLocationValidator = [
     .withMessage('City must be between 1 and 100 characters'),
 
   body('mapsUrl')
-    .optional()
+    .optional({ nullable: true })
     .trim()
-    .isURL()
-    .withMessage('Maps URL must be a valid URL'),
+    .custom((value) => {
+      if (!value || value === '' || value === null) return true;
+      try {
+        new URL(value);
+        return true;
+      } catch {
+        throw new Error('Maps URL must be a valid URL');
+      }
+    }),
 
   amenitiesValidator(false),
 
@@ -129,4 +144,20 @@ export const updateDepartmentLocationValidator = [
 
 export const locationIdParamValidator = [
   param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer'),
+];
+
+export const reorderDepartmentLocationsValidator = [
+  body('ids').isArray({ min: 1 }).withMessage('IDs must be a non-empty array'),
+
+  body('ids.*')
+    .isInt({ min: 1 })
+    .withMessage('Each ID must be a positive integer'),
+
+  body('ids').custom((ids: number[]) => {
+    const uniqueIds = new Set(ids);
+    if (uniqueIds.size !== ids.length) {
+      throw new Error('IDs array must not contain duplicates');
+    }
+    return true;
+  }),
 ];

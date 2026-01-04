@@ -31,7 +31,7 @@ function initEditor() {
 
   easyMDE = new EasyMDE({
     element: textareaRef.value,
-    initialValue: props.modelValue,
+    initialValue: props.modelValue ?? '',
     placeholder: props.placeholder,
     minHeight: props.minHeight,
     spellChecker: false,
@@ -78,8 +78,10 @@ watch(
   () => props.modelValue,
   (newValue) => {
     if (isUpdatingFromEditor || !easyMDE) return;
-    if (easyMDE.value() !== newValue) {
-      easyMDE.value(newValue);
+    const currentValue = easyMDE.value();
+    const newVal = newValue ?? '';
+    if (currentValue !== newVal) {
+      easyMDE.value(newVal);
     }
   },
 );

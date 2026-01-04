@@ -102,7 +102,7 @@ model DepartmentTrainingGroup {
   departmentId Int
   department   Department                  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
   name         String
-  ageRange     String
+  ageRange     String?
   icon         String
   variant      String
   note         String?
@@ -136,7 +136,7 @@ model DepartmentLocation {
   badgeVariant String
   street       String
   city         String
-  mapsUrl      String
+  mapsUrl      String?
   amenities    Json
   sort         Int        @default(0)
   createdAt    DateTime   @default(now())
@@ -154,7 +154,7 @@ model DepartmentTrainer {
   role            String
   licenses        Json
   experience      String
-  quote           String
+  quote           String?
   sort            Int           @default(0)
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt

@@ -7,7 +7,7 @@ import {
 // Training Group DTOs
 export interface CreateDepartmentTrainingGroupDto {
   name: string;
-  ageRange: string;
+  ageRange?: string;
   icon: 'youth' | 'adults';
   variant: 'primary' | 'secondary';
   note?: string;

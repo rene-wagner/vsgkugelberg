@@ -84,7 +84,7 @@ describe('Department Locations API Integration Tests', () => {
       expect(response.body.amenities).toEqual([]);
     });
 
-    it('should return 400 for more than 3 amenities', async () => {
+    it('should allow more than 3 amenities', async () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
@@ -97,16 +97,59 @@ describe('Department Locations API Integration Tests', () => {
           badgeVariant: 'primary',
           street: 'Test Street 1',
           city: 'Test City',
-          mapsUrl: 'https://maps.google.com/?q=test',
+          mapsUrl: 'https://maps.openstreetmap.org/?q=test',
           amenities: [
             { text: 'One' },
             { text: 'Two' },
             { text: 'Three' },
             { text: 'Four' },
+            { text: 'Five' },
           ],
         });
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(201);
+      expect(response.body.amenities).toHaveLength(5);
+    });
+
+    it('should create a location without mapsUrl (optional)', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+
+      const response = await request(app)
+        .post(`/api/departments/${department.slug}/locations`)
+        .set('Cookie', cookies)
+        .send({
+          name: 'Test Hall',
+          badge: 'TEST',
+          badgeVariant: 'primary',
+          street: 'Test Street 1',
+          city: 'Test City',
+          amenities: [{ text: 'Parking' }],
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.mapsUrl).toBeNull();
+    });
+
+    it('should create a location with empty mapsUrl', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+
+      const response = await request(app)
+        .post(`/api/departments/${department.slug}/locations`)
+        .set('Cookie', cookies)
+        .send({
+          name: 'Test Hall',
+          badge: 'TEST',
+          badgeVariant: 'primary',
+          street: 'Test Street 1',
+          city: 'Test City',
+          mapsUrl: '',
+          amenities: [{ text: 'Parking' }],
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body.mapsUrl).toBe('');
     });
 
     it('should return 400 for invalid mapsUrl', async () => {
@@ -271,6 +314,112 @@ describe('Department Locations API Integration Tests', () => {
       const response = await request(app).delete(
         `/api/departments/${department.slug}/locations/${location.id}`,
       );
+
+      expect(response.status).toBe(401);
+    });
+  });
+
+  describe('PATCH /api/departments/:slug/locations/reorder', () => {
+    it('should reorder locations successfully', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+
+      const location1 = await prisma.departmentLocation.create({
+        data: {
+          departmentId: department.id,
+          name: 'First Hall',
+          badge: 'FIRST',
+          badgeVariant: 'primary',
+          street: 'First Street',
+          city: 'City',
+          mapsUrl: 'https://maps.google.com/?q=first',
+          amenities: [],
+          sort: 0,
+        },
+      });
+      const location2 = await prisma.departmentLocation.create({
+        data: {
+          departmentId: department.id,
+          name: 'Second Hall',
+          badge: 'SECOND',
+          badgeVariant: 'secondary',
+          street: 'Second Street',
+          city: 'City',
+          mapsUrl: 'https://maps.google.com/?q=second',
+          amenities: [],
+          sort: 1,
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/locations/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [location2.id, location1.id] });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveLength(2);
+      expect(response.body[0].id).toBe(location2.id);
+      expect(response.body[0].sort).toBe(0);
+      expect(response.body[1].id).toBe(location1.id);
+      expect(response.body[1].sort).toBe(1);
+    });
+
+    it('should return 404 for location from different department', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department1 = await createTestDepartment('dept-1');
+      const department2 = await createTestDepartment('dept-2');
+
+      const location1 = await prisma.departmentLocation.create({
+        data: {
+          departmentId: department1.id,
+          name: 'Hall 1',
+          badge: 'H1',
+          badgeVariant: 'primary',
+          street: 'Street 1',
+          city: 'City',
+          mapsUrl: 'https://maps.google.com/?q=1',
+          amenities: [],
+        },
+      });
+      const location2 = await prisma.departmentLocation.create({
+        data: {
+          departmentId: department2.id,
+          name: 'Hall 2',
+          badge: 'H2',
+          badgeVariant: 'secondary',
+          street: 'Street 2',
+          city: 'City',
+          mapsUrl: 'https://maps.google.com/?q=2',
+          amenities: [],
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department1.slug}/locations/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [location1.id, location2.id] });
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should return 400 for empty ids array', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/locations/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [] });
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 401 without authentication', async () => {
+      const department = await createTestDepartment();
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/locations/reorder`)
+        .send({ ids: [1, 2] });
 
       expect(response.status).toBe(401);
     });

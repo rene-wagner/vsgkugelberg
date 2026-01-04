@@ -54,11 +54,11 @@ export const createDepartmentTrainerValidator = [
     .withMessage('Experience must be between 1 and 200 characters'),
 
   body('quote')
+    .optional({ values: 'undefined' })
+    .isString()
     .trim()
-    .notEmpty()
-    .withMessage('Quote is required')
-    .isLength({ min: 1, max: 500 })
-    .withMessage('Quote must be between 1 and 500 characters'),
+    .isLength({ max: 500 })
+    .withMessage('Quote must be at most 500 characters'),
 
   body('sort')
     .optional()
@@ -86,12 +86,12 @@ export const updateDepartmentTrainerValidator = [
     .withMessage('Experience must be between 1 and 200 characters'),
 
   body('quote')
-    .optional()
-    .trim()
-    .notEmpty()
-    .withMessage('Quote cannot be empty')
-    .isLength({ min: 1, max: 500 })
-    .withMessage('Quote must be between 1 and 500 characters'),
+    .optional({ nullable: true })
+    .custom((value) => {
+      if (value === null || value === '') return true;
+      if (typeof value === 'string' && value.length <= 500) return true;
+      throw new Error('Quote must be at most 500 characters or null');
+    }),
 
   body('sort')
     .optional()
@@ -101,4 +101,20 @@ export const updateDepartmentTrainerValidator = [
 
 export const trainerIdParamValidator = [
   param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer'),
+];
+
+export const reorderDepartmentTrainersValidator = [
+  body('ids').isArray({ min: 1 }).withMessage('IDs must be a non-empty array'),
+
+  body('ids.*')
+    .isInt({ min: 1 })
+    .withMessage('Each ID must be a positive integer'),
+
+  body('ids').custom((ids: number[]) => {
+    const uniqueIds = new Set(ids);
+    if (uniqueIds.size !== ids.length) {
+      throw new Error('IDs array must not contain duplicates');
+    }
+    return true;
+  }),
 ];

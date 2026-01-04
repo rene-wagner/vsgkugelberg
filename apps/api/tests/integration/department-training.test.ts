@@ -78,6 +78,41 @@ describe('Department Training API Integration Tests', () => {
         );
       });
 
+      it('should create a training group without ageRange (optional)', async () => {
+        const cookies = await createAuthenticatedUser();
+        const department = await createTestDepartment();
+
+        const response = await request(app)
+          .post(`/api/departments/${department.slug}/training-groups`)
+          .set('Cookie', cookies)
+          .send({
+            name: 'Erwachsene',
+            icon: 'adults',
+            variant: 'secondary',
+          });
+
+        expect(response.status).toBe(201);
+        expect(response.body.ageRange).toBeNull();
+      });
+
+      it('should create a training group with empty ageRange', async () => {
+        const cookies = await createAuthenticatedUser();
+        const department = await createTestDepartment();
+
+        const response = await request(app)
+          .post(`/api/departments/${department.slug}/training-groups`)
+          .set('Cookie', cookies)
+          .send({
+            name: 'Erwachsene',
+            ageRange: '',
+            icon: 'adults',
+            variant: 'secondary',
+          });
+
+        expect(response.status).toBe(201);
+        expect(response.body.ageRange).toBe('');
+      });
+
       it('should return 400 for invalid icon value', async () => {
         const cookies = await createAuthenticatedUser();
         const department = await createTestDepartment();
@@ -371,6 +406,195 @@ describe('Department Training API Integration Tests', () => {
         });
         expect(deleted).toBeNull();
       });
+    });
+
+    describe('PATCH /api/departments/:slug/training-groups/:groupId/sessions/reorder', () => {
+      it('should reorder sessions within a group', async () => {
+        const cookies = await createAuthenticatedUser();
+        const department = await createTestDepartment();
+        const group = await prisma.departmentTrainingGroup.create({
+          data: {
+            departmentId: department.id,
+            name: 'Test Group',
+            ageRange: '6 - 17',
+            icon: 'youth',
+            variant: 'primary',
+          },
+        });
+
+        const session1 = await prisma.departmentTrainingSession.create({
+          data: {
+            trainingGroupId: group.id,
+            day: 'Montag',
+            time: '16:00',
+            sort: 0,
+          },
+        });
+        const session2 = await prisma.departmentTrainingSession.create({
+          data: {
+            trainingGroupId: group.id,
+            day: 'Dienstag',
+            time: '17:00',
+            sort: 1,
+          },
+        });
+
+        const response = await request(app)
+          .patch(
+            `/api/departments/${department.slug}/training-groups/${group.id}/sessions/reorder`,
+          )
+          .set('Cookie', cookies)
+          .send({ ids: [session2.id, session1.id] });
+
+        expect(response.status).toBe(200);
+        expect(response.body).toHaveLength(2);
+        expect(response.body[0].id).toBe(session2.id);
+        expect(response.body[0].sort).toBe(0);
+        expect(response.body[1].id).toBe(session1.id);
+        expect(response.body[1].sort).toBe(1);
+      });
+
+      it('should return 404 for session from different group', async () => {
+        const cookies = await createAuthenticatedUser();
+        const department = await createTestDepartment();
+        const group1 = await prisma.departmentTrainingGroup.create({
+          data: {
+            departmentId: department.id,
+            name: 'Group 1',
+            ageRange: '6 - 17',
+            icon: 'youth',
+            variant: 'primary',
+          },
+        });
+        const group2 = await prisma.departmentTrainingGroup.create({
+          data: {
+            departmentId: department.id,
+            name: 'Group 2',
+            ageRange: '18+',
+            icon: 'adults',
+            variant: 'secondary',
+          },
+        });
+
+        const session1 = await prisma.departmentTrainingSession.create({
+          data: { trainingGroupId: group1.id, day: 'Montag', time: '16:00' },
+        });
+        const session2 = await prisma.departmentTrainingSession.create({
+          data: { trainingGroupId: group2.id, day: 'Dienstag', time: '17:00' },
+        });
+
+        const response = await request(app)
+          .patch(
+            `/api/departments/${department.slug}/training-groups/${group1.id}/sessions/reorder`,
+          )
+          .set('Cookie', cookies)
+          .send({ ids: [session1.id, session2.id] });
+
+        expect(response.status).toBe(404);
+      });
+
+      it('should return 401 without authentication', async () => {
+        const department = await createTestDepartment();
+        const group = await prisma.departmentTrainingGroup.create({
+          data: {
+            departmentId: department.id,
+            name: 'Test Group',
+            ageRange: '6 - 17',
+            icon: 'youth',
+            variant: 'primary',
+          },
+        });
+
+        const response = await request(app)
+          .patch(
+            `/api/departments/${department.slug}/training-groups/${group.id}/sessions/reorder`,
+          )
+          .send({ ids: [1, 2] });
+
+        expect(response.status).toBe(401);
+      });
+    });
+  });
+
+  describe('PATCH /api/departments/:slug/training-groups/reorder', () => {
+    it('should reorder training groups', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department = await createTestDepartment();
+
+      const group1 = await prisma.departmentTrainingGroup.create({
+        data: {
+          departmentId: department.id,
+          name: 'First',
+          ageRange: '6 - 17',
+          icon: 'youth',
+          variant: 'primary',
+          sort: 0,
+        },
+      });
+      const group2 = await prisma.departmentTrainingGroup.create({
+        data: {
+          departmentId: department.id,
+          name: 'Second',
+          ageRange: '18+',
+          icon: 'adults',
+          variant: 'secondary',
+          sort: 1,
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/training-groups/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [group2.id, group1.id] });
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveLength(2);
+      expect(response.body[0].id).toBe(group2.id);
+      expect(response.body[0].sort).toBe(0);
+      expect(response.body[1].id).toBe(group1.id);
+      expect(response.body[1].sort).toBe(1);
+    });
+
+    it('should return 404 for group from different department', async () => {
+      const cookies = await createAuthenticatedUser();
+      const department1 = await createTestDepartment('dept-1');
+      const department2 = await createTestDepartment('dept-2');
+
+      const group1 = await prisma.departmentTrainingGroup.create({
+        data: {
+          departmentId: department1.id,
+          name: 'Group1',
+          ageRange: '6 - 17',
+          icon: 'youth',
+          variant: 'primary',
+        },
+      });
+      const group2 = await prisma.departmentTrainingGroup.create({
+        data: {
+          departmentId: department2.id,
+          name: 'Group2',
+          ageRange: '18+',
+          icon: 'adults',
+          variant: 'secondary',
+        },
+      });
+
+      const response = await request(app)
+        .patch(`/api/departments/${department1.slug}/training-groups/reorder`)
+        .set('Cookie', cookies)
+        .send({ ids: [group1.id, group2.id] });
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should return 401 without authentication', async () => {
+      const department = await createTestDepartment();
+
+      const response = await request(app)
+        .patch(`/api/departments/${department.slug}/training-groups/reorder`)
+        .send({ ids: [1, 2] });
+
+      expect(response.status).toBe(401);
     });
   });
 });

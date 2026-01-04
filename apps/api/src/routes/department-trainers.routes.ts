@@ -8,6 +8,7 @@ import {
   createDepartmentTrainerValidator,
   updateDepartmentTrainerValidator,
   trainerIdParamValidator,
+  reorderDepartmentTrainersValidator,
 } from '@/validators/department-trainer.validators';
 import {
   CreateDepartmentTrainerDto,
@@ -30,6 +31,21 @@ router.post(
     const dto: CreateDepartmentTrainerDto = req.body;
     const trainer = await trainersService.create(slug, dto);
     res.status(201).json(trainer);
+  }),
+);
+
+// Protected route - Reorder trainers (must be before /:id routes)
+router.patch(
+  '/reorder',
+  jwtMiddleware,
+  authGuardMiddleware,
+  reorderDepartmentTrainersValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const { slug } = req.params;
+    const { ids } = req.body;
+    const trainers = await trainersService.reorder(slug, ids);
+    res.json(trainers);
   }),
 );
 
