@@ -57,27 +57,6 @@ describe('Department Training API Integration Tests', () => {
         expect(response.body.sessions).toEqual([]);
       });
 
-      it('should create a training group with optional note', async () => {
-        const cookies = await createAuthenticatedUser();
-        const department = await createTestDepartment();
-
-        const response = await request(app)
-          .post(`/api/departments/${department.slug}/training-groups`)
-          .set('Cookie', cookies)
-          .send({
-            name: 'Erwachsene',
-            ageRange: 'Ab 18 Jahre',
-            icon: 'adults',
-            variant: 'secondary',
-            note: '<strong>Hinweis:</strong> Bitte Hallenschuhe mitbringen.',
-          });
-
-        expect(response.status).toBe(201);
-        expect(response.body.note).toBe(
-          '<strong>Hinweis:</strong> Bitte Hallenschuhe mitbringen.',
-        );
-      });
-
       it('should create a training group without ageRange (optional)', async () => {
         const cookies = await createAuthenticatedUser();
         const department = await createTestDepartment();

@@ -105,7 +105,6 @@ model DepartmentTrainingGroup {
   ageRange     String?
   icon         String
   variant      String
-  note         String?
   sort         Int                         @default(0)
   sessions     DepartmentTrainingSession[]
   createdAt    DateTime                    @default(now())

@@ -39,7 +39,6 @@ export interface DepartmentTrainingGroup {
   ageRange: string | null;
   icon: 'youth' | 'adults';
   variant: 'primary' | 'secondary';
-  note: string | null;
   sort: number;
   sessions: DepartmentTrainingSession[];
   createdAt: string;
@@ -51,7 +50,6 @@ export interface CreateDepartmentTrainingGroupDto {
   ageRange?: string | null;
   icon: 'youth' | 'adults';
   variant: 'primary' | 'secondary';
-  note?: string;
   sort?: number;
 }
 
@@ -60,7 +58,6 @@ export interface UpdateDepartmentTrainingGroupDto {
   ageRange?: string;
   icon?: 'youth' | 'adults';
   variant?: 'primary' | 'secondary';
-  note?: string | null;
   sort?: number;
 }
 

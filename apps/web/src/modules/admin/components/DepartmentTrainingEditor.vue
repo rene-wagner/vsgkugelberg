@@ -42,7 +42,6 @@ const pendingGroupUpdates = ref<
       ageRange: string;
       icon: 'youth' | 'adults';
       variant: 'primary' | 'secondary';
-      note: string | null;
     }
   >
 >(new Map());
@@ -143,7 +142,6 @@ function handleAddGroup() {
     ageRange: '',
     icon: 'adults',
     variant: 'primary',
-    note: null,
     sort: localGroups.value.length + pendingGroupCreates.value.size,
     sessions: [],
     createdAt: '',
@@ -159,7 +157,6 @@ function handleGroupUpdate(
     ageRange: string;
     icon: 'youth' | 'adults';
     variant: 'primary' | 'secondary';
-    note: string | null;
   },
   isNew: boolean,
 ) {
@@ -354,7 +351,6 @@ async function handleSave() {
         ageRange: group.ageRange,
         icon: group.icon,
         variant: group.variant,
-        note: group.note || undefined,
       };
 
       const createdGroup = await trainingStore.createGroup(
@@ -388,7 +384,6 @@ async function handleSave() {
         ageRange: data.ageRange,
         icon: data.icon,
         variant: data.variant,
-        note: data.note,
       };
       const result = await trainingStore.updateGroup(
         props.departmentSlug,

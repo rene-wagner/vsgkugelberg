@@ -10,7 +10,6 @@ export interface CreateDepartmentTrainingGroupDto {
   ageRange?: string;
   icon: 'youth' | 'adults';
   variant: 'primary' | 'secondary';
-  note?: string;
   sort?: number;
 }
 
@@ -19,7 +18,6 @@ export interface UpdateDepartmentTrainingGroupDto {
   ageRange?: string;
   icon?: 'youth' | 'adults';
   variant?: 'primary' | 'secondary';
-  note?: string | null;
   sort?: number;
 }
 

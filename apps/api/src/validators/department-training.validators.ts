@@ -30,12 +30,6 @@ export const createTrainingGroupValidator = [
     .isIn(['primary', 'secondary'])
     .withMessage("Variant must be 'primary' or 'secondary'"),
 
-  body('note')
-    .optional({ values: 'null' })
-    .trim()
-    .isLength({ max: 5000 })
-    .withMessage('Note must be at most 5000 characters'),
-
   body('sort')
     .optional()
     .isInt({ min: 0 })
@@ -70,16 +64,6 @@ export const updateTrainingGroupValidator = [
     .trim()
     .isIn(['primary', 'secondary'])
     .withMessage("Variant must be 'primary' or 'secondary'"),
-
-  body('note')
-    .optional({ nullable: true })
-    .custom((value) => {
-      if (value === null) return true;
-      if (typeof value === 'string' && value.length <= 5000) return true;
-      throw new Error(
-        'Note must be a string of at most 5000 characters or null',
-      );
-    }),
 
   body('sort')
     .optional()

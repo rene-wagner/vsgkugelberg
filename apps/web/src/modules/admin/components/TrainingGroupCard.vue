@@ -2,7 +2,6 @@
 import { ref, watch, computed } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import TrainingSessionRow from './TrainingSessionRow.vue';
-import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 import type {
   DepartmentTrainingGroup,
   DepartmentTrainingSession,
@@ -26,7 +25,6 @@ const emit = defineEmits<{
       ageRange: string;
       icon: 'youth' | 'adults';
       variant: 'primary' | 'secondary';
-      note: string | null;
     },
   ): void;
   (e: 'delete'): void;
@@ -42,10 +40,9 @@ const emit = defineEmits<{
 }>();
 
 const name = ref(props.group.name);
-const ageRange = ref(props.group.ageRange);
+const ageRange = ref(props.group.ageRange || '');
 const icon = ref<'youth' | 'adults'>(props.group.icon);
 const variant = ref<'primary' | 'secondary'>(props.group.variant);
-const note = ref(props.group.note || '');
 const isExpanded = ref(true);
 
 const localSessions = ref<LocalSession[]>([...props.group.sessions]);
@@ -55,23 +52,21 @@ watch(
   () => props.group,
   (newGroup) => {
     name.value = newGroup.name;
-    ageRange.value = newGroup.ageRange;
+    ageRange.value = newGroup.ageRange || '';
     icon.value = newGroup.icon;
     variant.value = newGroup.variant;
-    note.value = newGroup.note || '';
     localSessions.value = [...newGroup.sessions];
   },
   { deep: true },
 );
 
 // Emit updates when values change
-watch([name, ageRange, icon, variant, note], () => {
+watch([name, ageRange, icon, variant], () => {
   emit('update', {
     name: name.value,
     ageRange: ageRange.value,
     icon: icon.value,
     variant: variant.value,
-    note: note.value || null,
   });
 });
 
@@ -316,20 +311,6 @@ function handleSessionsDragEnd() {
           </svg>
           Trainingszeit hinzufügen
         </button>
-      </div>
-
-      <!-- Note Section (Markdown) -->
-      <div>
-        <label
-          class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-2"
-        >
-          Hinweis
-        </label>
-        <VsgMarkdownEditor
-          v-model="note"
-          placeholder="Optionaler Hinweis zur Trainingsgruppe..."
-          min-height="120px"
-        />
       </div>
     </div>
   </div>
