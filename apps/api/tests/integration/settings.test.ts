@@ -32,7 +32,7 @@ describe('Settings API Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('id', 1);
-      expect(response.body).toHaveProperty('foundingYear');
+      expect(response.body).toHaveProperty('foundingDate');
       expect(response.body).toHaveProperty('address');
       expect(response.body).toHaveProperty('memberCount');
       expect(response.body).toHaveProperty('contactEmail');
@@ -42,10 +42,11 @@ describe('Settings API Integration Tests', () => {
 
     it('should return existing settings if they exist', async () => {
       // Create settings directly in database
+      const foundingDate = new Date('1920-01-01T00:00:00.000Z');
       await prisma.clubSettings.create({
         data: {
           id: 1,
-          foundingYear: 1920,
+          foundingDate,
           address: '123 Sport Street',
           memberCount: 500,
           contactEmail: 'info@club.de',
@@ -58,7 +59,7 @@ describe('Settings API Integration Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
         id: 1,
-        foundingYear: 1920,
+        foundingDate: foundingDate.toISOString(),
         address: '123 Sport Street',
         memberCount: 500,
         contactEmail: 'info@club.de',
@@ -77,9 +78,10 @@ describe('Settings API Integration Tests', () => {
   describe('PATCH /api/settings', () => {
     it('should update settings with authentication', async () => {
       const { cookies } = await createAuthenticatedUser();
+      const foundingDate = '1950-01-01T00:00:00.000Z';
 
       const updateData = {
-        foundingYear: 1950,
+        foundingDate,
         address: 'Sportplatz 1, 12345 Berlin',
         memberCount: 1200,
         contactEmail: 'kontakt@vsg-kugelberg.de',
@@ -99,13 +101,13 @@ describe('Settings API Integration Tests', () => {
       const settings = await prisma.clubSettings.findUnique({
         where: { id: 1 },
       });
-      expect(settings?.foundingYear).toBe(1950);
+      expect(settings?.foundingDate?.toISOString()).toBe(foundingDate);
       expect(settings?.memberCount).toBe(1200);
     });
 
     it('should return 401 without authentication', async () => {
       const updateData = {
-        foundingYear: 1950,
+        foundingDate: '1950-01-01T00:00:00.000Z',
       };
 
       const response = await request(app)
@@ -117,12 +119,13 @@ describe('Settings API Integration Tests', () => {
 
     it('should allow partial updates', async () => {
       const { cookies } = await createAuthenticatedUser();
+      const foundingDate = new Date('1920-01-01T00:00:00.000Z');
 
       // First set some initial data
       await prisma.clubSettings.create({
         data: {
           id: 1,
-          foundingYear: 1920,
+          foundingDate,
           address: 'Original Address',
           memberCount: 500,
         },
@@ -136,18 +139,19 @@ describe('Settings API Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.memberCount).toBe(750);
-      expect(response.body.foundingYear).toBe(1920);
+      expect(response.body.foundingDate).toBe(foundingDate.toISOString());
       expect(response.body.address).toBe('Original Address');
     });
 
     it('should allow setting fields to null', async () => {
       const { cookies } = await createAuthenticatedUser();
+      const foundingDate = new Date('1920-01-01T00:00:00.000Z');
 
       // First set some initial data
       await prisma.clubSettings.create({
         data: {
           id: 1,
-          foundingYear: 1920,
+          foundingDate,
           address: 'Original Address',
         },
       });
@@ -160,55 +164,46 @@ describe('Settings API Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.address).toBeNull();
-      expect(response.body.foundingYear).toBe(1920);
+      expect(response.body.foundingDate).toBe(foundingDate.toISOString());
     });
   });
 
   describe('Validation', () => {
-    it('should reject founding year before 1800', async () => {
+    it('should reject invalid date format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
       const response = await request(app)
         .patch('/api/settings')
         .set('Cookie', cookies)
-        .send({ foundingYear: 1799 });
+        .send({ foundingDate: 'not-a-date' });
 
       expect(response.status).toBe(400);
     });
 
-    it('should reject founding year in the future', async () => {
+    it('should reject founding date in the future', async () => {
       const { cookies } = await createAuthenticatedUser();
-      const futureYear = new Date().getFullYear() + 1;
+      const futureDate = new Date();
+      futureDate.setFullYear(futureDate.getFullYear() + 1);
 
       const response = await request(app)
         .patch('/api/settings')
         .set('Cookie', cookies)
-        .send({ foundingYear: futureYear });
+        .send({ foundingDate: futureDate.toISOString() });
 
       expect(response.status).toBe(400);
     });
 
-    it('should accept founding year at boundaries', async () => {
+    it('should accept valid founding date', async () => {
       const { cookies } = await createAuthenticatedUser();
-      const currentYear = new Date().getFullYear();
+      const validDate = '1920-01-01T00:00:00.000Z';
 
-      // Test minimum boundary
-      let response = await request(app)
+      const response = await request(app)
         .patch('/api/settings')
         .set('Cookie', cookies)
-        .send({ foundingYear: 1800 });
+        .send({ foundingDate: validDate });
 
       expect(response.status).toBe(200);
-      expect(response.body.foundingYear).toBe(1800);
-
-      // Test maximum boundary (current year)
-      response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ foundingYear: currentYear });
-
-      expect(response.status).toBe(200);
-      expect(response.body.foundingYear).toBe(currentYear);
+      expect(response.body.foundingDate).toBe(validDate);
     });
 
     it('should reject invalid email format', async () => {
@@ -332,9 +327,10 @@ describe('Settings API Integration Tests', () => {
   describe('Edge Cases', () => {
     it('should handle updating all fields at once', async () => {
       const { cookies } = await createAuthenticatedUser();
+      const foundingDate = '1965-01-01T00:00:00.000Z';
 
       const fullUpdate = {
-        foundingYear: 1965,
+        foundingDate,
         address: 'Hauptstraße 42, 10115 Berlin',
         memberCount: 850,
         contactEmail: 'info@sportverein.de',
@@ -370,6 +366,7 @@ describe('Settings API Integration Tests', () => {
 
     it('should create settings if they do not exist during update', async () => {
       const { cookies } = await createAuthenticatedUser();
+      const foundingDate = '1980-01-01T00:00:00.000Z';
 
       // Ensure no settings exist
       await prisma.clubSettings.deleteMany();
@@ -377,17 +374,17 @@ describe('Settings API Integration Tests', () => {
       const response = await request(app)
         .patch('/api/settings')
         .set('Cookie', cookies)
-        .send({ foundingYear: 1980 });
+        .send({ foundingDate });
 
       expect(response.status).toBe(200);
-      expect(response.body.foundingYear).toBe(1980);
+      expect(response.body.foundingDate).toBe(foundingDate);
 
       // Verify created in database
       const settings = await prisma.clubSettings.findUnique({
         where: { id: 1 },
       });
       expect(settings).toBeTruthy();
-      expect(settings?.foundingYear).toBe(1980);
+      expect(settings?.foundingDate?.toISOString()).toBe(foundingDate);
     });
   });
 });

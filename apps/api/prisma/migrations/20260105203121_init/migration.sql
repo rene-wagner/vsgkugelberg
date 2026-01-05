@@ -156,7 +156,7 @@ CREATE TABLE "Block" (
 -- CreateTable
 CREATE TABLE "ClubSettings" (
     "id" INTEGER NOT NULL DEFAULT 1,
-    "foundingYear" INTEGER,
+    "foundingDate" TIMESTAMP(3),
     "address" TEXT,
     "memberCount" INTEGER,
     "contactEmail" TEXT,
