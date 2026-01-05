@@ -5,7 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export interface ClubSettings {
   id: number;
-  foundingYear: number | null;
+  foundingDate: string | null;
   address: string | null;
   memberCount: number | null;
   contactEmail: string | null;
@@ -14,7 +14,7 @@ export interface ClubSettings {
 }
 
 export interface UpdateSettingsData {
-  foundingYear?: number | null;
+  foundingDate?: string | null;
   address?: string | null;
   memberCount?: number | null;
   contactEmail?: string | null;

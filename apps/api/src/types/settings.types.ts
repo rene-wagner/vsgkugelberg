@@ -1,7 +1,7 @@
 import { ClubSettings as PrismaClubSettings } from '@/lib/prisma.lib';
 
 export interface UpdateSettingsDto {
-  foundingYear?: number | null;
+  foundingDate?: string | null;
   address?: string | null;
   memberCount?: number | null;
   contactEmail?: string | null;

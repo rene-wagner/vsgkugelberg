@@ -1,12 +1,16 @@
 import { body } from 'express-validator';
 
-const currentYear = new Date().getFullYear();
-
 export const updateSettingsValidator = [
-  body('foundingYear')
+  body('foundingDate')
     .optional({ values: 'null' })
-    .isInt({ min: 1800, max: currentYear })
-    .withMessage(`Founding year must be between 1800 and ${currentYear}`),
+    .isISO8601()
+    .withMessage('Founding date must be a valid ISO8601 date string')
+    .custom((value) => {
+      if (value && new Date(value) > new Date()) {
+        throw new Error('Founding date cannot be in the future');
+      }
+      return true;
+    }),
 
   body('address')
     .optional({ values: 'null' })

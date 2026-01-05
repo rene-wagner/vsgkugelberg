@@ -180,7 +180,7 @@ model Block {
 
 model ClubSettings {
   id           Int      @id @default(1)
-  foundingYear Int?
+  foundingDate DateTime?
   address      String?
   memberCount  Int?
   contactEmail String?

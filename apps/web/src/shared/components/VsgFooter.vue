@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
+import { useSettingsStore } from '@/modules/admin/stores/settingsStore';
+
+const settingsStore = useSettingsStore();
 
 const vereinLinks = [
   { label: 'Geschichte', href: '#' },
@@ -9,6 +13,32 @@ const vereinLinks = [
   { label: 'Sponsoren', href: '#' },
   { label: 'Kontakt', href: '/contact', isRouter: true },
 ];
+
+const age = computed(() => {
+  if (!settingsStore.settings?.foundingDate) {
+    return 100; // Fallback
+  }
+
+  const foundingDate = new Date(settingsStore.settings.foundingDate);
+  const today = new Date();
+  let years = today.getFullYear() - foundingDate.getFullYear();
+  const monthDiff = today.getMonth() - foundingDate.getMonth();
+
+  if (
+    monthDiff < 0 ||
+    (monthDiff === 0 && today.getDate() < foundingDate.getDate())
+  ) {
+    years--;
+  }
+
+  return years;
+});
+
+onMounted(() => {
+  if (!settingsStore.settings) {
+    settingsStore.fetchSettings();
+  }
+});
 </script>
 
 <template>
@@ -40,8 +70,8 @@ const vereinLinks = [
           <p
             class="max-w-md font-body font-normal leading-relaxed text-vsg-blue-300"
           >
-            Seit über 100 Jahren der Sportverein für Weißenfels und Umgebung.
-            Tradition, Gemeinschaft und sportliche Exzellenz.
+            Seit über {{ age }} Jahren der Sportverein für Weißenfels und
+            Umgebung. Tradition, Gemeinschaft und sportliche Exzellenz.
           </p>
         </div>
 

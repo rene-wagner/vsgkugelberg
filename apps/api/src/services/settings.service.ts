@@ -33,7 +33,7 @@ export class SettingsService {
     const settings = await prisma.clubSettings.update({
       where: { id: SETTINGS_ID },
       data: {
-        foundingYear: updateSettingsDto.foundingYear,
+        foundingDate: updateSettingsDto.foundingDate,
         address: updateSettingsDto.address,
         memberCount: updateSettingsDto.memberCount,
         contactEmail: updateSettingsDto.contactEmail,
