@@ -106,48 +106,12 @@ function getMapGradient(variant: DepartmentLocation['badgeVariant']): string {
 
         <!-- Amenities -->
         <div
-          v-for="amenity in location.amenities"
-          :key="amenity.text"
-          class="flex items-center gap-3"
+          v-if="location.amenities.length > 0"
+          class="flex items-start gap-3"
         >
-          <!-- Tables Icon -->
-          <svg
-            v-if="amenity.icon === 'tables'"
-            class="h-5 w-5 shrink-0 text-vsg-blue-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-            />
-          </svg>
-          <!-- Check Icon -->
-          <svg
-            v-else-if="
-              amenity.icon === 'check' ||
-              amenity.icon === 'changing-rooms' ||
-              amenity.icon === 'parking'
-            "
-            class="h-5 w-5 shrink-0 text-vsg-blue-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
           <!-- Info Icon -->
           <svg
-            v-else-if="amenity.icon === 'info'"
-            class="h-5 w-5 shrink-0 text-vsg-blue-600"
+            class="mt-0.5 h-5 w-5 shrink-0 text-vsg-blue-600"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -159,7 +123,9 @@ function getMapGradient(variant: DepartmentLocation['badgeVariant']): string {
               d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <p class="font-body text-gray-600">{{ amenity.text }}</p>
+          <p class="font-body text-gray-600">
+            {{ location.amenities.map((a) => a.text).join(', ') }}
+          </p>
         </div>
       </div>
 
