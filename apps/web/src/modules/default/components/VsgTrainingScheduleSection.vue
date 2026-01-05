@@ -58,11 +58,19 @@ function getNoteClasses(variant: TrainingGroup['variant']): string {
       </div>
 
       <!-- Training Groups Grid -->
-      <div class="grid gap-12 lg:grid-cols-2">
+      <div
+        :class="[
+          'gap-12',
+          groups.length === 1 ? 'flex justify-center' : 'grid lg:grid-cols-2',
+        ]"
+      >
         <div
           v-for="group in groups"
           :key="group.name"
-          class="card-hover overflow-hidden rounded-xl border border-gray-200 bg-gray-50"
+          :class="[
+            'card-hover overflow-hidden rounded-xl border border-gray-200 bg-gray-50',
+            { 'w-full max-w-2xl': groups.length === 1 },
+          ]"
         >
           <!-- Card Header -->
           <div :class="[getHeaderClasses(group.variant), 'px-8 py-6']">

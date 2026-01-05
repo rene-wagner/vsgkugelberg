@@ -50,13 +50,19 @@ function getAvatarGradient(index: number): string {
       </div>
 
       <!-- Trainers Grid -->
-      <div class="grid gap-8 md:grid-cols-3">
+      <div
+        :class="[
+          'gap-8',
+          trainers.length === 1 ? 'flex justify-center' : 'grid md:grid-cols-3',
+        ]"
+      >
         <VsgTrainerCard
           v-for="(trainer, index) in trainers"
           :key="trainer.name"
           :trainer="trainer"
           :avatar-gradient="getAvatarGradient(index)"
           :contact-page-path="props.contactPagePath"
+          :class="{ 'w-full max-w-md': trainers.length === 1 }"
         />
       </div>
     </div>

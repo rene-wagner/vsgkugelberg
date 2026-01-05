@@ -36,11 +36,19 @@ defineProps<Props>();
       </div>
 
       <!-- Locations Grid -->
-      <div class="grid gap-8 md:grid-cols-2">
+      <div
+        :class="[
+          'gap-8',
+          locations.length === 1
+            ? 'flex justify-center'
+            : 'grid md:grid-cols-2',
+        ]"
+      >
         <VsgLocationCard
           v-for="location in locations"
           :key="location.name"
           :location="location"
+          :class="{ 'w-full max-w-2xl': locations.length === 1 }"
         />
       </div>
     </div>
