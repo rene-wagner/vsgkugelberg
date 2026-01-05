@@ -7,6 +7,7 @@ import {
   updateUserValidator,
   idParamValidator,
 } from '@/validators/user.validators';
+import { paginationQueryValidator } from '@/validators/pagination.validators';
 import { CreateUserDto, UpdateUserDto } from '@/types/user.types';
 import { prisma } from '@/lib/prisma.lib';
 
@@ -26,9 +27,14 @@ router.post(
 
 router.get(
   '/',
-  asyncHandlerMiddleware(async (_req, res) => {
-    const users = await usersService.findAll();
-    res.json(users);
+  paginationQueryValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const page = req.query.page ? Number(req.query.page) : 1;
+    const limit = req.query.limit ? Number(req.query.limit) : 10;
+
+    const result = await usersService.findAll(page, limit);
+    res.json(result);
   }),
 );
 

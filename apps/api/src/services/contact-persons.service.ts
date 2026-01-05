@@ -4,6 +4,7 @@ import {
   UpdateContactPersonDto,
   ContactPersonWithImage,
 } from '@/types/contact-person.types';
+import { PaginatedResponse } from '@/types/pagination.types';
 import { Prisma, prisma } from '@/lib/prisma.lib';
 
 const ALLOWED_IMAGE_MIMETYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -25,11 +26,33 @@ export class ContactPersonsService {
     }
   }
 
-  async findAll(): Promise<ContactPersonWithImage[]> {
-    return prisma.contactPerson.findMany({
-      orderBy: { lastName: 'asc' },
-      include: { profileImage: true },
-    });
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<PaginatedResponse<ContactPersonWithImage>> {
+    const skip = (page - 1) * limit;
+
+    const [contactPersons, total] = await Promise.all([
+      prisma.contactPerson.findMany({
+        orderBy: { lastName: 'asc' },
+        include: { profileImage: true },
+        skip,
+        take: limit,
+      }),
+      prisma.contactPerson.count(),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: contactPersons,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
+      },
+    };
   }
 
   async findById(id: number): Promise<ContactPersonWithImage> {

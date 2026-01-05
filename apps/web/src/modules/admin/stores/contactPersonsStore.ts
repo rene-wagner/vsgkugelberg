@@ -49,26 +49,49 @@ export interface UpdateContactPersonData {
   profileImageId?: number | null;
 }
 
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+interface PaginatedResponse {
+  data: ContactPerson[];
+  meta: PaginationMeta;
+}
+
 export const useContactPersonsStore = defineStore('contactPersons', () => {
   const contactPersons = ref<ContactPerson[]>([]);
+  const meta = ref<PaginationMeta>({
+    total: 0,
+    page: 1,
+    limit: 25,
+    totalPages: 0,
+  });
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  async function fetchContactPersons(): Promise<void> {
+  async function fetchContactPersons(page = 1, limit = 25): Promise<void> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/contact-persons`, {
-        method: 'GET',
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/contact-persons?page=${page}&limit=${limit}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+        },
+      );
 
       if (!response.ok) {
         throw new Error('Failed to fetch contact persons');
       }
 
-      contactPersons.value = (await response.json()) as ContactPerson[];
+      const result = (await response.json()) as PaginatedResponse;
+      contactPersons.value = result.data;
+      meta.value = result.meta;
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'An error occurred';
     } finally {
@@ -200,6 +223,7 @@ export const useContactPersonsStore = defineStore('contactPersons', () => {
 
   return {
     contactPersons,
+    meta,
     isLoading,
     error,
     fetchContactPersons,

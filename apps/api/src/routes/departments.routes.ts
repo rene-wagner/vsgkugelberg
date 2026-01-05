@@ -9,6 +9,7 @@ import {
   updateDepartmentValidator,
   slugParamValidator,
 } from '@/validators/department.validators';
+import { paginationQueryValidator } from '@/validators/pagination.validators';
 import {
   CreateDepartmentDto,
   UpdateDepartmentDto,
@@ -26,9 +27,14 @@ const departmentsService = new DepartmentsService();
 // Public route - List all departments
 router.get(
   '/',
-  asyncHandlerMiddleware(async (_req, res) => {
-    const departments = await departmentsService.findAll();
-    res.json(departments);
+  paginationQueryValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const page = req.query.page ? Number(req.query.page) : 1;
+    const limit = req.query.limit ? Number(req.query.limit) : 10;
+
+    const result = await departmentsService.findAll(page, limit);
+    res.json(result);
   }),
 );
 

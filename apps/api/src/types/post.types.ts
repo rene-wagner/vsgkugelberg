@@ -27,14 +27,4 @@ export interface Post extends PrismaPost {
   thumbnail: Media | null;
 }
 
-export interface PaginationMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-export interface PaginatedResponse<T> {
-  data: T[];
-  meta: PaginationMeta;
-}
+export { PaginatedResponse, PaginationMeta } from './pagination.types';

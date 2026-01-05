@@ -47,12 +47,18 @@ describe('Departments API Integration Tests', () => {
       const response = await request(app).get('/api/departments');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(2);
-      expect(response.body[0]).toHaveProperty('name');
-      expect(response.body[0]).toHaveProperty('slug');
-      expect(response.body[0]).toHaveProperty('shortDescription');
-      expect(response.body[0]).toHaveProperty('createdAt');
-      expect(response.body[0]).toHaveProperty('updatedAt');
+      expect(response.body.data).toHaveLength(2);
+      expect(response.body.data[0]).toHaveProperty('name');
+      expect(response.body.data[0]).toHaveProperty('slug');
+      expect(response.body.data[0]).toHaveProperty('shortDescription');
+      expect(response.body.data[0]).toHaveProperty('createdAt');
+      expect(response.body.data[0]).toHaveProperty('updatedAt');
+      expect(response.body.meta).toMatchObject({
+        total: 2,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      });
     });
 
     it('should return departments ordered by name alphabetically', async () => {
@@ -75,15 +81,51 @@ describe('Departments API Integration Tests', () => {
       const response = await request(app).get('/api/departments');
 
       expect(response.status).toBe(200);
-      expect(response.body[0].name).toBe('Badminton');
-      expect(response.body[1].name).toBe('Volleyball');
+      expect(response.body.data[0].name).toBe('Badminton');
+      expect(response.body.data[1].name).toBe('Volleyball');
     });
 
-    it('should return empty array when no departments exist', async () => {
+    it('should return empty data when no departments exist', async () => {
       const response = await request(app).get('/api/departments');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(0);
+      expect(response.body.data).toHaveLength(0);
+      expect(response.body.meta.total).toBe(0);
+    });
+
+    it('should support pagination', async () => {
+      // Create 15 departments
+      for (let i = 1; i <= 15; i++) {
+        await prisma.department.create({
+          data: {
+            name: `Dept ${i.toString().padStart(2, '0')}`,
+            slug: `dept-${i}`,
+            shortDescription: `Description ${i}`,
+          },
+        });
+      }
+
+      // Page 1
+      let response = await request(app).get('/api/departments?page=1&limit=10');
+      expect(response.status).toBe(200);
+      expect(response.body.data).toHaveLength(10);
+      expect(response.body.meta).toMatchObject({
+        total: 15,
+        page: 1,
+        limit: 10,
+        totalPages: 2,
+      });
+
+      // Page 2
+      response = await request(app).get('/api/departments?page=2&limit=10');
+      expect(response.status).toBe(200);
+      expect(response.body.data).toHaveLength(5);
+      expect(response.body.meta).toMatchObject({
+        total: 15,
+        page: 2,
+        limit: 10,
+        totalPages: 2,
+      });
     });
   });
 
@@ -907,13 +949,13 @@ describe('Departments API Integration Tests', () => {
         const response = await request(app).get('/api/departments');
 
         expect(response.status).toBe(200);
-        expect(response.body).toHaveLength(2);
+        expect(response.body.data).toHaveLength(2);
 
         // Find the department with icon
-        const tennisDepart = response.body.find(
+        const tennisDepart = response.body.data.find(
           (d: { name: string }) => d.name === 'Tennis',
         );
-        const hockeyDepart = response.body.find(
+        const hockeyDepart = response.body.data.find(
           (d: { name: string }) => d.name === 'Hockey',
         );
 

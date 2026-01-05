@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useUsersStore } from '../stores/usersStore';
+import VsgPagination from '@/shared/components/VsgPagination.vue';
 
 const usersStore = useUsersStore();
 
 onMounted(() => {
   usersStore.fetchUsers();
 });
+
+async function handlePageChange(page: number) {
+  await usersStore.fetchUsers(page);
+}
 
 function getInitials(username: string): string {
   return username
@@ -186,18 +191,11 @@ async function handleDelete(userId: number, username: string) {
       </div>
 
       <!-- Pagination -->
-      <div
+      <VsgPagination
         v-if="usersStore.users.length > 0"
-        class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
-      >
-        <div class="font-body font-normal text-sm text-gray-500">
-          Zeige
-          <span class="text-vsg-blue-900 font-medium">{{
-            usersStore.users.length
-          }}</span>
-          Eintrage
-        </div>
-      </div>
+        :meta="usersStore.meta"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
 </template>

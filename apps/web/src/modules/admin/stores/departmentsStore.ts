@@ -31,26 +31,49 @@ export interface UpdateDepartmentData {
   iconId?: number | null;
 }
 
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+interface PaginatedResponse {
+  data: Department[];
+  meta: PaginationMeta;
+}
+
 export const useDepartmentsStore = defineStore('departments', () => {
   const departments = ref<Department[]>([]);
+  const meta = ref<PaginationMeta>({
+    total: 0,
+    page: 1,
+    limit: 25,
+    totalPages: 0,
+  });
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  async function fetchDepartments(): Promise<void> {
+  async function fetchDepartments(page = 1, limit = 25): Promise<void> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/departments`, {
-        method: 'GET',
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/departments?page=${page}&limit=${limit}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+        },
+      );
 
       if (!response.ok) {
         throw new Error('Failed to fetch departments');
       }
 
-      departments.value = (await response.json()) as Department[];
+      const result = (await response.json()) as PaginatedResponse;
+      departments.value = result.data;
+      meta.value = result.meta;
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'An error occurred';
     } finally {
@@ -175,6 +198,7 @@ export const useDepartmentsStore = defineStore('departments', () => {
 
   return {
     departments,
+    meta,
     isLoading,
     error,
     fetchDepartments,

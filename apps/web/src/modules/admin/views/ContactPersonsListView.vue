@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { useContactPersonsStore } from '../stores/contactPersonsStore';
+import VsgPagination from '@/shared/components/VsgPagination.vue';
 
 const contactPersonsStore = useContactPersonsStore();
 
 onMounted(() => {
   contactPersonsStore.fetchContactPersons();
 });
+
+async function handlePageChange(page: number) {
+  await contactPersonsStore.fetchContactPersons(page);
+}
 
 async function handleDelete(id: number, firstName: string, lastName: string) {
   const confirmed = window.confirm(
@@ -180,18 +185,11 @@ async function handleDelete(id: number, firstName: string, lastName: string) {
       </div>
 
       <!-- Pagination -->
-      <div
+      <VsgPagination
         v-if="contactPersonsStore.contactPersons.length > 0"
-        class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
-      >
-        <div class="font-body font-normal text-sm text-gray-500">
-          Zeige
-          <span class="text-vsg-blue-900 font-medium">{{
-            contactPersonsStore.contactPersons.length
-          }}</span>
-          Eintrage
-        </div>
-      </div>
+        :meta="contactPersonsStore.meta"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
 </template>

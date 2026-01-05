@@ -9,6 +9,7 @@ import {
   updateContactPersonValidator,
   idParamValidator,
 } from '@/validators/contact-person.validators';
+import { paginationQueryValidator } from '@/validators/pagination.validators';
 import {
   CreateContactPersonDto,
   UpdateContactPersonDto,
@@ -20,9 +21,14 @@ const contactPersonsService = new ContactPersonsService();
 // Public route - List all contact persons
 router.get(
   '/',
-  asyncHandlerMiddleware(async (_req, res) => {
-    const contactPersons = await contactPersonsService.findAll();
-    res.json(contactPersons);
+  paginationQueryValidator,
+  validationMiddleware,
+  asyncHandlerMiddleware(async (req, res) => {
+    const page = req.query.page ? Number(req.query.page) : 1;
+    const limit = req.query.limit ? Number(req.query.limit) : 10;
+
+    const result = await contactPersonsService.findAll(page, limit);
+    res.json(result);
   }),
 );
 
