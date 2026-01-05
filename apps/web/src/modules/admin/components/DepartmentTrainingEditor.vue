@@ -31,6 +31,7 @@ const trainingStore = useDepartmentTrainingStore();
 
 // Local state
 const localGroups = ref<LocalGroup[]>([]);
+const sortableIds = ref<number[]>([]);
 
 // Pending changes tracking
 const pendingGroupCreates = ref<Map<number, LocalGroup>>(new Map());
@@ -55,6 +56,7 @@ const pendingSessionUpdates = ref<
 >(new Map());
 const pendingSessionDeletes = ref<Map<number, Set<number>>>(new Map());
 const sessionOrderChanged = ref<Set<number>>(new Set());
+const pendingSessionOrders = ref<Map<number, number[]>>(new Map());
 
 let tempIdCounter = -1;
 
@@ -67,6 +69,7 @@ watch(
       sessions: [...g.sessions].sort((a, b) => a.sort - b.sort),
     }));
     localGroups.value.sort((a, b) => a.sort - b.sort);
+    sortableIds.value = localGroups.value.map((g) => g.id);
 
     // Clear all pending changes
     pendingGroupCreates.value.clear();
@@ -77,42 +80,60 @@ watch(
     pendingSessionUpdates.value.clear();
     pendingSessionDeletes.value.clear();
     sessionOrderChanged.value.clear();
+    pendingSessionOrders.value.clear();
   },
   { immediate: true },
 );
 
 // Computed: Display groups
-const displayGroups = computed(() => {
-  // Start with existing groups (not deleted)
-  const existing = localGroups.value
-    .filter((g) => !pendingGroupDeletes.value.has(g.id))
-    .map((g) => {
-      const pendingUpdate = pendingGroupUpdates.value.get(g.id);
-      const updatedGroup = pendingUpdate ? { ...g, ...pendingUpdate } : g;
+const displayGroups = computed({
+  get: () => {
+    return sortableIds.value
+      .map((id) => {
+        if (id < 0) {
+          return pendingGroupCreates.value.get(id);
+        }
+        const g = localGroups.value.find((group) => group.id === id);
+        if (!g) return null;
 
-      // Process sessions for this group
-      const deletedSessions =
-        pendingSessionDeletes.value.get(g.id) || new Set();
-      const sessionUpdates = pendingSessionUpdates.value.get(g.id) || new Map();
-      const newSessions = pendingSessionCreates.value.get(g.id) || [];
+        const pendingUpdate = pendingGroupUpdates.value.get(g.id);
+        const updatedGroup = pendingUpdate ? { ...g, ...pendingUpdate } : g;
 
-      const existingSessions = updatedGroup.sessions
-        .filter((s) => !deletedSessions.has(s.id))
-        .map((s) => {
-          const update = sessionUpdates.get(s.id);
-          return update ? { ...s, ...update } : s;
-        });
+        // Process sessions for this group
+        const deletedSessions =
+          pendingSessionDeletes.value.get(g.id) || new Set();
+        const sessionUpdates =
+          pendingSessionUpdates.value.get(g.id) || new Map();
+        const newSessions = pendingSessionCreates.value.get(g.id) || [];
 
-      return {
-        ...updatedGroup,
-        sessions: [...existingSessions, ...newSessions],
-      };
-    });
+        let currentSessions = updatedGroup.sessions
+          .filter((s) => !deletedSessions.has(s.id))
+          .map((s) => {
+            const update = sessionUpdates.get(s.id);
+            return update ? { ...s, ...update } : s;
+          });
 
-  // Add new groups
-  const newGroups = Array.from(pendingGroupCreates.value.values());
+        currentSessions = [...currentSessions, ...newSessions];
 
-  return [...existing, ...newGroups];
+        // Apply custom order if exists
+        const customOrder = pendingSessionOrders.value.get(g.id);
+        if (customOrder) {
+          currentSessions.sort((a, b) => {
+            return customOrder.indexOf(a.id) - customOrder.indexOf(b.id);
+          });
+        }
+
+        return {
+          ...updatedGroup,
+          sessions: currentSessions,
+        };
+      })
+      .filter((g): g is LocalGroup => !!g);
+  },
+  set: (newGroups: LocalGroup[]) => {
+    sortableIds.value = newGroups.map((g) => g.id);
+    groupOrderChanged.value = true;
+  },
 });
 
 const isDirty = computed(() => {
@@ -148,6 +169,7 @@ function handleAddGroup() {
     updatedAt: '',
   };
   pendingGroupCreates.value.set(tempId, newGroup);
+  sortableIds.value.push(tempId);
 }
 
 function handleGroupUpdate(
@@ -181,6 +203,8 @@ function handleGroupDelete(groupId: number, isNew: boolean) {
     pendingGroupDeletes.value.add(groupId);
     pendingGroupUpdates.value.delete(groupId);
   }
+  sortableIds.value = sortableIds.value.filter((id) => id !== groupId);
+  pendingSessionOrders.value.delete(groupId);
 }
 
 function handleGroupsDragEnd() {
@@ -216,6 +240,12 @@ function handleAddSession(groupId: number, isNewGroup: boolean) {
     const newMap = new Map(pendingSessionCreates.value);
     newMap.set(groupId, [...existingSessions, newSession]);
     pendingSessionCreates.value = newMap;
+  }
+
+  // Update sortable order for sessions if it exists
+  const currentOrder = pendingSessionOrders.value.get(groupId);
+  if (currentOrder) {
+    pendingSessionOrders.value.set(groupId, [...currentOrder, tempId]);
   }
 }
 
@@ -300,12 +330,28 @@ function handleSessionDelete(
       pendingSessionUpdates.value = updateMap;
     }
   }
+
+  // Update sortable order for sessions if it exists
+  const currentOrder = pendingSessionOrders.value.get(groupId);
+  if (currentOrder) {
+    pendingSessionOrders.value.set(
+      groupId,
+      currentOrder.filter((id) => id !== sessionId),
+    );
+  }
 }
 
-function handleSessionsReorder(groupId: number) {
+function handleSessionsReorder(groupId: number, newSessions: LocalSession[]) {
   const newSet = new Set(sessionOrderChanged.value);
   newSet.add(groupId);
   sessionOrderChanged.value = newSet;
+
+  const newMap = new Map(pendingSessionOrders.value);
+  newMap.set(
+    groupId,
+    newSessions.map((s) => s.id),
+  );
+  pendingSessionOrders.value = newMap;
 }
 
 const isSaving = ref(false);
@@ -360,6 +406,12 @@ async function handleSave() {
       if (!createdGroup)
         throw new Error('Fehler beim Erstellen einer Trainingsgruppe');
 
+      // Update sortableIds with the real ID
+      const groupIdx = sortableIds.value.indexOf(group.id);
+      if (groupIdx !== -1) {
+        sortableIds.value[groupIdx] = createdGroup.id;
+      }
+
       // Create sessions for this new group
       for (const session of group.sessions) {
         if (!session.day || !session.time) continue;
@@ -410,6 +462,15 @@ async function handleSave() {
         );
         if (!result)
           throw new Error('Fehler beim Erstellen einer Trainingszeit');
+
+        // Update pendingSessionOrders with real ID
+        const groupOrder = pendingSessionOrders.value.get(groupId);
+        if (groupOrder) {
+          const sIdx = groupOrder.indexOf(session.id);
+          if (sIdx !== -1) {
+            groupOrder[sIdx] = result.id;
+          }
+        }
       }
     }
 
@@ -434,9 +495,7 @@ async function handleSave() {
 
     // 7. Reorder groups if changed
     if (groupOrderChanged.value) {
-      const existingIds = displayGroups.value
-        .filter((g) => !g._isNew)
-        .map((g) => g.id);
+      const existingIds = sortableIds.value.filter((id) => id > 0);
       if (existingIds.length > 0) {
         const result = await trainingStore.reorderGroups(
           props.departmentSlug,
@@ -476,9 +535,11 @@ async function handleSave() {
     pendingSessionUpdates.value.clear();
     pendingSessionDeletes.value.clear();
     sessionOrderChanged.value.clear();
+    pendingSessionOrders.value.clear();
 
     // Refresh from store
     localGroups.value = [...trainingStore.trainingGroups];
+    sortableIds.value = localGroups.value.map((g) => g.id);
   } catch (e) {
     saveError.value =
       e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
@@ -570,7 +631,9 @@ async function handleSave() {
                 !!group._isNew,
               )
           "
-          @sessions-reorder="handleSessionsReorder(group.id)"
+          @sessions-reorder="
+            (newSessions) => handleSessionsReorder(group.id, newSessions)
+          "
         />
       </VueDraggable>
 

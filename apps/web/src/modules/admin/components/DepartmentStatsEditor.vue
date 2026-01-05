@@ -18,6 +18,7 @@ const statsStore = useDepartmentStatsStore();
 
 // Local state for editing
 const localStats = ref<DepartmentStat[]>([]);
+const sortableIds = ref<number[]>([]);
 const pendingCreates = ref<
   Array<{ tempId: number; label: string; value: string }>
 >([]);
@@ -34,6 +35,7 @@ watch(
   () => props.initialStats,
   (newStats) => {
     localStats.value = [...newStats].sort((a, b) => a.sort - b.sort);
+    sortableIds.value = localStats.value.map((s) => s.id);
     // Clear pending changes when initialStats change (e.g., after save)
     pendingCreates.value = [];
     pendingUpdates.value.clear();
@@ -44,29 +46,38 @@ watch(
 );
 
 // Computed: All items to display (existing + new, minus deleted)
-const displayItems = computed(() => {
-  const existing = localStats.value
-    .filter((s) => !pendingDeletes.value.has(s.id))
-    .map((s) => {
-      const pending = pendingUpdates.value.get(s.id);
-      if (pending) {
-        return { ...s, label: pending.label, value: pending.value };
-      }
-      return s;
-    });
-
-  const newItems = pendingCreates.value.map((item) => ({
-    id: item.tempId,
-    departmentId: 0,
-    label: item.label,
-    value: item.value,
-    sort: localStats.value.length + pendingCreates.value.indexOf(item),
-    createdAt: '',
-    updatedAt: '',
-    _isNew: true,
-  }));
-
-  return [...existing, ...newItems];
+const displayItems = computed({
+  get: () => {
+    return sortableIds.value
+      .map((id) => {
+        if (id < 0) {
+          const item = pendingCreates.value.find((i) => i.tempId === id);
+          if (!item) return null;
+          return {
+            id: item.tempId,
+            departmentId: 0,
+            label: item.label,
+            value: item.value,
+            sort: 0,
+            createdAt: '',
+            updatedAt: '',
+            _isNew: true,
+          };
+        }
+        const s = localStats.value.find((stat) => stat.id === id);
+        if (!s) return null;
+        const pending = pendingUpdates.value.get(s.id);
+        if (pending) {
+          return { ...s, label: pending.label, value: pending.value };
+        }
+        return s;
+      })
+      .filter((s): s is DepartmentStat & { _isNew?: boolean } => !!s);
+  },
+  set: (newItems: Array<DepartmentStat & { _isNew?: boolean }>) => {
+    sortableIds.value = newItems.map((s) => s.id);
+    orderChanged.value = true;
+  },
 });
 
 // Check if there are any unsaved changes
@@ -83,12 +94,14 @@ const isDirty = computed(() => {
 defineExpose({ isDirty });
 
 function handleAdd() {
+  const tempId = tempIdCounter--;
   const newItem = {
-    tempId: tempIdCounter--,
+    tempId,
     label: '',
     value: '',
   };
   pendingCreates.value.push(newItem);
+  sortableIds.value.push(tempId);
 }
 
 function handleUpdate(
@@ -127,6 +140,7 @@ function handleDelete(id: number, isNew: boolean) {
     // Remove any pending updates for this item
     pendingUpdates.value.delete(id);
   }
+  sortableIds.value = sortableIds.value.filter((sid) => sid !== id);
 }
 
 function handleDragEnd() {
@@ -166,6 +180,12 @@ async function handleSave() {
       if (!result) {
         throw new Error('Fehler beim Erstellen einer Statistik');
       }
+
+      // Update sortableIds with the real ID
+      const idx = sortableIds.value.indexOf(item.tempId);
+      if (idx !== -1) {
+        sortableIds.value[idx] = result.id;
+      }
     }
 
     // 3. Update existing items
@@ -187,9 +207,7 @@ async function handleSave() {
     // 4. Reorder if changed
     if (orderChanged.value) {
       // Get current order of existing (non-deleted) items
-      const existingIds = displayItems.value
-        .filter((item) => !('_isNew' in item))
-        .map((item) => item.id);
+      const existingIds = sortableIds.value.filter((id) => id > 0);
 
       if (existingIds.length > 0) {
         const result = await statsStore.reorder(
@@ -210,6 +228,7 @@ async function handleSave() {
 
     // Refresh local stats from store
     localStats.value = [...statsStore.stats];
+    sortableIds.value = localStats.value.map((s) => s.id);
   } catch (e) {
     saveError.value =
       e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';

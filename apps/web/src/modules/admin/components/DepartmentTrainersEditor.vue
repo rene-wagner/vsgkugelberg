@@ -24,6 +24,7 @@ const trainersStore = useDepartmentTrainersStore();
 
 // Local state
 const localTrainers = ref<LocalTrainer[]>([]);
+const sortableIds = ref<number[]>([]);
 const pendingCreates = ref<Map<number, LocalTrainer>>(new Map());
 const pendingUpdates = ref<
   Map<
@@ -45,6 +46,7 @@ watch(
   () => props.initialTrainers,
   (newTrainers) => {
     localTrainers.value = [...newTrainers].sort((a, b) => a.sort - b.sort);
+    sortableIds.value = localTrainers.value.map((t) => t.id);
     pendingCreates.value.clear();
     pendingUpdates.value.clear();
     pendingDeletes.value.clear();
@@ -54,17 +56,24 @@ watch(
 );
 
 // Computed: Display trainers
-const displayTrainers = computed(() => {
-  const existing = localTrainers.value
-    .filter((t) => !pendingDeletes.value.has(t.id))
-    .map((t) => {
-      const pending = pendingUpdates.value.get(t.id);
-      return pending ? { ...t, ...pending } : t;
-    });
-
-  const newTrainers = Array.from(pendingCreates.value.values());
-
-  return [...existing, ...newTrainers];
+const displayTrainers = computed({
+  get: () => {
+    return sortableIds.value
+      .map((id) => {
+        if (id < 0) {
+          return pendingCreates.value.get(id);
+        }
+        const t = localTrainers.value.find((train) => train.id === id);
+        if (!t) return null;
+        const pending = pendingUpdates.value.get(t.id);
+        return pending ? { ...t, ...pending } : t;
+      })
+      .filter((t): t is LocalTrainer => !!t);
+  },
+  set: (newItems: LocalTrainer[]) => {
+    sortableIds.value = newItems.map((t) => t.id);
+    orderChanged.value = true;
+  },
 });
 
 // Get all used contact person IDs (for exclusion in select)
@@ -129,6 +138,7 @@ function handleAdd() {
     updatedAt: '',
   };
   pendingCreates.value.set(tempId, newTrainer);
+  sortableIds.value.push(tempId);
 }
 
 function handleUpdate(
@@ -159,6 +169,7 @@ function handleDelete(id: number, isNew: boolean) {
     pendingDeletes.value.add(id);
     pendingUpdates.value.delete(id);
   }
+  sortableIds.value = sortableIds.value.filter((sid) => sid !== id);
 }
 
 function handleDragEnd() {
@@ -199,6 +210,12 @@ async function handleSave() {
         createDto,
       );
       if (!result) throw new Error('Fehler beim Erstellen eines Trainers');
+
+      // Update sortableIds with the real ID
+      const idx = sortableIds.value.indexOf(trainer.id);
+      if (idx !== -1) {
+        sortableIds.value[idx] = result.id;
+      }
     }
 
     // 3. Update existing trainers
@@ -218,9 +235,7 @@ async function handleSave() {
 
     // 4. Reorder if changed
     if (orderChanged.value) {
-      const existingIds = displayTrainers.value
-        .filter((t) => !t._isNew)
-        .map((t) => t.id);
+      const existingIds = sortableIds.value.filter((id) => id > 0);
 
       if (existingIds.length > 0) {
         const result = await trainersStore.reorder(
@@ -239,6 +254,7 @@ async function handleSave() {
 
     // Refresh from store
     localTrainers.value = [...trainersStore.trainers];
+    sortableIds.value = localTrainers.value.map((t) => t.id);
   } catch (e) {
     saveError.value =
       e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
