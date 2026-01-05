@@ -12,6 +12,7 @@ import { settingsRouter } from './settings.routes';
 import { eventsRouter } from './events.routes';
 import { contactPersonsRouter } from './contact-persons.routes';
 import { mediaRouter } from './media.routes';
+import { mediaFolderRouter } from './media-folders.routes';
 import { contactRouter } from './contact.routes';
 
 const router = Router();
@@ -27,6 +28,7 @@ router.use('/health', healthRouter);
 router.use('/settings', settingsRouter);
 router.use('/events', eventsRouter);
 router.use('/contact-persons', contactPersonsRouter);
+router.use('/media/folders', mediaFolderRouter);
 router.use('/media', mediaRouter);
 router.use('/contact', contactRouter);
 

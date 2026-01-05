@@ -230,6 +230,8 @@ model Media {
   size           Int
   type           String          @default("IMAGE")
   thumbnails     Json?
+  folderId       Int?
+  folder         MediaFolder?    @relation(fields: [folderId], references: [id], onDelete: SetNull)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   departments    Department[]
@@ -239,4 +241,18 @@ model Media {
 
   @@index([type])
   @@index([createdAt])
+  @@index([folderId])
+}
+
+model MediaFolder {
+  id        Int           @id @default(autoincrement())
+  name      String
+  parentId  Int?
+  parent    MediaFolder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children  MediaFolder[] @relation("FolderHierarchy")
+  media     Media[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([parentId])
 }

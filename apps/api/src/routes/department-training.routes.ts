@@ -51,8 +51,8 @@ router.patch(
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
     const { slug } = req.params;
-    const { ids } = req.body;
-    const groups = await trainingService.reorderGroups(slug, ids);
+    const body = req.body as { ids: number[] };
+    const groups = await trainingService.reorderGroups(slug, body.ids);
     res.json(groups);
   }),
 );
@@ -106,11 +106,11 @@ router.patch(
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
     const { slug, groupId } = req.params;
-    const { ids } = req.body;
+    const body = req.body as { ids: number[] };
     const sessions = await trainingService.reorderSessions(
       slug,
       parseInt(groupId, 10),
-      ids,
+      body.ids,
     );
     res.json(sessions);
   }),

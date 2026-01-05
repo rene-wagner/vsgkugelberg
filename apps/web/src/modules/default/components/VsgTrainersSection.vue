@@ -11,6 +11,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  description: '',
   contactPagePath: '/kontakt',
 });
 

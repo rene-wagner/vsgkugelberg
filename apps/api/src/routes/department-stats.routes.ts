@@ -43,8 +43,8 @@ router.patch(
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
     const { slug } = req.params;
-    const { ids } = req.body;
-    const stats = await statsService.reorder(slug, ids);
+    const body = req.body as { ids: number[] };
+    const stats = await statsService.reorder(slug, body.ids);
     res.json(stats);
   }),
 );
