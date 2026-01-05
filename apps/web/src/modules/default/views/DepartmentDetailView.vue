@@ -240,7 +240,10 @@ const departmentCta = computed<DepartmentCta>(() => {
       </VsgDepartmentHeroSection>
 
       <!-- Stats Section -->
-      <StatsSection v-if="departmentStats.length > 0" :stats="departmentStats" />
+      <StatsSection
+        v-if="departmentStats.length > 0"
+        :stats="departmentStats"
+      />
 
       <!-- Training Schedule Section -->
       <VsgTrainingScheduleSection
