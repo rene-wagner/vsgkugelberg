@@ -51,13 +51,19 @@ describe('Contact Persons API Integration Tests', () => {
       const response = await request(app).get('/api/contact-persons');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(2);
-      expect(response.body[0]).toHaveProperty('firstName');
-      expect(response.body[0]).toHaveProperty('lastName');
-      expect(response.body[0]).toHaveProperty('type');
-      expect(response.body[0]).toHaveProperty('phone');
-      expect(response.body[0]).toHaveProperty('createdAt');
-      expect(response.body[0]).toHaveProperty('updatedAt');
+      expect(response.body.data).toHaveLength(2);
+      expect(response.body.data[0]).toHaveProperty('firstName');
+      expect(response.body.data[0]).toHaveProperty('lastName');
+      expect(response.body.data[0]).toHaveProperty('type');
+      expect(response.body.data[0]).toHaveProperty('phone');
+      expect(response.body.data[0]).toHaveProperty('createdAt');
+      expect(response.body.data[0]).toHaveProperty('updatedAt');
+      expect(response.body.meta).toMatchObject({
+        total: 2,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      });
     });
 
     it('should return contact persons ordered by lastName alphabetically', async () => {
@@ -84,15 +90,55 @@ describe('Contact Persons API Integration Tests', () => {
       const response = await request(app).get('/api/contact-persons');
 
       expect(response.status).toBe(200);
-      expect(response.body[0].lastName).toBe('Albrecht');
-      expect(response.body[1].lastName).toBe('Zimmermann');
+      expect(response.body.data[0].lastName).toBe('Albrecht');
+      expect(response.body.data[1].lastName).toBe('Zimmermann');
     });
 
-    it('should return empty array when no contact persons exist', async () => {
+    it('should return empty data when no contact persons exist', async () => {
       const response = await request(app).get('/api/contact-persons');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(0);
+      expect(response.body.data).toHaveLength(0);
+      expect(response.body.meta.total).toBe(0);
+    });
+
+    it('should support pagination', async () => {
+      // Create 15 contact persons
+      for (let i = 1; i <= 15; i++) {
+        await prisma.contactPerson.create({
+          data: {
+            firstName: 'First',
+            lastName: `Last ${i.toString().padStart(2, '0')}`,
+            type: 'Trainer',
+            email: `test${i}@example.com`,
+            phone: `+49 123 ${i}`,
+          },
+        });
+      }
+
+      // Page 1
+      let response = await request(app).get(
+        '/api/contact-persons?page=1&limit=10',
+      );
+      expect(response.status).toBe(200);
+      expect(response.body.data).toHaveLength(10);
+      expect(response.body.meta).toMatchObject({
+        total: 15,
+        page: 1,
+        limit: 10,
+        totalPages: 2,
+      });
+
+      // Page 2
+      response = await request(app).get('/api/contact-persons?page=2&limit=10');
+      expect(response.status).toBe(200);
+      expect(response.body.data).toHaveLength(5);
+      expect(response.body.meta).toMatchObject({
+        total: 15,
+        page: 2,
+        limit: 10,
+        totalPages: 2,
+      });
     });
   });
 
@@ -612,8 +658,8 @@ describe('Contact Persons API Integration Tests', () => {
       const response = await request(app).get('/api/contact-persons');
 
       expect(response.status).toBe(200);
-      expect(response.body[0]).toHaveProperty('profileImage');
-      expect(response.body[0].profileImage).toMatchObject({
+      expect(response.body.data[0]).toHaveProperty('profileImage');
+      expect(response.body.data[0].profileImage).toMatchObject({
         id: media.id,
         filename: media.filename,
         mimetype: 'image/jpeg',
@@ -634,8 +680,8 @@ describe('Contact Persons API Integration Tests', () => {
       const response = await request(app).get('/api/contact-persons');
 
       expect(response.status).toBe(200);
-      expect(response.body[0]).toHaveProperty('profileImage');
-      expect(response.body[0].profileImage).toBeNull();
+      expect(response.body.data[0]).toHaveProperty('profileImage');
+      expect(response.body.data[0].profileImage).toBeNull();
     });
 
     it('should return profileImage in GET /api/contact-persons/:id', async () => {

@@ -17,12 +17,53 @@ describe('Users API Integration Tests', () => {
       const response = await request(app).get('/api/users');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0]).toMatchObject({
+      expect(response.body.data).toHaveLength(1);
+      expect(response.body.data[0]).toMatchObject({
         username: 'testuser',
         email: 'test@example.com',
       });
-      expect(response.body[0]).not.toHaveProperty('password');
+      expect(response.body.data[0]).not.toHaveProperty('password');
+      expect(response.body.meta).toMatchObject({
+        total: 1,
+        page: 1,
+        limit: 10,
+        totalPages: 1,
+      });
+    });
+
+    it('should support pagination', async () => {
+      // Create 15 users
+      for (let i = 1; i <= 15; i++) {
+        await prisma.user.create({
+          data: {
+            username: `user${i.toString().padStart(2, '0')}`,
+            email: `user${i}@example.com`,
+            password: 'password123',
+          },
+        });
+      }
+
+      // Page 1
+      let response = await request(app).get('/api/users?page=1&limit=10');
+      expect(response.status).toBe(200);
+      expect(response.body.data).toHaveLength(10);
+      expect(response.body.meta).toMatchObject({
+        total: 15,
+        page: 1,
+        limit: 10,
+        totalPages: 2,
+      });
+
+      // Page 2
+      response = await request(app).get('/api/users?page=2&limit=10');
+      expect(response.status).toBe(200);
+      expect(response.body.data).toHaveLength(5);
+      expect(response.body.meta).toMatchObject({
+        total: 15,
+        page: 2,
+        limit: 10,
+        totalPages: 2,
+      });
     });
   });
 

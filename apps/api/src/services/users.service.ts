@@ -2,21 +2,43 @@ import { PasswordService } from './password.service';
 import { NotFoundException, ConflictException } from '@/errors/http-errors';
 import { Prisma, prisma } from '@/lib/prisma.lib';
 import { CreateUserDto, UpdateUserDto, UserResponse } from '@/types/user.types';
+import { PaginatedResponse } from '@/types/pagination.types';
 
 const passwordService = new PasswordService();
 
 export class UsersService {
-  async findAll(): Promise<UserResponse[]> {
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true,
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<PaginatedResponse<UserResponse>> {
+    const skip = (page - 1) * limit;
+
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+        skip,
+        take: limit,
+      }),
+      prisma.user.count(),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: users,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
       },
-    });
-    return users;
+    };
   }
 
   async findOne(id: number): Promise<UserResponse> {

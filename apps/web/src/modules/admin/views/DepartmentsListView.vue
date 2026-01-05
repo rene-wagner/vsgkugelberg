@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import { useDepartmentsStore } from '../stores/departmentsStore';
 import { useMediaStore } from '../stores/mediaStore';
+import VsgPagination from '@/shared/components/VsgPagination.vue';
 
 const departmentsStore = useDepartmentsStore();
 const mediaStore = useMediaStore();
@@ -9,6 +10,10 @@ const mediaStore = useMediaStore();
 onMounted(() => {
   departmentsStore.fetchDepartments();
 });
+
+async function handlePageChange(page: number) {
+  await departmentsStore.fetchDepartments(page);
+}
 
 async function handleDelete(slug: string, name: string) {
   const confirmed = window.confirm(
@@ -174,18 +179,11 @@ async function handleDelete(slug: string, name: string) {
       </div>
 
       <!-- Pagination -->
-      <div
+      <VsgPagination
         v-if="departmentsStore.departments.length > 0"
-        class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
-      >
-        <div class="font-body font-normal text-sm text-gray-500">
-          Zeige
-          <span class="text-vsg-blue-900 font-medium">{{
-            departmentsStore.departments.length
-          }}</span>
-          Eintrage
-        </div>
-      </div>
+        :meta="departmentsStore.meta"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
 </template>

@@ -23,26 +23,49 @@ export interface UpdateUserData {
   password?: string;
 }
 
+export interface PaginationMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+interface PaginatedResponse {
+  data: User[];
+  meta: PaginationMeta;
+}
+
 export const useUsersStore = defineStore('users', () => {
   const users = ref<User[]>([]);
+  const meta = ref<PaginationMeta>({
+    total: 0,
+    page: 1,
+    limit: 25,
+    totalPages: 0,
+  });
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  async function fetchUsers(): Promise<void> {
+  async function fetchUsers(page = 1, limit = 25): Promise<void> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users`, {
-        method: 'GET',
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `${API_BASE_URL}/api/users?page=${page}&limit=${limit}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+        },
+      );
 
       if (!response.ok) {
         throw new Error('Failed to fetch users');
       }
 
-      users.value = (await response.json()) as User[];
+      const result = (await response.json()) as PaginatedResponse;
+      users.value = result.data;
+      meta.value = result.meta;
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'An error occurred';
     } finally {
@@ -163,6 +186,7 @@ export const useUsersStore = defineStore('users', () => {
 
   return {
     users,
+    meta,
     isLoading,
     error,
     fetchUsers,

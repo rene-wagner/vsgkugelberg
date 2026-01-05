@@ -10,6 +10,7 @@ import {
   DepartmentWithIcon,
   DepartmentWithAllRelations,
 } from '@/types/department.types';
+import { PaginatedResponse } from '@/types/pagination.types';
 import { SlugifyService } from '@/services/slugify.service';
 import { Prisma, prisma } from '@/lib/prisma.lib';
 
@@ -32,11 +33,33 @@ export class DepartmentsService {
     }
   }
 
-  async findAll(): Promise<DepartmentWithIcon[]> {
-    return prisma.department.findMany({
-      orderBy: { name: 'asc' },
-      include: { icon: true },
-    });
+  async findAll(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<PaginatedResponse<DepartmentWithIcon>> {
+    const skip = (page - 1) * limit;
+
+    const [departments, total] = await Promise.all([
+      prisma.department.findMany({
+        orderBy: { name: 'asc' },
+        include: { icon: true },
+        skip,
+        take: limit,
+      }),
+      prisma.department.count(),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data: departments as DepartmentWithIcon[],
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
+      },
+    };
   }
 
   async findBySlug(slug: string): Promise<DepartmentWithAllRelations> {

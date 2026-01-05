@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted } from 'vue';
 import { useNewsStore, type NewsItem } from '../stores/newsStore';
+import VsgPagination from '@/shared/components/VsgPagination.vue';
 
 const newsStore = useNewsStore();
 
 onMounted(() => {
   newsStore.fetchNews();
 });
+
+async function handlePageChange(page: number) {
+  await newsStore.fetchNews(page);
+}
 
 function getStatusBadgeClass(published: boolean) {
   return published
@@ -44,8 +49,6 @@ async function handleDelete(item: NewsItem) {
 
   await newsStore.deleteNews(item.slug);
 }
-
-const newsCount = computed(() => newsStore.news.length);
 </script>
 
 <template>
@@ -213,16 +216,11 @@ const newsCount = computed(() => newsStore.news.length);
       </div>
 
       <!-- Pagination -->
-      <div
+      <VsgPagination
         v-if="newsStore.news.length > 0"
-        class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
-      >
-        <div class="font-body font-normal text-sm text-gray-500">
-          Zeige
-          <span class="text-vsg-blue-900 font-medium">{{ newsCount }}</span>
-          Eintrage
-        </div>
-      </div>
+        :meta="newsStore.meta"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
 </template>
