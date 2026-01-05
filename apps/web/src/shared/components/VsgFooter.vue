@@ -21,7 +21,11 @@ const vereinLinks = [
             <div
               class="flex h-14 w-14 items-center justify-center rounded-lg bg-vsg-gold-400"
             >
-              <img src="@/assets/logo.svg" alt="VSG Kugelberg Logo" title="VSG Kugelberg Logo" />
+              <img
+                src="@/assets/logo.svg"
+                alt="VSG Kugelberg Logo"
+                title="VSG Kugelberg Logo"
+              />
             </div>
             <div>
               <span class="font-display text-3xl tracking-wider text-white"

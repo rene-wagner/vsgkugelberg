@@ -70,7 +70,11 @@ function toggleAbteilungen() {
           <div
             class="animate-pulse-gold flex h-12 w-12 items-center justify-center rounded-lg bg-vsg-gold-400"
           >
-            <img src="@/assets/logo.svg" alt="VSG Kugelberg Logo" title="VSG Kugelberg Logo" />
+            <img
+              src="@/assets/logo.svg"
+              alt="VSG Kugelberg Logo"
+              title="VSG Kugelberg Logo"
+            />
           </div>
           <div>
             <span class="font-display text-3xl tracking-wider text-white"
