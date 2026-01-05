@@ -3,7 +3,10 @@ import { watch, onMounted, onUnmounted, watchEffect, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { RouterLink } from 'vue-router';
-import { useDefaultDepartmentsStore } from '../stores/departmentsStore';
+import {
+  useDefaultDepartmentsStore,
+  getMediaUrl,
+} from '../stores/departmentsStore';
 import VsgDepartmentHeroSection from '../components/VsgDepartmentHeroSection.vue';
 import StatsSection from '../components/StatsSection.vue';
 import VsgTrainingScheduleSection from '../components/VsgTrainingScheduleSection.vue';
@@ -219,25 +222,17 @@ const departmentCta = computed<DepartmentCta>(() => {
       <VsgDepartmentHeroSection
         :title="currentDepartment.name.toUpperCase()"
         :description="currentDepartment.shortDescription"
+        :icon-url="
+          currentDepartment.icon
+            ? getMediaUrl(currentDepartment.icon)
+            : undefined
+        "
         subtitle="Spannende Duelle für Kinder und Erwachsene."
         primary-cta-label="TRAININGSZEITEN"
         primary-cta-anchor="#trainingszeiten"
         secondary-cta-label="UNSERE STANDORTE"
         secondary-cta-anchor="#standorte"
-      >
-        <template #background-icon>
-          <!-- Table Tennis Icon -->
-          <svg
-            class="h-[500px] w-[500px]"
-            viewBox="0 0 100 100"
-            fill="currentColor"
-          >
-            <ellipse cx="35" cy="50" rx="28" ry="35" />
-            <rect x="55" y="45" width="40" height="10" rx="2" />
-            <circle cx="75" cy="25" r="8" />
-          </svg>
-        </template>
-      </VsgDepartmentHeroSection>
+      />
 
       <!-- Stats Section -->
       <StatsSection
