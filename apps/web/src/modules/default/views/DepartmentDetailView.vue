@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, onMounted, onUnmounted, watchEffect } from 'vue';
+import { watch, onMounted, onUnmounted, watchEffect, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { RouterLink } from 'vue-router';
@@ -63,155 +63,84 @@ onUnmounted(() => {
   departmentsStore.clearCurrentDepartment();
 });
 
-// Static department data (to be replaced by API in future)
-// Tischtennis department data
-const tischtennisStats: Stat[] = [
-  { value: '45', label: 'Aktive Spieler' },
-  { value: '3', label: 'Mannschaften' },
-  { value: '12', label: 'Tischtennisplatten' },
-  { value: '8', label: 'Meistertitel' },
-];
+// Transform API stats to component format
+const departmentStats = computed<Stat[]>(() => {
+  if (!currentDepartment.value?.stats) return [];
+  return currentDepartment.value.stats.map((stat) => ({
+    value: stat.value,
+    label: stat.label,
+  }));
+});
 
-const tischtennisTrainingGroups: TrainingGroup[] = [
-  {
-    name: 'Kinder & Jugend',
-    ageRange: '6 - 17 Jahre',
-    icon: 'youth',
-    variant: 'primary',
-    sessions: [
-      {
-        day: 'Montag',
-        time: '16:00 - 17:30',
-        group: 'Anfänger',
-        level: 'beginner',
-      },
-      {
-        day: 'Mittwoch',
-        time: '16:00 - 18:00',
-        group: 'Fortgeschrittene',
-        level: 'intermediate',
-      },
-      {
-        day: 'Freitag',
-        time: '15:30 - 17:00',
-        group: 'Alle Stufen',
-        level: 'all',
-      },
-      {
-        day: 'Samstag',
-        time: '10:00 - 12:00',
-        group: 'Wettkampfteam',
-        level: 'competition',
-      },
-    ],
-    note: '<strong>Hinweis:</strong> Schläger und Bälle werden gestellt. Bitte Hallenschuhe und Sportkleidung mitbringen.',
-  },
-  {
-    name: 'Erwachsene',
-    ageRange: 'Ab 18 Jahre',
-    icon: 'adults',
-    variant: 'secondary',
-    sessions: [
-      {
-        day: 'Dienstag',
-        time: '19:00 - 21:30',
-        group: 'Hobbyspieler',
-        level: 'intermediate',
-      },
-      {
-        day: 'Donnerstag',
-        time: '19:00 - 22:00',
-        group: 'Mannschaftstraining',
-        level: 'competition',
-      },
-      {
-        day: 'Freitag',
-        time: '19:30 - 21:30',
-        group: 'Freies Spiel',
-        level: 'beginner',
-      },
-      {
-        day: 'Sonntag',
-        time: '10:00 - 13:00',
-        group: 'Punktspiele',
-        level: 'advanced',
-      },
-    ],
-    note: '<strong>Probetraining:</strong> Jederzeit möglich! Einfach vorbeikommen oder vorher kurz per E-Mail anmelden.',
-  },
-];
+// Transform API training groups to component format
+const departmentTrainingGroups = computed<TrainingGroup[]>(() => {
+  if (!currentDepartment.value?.trainingGroups) return [];
+  return currentDepartment.value.trainingGroups.map((group) => ({
+    name: group.name,
+    ageRange: group.ageRange || '',
+    icon: group.icon as 'youth' | 'adults',
+    variant: group.variant as 'primary' | 'secondary',
+    sessions: group.sessions.map((session) => ({
+      day: session.day,
+      time: session.time,
+      group: 'Allgemein',
+      level: 'all' as const,
+    })),
+  }));
+});
 
-const tischtennisLocations: DepartmentLocation[] = [
-  {
-    name: 'Sporthalle Kugelberg',
-    badge: 'HAUPTHALLE',
-    badgeVariant: 'primary',
-    street: 'Kugelbergstraße 15',
-    city: '06667 Weißenfels',
-    amenities: [
-      { icon: 'tables', text: '8 Tischtennisplatten' },
-      { icon: 'check', text: 'Umkleiden & Duschen vorhanden' },
-      { icon: 'check', text: 'Parkplätze direkt vor der Halle' },
-    ],
-    mapsUrl: 'https://maps.google.com/?q=Kugelbergstraße+15,+06667+Weißenfels',
-  },
-  {
-    name: 'Schulsporthalle Langendorf',
-    badge: 'AUSWEICHHALLE',
-    badgeVariant: 'secondary',
-    street: 'Schulstraße 8',
-    city: '06667 Langendorf',
-    amenities: [
-      { icon: 'tables', text: '4 Tischtennisplatten' },
-      { icon: 'check', text: 'Umkleiden vorhanden' },
-      { icon: 'info', text: 'Nur für Jugendtraining (Mo & Mi)' },
-    ],
-    mapsUrl: 'https://maps.google.com/?q=Schulstraße+8,+06667+Langendorf',
-  },
-];
+// Transform API locations to component format
+const departmentLocations = computed<DepartmentLocation[]>(() => {
+  if (!currentDepartment.value?.locations) return [];
+  return currentDepartment.value.locations.map((location) => ({
+    name: location.name,
+    badge: location.badge,
+    badgeVariant: location.badgeVariant as 'primary' | 'secondary',
+    street: location.street,
+    city: location.city,
+    amenities: Array.isArray(location.amenities) ? location.amenities : [],
+    mapsUrl: location.mapsUrl || '',
+  }));
+});
 
-const tischtennisTrainers: Trainer[] = [
-  {
-    name: 'Michael Weber',
-    role: 'Abteilungsleiter & Cheftrainer',
-    licenses: [{ name: 'DTTB C-Lizenz', variant: 'gold' }],
-    experience: '25 Jahre Spielerfahrung, ehemaliger Bezirksligaspieler',
-    quote:
-      'Tischtennis ist mehr als nur ein Sport - es ist Konzentration, Reaktion und vor allem Spaß an der Bewegung.',
-    contactPersonId: 1,
-  },
-  {
-    name: 'Sandra Müller',
-    role: 'Jugendtrainerin',
-    licenses: [
-      { name: 'DTTB D-Lizenz', variant: 'gold' },
-      { name: 'Jugendwart', variant: 'blue' },
-    ],
-    experience: 'Spezialisiert auf Kinder- und Jugendtraining',
-    quote:
-      'Bei mir lernen die Kinder spielerisch die Grundlagen und entwickeln Freude am Tischtennis.',
-    contactPersonId: 2,
-  },
-  {
-    name: 'Thomas Schmidt',
-    role: 'Mannschaftstrainer',
-    licenses: [{ name: 'DTTB B-Lizenz', variant: 'gold' }],
-    experience: 'Aktiver Landesligaspieler mit Wettkampferfahrung',
-    quote:
-      'Mein Fokus liegt auf Technik und Taktik für unsere Mannschaftsspieler.',
-    contactPersonId: 3,
-  },
-];
+// Transform API trainers to component format
+const departmentTrainers = computed<Trainer[]>(() => {
+  if (!currentDepartment.value?.trainers) return [];
+  return currentDepartment.value.trainers.map((trainer) => {
+    const licenses = Array.isArray(trainer.licenses)
+      ? trainer.licenses
+      : JSON.parse(trainer.licenses || '[]');
 
-const tischtennisCta: DepartmentCta = {
-  title: 'LUST AUF<br/>TISCHTENNIS?',
-  description:
-    'Komm einfach zum Probetraining vorbei! Wir freuen uns auf dich - egal ob Anfänger oder erfahrener Spieler.',
-  primaryCtaLabel: 'PROBETRAINING ANFRAGEN',
-  primaryCtaRoute: '/kontakt',
-  secondaryCtaLabel: 'E-MAIL SCHREIBEN',
-  secondaryCtaRoute: 'mailto:tischtennis@vsg-kugelberg.de',
-};
+    return {
+      name: `${trainer.contactPerson.firstName} ${trainer.contactPerson.lastName}`,
+      role: trainer.role,
+      licenses: licenses.map((lic: any) => ({
+        name: lic.name,
+        variant: lic.variant as 'gold' | 'blue',
+      })),
+      experience: trainer.experience,
+      quote: trainer.quote || '',
+      contactPersonId: trainer.contactPersonId,
+      avatarUrl: trainer.contactPerson.profileImage
+        ? `${import.meta.env.VITE_API_BASE_URL}/uploads/${trainer.contactPerson.profileImage.filename}`
+        : undefined,
+    };
+  });
+});
+
+// Generate CTA based on department name
+const departmentCta = computed<DepartmentCta>(() => {
+  const departmentName = currentDepartment.value?.name || '';
+  return {
+    title: `LUST AUF<br/>${departmentName.toUpperCase()}?`,
+    description:
+      'Komm einfach zum Probetraining vorbei! Wir freuen uns auf dich - egal ob Anfänger oder erfahrener Spieler.',
+    primaryCtaLabel: 'PROBETRAINING ANFRAGEN',
+    primaryCtaRoute: '/kontakt',
+    secondaryCtaLabel: 'E-MAIL SCHREIBEN',
+    secondaryCtaRoute: `mailto:${departmentName.toLowerCase().replace(/\s+/g, '-')}@vsg-kugelberg.de`,
+  };
+});
 </script>
 
 <template>
@@ -311,43 +240,46 @@ const tischtennisCta: DepartmentCta = {
       </VsgDepartmentHeroSection>
 
       <!-- Stats Section -->
-      <StatsSection :stats="tischtennisStats" />
+      <StatsSection v-if="departmentStats.length > 0" :stats="departmentStats" />
 
       <!-- Training Schedule Section -->
       <VsgTrainingScheduleSection
+        v-if="departmentTrainingGroups.length > 0"
         id="trainingszeiten"
         title="TRAININGSZEITEN"
         subtitle="Wann wir trainieren"
         description="Regelmäßiges Training für alle Altersgruppen. Anfänger und Fortgeschrittene sind herzlich willkommen!"
-        :groups="tischtennisTrainingGroups"
+        :groups="departmentTrainingGroups"
       />
 
       <!-- Locations Section -->
       <VsgLocationSection
+        v-if="departmentLocations.length > 0"
         id="standorte"
         title="UNSERE STANDORTE"
         subtitle="Wo wir spielen"
         description="Moderne Hallen mit professioneller Ausstattung für optimale Trainingsbedingungen."
-        :locations="tischtennisLocations"
+        :locations="departmentLocations"
       />
 
       <!-- Trainers Section -->
       <VsgTrainersSection
+        v-if="departmentTrainers.length > 0"
         id="trainer"
         title="UNSERE TRAINER"
         subtitle="Wer euch trainiert"
         description="Erfahrene und lizenzierte Trainer, die mit Leidenschaft ihr Wissen weitergeben."
-        :trainers="tischtennisTrainers"
+        :trainers="departmentTrainers"
       />
 
       <!-- CTA Section -->
       <VsgDepartmentCtaSection
-        :title="tischtennisCta.title"
-        :description="tischtennisCta.description"
-        :primary-cta-label="tischtennisCta.primaryCtaLabel"
-        :primary-cta-route="tischtennisCta.primaryCtaRoute"
-        :secondary-cta-label="tischtennisCta.secondaryCtaLabel"
-        :secondary-cta-route="tischtennisCta.secondaryCtaRoute"
+        :title="departmentCta.title"
+        :description="departmentCta.description"
+        :primary-cta-label="departmentCta.primaryCtaLabel"
+        :primary-cta-route="departmentCta.primaryCtaRoute"
+        :secondary-cta-label="departmentCta.secondaryCtaLabel"
+        :secondary-cta-route="departmentCta.secondaryCtaRoute"
       />
     </template>
   </div>
