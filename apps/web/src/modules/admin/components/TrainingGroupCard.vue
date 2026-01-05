@@ -36,7 +36,7 @@ const emit = defineEmits<{
     isNew: boolean,
   ): void;
   (e: 'session-delete', sessionId: number, isNew: boolean): void;
-  (e: 'sessions-reorder'): void;
+  (e: 'sessions-reorder', newSessions: LocalSession[]): void;
 }>();
 
 const name = ref(props.group.name);
@@ -93,7 +93,7 @@ function handleSessionDelete(sessionId: number, isNew: boolean) {
 }
 
 function handleSessionsDragEnd() {
-  emit('sessions-reorder');
+  emit('sessions-reorder', localSessions.value);
 }
 </script>
 

@@ -25,6 +25,7 @@ const locationsStore = useDepartmentLocationsStore();
 
 // Local state
 const localLocations = ref<LocalLocation[]>([]);
+const sortableIds = ref<number[]>([]);
 const pendingCreates = ref<Map<number, LocalLocation>>(new Map());
 const pendingUpdates = ref<
   Map<
@@ -58,6 +59,9 @@ watch(
         image: l.image ?? null,
       }))
       .sort((a, b) => a.sort - b.sort);
+
+    sortableIds.value = localLocations.value.map((l) => l.id);
+
     pendingCreates.value.clear();
     pendingUpdates.value.clear();
     pendingDeletes.value.clear();
@@ -67,17 +71,24 @@ watch(
 );
 
 // Computed: Display locations
-const displayLocations = computed(() => {
-  const existing = localLocations.value
-    .filter((l) => !pendingDeletes.value.has(l.id))
-    .map((l) => {
-      const pending = pendingUpdates.value.get(l.id);
-      return pending ? { ...l, ...pending } : l;
-    });
-
-  const newLocations = Array.from(pendingCreates.value.values());
-
-  return [...existing, ...newLocations];
+const displayLocations = computed({
+  get: () => {
+    return sortableIds.value
+      .map((id) => {
+        if (id < 0) {
+          return pendingCreates.value.get(id);
+        }
+        const l = localLocations.value.find((loc) => loc.id === id);
+        if (!l) return null;
+        const pending = pendingUpdates.value.get(l.id);
+        return pending ? { ...l, ...pending } : l;
+      })
+      .filter((l): l is LocalLocation => !!l);
+  },
+  set: (newItems: LocalLocation[]) => {
+    sortableIds.value = newItems.map((l) => l.id);
+    orderChanged.value = true;
+  },
 });
 
 const isDirty = computed(() => {
@@ -112,6 +123,7 @@ function handleAdd() {
     updatedAt: '',
   };
   pendingCreates.value.set(tempId, newLocation);
+  sortableIds.value.push(tempId);
 }
 
 function handleUpdate(
@@ -146,6 +158,7 @@ function handleDelete(id: number, isNew: boolean) {
     pendingDeletes.value.add(id);
     pendingUpdates.value.delete(id);
   }
+  sortableIds.value = sortableIds.value.filter((sid) => sid !== id);
 }
 
 function handleDragEnd() {
@@ -191,6 +204,12 @@ async function handleSave() {
         createDto,
       );
       if (!result) throw new Error('Fehler beim Erstellen eines Standorts');
+
+      // Update sortableIds with the real ID
+      const idx = sortableIds.value.indexOf(location.id);
+      if (idx !== -1) {
+        sortableIds.value[idx] = result.id;
+      }
     }
 
     // 3. Update existing locations
@@ -216,9 +235,7 @@ async function handleSave() {
 
     // 4. Reorder if changed
     if (orderChanged.value) {
-      const existingIds = displayLocations.value
-        .filter((l) => !l._isNew)
-        .map((l) => l.id);
+      const existingIds = sortableIds.value.filter((id) => id > 0);
 
       if (existingIds.length > 0) {
         const result = await locationsStore.reorder(
@@ -237,6 +254,7 @@ async function handleSave() {
 
     // Refresh from store
     localLocations.value = [...locationsStore.locations];
+    sortableIds.value = localLocations.value.map((l) => l.id);
   } catch (e) {
     saveError.value =
       e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
