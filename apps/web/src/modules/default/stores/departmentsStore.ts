@@ -103,6 +103,16 @@ export function getMediaUrl(item: MediaItem): string {
   return `${API_BASE_URL}/uploads/${item.filename}`;
 }
 
+interface PaginatedResponse {
+  data: Department[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 export const useDefaultDepartmentsStore = defineStore(
   'default-departments',
   () => {
@@ -122,15 +132,19 @@ export const useDefaultDepartmentsStore = defineStore(
       error.value = null;
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/departments`, {
-          method: 'GET',
-        });
+        const response = await fetch(
+          `${API_BASE_URL}/api/departments?limit=100`,
+          {
+            method: 'GET',
+          },
+        );
 
         if (!response.ok) {
           throw new Error('Failed to fetch departments');
         }
 
-        departments.value = (await response.json()) as Department[];
+        const result = (await response.json()) as PaginatedResponse;
+        departments.value = result.data;
       } catch (e) {
         error.value = e instanceof Error ? e.message : 'An error occurred';
       } finally {
