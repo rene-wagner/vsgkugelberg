@@ -19,8 +19,6 @@ const emit = defineEmits<{
       contactPersonId: number | null;
       role: string;
       licenses: TrainerLicense[];
-      experience: string;
-      quote: string;
     },
   ): void;
   (e: 'delete'): void;
@@ -31,8 +29,6 @@ const contactPersonId = ref<number | null>(
 );
 const role = ref(props.trainer.role);
 const licenses = ref<TrainerLicense[]>([...props.trainer.licenses]);
-const experience = ref(props.trainer.experience);
-const quote = ref(props.trainer.quote);
 const isExpanded = ref(true);
 
 // License form state
@@ -48,21 +44,17 @@ watch(
     contactPersonId.value = newTrainer.contactPersonId || null;
     role.value = newTrainer.role;
     licenses.value = [...newTrainer.licenses];
-    experience.value = newTrainer.experience;
-    quote.value = newTrainer.quote;
   },
 );
 
 // Emit updates when values change
 watch(
-  [contactPersonId, role, licenses, experience, quote],
+  [contactPersonId, role, licenses],
   () => {
     emit('update', {
       contactPersonId: contactPersonId.value,
       role: role.value,
       licenses: licenses.value,
-      experience: experience.value,
-      quote: quote.value,
     });
   },
   { deep: true },
@@ -252,36 +244,6 @@ function handleRemoveLicense(index: number) {
           placeholder="z.B. Cheftrainer, Co-Trainer"
           class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
         />
-      </div>
-
-      <!-- Experience & Quote Row -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label
-            class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-          >
-            Erfahrung
-          </label>
-          <input
-            v-model="experience"
-            type="text"
-            placeholder="z.B. 15+ Jahre"
-            class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-          />
-        </div>
-        <div>
-          <label
-            class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-          >
-            Zitat
-          </label>
-          <input
-            v-model="quote"
-            type="text"
-            placeholder="Ein kurzes Motto..."
-            class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-          />
-        </div>
       </div>
 
       <!-- Licenses Section -->

@@ -12,16 +12,12 @@ export interface CreateDepartmentTrainerDto {
   contactPersonId: number;
   role: string;
   licenses: TrainerLicense[];
-  experience: string;
-  quote?: string;
   sort?: number;
 }
 
 export interface UpdateDepartmentTrainerDto {
   role?: string;
   licenses?: TrainerLicense[];
-  experience?: string;
-  quote?: string;
   sort?: number;
 }
 

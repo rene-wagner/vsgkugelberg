@@ -41,8 +41,6 @@ export interface Trainer {
   name: string;
   role: string; // e.g., "Abteilungsleiter & Cheftrainer"
   licenses: TrainerLicense[];
-  experience: string; // e.g., "25 Jahre Spielerfahrung"
-  quote: string;
   contactPersonId?: number; // ID for pre-selecting contact person on contact page
   avatarUrl?: string; // Optional; shows placeholder if not provided
 }

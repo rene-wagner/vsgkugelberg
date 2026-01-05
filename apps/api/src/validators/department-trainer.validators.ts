@@ -46,20 +46,6 @@ export const createDepartmentTrainerValidator = [
 
   licensesValidator(true).notEmpty().withMessage('Licenses is required'),
 
-  body('experience')
-    .trim()
-    .notEmpty()
-    .withMessage('Experience is required')
-    .isLength({ min: 1, max: 200 })
-    .withMessage('Experience must be between 1 and 200 characters'),
-
-  body('quote')
-    .optional({ values: 'undefined' })
-    .isString()
-    .trim()
-    .isLength({ max: 500 })
-    .withMessage('Quote must be at most 500 characters'),
-
   body('sort')
     .optional()
     .isInt({ min: 0 })
@@ -76,22 +62,6 @@ export const updateDepartmentTrainerValidator = [
     .withMessage('Role must be between 1 and 100 characters'),
 
   licensesValidator(false),
-
-  body('experience')
-    .optional()
-    .trim()
-    .notEmpty()
-    .withMessage('Experience cannot be empty')
-    .isLength({ min: 1, max: 200 })
-    .withMessage('Experience must be between 1 and 200 characters'),
-
-  body('quote')
-    .optional({ nullable: true })
-    .custom((value) => {
-      if (value === null || value === '') return true;
-      if (typeof value === 'string' && value.length <= 500) return true;
-      throw new Error('Quote must be at most 500 characters or null');
-    }),
 
   body('sort')
     .optional()

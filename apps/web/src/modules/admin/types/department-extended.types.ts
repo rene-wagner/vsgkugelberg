@@ -150,13 +150,11 @@ export interface ContactPerson {
 export interface DepartmentTrainer {
   id: number;
   departmentId: number;
-  contactPersonId: number;
+  contactPersonId: number | null;
   role: string;
   licenses: TrainerLicense[];
-  experience: string;
-  quote: string | null;
   sort: number;
-  contactPerson: ContactPerson;
+  contactPerson: ContactPerson | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -165,16 +163,12 @@ export interface CreateDepartmentTrainerDto {
   contactPersonId: number;
   role: string;
   licenses: TrainerLicense[];
-  experience: string;
-  quote?: string | null;
   sort?: number;
 }
 
 export interface UpdateDepartmentTrainerDto {
   role?: string;
   licenses?: TrainerLicense[];
-  experience?: string;
-  quote?: string;
   sort?: number;
 }
 

@@ -93,15 +93,7 @@ function getContactLink(): string {
             {{ license.name }}
           </span>
         </div>
-        <p class="font-body text-sm text-gray-600">
-          {{ trainer.experience }}
-        </p>
       </div>
-
-      <!-- Quote -->
-      <p class="font-body text-sm leading-relaxed text-gray-600 italic">
-        "{{ trainer.quote }}"
-      </p>
     </div>
   </div>
 </template>

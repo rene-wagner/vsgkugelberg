@@ -46,8 +46,6 @@ export class DepartmentTrainersService {
           contactPersonId: dto.contactPersonId,
           role: dto.role,
           licenses: dto.licenses,
-          experience: dto.experience,
-          quote: dto.quote ?? null,
           sort: dto.sort ?? 0,
         },
         include: {
@@ -92,8 +90,6 @@ export class DepartmentTrainersService {
       data: {
         ...(dto.role !== undefined && { role: dto.role }),
         ...(dto.licenses !== undefined && { licenses: dto.licenses }),
-        ...(dto.experience !== undefined && { experience: dto.experience }),
-        ...(dto.quote !== undefined && { quote: dto.quote }),
         ...(dto.sort !== undefined && { sort: dto.sort }),
       },
       include: {

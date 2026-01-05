@@ -31,7 +31,7 @@ const badge = ref(props.location.badge);
 const badgeVariant = ref<'primary' | 'secondary'>(props.location.badgeVariant);
 const street = ref(props.location.street);
 const city = ref(props.location.city);
-const mapsUrl = ref(props.location.mapsUrl);
+const mapsUrl = ref(props.location.mapsUrl || '');
 const amenities = ref<LocationAmenity[]>([...props.location.amenities]);
 const newAmenity = ref('');
 const isExpanded = ref(true);
@@ -45,7 +45,7 @@ watch(
     badgeVariant.value = newLocation.badgeVariant;
     street.value = newLocation.street;
     city.value = newLocation.city;
-    mapsUrl.value = newLocation.mapsUrl;
+    mapsUrl.value = newLocation.mapsUrl || '';
     amenities.value = [...newLocation.amenities];
   },
 );

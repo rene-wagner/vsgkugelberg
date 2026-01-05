@@ -55,15 +55,11 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'Abteilungsleiter & Cheftrainer',
           licenses: [{ name: 'DTTB C-Lizenz', variant: 'gold' }],
-          experience: '25 Jahre Spielerfahrung',
-          quote: 'Tischtennis ist mehr als nur ein Sport.',
         });
 
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({
         role: 'Abteilungsleiter & Cheftrainer',
-        experience: '25 Jahre Spielerfahrung',
-        quote: 'Tischtennis ist mehr als nur ein Sport.',
         sort: 0,
       });
       expect(response.body.licenses).toEqual([
@@ -90,51 +86,10 @@ describe('Department Trainers API Integration Tests', () => {
             { name: 'DTTB D-Lizenz', variant: 'gold' },
             { name: 'Jugendwart', variant: 'blue' },
           ],
-          experience: 'Spezialisiert auf Jugendtraining',
-          quote: 'Bei mir lernen die Kinder spielerisch.',
         });
 
       expect(response.status).toBe(201);
       expect(response.body.licenses).toHaveLength(2);
-    });
-
-    it('should create a trainer without quote (optional)', async () => {
-      const cookies = await createAuthenticatedUser();
-      const department = await createTestDepartment();
-      const contactPerson = await createTestContactPerson();
-
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/trainers`)
-        .set('Cookie', cookies)
-        .send({
-          contactPersonId: contactPerson.id,
-          role: 'Trainer',
-          licenses: [{ name: 'C-Lizenz', variant: 'gold' }],
-          experience: '10 Jahre Erfahrung',
-        });
-
-      expect(response.status).toBe(201);
-      expect(response.body.quote).toBeNull();
-    });
-
-    it('should create a trainer with empty quote', async () => {
-      const cookies = await createAuthenticatedUser();
-      const department = await createTestDepartment();
-      const contactPerson = await createTestContactPerson();
-
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/trainers`)
-        .set('Cookie', cookies)
-        .send({
-          contactPersonId: contactPerson.id,
-          role: 'Trainer',
-          licenses: [{ name: 'C-Lizenz', variant: 'gold' }],
-          experience: '10 Jahre Erfahrung',
-          quote: '',
-        });
-
-      expect(response.status).toBe(201);
-      expect(response.body.quote).toBe('');
     });
 
     it('should return 409 for duplicate trainer association', async () => {
@@ -150,8 +105,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'First Role',
           licenses: [],
-          experience: 'Some experience',
-          quote: 'Some quote',
         });
 
       // Try to create duplicate
@@ -162,8 +115,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'Second Role',
           licenses: [],
-          experience: 'Other experience',
-          quote: 'Other quote',
         });
 
       expect(response.status).toBe(409);
@@ -180,8 +131,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: 99999,
           role: 'Trainer',
           licenses: [],
-          experience: 'Some experience',
-          quote: 'Some quote',
         });
 
       expect(response.status).toBe(404);
@@ -199,8 +148,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'Trainer',
           licenses: [{ name: 'Test License', variant: 'invalid' }],
-          experience: 'Some experience',
-          quote: 'Some quote',
         });
 
       expect(response.status).toBe(400);
@@ -223,8 +170,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'Trainer',
           licenses,
-          experience: 'Some experience',
-          quote: 'Some quote',
         });
 
       expect(response.status).toBe(400);
@@ -240,8 +185,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'Trainer',
           licenses: [],
-          experience: 'Some experience',
-          quote: 'Some quote',
         });
 
       expect(response.status).toBe(401);
@@ -259,8 +202,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'Original Role',
           licenses: [],
-          experience: 'Original experience',
-          quote: 'Original quote',
         },
       });
 
@@ -277,7 +218,6 @@ describe('Department Trainers API Integration Tests', () => {
       expect(response.body.licenses).toEqual([
         { name: 'New License', variant: 'blue' },
       ]);
-      expect(response.body.experience).toBe('Original experience');
     });
 
     it('should return 404 for trainer from different department', async () => {
@@ -291,8 +231,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'Trainer',
           licenses: [],
-          experience: 'Experience',
-          quote: 'Quote',
         },
       });
 
@@ -316,8 +254,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'To Delete',
           licenses: [],
-          experience: 'Experience',
-          quote: 'Quote',
         },
       });
 
@@ -349,8 +285,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'Trainer',
           licenses: [],
-          experience: 'Experience',
-          quote: 'Quote',
         },
       });
 
@@ -375,8 +309,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson1.id,
           role: 'First Trainer',
           licenses: [],
-          experience: 'Experience 1',
-          quote: 'Quote 1',
           sort: 0,
         },
       });
@@ -386,8 +318,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson2.id,
           role: 'Second Trainer',
           licenses: [],
-          experience: 'Experience 2',
-          quote: 'Quote 2',
           sort: 1,
         },
       });
@@ -419,8 +349,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson1.id,
           role: 'Trainer 1',
           licenses: [],
-          experience: 'Experience',
-          quote: 'Quote',
         },
       });
       const trainer2 = await prisma.departmentTrainer.create({
@@ -429,8 +357,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson2.id,
           role: 'Trainer 2',
           licenses: [],
-          experience: 'Experience',
-          quote: 'Quote',
         },
       });
 
@@ -453,8 +379,6 @@ describe('Department Trainers API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'Trainer',
           licenses: [],
-          experience: 'Experience',
-          quote: 'Quote',
         },
       });
 

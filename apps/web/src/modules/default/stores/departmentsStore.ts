@@ -69,8 +69,6 @@ export interface DepartmentTrainer {
   contactPersonId: number;
   role: string;
   licenses: any;
-  experience: string;
-  quote: string | null;
   sort: number;
   createdAt: string;
   updatedAt: string;

@@ -86,12 +86,14 @@ function initializeStores(dept: DepartmentExtended) {
 }
 
 // Clear stores when leaving (for future navigation guards)
+/*
 function _clearStores() {
   statsStore.clearStats();
   trainingStore.clearTrainingGroups();
   locationsStore.clearLocations();
   trainersStore.clearTrainers();
 }
+*/
 
 onMounted(async () => {
   if (isEditMode.value) {

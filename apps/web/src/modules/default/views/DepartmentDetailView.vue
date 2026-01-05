@@ -121,8 +121,6 @@ const departmentTrainers = computed<Trainer[]>(() => {
         name: lic.name,
         variant: lic.variant as 'gold' | 'blue',
       })),
-      experience: trainer.experience,
-      quote: trainer.quote || '',
       contactPersonId: trainer.contactPersonId,
       avatarUrl: trainer.contactPerson.profileImage
         ? `${import.meta.env.VITE_API_BASE_URL}/uploads/${trainer.contactPerson.profileImage.filename}`
@@ -228,10 +226,18 @@ const departmentCta = computed<DepartmentCta>(() => {
             : undefined
         "
         subtitle="Spannende Duelle für Kinder und Erwachsene."
-        primary-cta-label="TRAININGSZEITEN"
-        primary-cta-anchor="#trainingszeiten"
-        secondary-cta-label="UNSERE STANDORTE"
-        secondary-cta-anchor="#standorte"
+        :primary-cta-label="
+          departmentTrainingGroups.length > 0 ? 'TRAININGSZEITEN' : undefined
+        "
+        :primary-cta-anchor="
+          departmentTrainingGroups.length > 0 ? '#trainingszeiten' : undefined
+        "
+        :secondary-cta-label="
+          departmentLocations.length > 0 ? 'UNSERE STANDORTE' : undefined
+        "
+        :secondary-cta-anchor="
+          departmentLocations.length > 0 ? '#standorte' : undefined
+        "
       />
 
       <!-- Stats Section -->

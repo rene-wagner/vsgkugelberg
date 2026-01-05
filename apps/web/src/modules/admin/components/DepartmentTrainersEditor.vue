@@ -32,8 +32,6 @@ const pendingUpdates = ref<
       contactPersonId: number | null;
       role: string;
       licenses: TrainerLicense[];
-      experience: string;
-      quote: string;
     }
   >
 >(new Map());
@@ -113,8 +111,6 @@ function handleAdd() {
     contactPersonId: 0,
     role: '',
     licenses: [],
-    experience: '',
-    quote: '',
     sort: localTrainers.value.length + pendingCreates.value.size,
     contactPerson: {
       id: 0,
@@ -141,8 +137,6 @@ function handleUpdate(
     contactPersonId: number | null;
     role: string;
     licenses: TrainerLicense[];
-    experience: string;
-    quote: string;
   },
   isNew: boolean,
 ) {
@@ -152,8 +146,6 @@ function handleUpdate(
       trainer.contactPersonId = data.contactPersonId || 0;
       trainer.role = data.role;
       trainer.licenses = data.licenses;
-      trainer.experience = data.experience;
-      trainer.quote = data.quote;
     }
   } else {
     pendingUpdates.value.set(id, data);
@@ -200,8 +192,6 @@ async function handleSave() {
         contactPersonId: trainer.contactPersonId,
         role: trainer.role,
         licenses: trainer.licenses,
-        experience: trainer.experience,
-        quote: trainer.quote,
       };
 
       const result = await trainersStore.createTrainer(
@@ -216,8 +206,6 @@ async function handleSave() {
       const updateDto: UpdateDepartmentTrainerDto = {
         role: data.role,
         licenses: data.licenses,
-        experience: data.experience,
-        quote: data.quote,
       };
 
       const result = await trainersStore.updateTrainer(

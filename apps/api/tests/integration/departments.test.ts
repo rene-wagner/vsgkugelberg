@@ -190,8 +190,6 @@ describe('Departments API Integration Tests', () => {
           contactPersonId: contactPerson.id,
           role: 'Cheftrainer',
           licenses: [{ name: 'DTTB C-Lizenz', variant: 'gold' }],
-          experience: '25 Jahre',
-          quote: 'Sport ist toll',
           sort: 0,
         },
       });
