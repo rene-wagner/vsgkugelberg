@@ -25,7 +25,6 @@ describe('Department Locations API Integration Tests', () => {
         name: `Department ${slug}`,
         slug,
         shortDescription: 'Test department',
-        longDescription: 'This is a test department',
       },
     });
   }

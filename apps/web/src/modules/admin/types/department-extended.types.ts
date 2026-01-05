@@ -88,6 +88,8 @@ export interface DepartmentLocation {
   city: string;
   mapsUrl: string | null;
   amenities: LocationAmenity[];
+  imageId: number | null;
+  image: ContactPersonMedia | null;
   sort: number;
   createdAt: string;
   updatedAt: string;
@@ -101,6 +103,7 @@ export interface CreateDepartmentLocationDto {
   city: string;
   mapsUrl?: string | null;
   amenities: LocationAmenity[];
+  imageId?: number | null;
   sort?: number;
 }
 
@@ -112,6 +115,7 @@ export interface UpdateDepartmentLocationDto {
   city?: string;
   mapsUrl?: string;
   amenities?: LocationAmenity[];
+  imageId?: number | null;
   sort?: number;
 }
 
@@ -178,7 +182,6 @@ export interface DepartmentExtended {
   name: string;
   slug: string;
   shortDescription: string;
-  longDescription: string;
   iconId: number | null;
   icon: ContactPersonMedia | null;
   stats: DepartmentStat[];

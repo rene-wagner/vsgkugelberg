@@ -57,6 +57,7 @@ export class DepartmentsService {
         },
         locations: {
           orderBy: { sort: 'asc' },
+          include: { image: true },
         },
         trainers: {
           orderBy: { sort: 'asc' },
@@ -95,7 +96,6 @@ export class DepartmentsService {
           name: createDepartmentDto.name,
           slug,
           shortDescription: createDepartmentDto.shortDescription,
-          longDescription: createDepartmentDto.longDescription,
           iconId: createDepartmentDto.iconId,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -150,10 +150,6 @@ export class DepartmentsService {
 
     if (updateDepartmentDto.shortDescription !== undefined) {
       updateData.shortDescription = updateDepartmentDto.shortDescription;
-    }
-
-    if (updateDepartmentDto.longDescription !== undefined) {
-      updateData.longDescription = updateDepartmentDto.longDescription;
     }
 
     // Handle iconId: can be set to a value, or explicitly set to null to remove

@@ -12,15 +12,8 @@ export const createDepartmentValidator = [
     .trim()
     .notEmpty()
     .withMessage('Short description is required')
-    .isLength({ min: 10, max: 200 })
-    .withMessage('Short description must be between 10 and 200 characters'),
-
-  body('longDescription')
-    .trim()
-    .notEmpty()
-    .withMessage('Long description is required')
-    .isLength({ min: 20, max: 5000 })
-    .withMessage('Long description must be between 20 and 5000 characters'),
+    .isLength({ min: 10, max: 5000 })
+    .withMessage('Short description must be between 10 and 5000 characters'),
 
   body('iconId')
     .optional()
@@ -38,14 +31,8 @@ export const updateDepartmentValidator = [
   body('shortDescription')
     .optional()
     .trim()
-    .isLength({ min: 10, max: 200 })
-    .withMessage('Short description must be between 10 and 200 characters'),
-
-  body('longDescription')
-    .optional()
-    .trim()
-    .isLength({ min: 20, max: 5000 })
-    .withMessage('Long description must be between 20 and 5000 characters'),
+    .isLength({ min: 10, max: 5000 })
+    .withMessage('Short description must be between 10 and 5000 characters'),
 
   body('iconId')
     .optional({ nullable: true })

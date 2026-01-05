@@ -58,7 +58,6 @@ CREATE TABLE "Department" (
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "shortDescription" TEXT NOT NULL,
-    "longDescription" TEXT NOT NULL,
     "iconId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -118,6 +117,7 @@ CREATE TABLE "DepartmentLocation" (
     "city" TEXT NOT NULL,
     "mapsUrl" TEXT,
     "amenities" JSONB NOT NULL,
+    "imageId" INTEGER,
     "sort" INTEGER NOT NULL DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -330,6 +330,9 @@ ALTER TABLE "DepartmentTrainingSession" ADD CONSTRAINT "DepartmentTrainingSessio
 
 -- AddForeignKey
 ALTER TABLE "DepartmentLocation" ADD CONSTRAINT "DepartmentLocation_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "DepartmentLocation" ADD CONSTRAINT "DepartmentLocation_imageId_fkey" FOREIGN KEY ("imageId") REFERENCES "Media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "DepartmentTrainer" ADD CONSTRAINT "DepartmentTrainer_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE CASCADE ON UPDATE CASCADE;

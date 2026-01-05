@@ -3,7 +3,9 @@ import { ref, watch, computed } from 'vue';
 import type {
   DepartmentLocation,
   LocationAmenity,
+  ContactPersonMedia,
 } from '../types/department-extended.types';
+import ImageSelector from './ImageSelector.vue';
 
 const props = defineProps<{
   location: DepartmentLocation & { _isNew?: boolean };
@@ -21,6 +23,8 @@ const emit = defineEmits<{
       city: string;
       mapsUrl: string;
       amenities: LocationAmenity[];
+      imageId: number | null;
+      image: ContactPersonMedia | null;
     },
   ): void;
   (e: 'delete'): void;
@@ -33,6 +37,8 @@ const street = ref(props.location.street);
 const city = ref(props.location.city);
 const mapsUrl = ref(props.location.mapsUrl || '');
 const amenities = ref<LocationAmenity[]>([...props.location.amenities]);
+const imageId = ref(props.location.imageId ?? null);
+const image = ref(props.location.image ?? null);
 const newAmenity = ref('');
 const isExpanded = ref(true);
 
@@ -47,21 +53,51 @@ watch(
     city.value = newLocation.city;
     mapsUrl.value = newLocation.mapsUrl || '';
     amenities.value = [...newLocation.amenities];
+    imageId.value = newLocation.imageId ?? null;
+    image.value = newLocation.image ?? null;
   },
 );
 
 // Emit updates when values change
 watch(
-  [name, badge, badgeVariant, street, city, mapsUrl, amenities],
-  () => {
+  [name, badge, badgeVariant, street, city, mapsUrl, amenities, imageId, image],
+  ([
+    newName,
+    newBadge,
+    newVariant,
+    newStreet,
+    newCity,
+    newMapsUrl,
+    newAmenities,
+    newImageId,
+    newImage,
+  ]) => {
+    // Check if anything actually changed to prevent recursive updates via parent re-rendering
+    if (
+      newName === props.location.name &&
+      newBadge === props.location.badge &&
+      newVariant === props.location.badgeVariant &&
+      newStreet === props.location.street &&
+      newCity === props.location.city &&
+      newMapsUrl === (props.location.mapsUrl || '') &&
+      JSON.stringify(newAmenities) ===
+        JSON.stringify(props.location.amenities) &&
+      newImageId === (props.location.imageId ?? null) &&
+      newImage?.id === props.location.image?.id
+    ) {
+      return;
+    }
+
     emit('update', {
-      name: name.value,
-      badge: badge.value,
-      badgeVariant: badgeVariant.value,
-      street: street.value,
-      city: city.value,
-      mapsUrl: mapsUrl.value,
-      amenities: amenities.value,
+      name: newName,
+      badge: newBadge,
+      badgeVariant: newVariant,
+      street: newStreet,
+      city: newCity,
+      mapsUrl: newMapsUrl,
+      amenities: newAmenities,
+      imageId: newImageId,
+      image: newImage,
     });
   },
   { deep: true },
@@ -198,6 +234,20 @@ function handleRemoveAmenity(index: number) {
 
     <!-- Card Body (Collapsible) -->
     <div v-show="isExpanded" class="p-4 space-y-4">
+      <!-- Image Selection -->
+      <div>
+        <label
+          class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-2"
+        >
+          Standortfoto
+        </label>
+        <ImageSelector
+          v-model:media-id="imageId"
+          v-model:media="image"
+          label="Foto auswählen oder hochladen"
+        />
+      </div>
+
       <!-- Badge Row -->
       <div class="grid grid-cols-2 gap-3">
         <div>

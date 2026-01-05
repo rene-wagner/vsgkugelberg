@@ -10,7 +10,6 @@ export interface Department {
   name: string;
   slug: string;
   shortDescription: string;
-  longDescription: string;
   iconId: number | null;
   icon: MediaItem | null;
   createdAt: string;
@@ -23,14 +22,12 @@ export type { DepartmentExtended };
 export interface CreateDepartmentData {
   name: string;
   shortDescription: string;
-  longDescription: string;
   iconId?: number;
 }
 
 export interface UpdateDepartmentData {
   name?: string;
   shortDescription?: string;
-  longDescription?: string;
   iconId?: number | null;
 }
 

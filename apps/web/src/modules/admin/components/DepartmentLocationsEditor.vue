@@ -6,6 +6,7 @@ import LocationCard from './LocationCard.vue';
 import type {
   DepartmentLocation,
   LocationAmenity,
+  ContactPersonMedia,
   CreateDepartmentLocationDto,
   UpdateDepartmentLocationDto,
 } from '../types/department-extended.types';
@@ -36,6 +37,8 @@ const pendingUpdates = ref<
       city: string;
       mapsUrl: string;
       amenities: LocationAmenity[];
+      imageId: number | null;
+      image: ContactPersonMedia | null;
     }
   >
 >(new Map());
@@ -48,7 +51,13 @@ let tempIdCounter = -1;
 watch(
   () => props.initialLocations,
   (newLocations) => {
-    localLocations.value = [...newLocations].sort((a, b) => a.sort - b.sort);
+    localLocations.value = [...newLocations]
+      .map((l) => ({
+        ...l,
+        imageId: l.imageId ?? null,
+        image: l.image ?? null,
+      }))
+      .sort((a, b) => a.sort - b.sort);
     pendingCreates.value.clear();
     pendingUpdates.value.clear();
     pendingDeletes.value.clear();
@@ -96,6 +105,8 @@ function handleAdd() {
     city: '',
     mapsUrl: '',
     amenities: [],
+    imageId: null,
+    image: null,
     sort: localLocations.value.length + pendingCreates.value.size,
     createdAt: '',
     updatedAt: '',
@@ -113,6 +124,8 @@ function handleUpdate(
     city: string;
     mapsUrl: string;
     amenities: LocationAmenity[];
+    imageId: number | null;
+    image: ContactPersonMedia | null;
   },
   isNew: boolean,
 ) {
@@ -170,6 +183,7 @@ async function handleSave() {
         city: location.city,
         mapsUrl: location.mapsUrl,
         amenities: location.amenities,
+        imageId: location.imageId,
       };
 
       const result = await locationsStore.createLocation(
@@ -189,6 +203,7 @@ async function handleSave() {
         city: data.city,
         mapsUrl: data.mapsUrl,
         amenities: data.amenities,
+        imageId: data.imageId,
       };
 
       const result = await locationsStore.updateLocation(

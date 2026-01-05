@@ -12,6 +12,7 @@ export interface CreateDepartmentLocationDto {
   city: string;
   mapsUrl?: string;
   amenities: LocationAmenity[];
+  imageId?: number | null;
   sort?: number;
 }
 
@@ -23,6 +24,7 @@ export interface UpdateDepartmentLocationDto {
   city?: string;
   mapsUrl?: string;
   amenities?: LocationAmenity[];
+  imageId?: number | null;
   sort?: number;
 }
 

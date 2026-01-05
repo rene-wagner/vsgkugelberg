@@ -54,6 +54,8 @@ export interface DepartmentLocation {
   city: string;
   mapsUrl: string | null;
   amenities: any;
+  imageId: number | null;
+  image: MediaItem | null;
   sort: number;
   createdAt: string;
   updatedAt: string;
@@ -87,7 +89,6 @@ export interface Department {
   name: string;
   slug: string;
   shortDescription: string;
-  longDescription: string;
   iconId: number | null;
   icon: MediaItem | null;
   stats: DepartmentStat[];

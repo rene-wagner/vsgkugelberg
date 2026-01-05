@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import type { DepartmentLocation } from '../types/department-detail.types';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 interface Props {
   location: DepartmentLocation;
 }
@@ -13,10 +15,8 @@ function getBadgeClasses(variant: DepartmentLocation['badgeVariant']): string {
     : 'bg-white text-vsg-blue-900';
 }
 
-function getMapGradient(variant: DepartmentLocation['badgeVariant']): string {
-  return variant === 'primary'
-    ? 'from-vsg-blue-600 to-vsg-blue-800'
-    : 'from-vsg-blue-500 to-vsg-blue-700';
+function getMediaUrl(filename: string): string {
+  return `${API_BASE_URL}/uploads/${filename}`;
 }
 </script>
 
@@ -24,48 +24,36 @@ function getMapGradient(variant: DepartmentLocation['badgeVariant']): string {
   <div
     class="card-hover overflow-hidden rounded-xl border border-gray-200 bg-white"
   >
-    <!-- Map Placeholder -->
-    <div
-      :class="[
-        'aspect-video bg-linear-to-br relative',
-        getMapGradient(location.badgeVariant),
-      ]"
-    >
-      <div class="absolute inset-0 flex items-center justify-center">
-        <div class="text-center">
-          <svg
-            class="mx-auto mb-2 h-16 w-16 text-white/50"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
-          <span class="font-body text-sm text-white/70">Kartenansicht</span>
-        </div>
-      </div>
+    <!-- Location Image -->
+    <div v-if="location.image" class="aspect-video relative">
+      <img
+        :src="getMediaUrl(location.image.filename)"
+        :alt="location.image.originalName"
+        class="w-full h-full object-cover"
+      />
       <!-- Badge -->
       <div class="absolute left-4 top-4">
         <span
           :class="[
             getBadgeClasses(location.badgeVariant),
-            'inline-block rounded px-3 py-1 font-display text-sm tracking-wider',
+            'inline-block rounded px-3 py-1 font-display text-sm tracking-wider shadow-sm',
           ]"
         >
           {{ location.badge }}
         </span>
       </div>
+    </div>
+
+    <!-- Fallback if no image (just show badge) -->
+    <div v-else class="p-4 bg-gray-50 border-b border-gray-100">
+      <span
+        :class="[
+          getBadgeClasses(location.badgeVariant),
+          'inline-block rounded px-3 py-1 font-display text-sm tracking-wider border border-gray-200',
+        ]"
+      >
+        {{ location.badge }}
+      </span>
     </div>
 
     <!-- Location Details -->
@@ -131,6 +119,7 @@ function getMapGradient(variant: DepartmentLocation['badgeVariant']): string {
 
       <!-- Route Link -->
       <a
+        v-if="location.mapsUrl"
         :href="location.mapsUrl"
         target="_blank"
         rel="noopener noreferrer"

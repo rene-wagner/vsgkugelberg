@@ -80,6 +80,11 @@ export const createDepartmentLocationValidator = [
     .optional()
     .isInt({ min: 0 })
     .withMessage('Sort must be a non-negative integer'),
+
+  body('imageId')
+    .optional({ nullable: true })
+    .isInt({ min: 1 })
+    .withMessage('imageId must be a positive integer'),
 ];
 
 export const updateDepartmentLocationValidator = [
@@ -140,6 +145,11 @@ export const updateDepartmentLocationValidator = [
     .optional()
     .isInt({ min: 0 })
     .withMessage('Sort must be a non-negative integer'),
+
+  body('imageId')
+    .optional({ nullable: true })
+    .isInt({ min: 1 })
+    .withMessage('imageId must be a positive integer'),
 ];
 
 export const locationIdParamValidator = [

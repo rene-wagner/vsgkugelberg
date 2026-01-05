@@ -71,7 +71,6 @@ model Department {
   name             String                    @unique
   slug             String                    @unique
   shortDescription String
-  longDescription  String
   iconId           Int?
   icon             Media?                    @relation(fields: [iconId], references: [id], onDelete: SetNull)
   stats            DepartmentStat[]
@@ -137,6 +136,8 @@ model DepartmentLocation {
   city         String
   mapsUrl      String?
   amenities    Json
+  imageId      Int?
+  image        Media?     @relation(fields: [imageId], references: [id], onDelete: SetNull)
   sort         Int        @default(0)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
@@ -234,6 +235,7 @@ model Media {
   departments    Department[]
   posts          Post[]
   contactPersons ContactPerson[]
+  locations      DepartmentLocation[]
 
   @@index([type])
   @@index([createdAt])

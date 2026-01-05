@@ -22,13 +22,18 @@ export interface LocationAmenity {
 }
 
 export interface DepartmentLocation {
+  id: number;
   name: string; // e.g., "Sporthalle Kugelberg"
   badge: string; // e.g., "Haupthalle"
   badgeVariant: 'primary' | 'secondary';
   street: string;
   city: string;
   amenities: LocationAmenity[];
-  mapsUrl: string;
+  mapsUrl: string | null;
+  image?: {
+    filename: string;
+    originalName: string;
+  } | null;
 }
 
 // Trainer Types

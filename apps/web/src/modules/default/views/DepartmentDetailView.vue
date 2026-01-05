@@ -96,6 +96,7 @@ const departmentTrainingGroups = computed<TrainingGroup[]>(() => {
 const departmentLocations = computed<DepartmentLocation[]>(() => {
   if (!currentDepartment.value?.locations) return [];
   return currentDepartment.value.locations.map((location) => ({
+    id: location.id,
     name: location.name,
     badge: location.badge,
     badgeVariant: location.badgeVariant as 'primary' | 'secondary',
@@ -103,6 +104,12 @@ const departmentLocations = computed<DepartmentLocation[]>(() => {
     city: location.city,
     amenities: Array.isArray(location.amenities) ? location.amenities : [],
     mapsUrl: location.mapsUrl || '',
+    image: location.image
+      ? {
+          filename: location.image.filename,
+          originalName: location.image.originalName,
+        }
+      : null,
   }));
 });
 
@@ -225,7 +232,6 @@ const departmentCta = computed<DepartmentCta>(() => {
             ? getMediaUrl(currentDepartment.icon)
             : undefined
         "
-        subtitle="Spannende Duelle für Kinder und Erwachsene."
         :primary-cta-label="
           departmentTrainingGroups.length > 0 ? 'TRAININGSZEITEN' : undefined
         "

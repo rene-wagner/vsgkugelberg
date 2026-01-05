@@ -36,8 +36,10 @@ export class DepartmentLocationsService {
         city: dto.city,
         mapsUrl: dto.mapsUrl ?? null,
         amenities: dto.amenities,
+        imageId: dto.imageId ?? null,
         sort: dto.sort ?? 0,
       },
+      include: { image: true },
     });
   }
 
@@ -71,8 +73,10 @@ export class DepartmentLocationsService {
         ...(dto.city !== undefined && { city: dto.city }),
         ...(dto.mapsUrl !== undefined && { mapsUrl: dto.mapsUrl }),
         ...(dto.amenities !== undefined && { amenities: dto.amenities }),
+        ...(dto.imageId !== undefined && { imageId: dto.imageId }),
         ...(dto.sort !== undefined && { sort: dto.sort }),
       },
+      include: { image: true },
     });
   }
 
@@ -132,6 +136,7 @@ export class DepartmentLocationsService {
     return prisma.departmentLocation.findMany({
       where: { departmentId },
       orderBy: { sort: 'asc' },
+      include: { image: true },
     });
   }
 }
