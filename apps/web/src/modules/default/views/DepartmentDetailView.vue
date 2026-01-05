@@ -142,7 +142,7 @@ const departmentCta = computed<DepartmentCta>(() => {
   return {
     title: `LUST AUF<br/>${departmentName.toUpperCase()}?`,
     description:
-      'Komm einfach zum Probetraining vorbei! Wir freuen uns auf dich - egal ob Anfänger oder erfahrener Spieler.',
+      'Komm einfach zum Probetraining vorbei! Wir freuen uns auf dich - egal ob Anfänger oder erfahrener Sportfreund.',
     primaryCtaLabel: 'PROBETRAINING ANFRAGEN',
     primaryCtaRoute: '/kontakt',
     secondaryCtaLabel: 'E-MAIL SCHREIBEN',
