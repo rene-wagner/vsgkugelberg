@@ -33,7 +33,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Badminton',
           slug: 'badminton',
           shortDescription: 'Badminton department',
-          longDescription: 'This is the badminton department',
         },
       });
 
@@ -42,7 +41,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Table Tennis',
           slug: 'table-tennis',
           shortDescription: 'Table Tennis department',
-          longDescription: 'This is the table tennis department',
         },
       });
 
@@ -53,7 +51,6 @@ describe('Departments API Integration Tests', () => {
       expect(response.body[0]).toHaveProperty('name');
       expect(response.body[0]).toHaveProperty('slug');
       expect(response.body[0]).toHaveProperty('shortDescription');
-      expect(response.body[0]).toHaveProperty('longDescription');
       expect(response.body[0]).toHaveProperty('createdAt');
       expect(response.body[0]).toHaveProperty('updatedAt');
     });
@@ -64,7 +61,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Volleyball',
           slug: 'volleyball',
           shortDescription: 'Volleyball department',
-          longDescription: 'This is the volleyball department',
         },
       });
 
@@ -73,7 +69,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Badminton',
           slug: 'badminton',
           shortDescription: 'Badminton department',
-          longDescription: 'This is the badminton department',
         },
       });
 
@@ -99,8 +94,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Gymnastics',
           slug: 'gymnastics',
           shortDescription: 'Gymnastics department offering various programs',
-          longDescription:
-            'Our gymnastics department offers comprehensive programs for all ages and skill levels',
         },
       });
 
@@ -111,9 +104,129 @@ describe('Departments API Integration Tests', () => {
         name: 'Gymnastics',
         slug: 'gymnastics',
         shortDescription: 'Gymnastics department offering various programs',
-        longDescription:
-          'Our gymnastics department offers comprehensive programs for all ages and skill levels',
       });
+    });
+
+    it('should return department with all extended relations', async () => {
+      // Create department with all related data
+      const department = await prisma.department.create({
+        data: {
+          name: 'Tischtennis',
+          slug: 'tischtennis',
+          shortDescription: 'Tischtennis department',
+        },
+      });
+
+      // Create stats
+      await prisma.departmentStat.create({
+        data: {
+          departmentId: department.id,
+          label: 'Aktive Spieler',
+          value: '45',
+          sort: 0,
+        },
+      });
+
+      // Create training group with session
+      const group = await prisma.departmentTrainingGroup.create({
+        data: {
+          departmentId: department.id,
+          name: 'Kinder & Jugend',
+          ageRange: '6 - 17 Jahre',
+          icon: 'youth',
+          variant: 'primary',
+          sort: 0,
+        },
+      });
+
+      await prisma.departmentTrainingSession.create({
+        data: {
+          trainingGroupId: group.id,
+          day: 'Montag',
+          time: '16:00 - 17:30',
+          sort: 0,
+        },
+      });
+
+      // Create location
+      await prisma.departmentLocation.create({
+        data: {
+          departmentId: department.id,
+          name: 'Sporthalle',
+          badge: 'HAUPTHALLE',
+          badgeVariant: 'primary',
+          street: 'Test Street 1',
+          city: 'Test City',
+          mapsUrl: 'https://maps.google.com/?q=test',
+          amenities: [{ text: 'Parkplatz' }],
+          sort: 0,
+        },
+      });
+
+      // Create contact person and trainer
+      const contactPerson = await prisma.contactPerson.create({
+        data: {
+          firstName: 'Michael',
+          lastName: 'Weber',
+          type: 'Trainer',
+          email: 'michael@test.com',
+          phone: '+49 123 456789',
+        },
+      });
+
+      await prisma.departmentTrainer.create({
+        data: {
+          departmentId: department.id,
+          contactPersonId: contactPerson.id,
+          role: 'Cheftrainer',
+          licenses: [{ name: 'DTTB C-Lizenz', variant: 'gold' }],
+          sort: 0,
+        },
+      });
+
+      const response = await request(app).get('/api/departments/tischtennis');
+
+      expect(response.status).toBe(200);
+
+      // Verify stats
+      expect(response.body.stats).toHaveLength(1);
+      expect(response.body.stats[0].label).toBe('Aktive Spieler');
+
+      // Verify training groups with sessions
+      expect(response.body.trainingGroups).toHaveLength(1);
+      expect(response.body.trainingGroups[0].name).toBe('Kinder & Jugend');
+      expect(response.body.trainingGroups[0].sessions).toHaveLength(1);
+      expect(response.body.trainingGroups[0].sessions[0].day).toBe('Montag');
+
+      // Verify locations
+      expect(response.body.locations).toHaveLength(1);
+      expect(response.body.locations[0].name).toBe('Sporthalle');
+      expect(response.body.locations[0].amenities).toEqual([
+        { text: 'Parkplatz' },
+      ]);
+
+      // Verify trainers with contact person
+      expect(response.body.trainers).toHaveLength(1);
+      expect(response.body.trainers[0].role).toBe('Cheftrainer');
+      expect(response.body.trainers[0].contactPerson.firstName).toBe('Michael');
+    });
+
+    it('should return empty arrays when department has no related data', async () => {
+      await prisma.department.create({
+        data: {
+          name: 'Empty Dept',
+          slug: 'empty-dept',
+          shortDescription: 'Empty department',
+        },
+      });
+
+      const response = await request(app).get('/api/departments/empty-dept');
+
+      expect(response.status).toBe(200);
+      expect(response.body.stats).toEqual([]);
+      expect(response.body.trainingGroups).toEqual([]);
+      expect(response.body.locations).toEqual([]);
+      expect(response.body.trainers).toEqual([]);
     });
 
     it('should return 404 for non-existent department', async () => {
@@ -141,8 +254,6 @@ describe('Departments API Integration Tests', () => {
       const newDepartment = {
         name: 'Badminton',
         shortDescription: 'Badminton department for all skill levels',
-        longDescription:
-          'Our badminton department offers training and competitions for players of all ages and abilities',
       };
 
       const response = await request(app)
@@ -155,8 +266,6 @@ describe('Departments API Integration Tests', () => {
         name: 'Badminton',
         slug: 'badminton',
         shortDescription: 'Badminton department for all skill levels',
-        longDescription:
-          'Our badminton department offers training and competitions for players of all ages and abilities',
       });
       expect(response.body).toHaveProperty('id');
       expect(response.body).toHaveProperty('createdAt');
@@ -175,7 +284,6 @@ describe('Departments API Integration Tests', () => {
       const department1 = {
         name: 'Table Tennis',
         shortDescription: 'Table Tennis department',
-        longDescription: 'This is the table tennis department',
       };
 
       const response1 = await request(app)
@@ -190,7 +298,6 @@ describe('Departments API Integration Tests', () => {
       const department2 = {
         name: 'Table Tennis Club',
         shortDescription: 'Another Table Tennis department',
-        longDescription: 'This is another table tennis department',
       };
 
       const response2 = await request(app)
@@ -207,7 +314,6 @@ describe('Departments API Integration Tests', () => {
       const newDepartment = {
         name: 'Volleyball',
         shortDescription: 'Volleyball department',
-        longDescription: 'This is the volleyball department',
       };
 
       const response = await request(app)
@@ -222,7 +328,6 @@ describe('Departments API Integration Tests', () => {
 
       const newDepartment = {
         shortDescription: 'Some description',
-        longDescription: 'Some long description text',
       };
 
       const response = await request(app)
@@ -238,23 +343,6 @@ describe('Departments API Integration Tests', () => {
 
       const newDepartment = {
         name: 'Badminton',
-        longDescription: 'Some long description text',
-      };
-
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
-
-      expect(response.status).toBe(400);
-    });
-
-    it('should return 400 for missing longDescription', async () => {
-      const { cookies } = await createAuthenticatedUser();
-
-      const newDepartment = {
-        name: 'Badminton',
-        shortDescription: 'Some short description',
       };
 
       const response = await request(app)
@@ -271,7 +359,6 @@ describe('Departments API Integration Tests', () => {
       const newDepartment = {
         name: 'B',
         shortDescription: 'Badminton department',
-        longDescription: 'This is the badminton department',
       };
 
       const response = await request(app)
@@ -290,7 +377,6 @@ describe('Departments API Integration Tests', () => {
       const newDepartment = {
         name: longName,
         shortDescription: 'Some description',
-        longDescription: 'Some long description text',
       };
 
       const response = await request(app)
@@ -308,7 +394,6 @@ describe('Departments API Integration Tests', () => {
       const newDepartment = {
         name: 'Badminton',
         shortDescription: 'Short',
-        longDescription: 'This is a long description',
       };
 
       const response = await request(app)
@@ -319,31 +404,13 @@ describe('Departments API Integration Tests', () => {
       expect(response.status).toBe(400);
     });
 
-    it('should return 400 for shortDescription too long (more than 200 chars)', async () => {
+    it('should return 400 for shortDescription too long (more than 5000 chars)', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const longShortDesc = 'a'.repeat(201);
+      const longShortDesc = 'a'.repeat(5001);
       const newDepartment = {
         name: 'Badminton',
         shortDescription: longShortDesc,
-        longDescription: 'This is a long description',
-      };
-
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
-
-      expect(response.status).toBe(400);
-    });
-
-    it('should return 400 for longDescription too short (less than 20 chars)', async () => {
-      const { cookies } = await createAuthenticatedUser();
-
-      const newDepartment = {
-        name: 'Badminton',
-        shortDescription: 'Badminton department',
-        longDescription: 'Too short',
       };
 
       const response = await request(app)
@@ -360,7 +427,6 @@ describe('Departments API Integration Tests', () => {
       const newDepartment = {
         name: 'Table Tennis & Badminton',
         shortDescription: 'Combined department',
-        longDescription: 'This is a combined department for both sports',
       };
 
       const response = await request(app)
@@ -382,7 +448,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Original Name',
           slug: 'original-name',
           shortDescription: 'Short description',
-          longDescription: 'Long description text',
         },
       });
 
@@ -405,10 +470,9 @@ describe('Departments API Integration Tests', () => {
 
       const department = await prisma.department.create({
         data: {
-          name: 'Gymnastics',
-          slug: 'gymnastics',
+          name: 'Original Name',
+          slug: 'original-name',
           shortDescription: 'Original short description',
-          longDescription: 'Long description text',
         },
       });
 
@@ -423,34 +487,7 @@ describe('Departments API Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.shortDescription).toBe('Updated short description');
-      expect(response.body.slug).toBe('gymnastics');
-    });
-
-    it('should update department longDescription', async () => {
-      const { cookies } = await createAuthenticatedUser();
-
-      const department = await prisma.department.create({
-        data: {
-          name: 'Volleyball',
-          slug: 'volleyball',
-          shortDescription: 'Short description',
-          longDescription: 'Original long description',
-        },
-      });
-
-      const update = {
-        longDescription: 'Updated long description text',
-      };
-
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
-
-      expect(response.status).toBe(200);
-      expect(response.body.longDescription).toBe(
-        'Updated long description text',
-      );
+      expect(response.body.slug).toBe('original-name');
     });
 
     it('should update multiple fields at once', async () => {
@@ -461,14 +498,12 @@ describe('Departments API Integration Tests', () => {
           name: 'Original Department',
           slug: 'original-department',
           shortDescription: 'Original short',
-          longDescription: 'Original long description',
         },
       });
 
       const update = {
         name: 'Updated Department',
         shortDescription: 'Updated short description',
-        longDescription: 'Updated long description text',
       };
 
       const response = await request(app)
@@ -480,7 +515,6 @@ describe('Departments API Integration Tests', () => {
       expect(response.body).toMatchObject({
         name: 'Updated Department',
         shortDescription: 'Updated short description',
-        longDescription: 'Updated long description text',
       });
       expect(response.body.slug).toBe('updated-department');
     });
@@ -493,7 +527,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Original Name',
           slug: 'original-name',
           shortDescription: 'Short description',
-          longDescription: 'Long description text',
         },
       });
 
@@ -522,7 +555,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Test Department',
           slug: 'test-department',
           shortDescription: 'Short description',
-          longDescription: 'Long description text',
         },
       });
 
@@ -561,7 +593,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Original Name',
           slug: 'original-name',
           shortDescription: 'Original short',
-          longDescription: 'Original long description',
         },
       });
 
@@ -577,7 +608,6 @@ describe('Departments API Integration Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body.name).toBe('Original Name');
       expect(response.body.shortDescription).toBe('Updated short only');
-      expect(response.body.longDescription).toBe('Original long description');
     });
 
     it('should return 400 for validation errors on update', async () => {
@@ -588,7 +618,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Test Department',
           slug: 'test-department',
           shortDescription: 'Short description',
-          longDescription: 'Long description text',
         },
       });
 
@@ -614,7 +643,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Department to Delete',
           slug: 'department-to-delete',
           shortDescription: 'Short description',
-          longDescription: 'Long description text',
         },
       });
 
@@ -642,7 +670,6 @@ describe('Departments API Integration Tests', () => {
           name: 'Protected Department',
           slug: 'protected-department',
           shortDescription: 'Short description',
-          longDescription: 'Long description text',
         },
       });
 
@@ -711,8 +738,6 @@ describe('Departments API Integration Tests', () => {
         const newDepartment = {
           name: 'Badminton',
           shortDescription: 'Badminton department for all skill levels',
-          longDescription:
-            'Our badminton department offers training and competitions for players of all ages and abilities',
           iconId: svgMedia.id,
         };
 
@@ -734,8 +759,6 @@ describe('Departments API Integration Tests', () => {
         const newDepartment = {
           name: 'Table Tennis',
           shortDescription: 'Table Tennis department for all skill levels',
-          longDescription:
-            'Our table tennis department offers training for players of all ages',
           iconId: pngMedia.id,
         };
 
@@ -754,8 +777,6 @@ describe('Departments API Integration Tests', () => {
         const newDepartment = {
           name: 'Volleyball',
           shortDescription: 'Volleyball department for all skill levels',
-          longDescription:
-            'Our volleyball department offers training for players of all ages',
           iconId: 99999,
         };
 
@@ -774,8 +795,6 @@ describe('Departments API Integration Tests', () => {
         const newDepartment = {
           name: 'Swimming',
           shortDescription: 'Swimming department for all skill levels',
-          longDescription:
-            'Our swimming department offers training for swimmers of all ages',
         };
 
         const response = await request(app)
@@ -799,7 +818,6 @@ describe('Departments API Integration Tests', () => {
             name: 'Gymnastics',
             slug: 'gymnastics',
             shortDescription: 'Gymnastics department',
-            longDescription: 'This is the gymnastics department',
           },
         });
 
@@ -826,7 +844,6 @@ describe('Departments API Integration Tests', () => {
             name: 'Football',
             slug: 'football',
             shortDescription: 'Football department',
-            longDescription: 'This is the football department',
             iconId: svgMedia.id,
           },
         });
@@ -850,7 +867,6 @@ describe('Departments API Integration Tests', () => {
             name: 'Basketball',
             slug: 'basketball',
             shortDescription: 'Basketball department',
-            longDescription: 'This is the basketball department',
           },
         });
 
@@ -876,7 +892,6 @@ describe('Departments API Integration Tests', () => {
             name: 'Tennis',
             slug: 'tennis',
             shortDescription: 'Tennis department',
-            longDescription: 'This is the tennis department',
             iconId: svgMedia.id,
           },
         });
@@ -886,7 +901,6 @@ describe('Departments API Integration Tests', () => {
             name: 'Hockey',
             slug: 'hockey',
             shortDescription: 'Hockey department',
-            longDescription: 'This is the hockey department',
           },
         });
 
@@ -919,8 +933,6 @@ describe('Departments API Integration Tests', () => {
             name: 'Athletics',
             slug: 'athletics',
             shortDescription: 'Athletics department with running events',
-            longDescription:
-              'Our athletics department offers various running and field events',
             iconId: svgMedia.id,
           },
         });
@@ -946,7 +958,6 @@ describe('Departments API Integration Tests', () => {
             name: 'Cycling',
             slug: 'cycling',
             shortDescription: 'Cycling department',
-            longDescription: 'This is the cycling department',
             iconId: svgMedia.id,
           },
         });
@@ -980,14 +991,12 @@ describe('Departments API Integration Tests', () => {
           name: 'Badminton',
           slug: 'badminton',
           shortDescription: 'First badminton department',
-          longDescription: 'This is the first badminton department',
         },
       });
 
       const newDepartment = {
         name: 'Badminton',
         shortDescription: 'Second badminton department',
-        longDescription: 'This is a duplicate badminton department',
       };
 
       const response = await request(app)
@@ -1006,7 +1015,6 @@ describe('Departments API Integration Tests', () => {
       const newDepartment = {
         name: 'Fußball & Tischtennis',
         shortDescription: 'German sports department',
-        longDescription: 'This department includes German sports',
       };
 
       const response = await request(app)
@@ -1025,7 +1033,6 @@ describe('Departments API Integration Tests', () => {
       const newDepartment = {
         name: '  Badminton  ',
         shortDescription: '  Short description  ',
-        longDescription: '  Long description text  ',
       };
 
       const response = await request(app)
@@ -1036,7 +1043,6 @@ describe('Departments API Integration Tests', () => {
       expect(response.status).toBe(201);
       expect(response.body.name).toBe('Badminton');
       expect(response.body.shortDescription).toBe('Short description');
-      expect(response.body.longDescription).toBe('Long description text');
     });
   });
 });

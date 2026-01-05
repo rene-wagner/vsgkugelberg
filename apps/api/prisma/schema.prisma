@@ -67,17 +67,99 @@ model Category {
 }
 
 model Department {
-  id               Int      @id @default(autoincrement())
-  name             String   @unique
-  slug             String   @unique
+  id               Int                       @id @default(autoincrement())
+  name             String                    @unique
+  slug             String                    @unique
   shortDescription String
-  longDescription  String
   iconId           Int?
-  icon             Media?   @relation(fields: [iconId], references: [id], onDelete: SetNull)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  icon             Media?                    @relation(fields: [iconId], references: [id], onDelete: SetNull)
+  stats            DepartmentStat[]
+  trainingGroups   DepartmentTrainingGroup[]
+  locations        DepartmentLocation[]
+  trainers         DepartmentTrainer[]
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
 
   @@index([slug])
+}
+
+model DepartmentStat {
+  id           Int        @id @default(autoincrement())
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  label        String
+  value        String
+  sort         Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([departmentId])
+}
+
+model DepartmentTrainingGroup {
+  id           Int                         @id @default(autoincrement())
+  departmentId Int
+  department   Department                  @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  name         String
+  ageRange     String?
+  icon         String
+  variant      String
+  sort         Int                         @default(0)
+  sessions     DepartmentTrainingSession[]
+  createdAt    DateTime                    @default(now())
+  updatedAt    DateTime                    @updatedAt
+
+  @@index([departmentId])
+}
+
+model DepartmentTrainingSession {
+  id              Int                     @id @default(autoincrement())
+  trainingGroupId Int
+  trainingGroup   DepartmentTrainingGroup @relation(fields: [trainingGroupId], references: [id], onDelete: Cascade)
+  day             String
+  time            String
+  sort            Int                     @default(0)
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  @@index([trainingGroupId])
+}
+
+model DepartmentLocation {
+  id           Int        @id @default(autoincrement())
+  departmentId Int
+  department   Department @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  name         String
+  badge        String
+  badgeVariant String
+  street       String
+  city         String
+  mapsUrl      String?
+  amenities    Json
+  imageId      Int?
+  image        Media?     @relation(fields: [imageId], references: [id], onDelete: SetNull)
+  sort         Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@index([departmentId])
+}
+
+model DepartmentTrainer {
+  id              Int           @id @default(autoincrement())
+  departmentId    Int
+  department      Department    @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  contactPersonId Int
+  contactPerson   ContactPerson @relation(fields: [contactPersonId], references: [id], onDelete: Cascade)
+  role            String
+  licenses        Json
+  sort            Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([departmentId, contactPersonId])
+  @@index([departmentId])
+  @@index([contactPersonId])
 }
 
 model Block {
@@ -125,17 +207,18 @@ model Event {
 }
 
 model ContactPerson {
-  id             Int      @id @default(autoincrement())
-  firstName      String
-  lastName       String
-  type           String
-  email          String
-  address        String?
-  phone          String
-  profileImageId Int?
-  profileImage   Media?   @relation(fields: [profileImageId], references: [id], onDelete: SetNull)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                 Int                 @id @default(autoincrement())
+  firstName          String
+  lastName           String
+  type               String
+  email              String
+  address            String?
+  phone              String
+  profileImageId     Int?
+  profileImage       Media?              @relation(fields: [profileImageId], references: [id], onDelete: SetNull)
+  departmentTrainers DepartmentTrainer[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 }
 
 model Media {
@@ -147,12 +230,29 @@ model Media {
   size           Int
   type           String          @default("IMAGE")
   thumbnails     Json?
+  folderId       Int?
+  folder         MediaFolder?    @relation(fields: [folderId], references: [id], onDelete: SetNull)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   departments    Department[]
   posts          Post[]
   contactPersons ContactPerson[]
+  locations      DepartmentLocation[]
 
   @@index([type])
   @@index([createdAt])
+  @@index([folderId])
+}
+
+model MediaFolder {
+  id        Int           @id @default(autoincrement())
+  name      String
+  parentId  Int?
+  parent    MediaFolder?  @relation("FolderHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children  MediaFolder[] @relation("FolderHierarchy")
+  media     Media[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([parentId])
 }

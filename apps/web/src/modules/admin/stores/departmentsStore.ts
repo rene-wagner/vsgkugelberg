@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { MediaItem } from './mediaStore';
+import type { DepartmentExtended } from '../types/department-extended.types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -9,24 +10,24 @@ export interface Department {
   name: string;
   slug: string;
   shortDescription: string;
-  longDescription: string;
   iconId: number | null;
   icon: MediaItem | null;
   createdAt: string;
   updatedAt: string;
 }
 
+// Re-export the extended type for consumers
+export type { DepartmentExtended };
+
 export interface CreateDepartmentData {
   name: string;
   shortDescription: string;
-  longDescription: string;
   iconId?: number;
 }
 
 export interface UpdateDepartmentData {
   name?: string;
   shortDescription?: string;
-  longDescription?: string;
   iconId?: number | null;
 }
 
@@ -57,7 +58,9 @@ export const useDepartmentsStore = defineStore('departments', () => {
     }
   }
 
-  async function fetchDepartment(slug: string): Promise<Department | null> {
+  async function fetchDepartment(
+    slug: string,
+  ): Promise<DepartmentExtended | null> {
     isLoading.value = true;
     error.value = null;
 
@@ -71,7 +74,7 @@ export const useDepartmentsStore = defineStore('departments', () => {
         throw new Error('Failed to fetch department');
       }
 
-      return (await response.json()) as Department;
+      return (await response.json()) as DepartmentExtended;
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'An error occurred';
       return null;

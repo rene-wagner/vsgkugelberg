@@ -14,6 +14,12 @@ import {
   UpdateDepartmentDto,
 } from '@/types/department.types';
 
+// Import nested routers
+import { departmentStatsRouter } from './department-stats.routes';
+import { departmentTrainingRouter } from './department-training.routes';
+import { departmentLocationsRouter } from './department-locations.routes';
+import { departmentTrainersRouter } from './department-trainers.routes';
+
 const router = Router();
 const departmentsService = new DepartmentsService();
 
@@ -84,5 +90,11 @@ router.delete(
     res.json(department);
   }),
 );
+
+// Mount nested routers for department sub-resources
+router.use('/:slug/stats', departmentStatsRouter);
+router.use('/:slug/training-groups', departmentTrainingRouter);
+router.use('/:slug/locations', departmentLocationsRouter);
+router.use('/:slug/trainers', departmentTrainersRouter);
 
 export { router as departmentsRouter };

@@ -1,15 +1,23 @@
 <script setup lang="ts">
-interface Stat {
+export interface Stat {
   value: string;
   label: string;
 }
 
-const stats: Stat[] = [
-  { value: '104', label: 'Jahre Tradition' },
-  { value: '850+', label: 'Mitglieder' },
-  { value: '4', label: 'Abteilungen' },
-  { value: '47', label: 'Titel' },
-];
+interface Props {
+  stats?: Stat[];
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  stats: () => [
+    { value: '104', label: 'Jahre Tradition' },
+    { value: '850+', label: 'Mitglieder' },
+    { value: '4', label: 'Abteilungen' },
+    { value: '47', label: 'Titel' },
+  ],
+});
+
+const displayStats = props.stats;
 </script>
 
 <template>
@@ -17,7 +25,7 @@ const stats: Stat[] = [
     <div class="mx-auto max-w-7xl px-6">
       <div class="grid grid-cols-2 gap-8 md:grid-cols-4">
         <div
-          v-for="(stat, index) in stats"
+          v-for="(stat, index) in displayStats"
           :key="stat.label"
           class="animate-scale-in text-center"
           :class="`delay-${(index + 1) * 100}`"

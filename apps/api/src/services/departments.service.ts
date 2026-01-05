@@ -6,7 +6,9 @@ import {
 import {
   CreateDepartmentDto,
   UpdateDepartmentDto,
+  Department,
   DepartmentWithIcon,
+  DepartmentWithAllRelations,
 } from '@/types/department.types';
 import { SlugifyService } from '@/services/slugify.service';
 import { Prisma, prisma } from '@/lib/prisma.lib';
@@ -37,10 +39,35 @@ export class DepartmentsService {
     });
   }
 
-  async findBySlug(slug: string): Promise<DepartmentWithIcon> {
+  async findBySlug(slug: string): Promise<DepartmentWithAllRelations> {
     const department = await prisma.department.findUnique({
       where: { slug },
-      include: { icon: true },
+      include: {
+        icon: true,
+        stats: {
+          orderBy: { sort: 'asc' },
+        },
+        trainingGroups: {
+          orderBy: { sort: 'asc' },
+          include: {
+            sessions: {
+              orderBy: { sort: 'asc' },
+            },
+          },
+        },
+        locations: {
+          orderBy: { sort: 'asc' },
+          include: { image: true },
+        },
+        trainers: {
+          orderBy: { sort: 'asc' },
+          include: {
+            contactPerson: {
+              include: { profileImage: true },
+            },
+          },
+        },
+      },
     });
 
     if (!department) {
@@ -69,7 +96,6 @@ export class DepartmentsService {
           name: createDepartmentDto.name,
           slug,
           shortDescription: createDepartmentDto.shortDescription,
-          longDescription: createDepartmentDto.longDescription,
           iconId: createDepartmentDto.iconId,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -124,10 +150,6 @@ export class DepartmentsService {
 
     if (updateDepartmentDto.shortDescription !== undefined) {
       updateData.shortDescription = updateDepartmentDto.shortDescription;
-    }
-
-    if (updateDepartmentDto.longDescription !== undefined) {
-      updateData.longDescription = updateDepartmentDto.longDescription;
     }
 
     // Handle iconId: can be set to a value, or explicitly set to null to remove

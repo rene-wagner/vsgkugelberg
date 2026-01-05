@@ -22,16 +22,23 @@ export class MediaService {
   async findAll(
     page: number = 1,
     limit: number = 24,
+    folderId: number | null | undefined = undefined,
   ): Promise<PaginatedResponse<Media>> {
     const skip = (page - 1) * limit;
 
+    const where: Prisma.MediaWhereInput = {};
+    if (folderId !== undefined) {
+      where.folderId = folderId;
+    }
+
     const [media, total] = await Promise.all([
       prisma.media.findMany({
+        where,
         orderBy: { createdAt: 'desc' },
         skip,
         take: limit,
       }),
-      prisma.media.count(),
+      prisma.media.count({ where }),
     ]);
 
     const totalPages = Math.ceil(total / limit);
@@ -84,6 +91,7 @@ export class MediaService {
         mimetype: createMediaDto.mimetype,
         size: createMediaDto.size,
         type: createMediaDto.type || 'IMAGE',
+        folderId: createMediaDto.folderId || null,
         ...(thumbnails && { thumbnails }),
       },
     });
@@ -169,6 +177,30 @@ export class MediaService {
     return prisma.media.update({
       where: { id },
       data: { thumbnails },
+    });
+  }
+
+  async move(id: number, folderId: number | null): Promise<Media> {
+    const media = await prisma.media.findUnique({
+      where: { id },
+    });
+
+    if (!media) {
+      throw new NotFoundException(`Media with ID ${id} not found`);
+    }
+
+    if (folderId !== null) {
+      const folder = await prisma.mediaFolder.findUnique({
+        where: { id: folderId },
+      });
+      if (!folder) {
+        throw new NotFoundException(`Folder with ID ${folderId} not found`);
+      }
+    }
+
+    return prisma.media.update({
+      where: { id },
+      data: { folderId },
     });
   }
 

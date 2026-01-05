@@ -18,6 +18,10 @@ const isUploading = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 const previewIcon = ref<MediaItem | null>(null);
 
+const hasContent = computed(
+  () => mediaStore.media.length > 0 || mediaStore.folders.length > 0,
+);
+
 // Filter media to show only SVG files
 const svgMedia = computed(() => {
   return mediaStore.media.filter((item) => item.mimetype === 'image/svg+xml');
@@ -35,14 +39,32 @@ watch(
 );
 
 onMounted(async () => {
-  // Fetch media to populate the gallery
-  if (mediaStore.media.length === 0) {
-    await mediaStore.fetchMedia(1, 100);
-  }
+  // We load root by default if opening gallery
 });
 
-function openGallery() {
+async function openGallery() {
+  await loadFolder(null);
   showGallery.value = true;
+}
+
+async function loadFolder(folderId: number | null) {
+  const promises: Promise<any>[] = [
+    mediaStore.fetchMedia(1, 100, folderId),
+    mediaStore.fetchFolders(folderId),
+  ];
+
+  if (folderId !== null) {
+    promises.push(mediaStore.fetchFolderDetails(folderId));
+  } else {
+    mediaStore.currentFolder = null;
+  }
+
+  await Promise.all(promises);
+}
+
+async function navigateUp() {
+  const parentId = mediaStore.currentFolder?.parentId || null;
+  await loadFolder(parentId);
 }
 
 function closeGallery() {
@@ -208,8 +230,32 @@ async function handleFileUpload(event: Event) {
 
           <!-- Content -->
           <div class="flex-1 overflow-y-auto p-6">
+            <!-- Back button if in folder -->
+            <div v-if="mediaStore.currentFolderId !== null" class="mb-4">
+              <button
+                type="button"
+                class="flex items-center gap-2 text-sm font-body text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors"
+                @click="navigateUp"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                  />
+                </svg>
+                Eine Ebene nach oben
+              </button>
+            </div>
+
             <!-- Empty State -->
-            <div v-if="svgMedia.length === 0" class="text-center py-12">
+            <div v-if="!hasContent" class="text-center py-12">
               <div
                 class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
               >
@@ -244,6 +290,58 @@ async function handleFileUpload(event: Event) {
               v-else
               class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3"
             >
+              <!-- Back to parent -->
+              <button
+                v-if="mediaStore.currentFolderId !== null"
+                type="button"
+                class="aspect-square bg-gray-50 border border-gray-200 rounded-lg flex flex-col items-center justify-center hover:bg-gray-100 transition-colors"
+                @click="navigateUp"
+              >
+                <svg
+                  class="w-8 h-8 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
+                  />
+                </svg>
+                <span
+                  class="mt-1 font-body text-[10px] text-gray-600 font-medium"
+                >
+                  ..
+                </span>
+              </button>
+
+              <!-- Folders -->
+              <button
+                v-for="folder in mediaStore.folders"
+                :key="'folder-' + folder.id"
+                type="button"
+                class="aspect-square bg-vsg-blue-50 border border-vsg-blue-100 rounded-lg flex flex-col items-center justify-center hover:bg-vsg-blue-100 transition-colors"
+                @click="loadFolder(folder.id)"
+              >
+                <svg
+                  class="w-8 h-8 text-vsg-blue-400"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                  />
+                </svg>
+                <span
+                  class="mt-1 font-body text-[10px] text-vsg-blue-900 font-medium px-1 text-center truncate w-full"
+                >
+                  {{ folder.name }}
+                </span>
+              </button>
+
+              <!-- Icons -->
               <button
                 v-for="item in svgMedia"
                 :key="item.id"

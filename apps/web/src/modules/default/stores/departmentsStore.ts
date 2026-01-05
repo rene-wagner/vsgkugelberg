@@ -15,14 +15,86 @@ export interface MediaItem {
   updatedAt: string;
 }
 
+export interface DepartmentStat {
+  id: number;
+  label: string;
+  value: string;
+  sort: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DepartmentTrainingSession {
+  id: number;
+  day: string;
+  time: string;
+  sort: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DepartmentTrainingGroup {
+  id: number;
+  name: string;
+  ageRange: string | null;
+  icon: string;
+  variant: string;
+  sort: number;
+  sessions: DepartmentTrainingSession[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DepartmentLocation {
+  id: number;
+  name: string;
+  badge: string;
+  badgeVariant: string;
+  street: string;
+  city: string;
+  mapsUrl: string | null;
+  amenities: any;
+  imageId: number | null;
+  image: MediaItem | null;
+  sort: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TrainerLicense {
+  name: string;
+  variant: string;
+}
+
+export interface DepartmentTrainer {
+  id: number;
+  contactPersonId: number;
+  role: string;
+  licenses: any;
+  sort: number;
+  createdAt: string;
+  updatedAt: string;
+  contactPerson: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    profileImage: MediaItem | null;
+  };
+}
+
 export interface Department {
   id: number;
   name: string;
   slug: string;
   shortDescription: string;
-  longDescription: string;
   iconId: number | null;
   icon: MediaItem | null;
+  stats: DepartmentStat[];
+  trainingGroups: DepartmentTrainingGroup[];
+  locations: DepartmentLocation[];
+  trainers: DepartmentTrainer[];
   createdAt: string;
   updatedAt: string;
 }

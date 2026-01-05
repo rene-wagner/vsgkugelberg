@@ -19,6 +19,15 @@ export interface MediaItem {
   size: number;
   type: string;
   thumbnails?: ThumbnailsMap | null;
+  folderId?: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MediaFolder {
+  id: number;
+  name: string;
+  parentId?: number | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -49,6 +58,9 @@ interface UploadProgress {
 
 export const useMediaStore = defineStore('media', () => {
   const media = ref<MediaItem[]>([]);
+  const folders = ref<MediaFolder[]>([]);
+  const currentFolderId = ref<number | null>(null);
+  const currentFolder = ref<MediaFolder | null>(null);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
   const uploadProgress = reactive<Map<string, UploadProgress>>(new Map());
@@ -61,13 +73,16 @@ export const useMediaStore = defineStore('media', () => {
   async function fetchMedia(
     page: number = 1,
     limit: number = 24,
+    folderId: number | null = currentFolderId.value,
   ): Promise<void> {
     isLoading.value = true;
     error.value = null;
+    currentFolderId.value = folderId;
 
     try {
+      const folderParam = folderId === null ? 'null' : folderId;
       const response = await fetch(
-        `${API_BASE_URL}/api/media?page=${page}&limit=${limit}`,
+        `${API_BASE_URL}/api/media?page=${page}&limit=${limit}&folderId=${folderParam}`,
         {
           method: 'GET',
           credentials: 'include',
@@ -88,7 +103,160 @@ export const useMediaStore = defineStore('media', () => {
     }
   }
 
-  async function uploadMedia(file: File): Promise<MediaItem | null> {
+  async function fetchFolderDetails(id: number): Promise<MediaFolder | null> {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/media/folders/${id}`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch folder details');
+      }
+
+      const result = (await response.json()) as MediaFolder;
+      currentFolder.value = result;
+      return result;
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'An error occurred';
+      return null;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function fetchFolders(
+    parentId: number | null = currentFolderId.value,
+  ): Promise<void> {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      const parentParam = parentId === null ? 'null' : parentId;
+      const response = await fetch(
+        `${API_BASE_URL}/api/media/folders?parentId=${parentParam}`,
+        {
+          method: 'GET',
+          credentials: 'include',
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch folders');
+      }
+
+      folders.value = (await response.json()) as MediaFolder[];
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'An error occurred';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function createFolder(
+    name: string,
+    parentId: number | null = currentFolderId.value,
+  ): Promise<MediaFolder | null> {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/media/folders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, parentId }),
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create folder');
+      }
+
+      const result = (await response.json()) as MediaFolder;
+      folders.value.push(result);
+      folders.value.sort((a, b) => a.name.localeCompare(b.name));
+      return result;
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'An error occurred';
+      return null;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function deleteFolder(id: number): Promise<boolean> {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/media/folders/${id}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete folder');
+      }
+
+      folders.value = folders.value.filter((f) => f.id !== id);
+      return true;
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'An error occurred';
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function moveMedia(
+    mediaId: number,
+    folderId: number | null,
+  ): Promise<boolean> {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/media/${mediaId}/move`,
+        {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ folderId }),
+          credentials: 'include',
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to move media');
+      }
+
+      // If we are currently in a folder, and the item was moved out, remove it from list
+      // Or if we move it INTO the current folder, we'd need to fetch it.
+      // For simplicity, we just refetch current view if it was affected
+      if (currentFolderId.value !== folderId) {
+        media.value = media.value.filter((m) => m.id !== mediaId);
+      }
+
+      return true;
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'An error occurred';
+      return false;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function uploadMedia(
+    file: File,
+    folderId: number | null = currentFolderId.value,
+  ): Promise<MediaItem | null> {
     const uploadId = `${file.name}-${Date.now()}`;
 
     uploadProgress.set(uploadId, {
@@ -106,6 +274,9 @@ export const useMediaStore = defineStore('media', () => {
 
       const formData = new FormData();
       formData.append('file', file);
+      if (folderId !== null) {
+        formData.append('folderId', folderId.toString());
+      }
 
       // Use XMLHttpRequest for progress tracking
       const result = await new Promise<MediaItem>((resolve, reject) => {
@@ -150,8 +321,10 @@ export const useMediaStore = defineStore('media', () => {
         status: 'complete',
       });
 
-      // Add to local state
-      media.value.unshift(result);
+      // Add to local state if we're in the same folder or if it was uploaded to root and we are at root
+      if (currentFolderId.value === folderId) {
+        media.value.unshift(result);
+      }
 
       // Clean up progress after a delay
       setTimeout(() => {
@@ -177,11 +350,14 @@ export const useMediaStore = defineStore('media', () => {
     }
   }
 
-  async function uploadMultipleMedia(files: File[]): Promise<MediaItem[]> {
+  async function uploadMultipleMedia(
+    files: File[],
+    folderId: number | null = currentFolderId.value,
+  ): Promise<MediaItem[]> {
     const results: MediaItem[] = [];
 
     for (const file of files) {
-      const result = await uploadMedia(file);
+      const result = await uploadMedia(file, folderId);
       if (result) {
         results.push(result);
       }
@@ -325,6 +501,9 @@ export const useMediaStore = defineStore('media', () => {
 
   return {
     media,
+    folders,
+    currentFolderId,
+    currentFolder,
     isLoading,
     error,
     uploadProgress,
@@ -333,6 +512,11 @@ export const useMediaStore = defineStore('media', () => {
     regenerateProgress,
     getMediaUrl,
     fetchMedia,
+    fetchFolderDetails,
+    fetchFolders,
+    createFolder,
+    deleteFolder,
+    moveMedia,
     uploadMedia,
     uploadMultipleMedia,
     deleteMedia,
