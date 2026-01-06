@@ -25,12 +25,14 @@ export interface UpdateDepartmentTrainingGroupDto {
 export interface CreateDepartmentTrainingSessionDto {
   day: string;
   time: string;
+  locationId?: number | null;
   sort?: number;
 }
 
 export interface UpdateDepartmentTrainingSessionDto {
   day?: string;
   time?: string;
+  locationId?: number | null;
   sort?: number;
 }
 

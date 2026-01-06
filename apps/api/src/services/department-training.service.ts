@@ -1,4 +1,4 @@
-import { NotFoundException } from '@/errors/http-errors';
+import { BadRequestException, NotFoundException } from '@/errors/http-errors';
 import {
   CreateDepartmentTrainingGroupDto,
   UpdateDepartmentTrainingGroupDto,
@@ -116,11 +116,23 @@ export class DepartmentTrainingService {
       );
     }
 
+    if (dto.locationId) {
+      const location = await prisma.departmentLocation.findFirst({
+        where: { id: dto.locationId, departmentId },
+      });
+      if (!location) {
+        throw new BadRequestException(
+          `Location with ID ${dto.locationId} not found for this department`,
+        );
+      }
+    }
+
     return prisma.departmentTrainingSession.create({
       data: {
         trainingGroupId: groupId,
         day: dto.day,
         time: dto.time,
+        locationId: dto.locationId ?? null,
         sort: dto.sort ?? 0,
       },
     });
@@ -156,11 +168,23 @@ export class DepartmentTrainingService {
       );
     }
 
+    if (dto.locationId) {
+      const location = await prisma.departmentLocation.findFirst({
+        where: { id: dto.locationId, departmentId },
+      });
+      if (!location) {
+        throw new BadRequestException(
+          `Location with ID ${dto.locationId} not found for this department`,
+        );
+      }
+    }
+
     return prisma.departmentTrainingSession.update({
       where: { id },
       data: {
         ...(dto.day !== undefined && { day: dto.day }),
         ...(dto.time !== undefined && { time: dto.time }),
+        ...(dto.locationId !== undefined && { locationId: dto.locationId }),
         ...(dto.sort !== undefined && { sort: dto.sort }),
       },
     });

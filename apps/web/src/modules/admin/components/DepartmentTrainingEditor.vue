@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useDepartmentTrainingStore } from '../stores/departmentTrainingStore';
+import { useDepartmentLocationsStore } from '../stores/departmentLocationsStore';
 import TrainingGroupCard from './TrainingGroupCard.vue';
 import type {
   DepartmentTrainingGroup,
@@ -28,6 +29,7 @@ const props = defineProps<{
 }>();
 
 const trainingStore = useDepartmentTrainingStore();
+const locationsStore = useDepartmentLocationsStore();
 
 // Local state
 const localGroups = ref<LocalGroup[]>([]);
@@ -52,7 +54,10 @@ const groupOrderChanged = ref(false);
 // Session pending changes (keyed by groupId)
 const pendingSessionCreates = ref<Map<number, LocalSession[]>>(new Map());
 const pendingSessionUpdates = ref<
-  Map<number, Map<number, { day: string; time: string }>>
+  Map<
+    number,
+    Map<number, { day: string; time: string; locationId: number | null }>
+  >
 >(new Map());
 const pendingSessionDeletes = ref<Map<number, Set<number>>>(new Map());
 const sessionOrderChanged = ref<Set<number>>(new Set());
@@ -221,6 +226,7 @@ function handleAddSession(groupId: number, isNewGroup: boolean) {
     trainingGroupId: groupId,
     day: '',
     time: '',
+    locationId: null,
     sort: 0,
     createdAt: '',
     updatedAt: '',
@@ -252,7 +258,7 @@ function handleAddSession(groupId: number, isNewGroup: boolean) {
 function handleSessionUpdate(
   groupId: number,
   sessionId: number,
-  data: { day: string; time: string },
+  data: { day: string; time: string; locationId: number | null },
   isNewSession: boolean,
   isNewGroup: boolean,
 ) {
@@ -261,7 +267,12 @@ function handleSessionUpdate(
     if (group) {
       const updatedSessions = group.sessions.map((s) => {
         if ((s as LocalSession)._tempId === sessionId) {
-          return { ...s, day: data.day, time: data.time };
+          return {
+            ...s,
+            day: data.day,
+            time: data.time,
+            locationId: data.locationId,
+          };
         }
         return s;
       });
@@ -274,7 +285,12 @@ function handleSessionUpdate(
     if (sessions) {
       const updatedSessions = sessions.map((s) => {
         if (s._tempId === sessionId) {
-          return { ...s, day: data.day, time: data.time };
+          return {
+            ...s,
+            day: data.day,
+            time: data.time,
+            locationId: data.locationId,
+          };
         }
         return s;
       });
@@ -418,6 +434,7 @@ async function handleSave() {
         const sessionDto: CreateDepartmentTrainingSessionDto = {
           day: session.day,
           time: session.time,
+          locationId: session.locationId,
         };
         const createdSession = await trainingStore.createSession(
           props.departmentSlug,
@@ -454,6 +471,7 @@ async function handleSave() {
         const sessionDto: CreateDepartmentTrainingSessionDto = {
           day: session.day,
           time: session.time,
+          locationId: session.locationId,
         };
         const result = await trainingStore.createSession(
           props.departmentSlug,
@@ -481,6 +499,7 @@ async function handleSave() {
         const updateDto: UpdateDepartmentTrainingSessionDto = {
           day: data.day,
           time: data.time,
+          locationId: data.locationId,
         };
         const result = await trainingStore.updateSession(
           props.departmentSlug,
@@ -604,6 +623,7 @@ async function handleSave() {
           :key="group.id"
           :group="group"
           :is-new="!!group._isNew"
+          :locations="locationsStore.locations"
           @update="
             (data) =>
               handleGroupUpdate(group._tempId || group.id, data, !!group._isNew)

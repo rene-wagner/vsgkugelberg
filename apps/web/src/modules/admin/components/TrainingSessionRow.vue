@@ -1,19 +1,27 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import type { DepartmentTrainingSession } from '../types/department-extended.types';
+import type {
+  DepartmentTrainingSession,
+  DepartmentLocation,
+} from '../types/department-extended.types';
 
 const props = defineProps<{
   session: DepartmentTrainingSession;
+  locations: DepartmentLocation[];
   isNew?: boolean;
 }>();
 
 const emit = defineEmits<{
-  (e: 'update', data: { day: string; time: string }): void;
+  (
+    e: 'update',
+    data: { day: string; time: string; locationId: number | null },
+  ): void;
   (e: 'delete'): void;
 }>();
 
 const day = ref(props.session.day);
 const time = ref(props.session.time);
+const locationId = ref(props.session.locationId);
 
 const dayOptions = [
   'Montag',
@@ -31,12 +39,17 @@ watch(
   (newSession) => {
     day.value = newSession.day;
     time.value = newSession.time;
+    locationId.value = newSession.locationId;
   },
 );
 
 // Emit updates when values change
-watch([day, time], () => {
-  emit('update', { day: day.value, time: time.value });
+watch([day, time, locationId], () => {
+  emit('update', {
+    day: day.value,
+    time: time.value,
+    locationId: locationId.value,
+  });
 });
 
 function handleDelete() {
@@ -84,6 +97,17 @@ function handleDelete() {
       placeholder="z.B. 18:00 - 20:00"
       class="flex-1 px-2 py-1.5 bg-white border border-gray-300 rounded text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
     />
+
+    <!-- Location Select -->
+    <select
+      v-model="locationId"
+      class="flex-1 px-2 py-1.5 bg-white border border-gray-300 rounded text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
+    >
+      <option :value="null">Kein Standort</option>
+      <option v-for="loc in locations" :key="loc.id" :value="loc.id">
+        {{ loc.name }}
+      </option>
+    </select>
 
     <!-- Delete Button -->
     <button

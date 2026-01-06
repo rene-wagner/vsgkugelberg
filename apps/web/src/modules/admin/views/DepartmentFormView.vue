@@ -57,14 +57,14 @@ const tabs = computed<TabDefinition[]>(() => {
       disabledTooltip,
     },
     {
-      id: 'training',
-      label: 'TRAINING',
+      id: 'standorte',
+      label: 'STANDORTE',
       disabled: disabledInCreateMode,
       disabledTooltip,
     },
     {
-      id: 'standorte',
-      label: 'STANDORTE',
+      id: 'training',
+      label: 'TRAINING',
       disabled: disabledInCreateMode,
       disabledTooltip,
     },
@@ -211,23 +211,7 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
           </div>
         </div>
 
-        <!-- Tab 3: Training -->
-        <div v-show="activeTab === 'training'">
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <h2
-              class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6"
-            >
-              TRAININGSGRUPPEN
-            </h2>
-            <DepartmentTrainingEditor
-              v-if="department"
-              :department-slug="department.slug"
-              :initial-groups="department.trainingGroups || []"
-            />
-          </div>
-        </div>
-
-        <!-- Tab 4: Standorte (Locations) -->
+        <!-- Tab 3: Standorte (Locations) -->
         <div v-show="activeTab === 'standorte'">
           <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h2
@@ -239,6 +223,22 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
               v-if="department"
               :department-slug="department.slug"
               :initial-locations="department.locations || []"
+            />
+          </div>
+        </div>
+
+        <!-- Tab 4: Training -->
+        <div v-show="activeTab === 'training'">
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <h2
+              class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6"
+            >
+              TRAININGSGRUPPEN
+            </h2>
+            <DepartmentTrainingEditor
+              v-if="department"
+              :department-slug="department.slug"
+              :initial-groups="department.trainingGroups || []"
             />
           </div>
         </div>

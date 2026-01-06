@@ -4,6 +4,7 @@ export interface TrainingSession {
   time: string; // e.g., "16:00 - 17:30"
   group: string; // e.g., "Anfanger"
   level: 'beginner' | 'intermediate' | 'advanced' | 'all' | 'competition';
+  locationName?: string;
 }
 
 export interface TrainingGroup {
