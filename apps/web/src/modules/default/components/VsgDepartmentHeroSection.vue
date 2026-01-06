@@ -11,6 +11,18 @@ interface Props {
 }
 
 defineProps<Props>();
+
+function handleAnchorClick(e: MouseEvent, anchor: string) {
+  if (anchor.startsWith('#')) {
+    const target = document.querySelector(anchor);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth' });
+      // Update URL hash without jumping
+      history.pushState(null, '', anchor);
+    }
+  }
+}
 </script>
 
 <template>
@@ -66,6 +78,7 @@ defineProps<Props>();
           v-if="primaryCtaLabel && primaryCtaAnchor"
           :href="primaryCtaAnchor"
           class="btn-primary gold-glow bg-vsg-gold-400 px-10 py-4 font-display text-2xl tracking-wider text-vsg-blue-900"
+          @click="handleAnchorClick($event, primaryCtaAnchor)"
         >
           {{ primaryCtaLabel }}
         </a>
@@ -73,6 +86,7 @@ defineProps<Props>();
           v-if="secondaryCtaLabel && secondaryCtaAnchor"
           :href="secondaryCtaAnchor"
           class="border-2 border-vsg-gold-400/50 px-10 py-4 font-display text-2xl tracking-wider text-vsg-gold-400 transition-colors hover:bg-vsg-gold-400/10"
+          @click="handleAnchorClick($event, secondaryCtaAnchor)"
         >
           {{ secondaryCtaLabel }}
         </a>
