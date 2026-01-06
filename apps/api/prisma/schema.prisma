@@ -116,6 +116,8 @@ model DepartmentTrainingSession {
   id              Int                     @id @default(autoincrement())
   trainingGroupId Int
   trainingGroup   DepartmentTrainingGroup @relation(fields: [trainingGroupId], references: [id], onDelete: Cascade)
+  locationId      Int?
+  location        DepartmentLocation?     @relation(fields: [locationId], references: [id], onDelete: SetNull)
   day             String
   time            String
   sort            Int                     @default(0)
@@ -123,6 +125,7 @@ model DepartmentTrainingSession {
   updatedAt       DateTime                @updatedAt
 
   @@index([trainingGroupId])
+  @@index([locationId])
 }
 
 model DepartmentLocation {
@@ -139,6 +142,7 @@ model DepartmentLocation {
   imageId      Int?
   image        Media?     @relation(fields: [imageId], references: [id], onDelete: SetNull)
   sort         Int        @default(0)
+  trainingSessions DepartmentTrainingSession[]
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 

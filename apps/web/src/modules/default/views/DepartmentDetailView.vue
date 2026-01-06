@@ -88,6 +88,7 @@ const departmentTrainingGroups = computed<TrainingGroup[]>(() => {
       time: session.time,
       group: 'Allgemein',
       level: 'all' as const,
+      locationName: session.location?.name,
     })),
   }));
 });

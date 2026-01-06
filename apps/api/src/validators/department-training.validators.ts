@@ -87,6 +87,11 @@ export const createTrainingSessionValidator = [
     .isLength({ min: 1, max: 30 })
     .withMessage('Time must be between 1 and 30 characters'),
 
+  body('locationId')
+    .optional({ nullable: true })
+    .isInt({ min: 1 })
+    .withMessage('Location ID must be a positive integer or null'),
+
   body('sort')
     .optional()
     .isInt({ min: 0 })
@@ -109,6 +114,11 @@ export const updateTrainingSessionValidator = [
     .withMessage('Time cannot be empty')
     .isLength({ min: 1, max: 30 })
     .withMessage('Time must be between 1 and 30 characters'),
+
+  body('locationId')
+    .optional({ nullable: true })
+    .isInt({ min: 1 })
+    .withMessage('Location ID must be a positive integer or null'),
 
   body('sort')
     .optional()

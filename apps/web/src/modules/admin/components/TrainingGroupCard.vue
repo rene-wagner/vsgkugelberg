@@ -5,6 +5,7 @@ import TrainingSessionRow from './TrainingSessionRow.vue';
 import type {
   DepartmentTrainingGroup,
   DepartmentTrainingSession,
+  DepartmentLocation,
 } from '../types/department-extended.types';
 
 interface LocalSession extends DepartmentTrainingSession {
@@ -15,6 +16,7 @@ interface LocalSession extends DepartmentTrainingSession {
 const props = defineProps<{
   group: DepartmentTrainingGroup & { _isNew?: boolean };
   isNew?: boolean;
+  locations: DepartmentLocation[];
 }>();
 
 const emit = defineEmits<{
@@ -32,7 +34,7 @@ const emit = defineEmits<{
   (
     e: 'session-update',
     sessionId: number,
-    data: { day: string; time: string },
+    data: { day: string; time: string; locationId: number | null },
     isNew: boolean,
   ): void;
   (e: 'session-delete', sessionId: number, isNew: boolean): void;
@@ -82,7 +84,7 @@ function handleAddSession() {
 
 function handleSessionUpdate(
   sessionId: number,
-  data: { day: string; time: string },
+  data: { day: string; time: string; locationId: number | null },
   isNew: boolean,
 ) {
   emit('session-update', sessionId, data, isNew);
@@ -262,6 +264,7 @@ function handleSessionsDragEnd() {
               :key="session.id"
               :session="session"
               :is-new="session._isNew"
+              :locations="locations"
               @update="
                 (data) =>
                   handleSessionUpdate(

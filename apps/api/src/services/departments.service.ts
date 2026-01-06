@@ -75,6 +75,7 @@ export class DepartmentsService {
           include: {
             sessions: {
               orderBy: { sort: 'asc' },
+              include: { location: true },
             },
           },
         },
