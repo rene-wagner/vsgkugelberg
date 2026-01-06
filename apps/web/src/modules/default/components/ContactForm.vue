@@ -195,7 +195,7 @@ const clearSuccess = () => {
       >
         <div class="flex items-start gap-3">
           <svg
-            class="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0"
+            class="w-5 h-5 text-green-600 mt-0.5 shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -240,7 +240,7 @@ const clearSuccess = () => {
       >
         <div class="flex items-start gap-3">
           <svg
-            class="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0"
+            class="w-5 h-5 text-red-600 mt-0.5 shrink-0"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -379,7 +379,7 @@ const clearSuccess = () => {
           maxlength="5000"
           :disabled="isSubmitting"
           :class="[
-            'w-full px-4 py-3 bg-white border-2 rounded-xl font-body text-vsg-blue-900 transition-colors resize-y min-h-[120px]',
+            'w-full px-4 py-3 bg-white border-2 rounded-xl font-body text-vsg-blue-900 transition-colors resize-y min-h-30',
             'focus:outline-none focus:border-vsg-gold-400',
             errors.message ? 'border-red-300' : 'border-vsg-blue-200',
             isSubmitting ? 'opacity-50 cursor-not-allowed' : '',

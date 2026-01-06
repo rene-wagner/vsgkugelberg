@@ -35,7 +35,7 @@ defineProps<Props>();
       v-if="iconUrl"
       class="absolute right-10 top-1/2 -translate-y-1/2 opacity-7"
     >
-      <img :src="iconUrl" alt="" class="h-[500px] w-[500px] object-contain" />
+      <img :src="iconUrl" alt="" class="h-125 w-125 object-contain" />
     </div>
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 py-20 text-center">

@@ -48,7 +48,7 @@
                 class="flex gap-4 rounded-xl border border-vsg-blue-100 bg-white p-6"
               >
                 <div
-                  class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
+                  class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
                 >
                   <svg
                     class="h-6 w-6 text-vsg-blue-900"
@@ -81,7 +81,7 @@
                 class="flex gap-4 rounded-xl border border-vsg-blue-100 bg-white p-6"
               >
                 <div
-                  class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
+                  class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
                 >
                   <svg
                     class="h-6 w-6 text-vsg-blue-900"
@@ -114,7 +114,7 @@
                 class="flex gap-4 rounded-xl border border-vsg-blue-100 bg-white p-6"
               >
                 <div
-                  class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
+                  class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
                 >
                   <svg
                     class="h-6 w-6 text-vsg-blue-900"
@@ -147,7 +147,7 @@
                 class="flex gap-4 rounded-xl border border-vsg-blue-100 bg-white p-6"
               >
                 <div
-                  class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
+                  class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
                 >
                   <svg
                     class="h-6 w-6 text-vsg-blue-900"
@@ -275,7 +275,7 @@
             <div class="mt-8 space-y-6">
               <div class="flex gap-4">
                 <div
-                  class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-vsg-gold-400 font-display text-lg text-vsg-blue-900"
+                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-vsg-gold-400 font-display text-lg text-vsg-blue-900"
                 >
                   1
                 </div>
@@ -294,7 +294,7 @@
 
               <div class="flex gap-4">
                 <div
-                  class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-vsg-gold-400 font-display text-lg text-vsg-blue-900"
+                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-vsg-gold-400 font-display text-lg text-vsg-blue-900"
                 >
                   2
                 </div>
@@ -313,7 +313,7 @@
 
               <div class="flex gap-4">
                 <div
-                  class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-vsg-gold-400 font-display text-lg text-vsg-blue-900"
+                  class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-vsg-gold-400 font-display text-lg text-vsg-blue-900"
                 >
                   3
                 </div>

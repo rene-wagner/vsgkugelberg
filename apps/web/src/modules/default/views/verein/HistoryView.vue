@@ -47,7 +47,7 @@
               <!-- 1920 -->
               <div class="flex gap-6">
                 <div
-                  class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
+                  class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
                 >
                   <span class="font-display text-xl text-vsg-blue-900"
                     >1920</span
@@ -72,7 +72,7 @@
               <!-- 1950s -->
               <div class="flex gap-6">
                 <div
-                  class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-vsg-blue-100"
+                  class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-vsg-blue-100"
                 >
                   <span class="font-display text-xl text-vsg-blue-900"
                     >1950</span
@@ -96,7 +96,7 @@
               <!-- 1980s -->
               <div class="flex gap-6">
                 <div
-                  class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-vsg-blue-100"
+                  class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-vsg-blue-100"
                 >
                   <span class="font-display text-xl text-vsg-blue-900"
                     >1980</span
@@ -121,7 +121,7 @@
               <!-- 2000s -->
               <div class="flex gap-6">
                 <div
-                  class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-vsg-blue-100"
+                  class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-vsg-blue-100"
                 >
                   <span class="font-display text-xl text-vsg-blue-900"
                     >2000</span
@@ -146,7 +146,7 @@
               <!-- Today -->
               <div class="flex gap-6">
                 <div
-                  class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
+                  class="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400"
                 >
                   <span class="font-display text-lg text-vsg-blue-900"
                     >Heute</span

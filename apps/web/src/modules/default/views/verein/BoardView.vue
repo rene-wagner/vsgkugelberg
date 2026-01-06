@@ -51,7 +51,7 @@
               >
                 <div class="flex items-start gap-4">
                   <div
-                    class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-vsg-gold-400"
+                    class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-gold-400"
                   >
                     <svg
                       class="h-8 w-8 text-vsg-blue-900"
@@ -86,7 +86,7 @@
               >
                 <div class="flex items-start gap-4">
                   <div
-                    class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-vsg-blue-200"
+                    class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-blue-200"
                   >
                     <svg
                       class="h-8 w-8 text-vsg-blue-900"
@@ -121,7 +121,7 @@
               >
                 <div class="flex items-start gap-4">
                   <div
-                    class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-vsg-blue-200"
+                    class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-blue-200"
                   >
                     <svg
                       class="h-8 w-8 text-vsg-blue-900"
@@ -156,7 +156,7 @@
               >
                 <div class="flex items-start gap-4">
                   <div
-                    class="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-vsg-blue-200"
+                    class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-blue-200"
                   >
                     <svg
                       class="h-8 w-8 text-vsg-blue-900"
