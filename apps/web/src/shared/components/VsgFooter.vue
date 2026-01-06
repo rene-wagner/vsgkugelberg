@@ -6,12 +6,11 @@ import { useSettingsStore } from '@/modules/admin/stores/settingsStore';
 const settingsStore = useSettingsStore();
 
 const vereinLinks = [
-  { label: 'Geschichte', href: '#' },
-  { label: 'Vorstand', href: '#' },
-  { label: 'Satzung', href: '#' },
-  { label: 'Mitgliedschaft', href: '#' },
-  { label: 'Sponsoren', href: '#' },
-  { label: 'Kontakt', href: '/contact', isRouter: true },
+  { label: 'Geschichte', href: '/verein/geschichte', isRouter: true },
+  { label: 'Vorstand', href: '/verein/vorstand', isRouter: true },
+  { label: 'Satzung', href: '/verein/satzung', isRouter: true },
+  { label: 'Mitgliedschaft', href: '/verein/mitgliedschaft', isRouter: true },
+  { label: 'Sponsoren', href: '/verein/sponsoren', isRouter: true },
 ];
 
 const age = computed(() => {
@@ -76,7 +75,7 @@ onMounted(() => {
         </div>
 
         <!-- Links -->
-        <div>
+        <div class="md:col-start-4 md:text-right">
           <h5
             class="mb-6 font-display text-xl tracking-wider text-vsg-gold-400"
           >
@@ -98,22 +97,6 @@ onMounted(() => {
               >
                 {{ link.label }}
               </a>
-            </li>
-          </ul>
-        </div>
-
-        <!-- Contact -->
-        <div>
-          <h5
-            class="mb-6 font-display text-xl tracking-wider text-vsg-gold-400"
-          >
-            KONTAKT
-          </h5>
-          <ul class="space-y-3">
-            <li class="font-body font-normal text-vsg-blue-300">
-              VSG Kugelberg e.V.<br />
-              Kugelbergstraße 15<br />
-              06667 Weißenfels
             </li>
           </ul>
         </div>
