@@ -59,7 +59,7 @@ function handleClick(event: MouseEvent) {
 <template>
   <a
     :href="currentHref"
-    class="secure-link"
+    class="cursor-pointer transition-colors duration-200"
     @mouseover="decode"
     @focus="decode"
     @click="handleClick"
@@ -72,16 +72,3 @@ function handleClick(event: MouseEvent) {
     </slot>
   </a>
 </template>
-
-<style scoped>
-.secure-link {
-  cursor: pointer;
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  transition: color 0.2s ease;
-}
-
-.secure-link:hover {
-  text-decoration-style: solid;
-}
-</style>
