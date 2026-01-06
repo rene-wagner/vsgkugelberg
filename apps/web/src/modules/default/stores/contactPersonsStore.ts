@@ -37,6 +37,16 @@ export interface ContactPerson {
   updatedAt: string;
 }
 
+interface PaginatedResponse {
+  data: ContactPerson[];
+  meta: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
 export const useDefaultContactPersonsStore = defineStore(
   'default-contact-persons',
   () => {
@@ -49,15 +59,19 @@ export const useDefaultContactPersonsStore = defineStore(
       error.value = null;
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/contact-persons`, {
-          method: 'GET',
-        });
+        const response = await fetch(
+          `${API_BASE_URL}/api/contact-persons?limit=50`,
+          {
+            method: 'GET',
+          },
+        );
 
         if (!response.ok) {
           throw new Error('Failed to fetch contact persons');
         }
 
-        contactPersons.value = (await response.json()) as ContactPerson[];
+        const result = (await response.json()) as PaginatedResponse;
+        contactPersons.value = result.data;
       } catch (e) {
         error.value = e instanceof Error ? e.message : 'An error occurred';
       } finally {

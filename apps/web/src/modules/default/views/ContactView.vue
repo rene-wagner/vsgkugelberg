@@ -5,6 +5,7 @@ import {
   type ContactPerson,
 } from '../stores/contactPersonsStore';
 import ContactForm from '../components/ContactForm.vue';
+import VsgSecureContact from '../components/VsgSecureContact.vue';
 
 const contactPersonsStore = useDefaultContactPersonsStore();
 const selectedContactPersonId = ref<number | null>(null);
@@ -45,6 +46,15 @@ function getProfileImageUrl(cp: ContactPerson): string | null {
   }
 
   return `${apiBaseUrl}/uploads/${cp.profileImage.filename}`;
+}
+
+function encodeBase64(value: string): string {
+  try {
+    return btoa(value);
+  } catch (e) {
+    console.error('Failed to encode to base64', e);
+    return '';
+  }
 }
 </script>
 
@@ -201,12 +211,11 @@ function getProfileImageUrl(cp: ContactPerson): string | null {
                       class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider"
                       >Telefon</span
                     >
-                    <a
-                      :href="`tel:${selectedContactPerson.phone}`"
+                    <VsgSecureContact
+                      :encrypted="encodeBase64(selectedContactPerson.phone)"
+                      type="phone"
                       class="font-body text-lg text-vsg-blue-900 hover:text-vsg-gold-600 transition-colors"
-                    >
-                      {{ selectedContactPerson.phone }}
-                    </a>
+                    />
                   </div>
                 </div>
 
@@ -234,12 +243,10 @@ function getProfileImageUrl(cp: ContactPerson): string | null {
                       class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider"
                       >E-Mail</span
                     >
-                    <a
-                      :href="`mailto:${selectedContactPerson.email}`"
+                    <VsgSecureContact
+                      :encrypted="encodeBase64(selectedContactPerson.email)"
                       class="font-body text-lg text-vsg-blue-900 hover:text-vsg-gold-600 transition-colors"
-                    >
-                      {{ selectedContactPerson.email }}
-                    </a>
+                    />
                   </div>
                 </div>
 

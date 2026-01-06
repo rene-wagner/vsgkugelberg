@@ -115,20 +115,6 @@ onMounted(() => {
               Kugelbergstraße 15<br />
               06667 Weißenfels
             </li>
-            <li class="font-body font-normal text-vsg-blue-300">
-              <a
-                href="mailto:info@vsg-kugelberg.de"
-                class="transition-colors hover:text-vsg-gold-400"
-                >info@vsg-kugelberg.de</a
-              >
-            </li>
-            <li class="font-body font-normal text-vsg-blue-300">
-              <a
-                href="tel:+493443123456"
-                class="transition-colors hover:text-vsg-gold-400"
-                >+49 3443 123456</a
-              >
-            </li>
           </ul>
         </div>
       </div>
