@@ -142,7 +142,7 @@ function getProfileImageUrl(cp: ContactPerson): string | null {
                 <div class="flex items-center gap-6">
                   <!-- Profile Image or Initials Fallback -->
                   <div
-                    class="flex-shrink-0 w-32 h-32 rounded-full overflow-hidden bg-vsg-blue-100 flex items-center justify-center"
+                    class="shrink-0 w-32 h-32 rounded-full overflow-hidden bg-vsg-blue-100 flex items-center justify-center"
                   >
                     <img
                       v-if="selectedContactPerson.profileImage"
@@ -180,7 +180,7 @@ function getProfileImageUrl(cp: ContactPerson): string | null {
                 <!-- Phone -->
                 <div class="flex items-start gap-4">
                   <div
-                    class="flex-shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
+                    class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
                   >
                     <svg
                       class="w-5 h-5 text-vsg-blue-600"
@@ -213,7 +213,7 @@ function getProfileImageUrl(cp: ContactPerson): string | null {
                 <!-- Email -->
                 <div class="flex items-start gap-4">
                   <div
-                    class="flex-shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
+                    class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
                   >
                     <svg
                       class="w-5 h-5 text-vsg-blue-600"
@@ -249,7 +249,7 @@ function getProfileImageUrl(cp: ContactPerson): string | null {
                   class="flex items-start gap-4"
                 >
                   <div
-                    class="flex-shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
+                    class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
                   >
                     <svg
                       class="w-5 h-5 text-vsg-blue-600"
