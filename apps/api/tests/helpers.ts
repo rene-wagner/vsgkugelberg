@@ -6,7 +6,6 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import {
   PrismaClient,
   Prisma,
-  Block,
   Category,
   ClubSettings,
   ContactPerson,
@@ -30,7 +29,6 @@ const prisma = new PrismaClient({ adapter });
 export {
   prisma,
   Prisma,
-  Block,
   Category,
   ClubSettings,
   ContactPerson,
@@ -51,7 +49,6 @@ export async function cleanupDatabase() {
   // Delete in correct order: child tables first, then parent tables
   // Note: department must come before media due to iconId foreign key
   await prisma.$transaction([
-    prisma.block.deleteMany(),
     // Delete department children first (cascade doesn't run in transactions)
     prisma.departmentTrainingSession.deleteMany(),
     prisma.departmentTrainingGroup.deleteMany(),

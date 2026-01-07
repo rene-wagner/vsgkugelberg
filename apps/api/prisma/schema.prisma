@@ -166,22 +166,6 @@ model DepartmentTrainer {
   @@index([contactPersonId])
 }
 
-model Block {
-  id        String   @id @default(uuid())
-  page      String
-  type      String
-  sort      Int      @default(0)
-  data      Json?
-  parentId  String?
-  parent    Block?   @relation("BlockChildren", fields: [parentId], references: [id], onDelete: Cascade)
-  children  Block[]  @relation("BlockChildren")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([page])
-  @@index([parentId])
-}
-
 model ClubSettings {
   id           Int      @id @default(1)
   foundingDate DateTime?
