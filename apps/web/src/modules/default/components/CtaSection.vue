@@ -36,7 +36,11 @@ withDefaults(defineProps<Props>(), {
     <div class="relative z-10 mx-auto max-w-4xl">
       <h3
         class="font-display leading-tight tracking-wider text-vsg-blue-900 uppercase mb-8"
-        :class="theme === 'white' ? 'text-4xl md:text-6xl' : 'text-5xl md:text-7xl lg:text-8xl'"
+        :class="
+          theme === 'white'
+            ? 'text-4xl md:text-6xl'
+            : 'text-5xl md:text-7xl lg:text-8xl'
+        "
         v-html="title"
       ></h3>
       <p

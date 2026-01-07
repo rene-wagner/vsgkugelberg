@@ -24,7 +24,7 @@ Chart.register(
   Title,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 );
 
 const props = defineProps<{
@@ -84,7 +84,7 @@ watch(
   () => {
     renderChart();
   },
-  { deep: true }
+  { deep: true },
 );
 </script>
 

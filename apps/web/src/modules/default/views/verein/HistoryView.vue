@@ -223,7 +223,8 @@ const ACHIEVEMENT_ITEMS = [
     category: 'volleyball',
     categoryLabel: 'Beachvolleyball',
     title: 'Landesmeister Ü53',
-    description: 'Lars Hoffmann und Jörg Schmeißer gewinnen den Titel in Halle-Neustadt.',
+    description:
+      'Lars Hoffmann und Jörg Schmeißer gewinnen den Titel in Halle-Neustadt.',
     colorClass: 'border-vsg-blue-600',
   },
   {
@@ -242,15 +243,21 @@ const ACHIEVEMENT_ITEMS = [
     class="min-h-screen text-white overflow-x-hidden selection:bg-vsg-gold-500 selection:text-vsg-blue-900"
   >
     <!-- Hero Section -->
-    <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+    <header
+      class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden"
+    >
       <!-- Background gradient overlay -->
       <div
         class="absolute inset-0 bg-gradient-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"
       ></div>
 
       <!-- Decorative elements -->
-      <div class="absolute top-1/4 right-0 w-96 h-96 bg-vsg-gold-500/10 rounded-full blur-3xl"></div>
-      <div class="absolute bottom-1/4 left-0 w-80 h-80 bg-vsg-blue-500/20 rounded-full blur-3xl"></div>
+      <div
+        class="absolute top-1/4 right-0 w-96 h-96 bg-vsg-gold-500/10 rounded-full blur-3xl"
+      ></div>
+      <div
+        class="absolute bottom-1/4 left-0 w-80 h-80 bg-vsg-blue-500/20 rounded-full blur-3xl"
+      ></div>
 
       <div class="relative z-10 text-center px-6 max-w-4xl animate-fadeIn">
         <span
@@ -263,16 +270,25 @@ const ACHIEVEMENT_ITEMS = [
         >
           DIE CHRONIK
         </h1>
-        <p class="font-body text-vsg-blue-200 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-          Von den ersten Aufschlägen in der Fritz-Juch-Oberschule bis hin zu Erfolgen auf
-          internationaler Bühne – begleiten Sie uns auf einer Zeitreise durch die Geschichte der VSG
-          Kugelberg.
+        <p
+          class="font-body text-vsg-blue-200 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
+        >
+          Von den ersten Aufschlägen in der Fritz-Juch-Oberschule bis hin zu
+          Erfolgen auf internationaler Bühne – begleiten Sie uns auf einer
+          Zeitreise durch die Geschichte der VSG Kugelberg.
         </p>
       </div>
 
       <!-- Scroll indicator -->
-      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20">
-        <svg class="w-8 h-8 text-vsg-gold-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div
+        class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20"
+      >
+        <svg
+          class="w-8 h-8 text-vsg-gold-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -291,14 +307,17 @@ const ACHIEVEMENT_ITEMS = [
           <div class="space-y-8 animate-fadeIn">
             <div class="flex items-center gap-4">
               <div class="h-px w-12 bg-vsg-gold-600"></div>
-              <span class="font-display text-vsg-gold-600 text-2xl tracking-widest uppercase"
+              <span
+                class="font-display text-vsg-gold-600 text-2xl tracking-widest uppercase"
                 >Der Ursprung</span
               >
             </div>
             <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900">
               {{ FOUNDING_DATA.title }}
             </h2>
-            <div class="font-body text-gray-600 text-lg leading-relaxed space-y-6">
+            <div
+              class="font-body text-gray-600 text-lg leading-relaxed space-y-6"
+            >
               <p v-for="(p, index) in FOUNDING_DATA.narrative" :key="index">
                 {{ p }}
               </p>
@@ -321,18 +340,24 @@ const ACHIEVEMENT_ITEMS = [
             ENTWICKLUNG & WACHSTUM
           </h2>
           <p class="font-body text-gray-600 max-w-2xl mx-auto text-lg">
-            Vom kleinen Kiez-Verein zur festen Größe im Burgenlandkreis. Die Zahlen sprechen für
-            sich.
+            Vom kleinen Kiez-Verein zur festen Größe im Burgenlandkreis. Die
+            Zahlen sprechen für sich.
           </p>
         </div>
 
         <!-- Chart -->
-        <div class="bg-white p-8 rounded-xl border border-gray-200 mb-20 shadow-sm">
+        <div
+          class="bg-white p-8 rounded-xl border border-gray-200 mb-20 shadow-sm"
+        >
           <div class="flex justify-between items-center mb-8">
-            <h3 class="font-display text-2xl text-vsg-gold-600 uppercase tracking-widest">
+            <h3
+              class="font-display text-2xl text-vsg-gold-600 uppercase tracking-widest"
+            >
               Mitgliederstatistik
             </h3>
-            <div class="flex items-center gap-4 text-xs uppercase tracking-tighter text-vsg-blue-600">
+            <div
+              class="flex items-center gap-4 text-xs uppercase tracking-tighter text-vsg-blue-600"
+            >
               <span class="flex items-center gap-1"
                 ><div class="w-3 h-3 bg-vsg-gold-500 rounded-full"></div>
                 Mitgliederzahl</span
@@ -346,7 +371,9 @@ const ACHIEVEMENT_ITEMS = [
 
         <!-- Chronicle Accordion -->
         <div class="max-w-4xl mx-auto space-y-4">
-          <h3 class="font-display text-3xl text-vsg-blue-900 mb-8 text-center uppercase tracking-widest">
+          <h3
+            class="font-display text-3xl text-vsg-blue-900 mb-8 text-center uppercase tracking-widest"
+          >
             Chronik der Ereignisse
           </h3>
           <VsgAccordion :items="CHRONICLE_GROUPS" />
@@ -358,13 +385,16 @@ const ACHIEVEMENT_ITEMS = [
     <section id="festivals" class="py-24 bg-white">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase"
+          <span
+            class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase"
             >Vereinsleben</span
           >
-          <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 mt-2">GEMEINSAM AKTIV</h2>
+          <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 mt-2">
+            GEMEINSAM AKTIV
+          </h2>
           <p class="font-body text-gray-600 mt-4 max-w-2xl mx-auto text-lg">
-            Sport ist nur die halbe Miete. Bei uns wird Gemeinschaft großgeschrieben – ob auf dem
-            Rad, dem Schiff oder der Rodelbahn.
+            Sport ist nur die halbe Miete. Bei uns wird Gemeinschaft
+            großgeschrieben – ob auf dem Rad, dem Schiff oder der Rodelbahn.
           </p>
         </div>
 
@@ -379,9 +409,15 @@ const ACHIEVEMENT_ITEMS = [
             >
               <span class="text-7xl">{{ card.emoji }}</span>
             </div>
-            <span class="font-display text-4xl text-vsg-gold-600 block mb-2">{{ card.emoji }}</span>
-            <h4 class="font-display text-2xl text-vsg-blue-900 tracking-widest">{{ card.title }}</h4>
-            <p class="text-sm text-vsg-blue-600 mt-1 uppercase tracking-tighter italic">
+            <span class="font-display text-4xl text-vsg-gold-600 block mb-2">{{
+              card.emoji
+            }}</span>
+            <h4 class="font-display text-2xl text-vsg-blue-900 tracking-widest">
+              {{ card.title }}
+            </h4>
+            <p
+              class="text-sm text-vsg-blue-600 mt-1 uppercase tracking-tighter italic"
+            >
               {{ card.subtitle }}
             </p>
             <p class="font-body text-base text-gray-600 mt-4 leading-relaxed">
@@ -396,10 +432,13 @@ const ACHIEVEMENT_ITEMS = [
     <section id="achievements" class="py-24 bg-gray-50">
       <div class="max-w-7xl mx-auto px-6">
         <div class="text-center mb-16">
-          <span class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase"
+          <span
+            class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase"
             >Unsere Stolz</span
           >
-          <h2 class="font-display text-5xl md:text-7xl text-vsg-blue-900 mt-2">HALL OF FAME</h2>
+          <h2 class="font-display text-5xl md:text-7xl text-vsg-blue-900 mt-2">
+            HALL OF FAME
+          </h2>
         </div>
 
         <!-- Highlight Box (Gold) -->
@@ -407,16 +446,22 @@ const ACHIEVEMENT_ITEMS = [
           class="max-w-4xl mx-auto mb-20 bg-gradient-to-br from-vsg-gold-600 to-vsg-gold-400 p-1 rounded-2xl shadow-xl animate-pulse-gold"
         >
           <div class="bg-white rounded-2xl p-10 text-center">
-            <span class="font-display text-vsg-gold-600 text-2xl tracking-widest block mb-4"
+            <span
+              class="font-display text-vsg-gold-600 text-2xl tracking-widest block mb-4"
               >★ WELT- & EUROPAMEISTERSCHAFTEN ★</span
             >
-            <h3 class="font-display text-4xl md:text-6xl text-vsg-blue-900 mb-6">
+            <h3
+              class="font-display text-4xl md:text-6xl text-vsg-blue-900 mb-6"
+            >
               BRONZE BEI DER WELTMEISTERSCHAFT
             </h3>
-            <p class="font-body text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto">
-              Helmut Wiegand und Dietmar Unser gewinnen 2015 die Bronzemedaille im Badminton-Doppel
-              in Helsingborg. Ein Jahr später sichert sich Helmut Wiegand die Silbermedaille im
-              Doppel bei der Europameisterschaft in Slowenien.
+            <p
+              class="font-body text-gray-600 text-lg leading-relaxed max-w-2xl mx-auto"
+            >
+              Helmut Wiegand und Dietmar Unser gewinnen 2015 die Bronzemedaille
+              im Badminton-Doppel in Helsingborg. Ein Jahr später sichert sich
+              Helmut Wiegand die Silbermedaille im Doppel bei der
+              Europameisterschaft in Slowenien.
             </p>
             <div class="flex flex-wrap justify-center gap-4 mt-8">
               <span
@@ -431,7 +476,10 @@ const ACHIEVEMENT_ITEMS = [
           </div>
         </div>
 
-        <VsgSuccessList :items="ACHIEVEMENT_ITEMS" :categories="ACHIEVEMENT_CATEGORIES" />
+        <VsgSuccessList
+          :items="ACHIEVEMENT_ITEMS"
+          :categories="ACHIEVEMENT_CATEGORIES"
+        />
       </div>
     </section>
 
