@@ -3,7 +3,6 @@ import { PrismaPg } from '@prisma/adapter-pg';
 import {
   PrismaClient,
   Prisma,
-  Block,
   Category,
   ClubSettings,
   Department,
@@ -27,7 +26,6 @@ const prisma = new PrismaClient({ adapter });
 export {
   prisma,
   Prisma,
-  Block,
   Category,
   ClubSettings,
   Department,

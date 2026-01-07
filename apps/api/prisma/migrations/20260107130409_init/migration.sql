@@ -97,6 +97,7 @@ CREATE TABLE "DepartmentTrainingGroup" (
 CREATE TABLE "DepartmentTrainingSession" (
     "id" SERIAL NOT NULL,
     "trainingGroupId" INTEGER NOT NULL,
+    "locationId" INTEGER,
     "day" TEXT NOT NULL,
     "time" TEXT NOT NULL,
     "sort" INTEGER NOT NULL DEFAULT 0,
@@ -137,20 +138,6 @@ CREATE TABLE "DepartmentTrainer" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "DepartmentTrainer_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Block" (
-    "id" TEXT NOT NULL,
-    "page" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "sort" INTEGER NOT NULL DEFAULT 0,
-    "data" JSONB,
-    "parentId" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Block_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -278,6 +265,9 @@ CREATE INDEX "DepartmentTrainingGroup_departmentId_idx" ON "DepartmentTrainingGr
 CREATE INDEX "DepartmentTrainingSession_trainingGroupId_idx" ON "DepartmentTrainingSession"("trainingGroupId");
 
 -- CreateIndex
+CREATE INDEX "DepartmentTrainingSession_locationId_idx" ON "DepartmentTrainingSession"("locationId");
+
+-- CreateIndex
 CREATE INDEX "DepartmentLocation_departmentId_idx" ON "DepartmentLocation"("departmentId");
 
 -- CreateIndex
@@ -288,12 +278,6 @@ CREATE INDEX "DepartmentTrainer_contactPersonId_idx" ON "DepartmentTrainer"("con
 
 -- CreateIndex
 CREATE UNIQUE INDEX "DepartmentTrainer_departmentId_contactPersonId_key" ON "DepartmentTrainer"("departmentId", "contactPersonId");
-
--- CreateIndex
-CREATE INDEX "Block_page_idx" ON "Block"("page");
-
--- CreateIndex
-CREATE INDEX "Block_parentId_idx" ON "Block"("parentId");
 
 -- CreateIndex
 CREATE INDEX "Event_startDate_idx" ON "Event"("startDate");
@@ -347,6 +331,9 @@ ALTER TABLE "DepartmentTrainingGroup" ADD CONSTRAINT "DepartmentTrainingGroup_de
 ALTER TABLE "DepartmentTrainingSession" ADD CONSTRAINT "DepartmentTrainingSession_trainingGroupId_fkey" FOREIGN KEY ("trainingGroupId") REFERENCES "DepartmentTrainingGroup"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "DepartmentTrainingSession" ADD CONSTRAINT "DepartmentTrainingSession_locationId_fkey" FOREIGN KEY ("locationId") REFERENCES "DepartmentLocation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "DepartmentLocation" ADD CONSTRAINT "DepartmentLocation_departmentId_fkey" FOREIGN KEY ("departmentId") REFERENCES "Department"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -357,9 +344,6 @@ ALTER TABLE "DepartmentTrainer" ADD CONSTRAINT "DepartmentTrainer_departmentId_f
 
 -- AddForeignKey
 ALTER TABLE "DepartmentTrainer" ADD CONSTRAINT "DepartmentTrainer_contactPersonId_fkey" FOREIGN KEY ("contactPersonId") REFERENCES "ContactPerson"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Block" ADD CONSTRAINT "Block_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Block"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "ContactPerson" ADD CONSTRAINT "ContactPerson_profileImageId_fkey" FOREIGN KEY ("profileImageId") REFERENCES "Media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
