@@ -1,16 +1,12 @@
 <script setup lang="ts">
-import { RouterLink, useRouter } from 'vue-router';
-import { ref } from 'vue';
+import { RouterLink, useRouter, useRoute } from 'vue-router';
+import { ref, watch } from 'vue';
 import { useAuthStore } from '@/modules/auth/stores/authStore';
 
 const isUserMenuOpen = ref(false);
 const router = useRouter();
+const route = useRoute();
 const authStore = useAuthStore();
-
-async function handleLogout() {
-  await authStore.logout();
-  router.push('/login');
-}
 
 // Navigation items for the sidebar
 const navItems = [
@@ -23,6 +19,14 @@ const navItems = [
     name: 'Kategorien',
     path: '/admin/categories',
     icon: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z',
+  },
+  {
+    name: 'Verein',
+    icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
+    children: [
+      { name: 'Geschichte', path: '/admin/club-history' },
+      { name: 'Vorstand', path: '/admin/board' },
+    ],
   },
   {
     name: 'Benutzer',
@@ -55,6 +59,46 @@ const navItems = [
     icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
   },
 ];
+
+const expandedItems = ref<string[]>([]);
+
+function toggleExpand(itemName: string) {
+  const index = expandedItems.value.indexOf(itemName);
+  if (index > -1) {
+    expandedItems.value.splice(index, 1);
+  } else {
+    expandedItems.value.push(itemName);
+  }
+}
+
+// Check if a navigation item or any of its children is active
+function isItemActive(item: any): boolean {
+  if (item.path && route.path === item.path) return true;
+  if (item.children) {
+    return item.children.some((child: any) => route.path === child.path);
+  }
+  return false;
+}
+
+// Auto-expand parent if child is active
+watch(
+  () => route.path,
+  () => {
+    navItems.forEach((item) => {
+      if (item.children && isItemActive(item)) {
+        if (!expandedItems.value.includes(item.name)) {
+          expandedItems.value.push(item.name);
+        }
+      }
+    });
+  },
+  { immediate: true },
+);
+
+async function handleLogout() {
+  await authStore.logout();
+  router.push('/login');
+}
 </script>
 
 <template>
@@ -181,8 +225,76 @@ const navItems = [
           </div>
 
           <ul class="space-y-1">
-            <li v-for="item in navItems" :key="item.path">
+            <li v-for="item in navItems" :key="item.name">
+              <template v-if="item.children">
+                <!-- Root item with children -->
+                <button
+                  type="button"
+                  class="sidebar-link w-full flex items-center justify-between gap-3 px-4 py-3 border-l-4 border-transparent hover:bg-vsg-blue-800/30 hover:border-l-vsg-gold-400/50 transition-all text-left"
+                  :class="{ active: isItemActive(item) }"
+                  @click="toggleExpand(item.name)"
+                >
+                  <div class="flex items-center gap-3">
+                    <svg
+                      class="w-5 h-5 text-vsg-blue-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        :d="item.icon"
+                      />
+                    </svg>
+                    <span
+                      class="font-body font-normal text-sm text-vsg-blue-200"
+                      >{{ item.name }}</span
+                    >
+                  </div>
+                  <svg
+                    class="w-4 h-4 text-vsg-blue-400 transition-transform duration-200"
+                    :class="{ 'rotate-180': expandedItems.includes(item.name) }"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                <!-- Submenu -->
+                <div
+                  class="overflow-hidden transition-all duration-300 ease-in-out"
+                  :style="{
+                    maxHeight: expandedItems.includes(item.name)
+                      ? `${item.children.length * 40}px`
+                      : '0',
+                  }"
+                >
+                  <ul class="pl-12 space-y-1 py-1">
+                    <li v-for="child in item.children" :key="child.path">
+                      <RouterLink
+                        :to="child.path"
+                        class="block py-2 font-body font-normal text-sm text-vsg-blue-300 hover:text-vsg-gold-400 transition-colors"
+                        active-class="!text-vsg-gold-400"
+                      >
+                        {{ child.name }}
+                      </RouterLink>
+                    </li>
+                  </ul>
+                </div>
+              </template>
+
+              <!-- Standard root item -->
               <RouterLink
+                v-else
                 :to="item.path"
                 class="sidebar-link flex items-center gap-3 px-4 py-3 border-l-4 border-transparent hover:bg-vsg-blue-800/30 hover:border-l-vsg-gold-400/50 transition-all"
                 active-class="active"
