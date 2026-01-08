@@ -15,6 +15,7 @@ import ContactPersonsListView from '../views/ContactPersonsListView.vue';
 import ContactPersonFormView from '../views/ContactPersonFormView.vue';
 import MediaLibraryView from '../views/MediaLibraryView.vue';
 import SettingsView from '../views/SettingsView.vue';
+import HistoryFormView from '../views/HistoryFormView.vue';
 
 const routes: RouteRecordRaw[] = [
   {
@@ -26,6 +27,11 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: 'admin-dashboard',
         component: AdminDashboard,
+      },
+      {
+        path: 'club-history',
+        name: 'admin-history',
+        component: HistoryFormView,
       },
       {
         path: 'users',

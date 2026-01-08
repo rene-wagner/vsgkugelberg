@@ -119,25 +119,9 @@ export class HistoryService {
         },
       });
 
-      // 2. Clear existing relations
-      await tx.historyFact.deleteMany({ where: { historyContentId: 1 } });
-      await tx.historyMilestone.deleteMany({ where: { historyContentId: 1 } });
-      await tx.historyChartLabel.deleteMany({ where: { historyContentId: 1 } });
-      await tx.historyChartDataset.deleteMany({
-        where: { historyContentId: 1 },
-      });
-      await tx.historyChronicleGroup.deleteMany({
-        where: { historyContentId: 1 },
-      });
-      await tx.historyFestivalItem.deleteMany({
-        where: { historyContentId: 1 },
-      });
-      await tx.historyAchievement.deleteMany({
-        where: { historyContentId: 1 },
-      });
-
-      // 3. Recreate relations
+      // 2. Clear and Recreate relations only if provided in data
       if (data.foundingFacts) {
+        await tx.historyFact.deleteMany({ where: { historyContentId: 1 } });
         await tx.historyFact.createMany({
           data: data.foundingFacts.map((f, i) => ({
             historyContentId: 1,
@@ -150,6 +134,9 @@ export class HistoryService {
       }
 
       if (data.foundingMilestones) {
+        await tx.historyMilestone.deleteMany({
+          where: { historyContentId: 1 },
+        });
         await tx.historyMilestone.createMany({
           data: data.foundingMilestones.map((m, i) => ({
             historyContentId: 1,
@@ -162,6 +149,13 @@ export class HistoryService {
       }
 
       if (data.developmentChartData) {
+        await tx.historyChartLabel.deleteMany({
+          where: { historyContentId: 1 },
+        });
+        await tx.historyChartDataset.deleteMany({
+          where: { historyContentId: 1 },
+        });
+
         // Labels
         await tx.historyChartLabel.createMany({
           data: data.developmentChartData.labels.map((l, i) => ({
@@ -193,6 +187,9 @@ export class HistoryService {
       }
 
       if (data.developmentChronicleGroups) {
+        await tx.historyChronicleGroup.deleteMany({
+          where: { historyContentId: 1 },
+        });
         for (let i = 0; i < data.developmentChronicleGroups.length; i++) {
           const g = data.developmentChronicleGroups[i];
           const group = await tx.historyChronicleGroup.create({
@@ -215,6 +212,9 @@ export class HistoryService {
       }
 
       if (data.festivalsItems) {
+        await tx.historyFestivalItem.deleteMany({
+          where: { historyContentId: 1 },
+        });
         await tx.historyFestivalItem.createMany({
           data: data.festivalsItems.map((f, i) => ({
             historyContentId: 1,
@@ -226,6 +226,9 @@ export class HistoryService {
       }
 
       if (data.achievementsItems) {
+        await tx.historyAchievement.deleteMany({
+          where: { historyContentId: 1 },
+        });
         await tx.historyAchievement.createMany({
           data: data.achievementsItems.map((a, i) => ({
             historyContentId: 1,

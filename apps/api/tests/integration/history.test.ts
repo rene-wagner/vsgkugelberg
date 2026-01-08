@@ -195,5 +195,41 @@ describe('History API Integration Tests', () => {
         complexData.foundingFacts,
       );
     });
+
+    it('should preserve existing relations on partial update', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // 1. Initial full setup
+      const initialData = {
+        foundingFacts: [
+          { year: '1985', headline: 'Fact 1', description: 'Desc 1' },
+        ],
+        festivalsItems: [{ headline: 'Fest 1', text: 'Text 1' }],
+      };
+
+      await request(app)
+        .patch('/api/history/admin')
+        .set('Cookie', cookies)
+        .send(initialData);
+
+      // 2. Partial update (only Hero headline)
+      const partialUpdate = {
+        heroHeadline: 'NEW HERO HEADLINE',
+      };
+
+      const response = await request(app)
+        .patch('/api/history/admin')
+        .set('Cookie', cookies)
+        .send(partialUpdate);
+
+      expect(response.status).toBe(200);
+      expect(response.body.heroHeadline).toBe('NEW HERO HEADLINE');
+
+      // 3. Verify relations are still there
+      expect(response.body.foundingFacts).toHaveLength(1);
+      expect(response.body.foundingFacts[0].headline).toBe('Fact 1');
+      expect(response.body.festivalsItems).toHaveLength(1);
+      expect(response.body.festivalsItems[0].headline).toBe('Fest 1');
+    });
   });
 });
