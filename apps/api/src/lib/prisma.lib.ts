@@ -16,6 +16,7 @@ import {
   Media,
   Post,
   User,
+  HistoryContent,
 } from '../../generated/prisma/client';
 
 const connectionString = `${process.env.DATABASE_URL}`;
@@ -39,4 +40,5 @@ export {
   Media,
   Post,
   User,
+  HistoryContent,
 };

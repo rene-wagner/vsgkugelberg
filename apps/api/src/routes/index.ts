@@ -13,6 +13,7 @@ import { contactPersonsRouter } from './contact-persons.routes';
 import { mediaRouter } from './media.routes';
 import { mediaFolderRouter } from './media-folders.routes';
 import { contactRouter } from './contact.routes';
+import { historyRouter } from './history.routes';
 
 const router = Router();
 
@@ -29,5 +30,6 @@ router.use('/contact-persons', contactPersonsRouter);
 router.use('/media/folders', mediaFolderRouter);
 router.use('/media', mediaRouter);
 router.use('/contact', contactRouter);
+router.use('/history', historyRouter);
 
 export { router };

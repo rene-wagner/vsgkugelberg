@@ -244,3 +244,34 @@ model MediaFolder {
 
   @@index([parentId])
 }
+
+model HistoryContent {
+  id                         Int      @id @default(1)
+  // Hero Section
+  heroHeadline               String
+  heroSubHeadline            String
+  // Founding Section
+  foundingHeadline           String
+  foundingNarrative          Json     // Array of strings (paragraphs)
+  foundingFactCardHeadline   String
+  foundingFacts              Json     // Array of { label: string, value: string }
+  foundingMilestonesHeadline String
+  foundingMilestones         Json     // Array of { year: string, title: string, description: string }
+  // Development Section
+  developmentHeadline        String
+  developmentNarrative       Json     // Array of strings
+  developmentChartData       Json     // { labels: string[], datasets: { label: string, data: number[] }[] }
+  developmentChronicleGroups Json     // Array of { id: number, title: string, content: { year: string, text: string }[] }
+  // Festivals Section
+  festivalsHeadline          String
+  festivalsDescription       String
+  festivalsItems             Json     // Array of { title: string, subtitle: string, text: string, icon: string }
+  // Achievements Section
+  achievementsHeadline       String
+  achievementsItems          Json     // Array of { year: string, title: string, description: string, category: string }
+  // CTA Section
+  ctaHeadline                String
+  ctaDescription             String
+  
+  updatedAt                  DateTime @updatedAt
+}

@@ -215,6 +215,33 @@ CREATE TABLE "MediaFolder" (
 );
 
 -- CreateTable
+CREATE TABLE "HistoryContent" (
+    "id" INTEGER NOT NULL DEFAULT 1,
+    "heroHeadline" TEXT NOT NULL,
+    "heroSubHeadline" TEXT NOT NULL,
+    "foundingHeadline" TEXT NOT NULL,
+    "foundingNarrative" JSONB NOT NULL,
+    "foundingFactCardHeadline" TEXT NOT NULL,
+    "foundingFacts" JSONB NOT NULL,
+    "foundingMilestonesHeadline" TEXT NOT NULL,
+    "foundingMilestones" JSONB NOT NULL,
+    "developmentHeadline" TEXT NOT NULL,
+    "developmentNarrative" JSONB NOT NULL,
+    "developmentChartData" JSONB NOT NULL,
+    "developmentChronicleGroups" JSONB NOT NULL,
+    "festivalsHeadline" TEXT NOT NULL,
+    "festivalsDescription" TEXT NOT NULL,
+    "festivalsItems" JSONB NOT NULL,
+    "achievementsHeadline" TEXT NOT NULL,
+    "achievementsItems" JSONB NOT NULL,
+    "ctaHeadline" TEXT NOT NULL,
+    "ctaDescription" TEXT NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "HistoryContent_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_CategoryToPost" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL,
