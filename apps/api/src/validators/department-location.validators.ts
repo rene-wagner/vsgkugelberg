@@ -63,8 +63,8 @@ export const createDepartmentLocationValidator = [
     .optional({ values: 'undefined' })
     .isString()
     .trim()
-    .custom((value) => {
-      if (!value || value === '') return true;
+    .custom((value: unknown) => {
+      if (!value || typeof value !== 'string' || value === '') return true;
       // Basic URL validation
       try {
         new URL(value);
@@ -129,8 +129,8 @@ export const updateDepartmentLocationValidator = [
   body('mapsUrl')
     .optional({ nullable: true })
     .trim()
-    .custom((value) => {
-      if (!value || value === '' || value === null) return true;
+    .custom((value: unknown) => {
+      if (!value || typeof value !== 'string' || value === '') return true;
       try {
         new URL(value);
         return true;

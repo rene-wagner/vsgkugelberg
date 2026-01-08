@@ -1,12 +1,15 @@
-export interface FactItem {
-  label: string;
-  value: string;
+export interface HistoryFact {
+  year: string;
+  headline: string;
+  description: string;
+  sort?: number;
 }
 
-export interface MilestoneItem {
+export interface HistoryMilestone {
   year: string;
-  title: string;
+  headline: string;
   description: string;
+  sort?: number;
 }
 
 export interface ChartDataset {
@@ -21,27 +24,29 @@ export interface ChartData {
 
 export interface ChronicleEntry {
   year: string;
-  text: string;
+  description: string;
+  sort?: number;
 }
 
 export interface ChronicleGroup {
   id: number;
-  title: string;
+  headline: string;
   content: ChronicleEntry[];
+  sort?: number;
 }
 
 export interface FestivalItem {
-  title: string;
-  subtitle: string;
+  headline: string;
   text: string;
-  icon: string;
+  sort?: number;
 }
 
 export interface AchievementItem {
   year: string;
-  title: string;
+  headline: string;
   description: string;
   category: string;
+  sort?: number;
 }
 
 export interface HistoryContent {
@@ -49,13 +54,13 @@ export interface HistoryContent {
   heroHeadline: string;
   heroSubHeadline: string;
   foundingHeadline: string;
-  foundingNarrative: string[];
+  foundingDescription: string;
   foundingFactCardHeadline: string;
-  foundingFacts: FactItem[];
+  foundingFacts: HistoryFact[];
   foundingMilestonesHeadline: string;
-  foundingMilestones: MilestoneItem[];
+  foundingMilestones: HistoryMilestone[];
   developmentHeadline: string;
-  developmentNarrative: string[];
+  developmentDescription: string;
   developmentChartData: ChartData;
   developmentChronicleGroups: ChronicleGroup[];
   festivalsHeadline: string;

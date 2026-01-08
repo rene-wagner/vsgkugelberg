@@ -45,6 +45,72 @@ interface SeedDepartment {
   shortDescription: string;
 }
 
+interface HistoryFact {
+  year: string;
+  headline: string;
+  description: string;
+}
+
+interface HistoryMilestone {
+  year: string;
+  headline: string;
+  description: string;
+}
+
+interface HistoryChartDataset {
+  label: string;
+  data: number[];
+}
+
+interface HistoryChartData {
+  labels: string[];
+  datasets: HistoryChartDataset[];
+}
+
+interface HistoryChronicleEntry {
+  year: string;
+  description: string;
+}
+
+interface HistoryChronicleGroup {
+  headline: string;
+  content: HistoryChronicleEntry[];
+}
+
+interface HistoryFestivalItem {
+  headline: string;
+  text: string;
+}
+
+interface HistoryAchievement {
+  year: string;
+  headline: string;
+  description: string;
+  category: string;
+}
+
+interface SeedHistory {
+  heroHeadline: string;
+  heroSubHeadline: string;
+  foundingHeadline: string;
+  foundingDescription: string;
+  foundingFactCardHeadline: string;
+  foundingFacts: HistoryFact[];
+  foundingMilestonesHeadline: string;
+  foundingMilestones: HistoryMilestone[];
+  developmentHeadline: string;
+  developmentDescription: string;
+  developmentChartData: HistoryChartData;
+  developmentChronicleGroups: HistoryChronicleGroup[];
+  festivalsHeadline: string;
+  festivalsDescription: string;
+  festivalsItems: HistoryFestivalItem[];
+  achievementsHeadline: string;
+  achievementsItems: HistoryAchievement[];
+  ctaHeadline: string;
+  ctaDescription: string;
+}
+
 interface DbConfig {
   host: string;
   port: number;
@@ -169,6 +235,215 @@ const SEED_DEPARTMENTS: SeedDepartment[] = [
   },
 ];
 
+const SEED_HISTORY: SeedHistory = {
+  heroHeadline: 'DIE CHRONIK',
+  heroSubHeadline:
+    'Von den ersten Aufschlägen in der Fritz-Juch-Oberschule bis hin zu Erfolgen auf internationaler Bühne – begleiten Sie uns auf einer Zeitreise durch die Geschichte der VSG Kugelberg.',
+
+  foundingHeadline: 'WIE ALLES BEGANN',
+  foundingDescription:
+    'Zu Beginn der 1980er Jahre entstand in Weißenfels das Wohngebiet „Kugelberg“. Es war eine Zeit des Aufbruchs und der sportlichen Begeisterung. Die Gründungsmitglieder der VSG waren überwiegend dort wohnhaft – so lag es nahe, den Namen des Viertels als Grundlage zur Namensgebung zu wählen.\n\nAls erste Sportstätte wurde die Turnhalle der 1983 eingeweihten Fritz-Juch-Oberschule, die heute als Ökowegschule bekannt ist, vom Verein genutzt. Hier wurden die ersten Weichen für eine Gemeinschaft gestellt, die heute weit über die Grenzen von Weißenfels hinaus bekannt ist.',
+  foundingFactCardHeadline: 'DIE ECKDATEN',
+  foundingFacts: [
+    {
+      year: '1985',
+      headline: 'VSG „Fortschritt“ Kugelberg',
+      description: 'Gründung des Vereins in Weißenfels, Kugelbergring 16.',
+    },
+    {
+      year: '1985',
+      headline: 'Friedemann Lange',
+      description: 'Erster Vorstandsvorsitzender des Vereins.',
+    },
+  ],
+  foundingMilestonesHeadline: 'MEILENSTEINE & FUSIONEN',
+  foundingMilestones: [
+    {
+      year: '1985',
+      headline: 'Gründung der Sektionen',
+      description:
+        'Start mit Volleyball (Claus Brenner), Pop-Gymnastik (Heike Hofmann) und Tischtennis (Hans-Werner Rust).',
+    },
+    {
+      year: '1990',
+      headline: 'Neugründung als VSG Kugelberg e.V.',
+      description:
+        'Auflösung der alten Struktur am 13.12. and Neugründung unter heutigem Namen am 14.12.1990.',
+    },
+    {
+      year: '1992',
+      headline: 'Wachstum durch Anschluss',
+      description:
+        'Abteilung Tischtennis des 1. SC 1861 Weißenfels schließt sich am 19.06. an.',
+    },
+    {
+      year: '2012',
+      headline: 'Badminton-Expansion',
+      description:
+        'Anschluss der Abt. Badminton von Lok Weißenfels mit 46 neuen Mitgliedern am 01.07.2012.',
+    },
+  ],
+
+  developmentHeadline: 'ENTWICKLUNG & WACHSTUM',
+  developmentDescription:
+    'Vom kleinen Kiez-Verein zur festen Größe im Burgenlandkreis. Die Zahlen sprechen für sich.',
+  developmentChartData: {
+    labels: ['2000', '2005', '2010', '2015', '2020', '2022'],
+    datasets: [
+      {
+        label: 'Mitglieder',
+        data: [111, 96, 106, 223, 200, 210],
+      },
+    ],
+  },
+  developmentChronicleGroups: [
+    {
+      headline: '1990 – 2000: Die Anfänge & Erste Jubiläen',
+      content: [
+        {
+          year: '1994:',
+          description:
+            'Ehrennadel des Landessportbundes in Silber für Jürgen Flister und Walter Reichert.',
+        },
+        {
+          year: '1995:',
+          description:
+            '10-jähriges Bestehen im Hotel „Schöne Aussicht“ mit 110 Teilnehmern. Erstmalige Ernennung von Ehrenmitgliedern.',
+        },
+        {
+          year: '1990-06:',
+          description:
+            'Heidi Lange prägt den Verein als Vorstandsvorsitzende over 17 Jahre.',
+        },
+      ],
+    },
+    {
+      headline: '2001 – 2010: Digitalisierung & Sportbund',
+      content: [
+        {
+          year: '2007:',
+          description:
+            'Beitritt zum Kreissportbund Burgenlandkreis. Neugestaltung der Homepage und des Vereinslogos.',
+        },
+        {
+          year: '2010:',
+          description:
+            '25-jähriges Jubiläum im Bootshaus. Teilnahme am Sachsen-Anhalt Tag in Weißenfels.',
+        },
+      ],
+    },
+    {
+      headline: '2011 – 2019: Auszeichnungen & Erfolge',
+      content: [
+        {
+          year: '2013-15:',
+          description:
+            'Mehrfache Homepage-Relaunches. Rosa Beck und Hans-Werner Rust erhalten LSB-Ehrennadel in Silber.',
+        },
+        {
+          year: '2017:',
+          description:
+            'Heidrun Hauser wird Sportlerin des Jahres im Burgenlandkreis (12.115 Stimmen).',
+        },
+        {
+          year: '2019:',
+          description:
+            'Tischtennis-Herrenmannschaft belegt 3. Platz bei der Sportlerwahl – vor dem MBC!',
+        },
+      ],
+    },
+    {
+      headline: '2020 – 2022: Pandemie & Neuanfang',
+      content: [
+        {
+          year: '2020:',
+          description:
+            'Corona-Pandemie: Erste Schließung am 13.03.2020. Wiedereröffnung im Juni/Juli unter strengen Auflagen.',
+        },
+        {
+          year: '2022:',
+          description:
+            'Rückkehr in die Albert-Einstein-Halle nach zweijähriger Sanierung am 01.02.2022.',
+        },
+      ],
+    },
+  ],
+
+  festivalsHeadline: 'GEMEINSAM AKTIV',
+  festivalsDescription:
+    'Sport ist nur die halbe Miete. Bei uns wird Gemeinschaft großgeschrieben – ob auf dem Rad, dem Schiff oder der Rodelbahn.',
+  festivalsItems: [
+    {
+      headline: 'ALLWETTERRODELBAHN',
+      text: 'Ein Dauerbrenner für Jung und Alt. Bis zu 53 Teilnehmer (2020) jagen jährlich durch die Kurven und messen sich beim Minigolf.',
+    },
+    {
+      headline: 'RADTOUREN',
+      text: 'Ob zum Halleschen Anger oder Richtung Uichteritz – unsere Radtouren stärken den Zusammenhalt auch abseits der Sporthallen.',
+    },
+    {
+      headline: 'KULTUR & AUSFLÜGE',
+      text: 'Traumschiff-Fahrten, Besuche des Gosecker Schlosses oder Bowlingabende sorgen für Abwechslung und gute Laune im Vereinskalender.',
+    },
+  ],
+
+  achievementsHeadline: 'HALL OF FAME',
+  achievementsItems: [
+    {
+      year: '2013',
+      category: 'badminton',
+      headline: 'Deutsche Meisterschaften Berlin',
+      description: 'Heidrun Hauser belegt im Einzel und Doppel den 3. Platz.',
+    },
+    {
+      year: '2014',
+      category: 'badminton',
+      headline: 'Norddeutsche Meisterschaften',
+      description:
+        'Helmut Wiegand wird 1. im Doppel. Heidrun Hauser wird Deutsche Vizemeisterin im Doppel.',
+    },
+    {
+      year: '2013',
+      category: 'table-tennis',
+      headline: 'Landespokalsieg Klasse B',
+      description:
+        'Andreas & Matthias Fekl sowie Marco Merten gewinnen den Landespokal in Riestedt.',
+    },
+    {
+      year: '2015',
+      category: 'table-tennis',
+      headline: 'Landespokalsieg Klasse A',
+      description:
+        'Erster Sieg in der Königsklasse durch Andreas & Johannes Fekl sowie André Kreisel.',
+    },
+    {
+      year: '2018',
+      category: 'table-tennis',
+      headline: 'Aufstieg Verbandsliga',
+      description:
+        'Erstmaliger Aufstieg der 1. Herrenmannschaft in die höchste Spielklasse des Landes.',
+    },
+    {
+      year: '2012',
+      category: 'volleyball',
+      headline: 'Landesmeister Ü53',
+      description:
+        'Lars Hoffmann und Jörg Schmeißer gewinnen den Titel in Halle-Neustadt.',
+    },
+    {
+      year: '2018',
+      category: 'volleyball',
+      headline: 'Nordostdeutscher Meister',
+      description:
+        'Titelgewinn für Hoffmann/Schmeißer in der Altersklasse Ü59.',
+    },
+  ],
+
+  ctaHeadline: 'Werde Teil unserer Geschichte',
+  ctaDescription:
+    'Schließe dich unserer Gemeinschaft an und schreibe das nächste Kapitel mit uns.',
+};
+
 // Seeding functions
 const seedUsers = async (pgClient: pg.Client): Promise<number> => {
   console.log('\n--- Seeding Users ---');
@@ -220,6 +495,132 @@ const seedDepartments = async (pgClient: pg.Client): Promise<number> => {
 
   console.log(`Seeded ${seededCount} departments`);
   return seededCount;
+};
+
+const seedHistory = async (pgClient: pg.Client): Promise<void> => {
+  console.log('\n--- Seeding History ---');
+
+  // Check if history already exists
+  const checkResult = await pgClient.query('SELECT id FROM "HistoryContent" WHERE id = 1');
+  if (checkResult.rows.length > 0) {
+    console.log('  History content already exists, skipping.');
+    return;
+  }
+
+  // 1. Create HistoryContent
+  await pgClient.query(
+    `INSERT INTO "HistoryContent" (
+      "id", "heroHeadline", "heroSubHeadline", "foundingHeadline", "foundingDescription",
+      "foundingFactCardHeadline", "foundingMilestonesHeadline", "developmentHeadline",
+      "developmentDescription", "festivalsHeadline", "festivalsDescription",
+      "achievementsHeadline", "ctaHeadline", "ctaDescription", "updatedAt"
+    ) VALUES (
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, NOW()
+    )`,
+    [
+      1,
+      SEED_HISTORY.heroHeadline,
+      SEED_HISTORY.heroSubHeadline,
+      SEED_HISTORY.foundingHeadline,
+      SEED_HISTORY.foundingDescription,
+      SEED_HISTORY.foundingFactCardHeadline,
+      SEED_HISTORY.foundingMilestonesHeadline,
+      SEED_HISTORY.developmentHeadline,
+      SEED_HISTORY.developmentDescription,
+      SEED_HISTORY.festivalsHeadline,
+      SEED_HISTORY.festivalsDescription,
+      SEED_HISTORY.achievementsHeadline,
+      SEED_HISTORY.ctaHeadline,
+      SEED_HISTORY.ctaDescription,
+    ],
+  );
+
+  // 2. Seed Relations
+  for (let i = 0; i < SEED_HISTORY.foundingFacts.length; i++) {
+    const f = SEED_HISTORY.foundingFacts[i];
+    await pgClient.query(
+      `INSERT INTO "HistoryFact" ("historyContentId", "year", "headline", "description", "sort")
+       VALUES ($1, $2, $3, $4, $5)`,
+      [1, f.year, f.headline, f.description, i],
+    );
+  }
+
+  for (let i = 0; i < SEED_HISTORY.foundingMilestones.length; i++) {
+    const m = SEED_HISTORY.foundingMilestones[i];
+    await pgClient.query(
+      `INSERT INTO "HistoryMilestone" ("historyContentId", "year", "headline", "description", "sort")
+       VALUES ($1, $2, $3, $4, $5)`,
+      [1, m.year, m.headline, m.description, i],
+    );
+  }
+
+  // Chart Labels
+  for (let i = 0; i < SEED_HISTORY.developmentChartData.labels.length; i++) {
+    await pgClient.query(
+      `INSERT INTO "HistoryChartLabel" ("historyContentId", "label", "sort")
+       VALUES ($1, $2, $3)`,
+      [1, SEED_HISTORY.developmentChartData.labels[i], i],
+    );
+  }
+
+  // Datasets and Values
+  for (let i = 0; i < SEED_HISTORY.developmentChartData.datasets.length; i++) {
+    const ds = SEED_HISTORY.developmentChartData.datasets[i];
+    const dsResult = await pgClient.query(
+      `INSERT INTO "HistoryChartDataset" ("historyContentId", "label", "sort")
+       VALUES ($1, $2, $3) RETURNING id`,
+      [1, ds.label, i],
+    );
+    const dsId = dsResult.rows[0].id;
+
+    for (let j = 0; j < ds.data.length; j++) {
+      await pgClient.query(
+        `INSERT INTO "HistoryChartValue" ("datasetId", "value", "sort")
+         VALUES ($1, $2, $3)`,
+        [dsId, ds.data[j], j],
+      );
+    }
+  }
+
+  // Chronicle Groups
+  for (let i = 0; i < SEED_HISTORY.developmentChronicleGroups.length; i++) {
+    const g = SEED_HISTORY.developmentChronicleGroups[i];
+    const gResult = await pgClient.query(
+      `INSERT INTO "HistoryChronicleGroup" ("historyContentId", "headline", "sort")
+       VALUES ($1, $2, $3) RETURNING id`,
+      [1, g.headline, i],
+    );
+    const gId = gResult.rows[0].id;
+
+    for (let j = 0; j < g.content.length; j++) {
+      const e = g.content[j];
+      await pgClient.query(
+        `INSERT INTO "HistoryChronicleEntry" ("groupId", "year", "description", "sort")
+         VALUES ($1, $2, $3, $4)`,
+        [gId, e.year, e.description, j],
+      );
+    }
+  }
+
+  for (let i = 0; i < SEED_HISTORY.festivalsItems.length; i++) {
+    const f = SEED_HISTORY.festivalsItems[i];
+    await pgClient.query(
+      `INSERT INTO "HistoryFestivalItem" ("historyContentId", "headline", "text", "sort")
+       VALUES ($1, $2, $3, $4)`,
+      [1, f.headline, f.text, i],
+    );
+  }
+
+  for (let i = 0; i < SEED_HISTORY.achievementsItems.length; i++) {
+    const a = SEED_HISTORY.achievementsItems[i];
+    await pgClient.query(
+      `INSERT INTO "HistoryAchievement" ("historyContentId", "year", "headline", "description", "category", "sort")
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [1, a.year, a.headline, a.description, a.category, i],
+    );
+  }
+
+  console.log('  History content seeded successfully.');
 };
 
 // Migration functions
@@ -353,6 +754,7 @@ const main = async (): Promise<void> => {
     // Seed users and departments first
     const usersSeeded = await seedUsers(pgClient);
     const departmentsSeeded = await seedDepartments(pgClient);
+    await seedHistory(pgClient);
 
     // Fetch categories from MySQL
     const [categoryRows] = await mysqlConn.query(CATEGORY_QUERY);
