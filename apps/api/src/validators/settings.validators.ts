@@ -5,8 +5,8 @@ export const updateSettingsValidator = [
     .optional({ values: 'null' })
     .isISO8601()
     .withMessage('Founding date must be a valid ISO8601 date string')
-    .custom((value) => {
-      if (value && new Date(value) > new Date()) {
+    .custom((value: unknown) => {
+      if (value && typeof value === 'string' && new Date(value) > new Date()) {
         throw new Error('Founding date cannot be in the future');
       }
       return true;

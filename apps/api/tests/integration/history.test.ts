@@ -43,20 +43,14 @@ describe('History API Integration Tests', () => {
         heroHeadline: 'ORIGINAL HEADLINE',
         heroSubHeadline: 'Subheadline',
         foundingHeadline: 'Founding',
-        foundingNarrative: [],
+        foundingDescription: 'Description',
         foundingFactCardHeadline: 'Facts',
-        foundingFacts: [],
         foundingMilestonesHeadline: 'Milestones',
-        foundingMilestones: [],
         developmentHeadline: 'Dev',
-        developmentNarrative: [],
-        developmentChartData: { labels: [], datasets: [] },
-        developmentChronicleGroups: [],
+        developmentDescription: 'Dev Description',
         festivalsHeadline: 'Festivals',
         festivalsDescription: 'Desc',
-        festivalsItems: [],
         achievementsHeadline: 'Achievements',
-        achievementsItems: [],
         ctaHeadline: 'CTA',
         ctaDescription: 'CTA Desc',
       },
@@ -69,6 +63,10 @@ describe('History API Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('heroHeadline', 'ORIGINAL HEADLINE');
+      expect(response.body).toHaveProperty(
+        'foundingDescription',
+        'Description',
+      );
     });
 
     it('should be publicly accessible', async () => {
@@ -83,6 +81,7 @@ describe('History API Integration Tests', () => {
 
       const updateData = {
         heroHeadline: 'NEW HEADLINE',
+        foundingDescription: 'NEW DESCRIPTION',
       };
 
       const response = await request(app)
@@ -92,12 +91,14 @@ describe('History API Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.heroHeadline).toBe('NEW HEADLINE');
+      expect(response.body.foundingDescription).toBe('NEW DESCRIPTION');
 
       // Verify in db
       const updated = await prisma.historyContent.findUnique({
         where: { id: 1 },
       });
       expect(updated?.heroHeadline).toBe('NEW HEADLINE');
+      expect(updated?.foundingDescription).toBe('NEW DESCRIPTION');
     });
 
     it('should return 401 without authentication', async () => {
@@ -117,7 +118,12 @@ describe('History API Integration Tests', () => {
         .set('Cookie', cookies)
         .send({
           achievementsItems: [
-            { year: '2020', title: 'T', description: 'D', category: 'Alle' },
+            {
+              year: '2020',
+              headline: 'T',
+              description: 'D',
+              category: 'Alle',
+            },
           ],
         });
       expect(response.status).toBe(200);
@@ -130,7 +136,7 @@ describe('History API Integration Tests', () => {
           achievementsItems: [
             {
               year: '2020',
-              title: 'T',
+              headline: 'T',
               description: 'D',
               category: 'badminton',
             },
@@ -146,7 +152,7 @@ describe('History API Integration Tests', () => {
           achievementsItems: [
             {
               year: '2020',
-              title: 'T',
+              headline: 'T',
               description: 'D',
               category: 'invalid-dept',
             },
@@ -159,7 +165,7 @@ describe('History API Integration Tests', () => {
       );
     });
 
-    it('should handle complex Json fields', async () => {
+    it('should handle complex relational fields', async () => {
       const { cookies } = await createAuthenticatedUser();
 
       const complexData = {
@@ -167,8 +173,9 @@ describe('History API Integration Tests', () => {
           labels: ['2020', '2021'],
           datasets: [{ label: 'Members', data: [100, 110] }],
         },
-        festivalsItems: [
-          { title: 'Fest', subtitle: 'Sub', text: 'Text', icon: 'star' },
+        festivalsItems: [{ headline: 'Fest', text: 'Text' }],
+        foundingFacts: [
+          { year: '1985', headline: 'Fact', description: 'Desc' },
         ],
       };
 
@@ -184,6 +191,45 @@ describe('History API Integration Tests', () => {
       expect(response.body.festivalsItems).toMatchObject(
         complexData.festivalsItems,
       );
+      expect(response.body.foundingFacts).toMatchObject(
+        complexData.foundingFacts,
+      );
+    });
+
+    it('should preserve existing relations on partial update', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // 1. Initial full setup
+      const initialData = {
+        foundingFacts: [
+          { year: '1985', headline: 'Fact 1', description: 'Desc 1' },
+        ],
+        festivalsItems: [{ headline: 'Fest 1', text: 'Text 1' }],
+      };
+
+      await request(app)
+        .patch('/api/history/admin')
+        .set('Cookie', cookies)
+        .send(initialData);
+
+      // 2. Partial update (only Hero headline)
+      const partialUpdate = {
+        heroHeadline: 'NEW HERO HEADLINE',
+      };
+
+      const response = await request(app)
+        .patch('/api/history/admin')
+        .set('Cookie', cookies)
+        .send(partialUpdate);
+
+      expect(response.status).toBe(200);
+      expect(response.body.heroHeadline).toBe('NEW HERO HEADLINE');
+
+      // 3. Verify relations are still there
+      expect(response.body.foundingFacts).toHaveLength(1);
+      expect(response.body.foundingFacts[0].headline).toBe('Fact 1');
+      expect(response.body.festivalsItems).toHaveLength(1);
+      expect(response.body.festivalsItems[0].headline).toBe('Fest 1');
     });
   });
 });

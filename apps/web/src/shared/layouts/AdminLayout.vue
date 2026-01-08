@@ -102,7 +102,7 @@ async function handleLogout() {
 </script>
 
 <template>
-  <div class="min-h-screen text-white overflow-x-hidden">
+  <div class="min-h-screen text-vsg-blue-900 overflow-x-hidden">
     <!-- Header -->
     <header
       class="fixed top-0 left-0 right-0 z-50 h-16 bg-vsg-blue-900 border-b border-vsg-gold-400/20"

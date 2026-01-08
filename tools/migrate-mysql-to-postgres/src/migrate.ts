@@ -45,6 +45,118 @@ interface SeedDepartment {
   shortDescription: string;
 }
 
+interface SeedDepartmentStat {
+  label: string;
+  value: string;
+  sort: number;
+}
+
+interface SeedDepartmentLocation {
+  name: string;
+  badge: string;
+  badgeVariant: 'primary' | 'secondary';
+  street: string;
+  city: string;
+  mapsUrl: string;
+  amenities: { text: string }[];
+  sort: number;
+}
+
+interface SeedTrainingSession {
+  day: string;
+  time: string;
+  locationName: string;
+  sort: number;
+}
+
+interface SeedTrainingGroup {
+  name: string;
+  ageRange: string | null;
+  icon: 'youth' | 'adults';
+  variant: 'primary' | 'secondary';
+  sort: number;
+  sessions: SeedTrainingSession[];
+}
+
+interface CompleteDepartmentData {
+  name: string;
+  slug: string;
+  shortDescription: string;
+  stats: SeedDepartmentStat[];
+  locations: SeedDepartmentLocation[];
+  trainingGroups: SeedTrainingGroup[];
+}
+
+type DepartmentMap = Map<string, number>;
+type LocationMap = Map<string, Map<string, number>>;
+type TrainingGroupMap = Map<string, Map<string, number>>;
+
+interface HistoryFact {
+  year: string;
+  headline: string;
+  description: string;
+}
+
+interface HistoryMilestone {
+  year: string;
+  headline: string;
+  description: string;
+}
+
+interface HistoryChartDataset {
+  label: string;
+  data: number[];
+}
+
+interface HistoryChartData {
+  labels: string[];
+  datasets: HistoryChartDataset[];
+}
+
+interface HistoryChronicleEntry {
+  year: string;
+  description: string;
+}
+
+interface HistoryChronicleGroup {
+  headline: string;
+  content: HistoryChronicleEntry[];
+}
+
+interface HistoryFestivalItem {
+  headline: string;
+  text: string;
+}
+
+interface HistoryAchievement {
+  year: string;
+  headline: string;
+  description: string;
+  category: string;
+}
+
+interface SeedHistory {
+  heroHeadline: string;
+  heroSubHeadline: string;
+  foundingHeadline: string;
+  foundingDescription: string;
+  foundingFactCardHeadline: string;
+  foundingFacts: HistoryFact[];
+  foundingMilestonesHeadline: string;
+  foundingMilestones: HistoryMilestone[];
+  developmentHeadline: string;
+  developmentDescription: string;
+  developmentChartData: HistoryChartData;
+  developmentChronicleGroups: HistoryChronicleGroup[];
+  festivalsHeadline: string;
+  festivalsDescription: string;
+  festivalsItems: HistoryFestivalItem[];
+  achievementsHeadline: string;
+  achievementsItems: HistoryAchievement[];
+  ctaHeadline: string;
+  ctaDescription: string;
+}
+
 interface DbConfig {
   host: string;
   port: number;
@@ -142,32 +254,493 @@ const SEED_USERS: SeedUser[] = [
   },
 ];
 
-const SEED_DEPARTMENTS: SeedDepartment[] = [
+const SEED_DEPARTMENT_DATA: CompleteDepartmentData[] = [
   {
     name: 'Badminton',
     slug: 'badminton',
     shortDescription:
-      'Dynamic badminton club offering training and competitions for all skill levels.',
+      'Schnelle Ballwechsel und blitzschnelle Reaktionen! Badminton ist der perfekte Sport, um sich richtig auszupowern. Egal ob im Einzel oder Doppel – hier sind Geschwindigkeit und Taktik gefragt.',
+    stats: [
+      { label: 'Aktive Mitglieder', value: '30', sort: 0 },
+      { label: 'Mannschaften', value: '4', sort: 1 },
+      { label: 'Federbälle', value: '203', sort: 2 },
+      { label: 'WM Bronzemedalien', value: '1', sort: 3 },
+    ],
+    locations: [
+      {
+        name: 'Schlossgartenturnhalle',
+        badge: 'Haupthalle',
+        badgeVariant: 'primary',
+        street: 'Zeitzer Str. 23b',
+        city: '06667 Weißenfels',
+        mapsUrl: 'https://www.openstreetmap.org/?#map=19/51.199262/11.979805',
+        amenities: [],
+        sort: 0,
+      },
+      {
+        name: 'Sporthalle Beuditzschule',
+        badge: 'Haupthalle',
+        badgeVariant: 'primary',
+        street: 'Beuditzstr. 41',
+        city: '06667 Weißenfels',
+        mapsUrl: 'https://www.openstreetmap.org/?#map=19/51.200344/11.960836',
+        amenities: [],
+        sort: 1,
+      },
+    ],
+    trainingGroups: [
+      {
+        name: 'Kinder & Jugend',
+        ageRange: '6 - 17',
+        icon: 'youth',
+        variant: 'secondary',
+        sort: 0,
+        sessions: [
+          {
+            day: 'Freitag',
+            time: '17:00 - 19:00',
+            locationName: 'Schlossgartenturnhalle',
+            sort: 0,
+          },
+        ],
+      },
+      {
+        name: 'Erwachsene',
+        ageRange: null,
+        icon: 'adults',
+        variant: 'primary',
+        sort: 1,
+        sessions: [
+          {
+            day: 'Dienstag',
+            time: '18:00 - 20:00',
+            locationName: 'Schlossgartenturnhalle',
+            sort: 0,
+          },
+          {
+            day: 'Mittwoch',
+            time: '19:00 - 22:00',
+            locationName: 'Sporthalle Beuditzschule',
+            sort: 1,
+          },
+          {
+            day: 'Freitag',
+            time: '19:00 - 21:45',
+            locationName: 'Schlossgartenturnhalle',
+            sort: 2,
+          },
+        ],
+      },
+    ],
   },
   {
-    name: 'Gymnastics',
-    slug: 'gymnastics',
+    name: 'Gymnastik',
+    slug: 'gymnastik',
     shortDescription:
-      'Comprehensive gymnastics program for children and adults focusing on flexibility and strength.',
+      'Fit von Kopf bis Fuß! Mit abwechslungsreichen Übungen kräftigen wir die Muskulatur und halten die Gelenke geschmeidig. Ein effektives Ganzkörpertraining für jede Altersgruppe.',
+    stats: [
+      { label: 'Aktive Mitglieder', value: '30', sort: 0 },
+      { label: 'Mannschaften', value: '4', sort: 1 },
+      { label: 'Joga-Matten', value: '203', sort: 2 },
+      { label: 'Irgendwas', value: '5', sort: 3 },
+    ],
+    locations: [
+      {
+        name: 'Sporthalle Ökowegschule',
+        badge: 'Haupthalle',
+        badgeVariant: 'primary',
+        street: 'Kugelbergring 32',
+        city: '06667 Weißenfels',
+        mapsUrl: 'https://www.openstreetmap.org/?#map=19/51.192598/11.980410',
+        amenities: [],
+        sort: 0,
+      },
+    ],
+    trainingGroups: [
+      {
+        name: 'Erwachsene',
+        ageRange: null,
+        icon: 'adults',
+        variant: 'primary',
+        sort: 0,
+        sessions: [
+          {
+            day: 'Mittwoch',
+            time: '19:30 - 20:45',
+            locationName: 'Sporthalle Ökowegschule',
+            sort: 0,
+          },
+        ],
+      },
+    ],
   },
   {
-    name: 'Table Tennis',
-    slug: 'table-tennis',
+    name: 'Tischtennis',
+    slug: 'tischtennis',
     shortDescription:
-      'Fast-paced table tennis club with regular training sessions and league competitions.',
+      'Reaktionsschnelligkeit und Ballgefühl auf kleinstem Raum. Tischtennis ist das schnellste Rückschlagspiel der Welt und macht einfach riesigen Spaß – egal ob Anfänger oder Fortgeschrittener.',
+    stats: [
+      { label: 'Aktive Mitglieder', value: '30', sort: 0 },
+      { label: 'Mannschaften', value: '6', sort: 1 },
+      { label: 'Tischtennisplatten', value: '203', sort: 2 },
+      { label: 'Irgendwas', value: '5', sort: 3 },
+    ],
+    locations: [
+      {
+        name: 'Sporthalle Ökowegschule',
+        badge: 'Haupthalle',
+        badgeVariant: 'primary',
+        street: 'Kugelbergring 32',
+        city: '06667 Weißenfels',
+        mapsUrl: 'https://www.openstreetmap.org/?#map=19/51.192598/11.980410',
+        amenities: [],
+        sort: 0,
+      },
+      {
+        name: 'Sporthalle Albert-Einstein-Schule',
+        badge: 'Haupthalle',
+        badgeVariant: 'primary',
+        street: 'Kirschweg 86',
+        city: '06667 Weißenfels',
+        mapsUrl: 'https://www.openstreetmap.org/?#map=19/51.200227/11.949445',
+        amenities: [],
+        sort: 1,
+      },
+    ],
+    trainingGroups: [
+      {
+        name: 'Kinder & Jugend',
+        ageRange: '6 - 17',
+        icon: 'youth',
+        variant: 'secondary',
+        sort: 0,
+        sessions: [
+          {
+            day: 'Dienstag',
+            time: '16:30 - 19:00',
+            locationName: 'Sporthalle Ökowegschule',
+            sort: 0,
+          },
+          {
+            day: 'Donnerstag',
+            time: '17:30 - 18:30',
+            locationName: 'Sporthalle Albert-Einstein-Schule',
+            sort: 1,
+          },
+        ],
+      },
+      {
+        name: 'Erwachsene',
+        ageRange: null,
+        icon: 'adults',
+        variant: 'primary',
+        sort: 1,
+        sessions: [
+          {
+            day: 'Dienstag',
+            time: '19:00 - 22:00',
+            locationName: 'Sporthalle Ökowegschule',
+            sort: 0,
+          },
+          {
+            day: 'Donnerstag',
+            time: '18:30 - 22:00',
+            locationName: 'Sporthalle Albert-Einstein-Schule',
+            sort: 1,
+          },
+          {
+            day: 'Freitag',
+            time: '18:00 - 22:00',
+            locationName: 'Sporthalle Ökowegschule',
+            sort: 2,
+          },
+        ],
+      },
+    ],
   },
   {
     name: 'Volleyball',
     slug: 'volleyball',
     shortDescription:
-      'Team-oriented volleyball department offering indoor and beach volleyball programs.',
+      'Einer für alle, alle für einen! Beim Volleyball stehen Teamgeist und Dynamik im Vordergrund. Pritschen, Baggern und Schmettern – erlebe die Faszination dieses Mannschaftssports.',
+    stats: [
+      { label: 'Aktive Mitglieder', value: '30', sort: 0 },
+      { label: 'Mannschaften', value: '6', sort: 1 },
+      { label: 'Volleybälle', value: '35', sort: 2 },
+      { label: 'Irgendwas', value: '5', sort: 3 },
+    ],
+    locations: [
+      {
+        name: 'Sporthalle Ökowegschule',
+        badge: 'Haupthalle',
+        badgeVariant: 'primary',
+        street: 'Kugelbergring 32',
+        city: '06667 Weißenfels',
+        mapsUrl: 'https://www.openstreetmap.org/?#map=19/51.192598/11.980410',
+        amenities: [],
+        sort: 0,
+      },
+      {
+        name: 'Sporthalle Goethegymnasium',
+        badge: 'Haupthalle',
+        badgeVariant: 'primary',
+        street: 'Am Kloster 4',
+        city: '06667 Weißenfels',
+        mapsUrl: 'https://www.openstreetmap.org/?#map=19/51.199392/11.967936',
+        amenities: [],
+        sort: 1,
+      },
+      {
+        name: 'Stadthalle',
+        badge: 'Haupthalle',
+        badgeVariant: 'primary',
+        street: 'Beuditzstr. 69',
+        city: '06667 Weißenfels',
+        mapsUrl: 'https://www.openstreetmap.org/?#map=19/51.201790/11.957084',
+        amenities: [],
+        sort: 2,
+      },
+    ],
+    trainingGroups: [
+      {
+        name: 'Erwachsene',
+        ageRange: null,
+        icon: 'adults',
+        variant: 'primary',
+        sort: 0,
+        sessions: [
+          {
+            day: 'Montag',
+            time: '17:30 - 22:00',
+            locationName: 'Sporthalle Ökowegschule',
+            sort: 0,
+          },
+          {
+            day: 'Dienstag',
+            time: '20:00 - 21:45',
+            locationName: 'Sporthalle Goethegymnasium',
+            sort: 1,
+          },
+          {
+            day: 'Donnerstag',
+            time: '20:00 - 22:00',
+            locationName: 'Stadthalle',
+            sort: 2,
+          },
+        ],
+      },
+    ],
   },
 ];
+
+const SEED_HISTORY: SeedHistory = {
+  heroHeadline: 'DIE CHRONIK',
+  heroSubHeadline:
+    'Von den ersten Aufschlägen in der Fritz-Juch-Oberschule bis hin zu Erfolgen auf internationaler Bühne – begleiten Sie uns auf einer Zeitreise durch die Geschichte der VSG Kugelberg.',
+
+  foundingHeadline: 'WIE ALLES BEGANN',
+  foundingDescription:
+    'Zu Beginn der 1980er Jahre entstand in Weißenfels das Wohngebiet „Kugelberg“. Es war eine Zeit des Aufbruchs und der sportlichen Begeisterung. Die Gründungsmitglieder der VSG waren überwiegend dort wohnhaft – so lag es nahe, den Namen des Viertels als Grundlage zur Namensgebung zu wählen.\n\nAls erste Sportstätte wurde die Turnhalle der 1983 eingeweihten Fritz-Juch-Oberschule, die heute als Ökowegschule bekannt ist, vom Verein genutzt. Hier wurden die ersten Weichen für eine Gemeinschaft gestellt, die heute weit über die Grenzen von Weißenfels hinaus bekannt ist.',
+  foundingFactCardHeadline: 'DIE ECKDATEN',
+  foundingFacts: [
+    {
+      year: '1985',
+      headline: 'VSG „Fortschritt“ Kugelberg',
+      description: 'Gründung des Vereins in Weißenfels, Kugelbergring 16.',
+    },
+    {
+      year: '1985',
+      headline: 'Friedemann Lange',
+      description: 'Erster Vorstandsvorsitzender des Vereins.',
+    },
+  ],
+  foundingMilestonesHeadline: 'MEILENSTEINE & FUSIONEN',
+  foundingMilestones: [
+    {
+      year: '1985',
+      headline: 'Gründung der Sektionen',
+      description:
+        'Start mit Volleyball (Claus Brenner), Pop-Gymnastik (Heike Hofmann) und Tischtennis (Hans-Werner Rust).',
+    },
+    {
+      year: '1990',
+      headline: 'Neugründung als VSG Kugelberg e.V.',
+      description:
+        'Auflösung der alten Struktur am 13.12. and Neugründung unter heutigem Namen am 14.12.1990.',
+    },
+    {
+      year: '1992',
+      headline: 'Wachstum durch Anschluss',
+      description:
+        'Abteilung Tischtennis des 1. SC 1861 Weißenfels schließt sich am 19.06. an.',
+    },
+    {
+      year: '2012',
+      headline: 'Badminton-Expansion',
+      description:
+        'Anschluss der Abt. Badminton von Lok Weißenfels mit 46 neuen Mitgliedern am 01.07.2012.',
+    },
+  ],
+
+  developmentHeadline: 'ENTWICKLUNG & WACHSTUM',
+  developmentDescription:
+    'Vom kleinen Kiez-Verein zur festen Größe im Burgenlandkreis. Die Zahlen sprechen für sich.',
+  developmentChartData: {
+    labels: ['2000', '2005', '2010', '2015', '2020', '2022'],
+    datasets: [
+      {
+        label: 'Mitglieder',
+        data: [111, 96, 106, 223, 200, 210],
+      },
+    ],
+  },
+  developmentChronicleGroups: [
+    {
+      headline: '1990 – 2000: Die Anfänge & Erste Jubiläen',
+      content: [
+        {
+          year: '1994:',
+          description:
+            'Ehrennadel des Landessportbundes in Silber für Jürgen Flister und Walter Reichert.',
+        },
+        {
+          year: '1995:',
+          description:
+            '10-jähriges Bestehen im Hotel „Schöne Aussicht“ mit 110 Teilnehmern. Erstmalige Ernennung von Ehrenmitgliedern.',
+        },
+        {
+          year: '1990-06:',
+          description:
+            'Heidi Lange prägt den Verein als Vorstandsvorsitzende over 17 Jahre.',
+        },
+      ],
+    },
+    {
+      headline: '2001 – 2010: Digitalisierung & Sportbund',
+      content: [
+        {
+          year: '2007:',
+          description:
+            'Beitritt zum Kreissportbund Burgenlandkreis. Neugestaltung der Homepage und des Vereinslogos.',
+        },
+        {
+          year: '2010:',
+          description:
+            '25-jähriges Jubiläum im Bootshaus. Teilnahme am Sachsen-Anhalt Tag in Weißenfels.',
+        },
+      ],
+    },
+    {
+      headline: '2011 – 2019: Auszeichnungen & Erfolge',
+      content: [
+        {
+          year: '2013-15:',
+          description:
+            'Mehrfache Homepage-Relaunches. Rosa Beck und Hans-Werner Rust erhalten LSB-Ehrennadel in Silber.',
+        },
+        {
+          year: '2017:',
+          description:
+            'Heidrun Hauser wird Sportlerin des Jahres im Burgenlandkreis (12.115 Stimmen).',
+        },
+        {
+          year: '2019:',
+          description:
+            'Tischtennis-Herrenmannschaft belegt 3. Platz bei der Sportlerwahl – vor dem MBC!',
+        },
+      ],
+    },
+    {
+      headline: '2020 – 2022: Pandemie & Neuanfang',
+      content: [
+        {
+          year: '2020:',
+          description:
+            'Corona-Pandemie: Erste Schließung am 13.03.2020. Wiedereröffnung im Juni/Juli unter strengen Auflagen.',
+        },
+        {
+          year: '2022:',
+          description:
+            'Rückkehr in die Albert-Einstein-Halle nach zweijähriger Sanierung am 01.02.2022.',
+        },
+      ],
+    },
+  ],
+
+  festivalsHeadline: 'GEMEINSAM AKTIV',
+  festivalsDescription:
+    'Sport ist nur die halbe Miete. Bei uns wird Gemeinschaft großgeschrieben – ob auf dem Rad, dem Schiff oder der Rodelbahn.',
+  festivalsItems: [
+    {
+      headline: 'ALLWETTERRODELBAHN',
+      text: 'Ein Dauerbrenner für Jung und Alt. Bis zu 53 Teilnehmer (2020) jagen jährlich durch die Kurven und messen sich beim Minigolf.',
+    },
+    {
+      headline: 'RADTOUREN',
+      text: 'Ob zum Halleschen Anger oder Richtung Uichteritz – unsere Radtouren stärken den Zusammenhalt auch abseits der Sporthallen.',
+    },
+    {
+      headline: 'KULTUR & AUSFLÜGE',
+      text: 'Traumschiff-Fahrten, Besuche des Gosecker Schlosses oder Bowlingabende sorgen für Abwechslung und gute Laune im Vereinskalender.',
+    },
+  ],
+
+  achievementsHeadline: 'HALL OF FAME',
+  achievementsItems: [
+    {
+      year: '2013',
+      category: 'badminton',
+      headline: 'Deutsche Meisterschaften Berlin',
+      description: 'Heidrun Hauser belegt im Einzel und Doppel den 3. Platz.',
+    },
+    {
+      year: '2014',
+      category: 'badminton',
+      headline: 'Norddeutsche Meisterschaften',
+      description:
+        'Helmut Wiegand wird 1. im Doppel. Heidrun Hauser wird Deutsche Vizemeisterin im Doppel.',
+    },
+    {
+      year: '2013',
+      category: 'table-tennis',
+      headline: 'Landespokalsieg Klasse B',
+      description:
+        'Andreas & Matthias Fekl sowie Marco Merten gewinnen den Landespokal in Riestedt.',
+    },
+    {
+      year: '2015',
+      category: 'table-tennis',
+      headline: 'Landespokalsieg Klasse A',
+      description:
+        'Erster Sieg in der Königsklasse durch Andreas & Johannes Fekl sowie André Kreisel.',
+    },
+    {
+      year: '2018',
+      category: 'table-tennis',
+      headline: 'Aufstieg Verbandsliga',
+      description:
+        'Erstmaliger Aufstieg der 1. Herrenmannschaft in die höchste Spielklasse des Landes.',
+    },
+    {
+      year: '2012',
+      category: 'volleyball',
+      headline: 'Landesmeister Ü53',
+      description:
+        'Lars Hoffmann und Jörg Schmeißer gewinnen den Titel in Halle-Neustadt.',
+    },
+    {
+      year: '2018',
+      category: 'volleyball',
+      headline: 'Nordostdeutscher Meister',
+      description:
+        'Titelgewinn für Hoffmann/Schmeißer in der Altersklasse Ü59.',
+    },
+  ],
+
+  ctaHeadline: 'Werde Teil unserer Geschichte',
+  ctaDescription:
+    'Schließe dich unserer Gemeinschaft an und schreibe das nächste Kapitel mit uns.',
+};
 
 // Seeding functions
 const seedUsers = async (pgClient: pg.Client): Promise<number> => {
@@ -196,30 +769,356 @@ const seedUsers = async (pgClient: pg.Client): Promise<number> => {
   return seededCount;
 };
 
-const seedDepartments = async (pgClient: pg.Client): Promise<number> => {
+const seedDepartments = async (pgClient: pg.Client): Promise<DepartmentMap> => {
   console.log('\n--- Seeding Departments ---');
 
+  const departmentMap: DepartmentMap = new Map();
   let seededCount = 0;
 
-  for (const dept of SEED_DEPARTMENTS) {
+  for (const dept of SEED_DEPARTMENT_DATA) {
     const result = await pgClient.query(
       `INSERT INTO "Department" ("name", "slug", "shortDescription", "createdAt", "updatedAt")
        VALUES ($1, $2, $3, NOW(), NOW())
-       ON CONFLICT ("slug") DO NOTHING
+       ON CONFLICT ("slug") DO UPDATE SET
+         "name" = EXCLUDED."name",
+         "shortDescription" = EXCLUDED."shortDescription",
+         "updatedAt" = NOW()
        RETURNING id`,
       [dept.name, dept.slug, dept.shortDescription],
     );
 
-    if (result.rows.length > 0) {
-      console.log(`  Created department: ${dept.name} (id: ${result.rows[0].id})`);
+    const departmentId = result.rows[0].id;
+    departmentMap.set(dept.slug, departmentId);
+
+    if (result.rowCount && result.rowCount > 0) {
+      console.log(`  Created/Updated department: ${dept.name} (id: ${departmentId})`);
       seededCount++;
-    } else {
-      console.log(`  Skipped existing department: ${dept.name}`);
     }
   }
 
   console.log(`Seeded ${seededCount} departments`);
+  return departmentMap;
+};
+
+const seedDepartmentStats = async (
+  pgClient: pg.Client,
+  departmentMap: DepartmentMap,
+): Promise<number> => {
+  console.log('\n--- Seeding Department Stats ---');
+
+  let seededCount = 0;
+
+  for (const dept of SEED_DEPARTMENT_DATA) {
+    const departmentId = departmentMap.get(dept.slug);
+    if (!departmentId) {
+      console.warn(`  Warning: Department not found for slug: ${dept.slug}`);
+      continue;
+    }
+
+    // Delete existing stats for this department to ensure idempotency
+    await pgClient.query(`DELETE FROM "DepartmentStat" WHERE "departmentId" = $1`, [
+      departmentId,
+    ]);
+
+    for (const stat of dept.stats) {
+      const result = await pgClient.query(
+        `INSERT INTO "DepartmentStat" ("departmentId", "label", "value", "sort", "createdAt", "updatedAt")
+         VALUES ($1, $2, $3, $4, NOW(), NOW())
+         RETURNING id`,
+        [departmentId, stat.label, stat.value, stat.sort],
+      );
+
+      if (result.rows.length > 0) {
+        seededCount++;
+      }
+    }
+    console.log(`  Seeded ${dept.stats.length} stats for ${dept.name}`);
+  }
+
+  console.log(`Seeded ${seededCount} department stats total`);
   return seededCount;
+};
+
+const seedDepartmentLocations = async (
+  pgClient: pg.Client,
+  departmentMap: DepartmentMap,
+): Promise<LocationMap> => {
+  console.log('\n--- Seeding Department Locations ---');
+
+  const locationMap: LocationMap = new Map();
+  let seededCount = 0;
+
+  for (const dept of SEED_DEPARTMENT_DATA) {
+    const departmentId = departmentMap.get(dept.slug);
+    if (!departmentId) {
+      console.warn(`  Warning: Department not found for slug: ${dept.slug}`);
+      continue;
+    }
+
+    // Delete existing locations for this department to ensure idempotency
+    await pgClient.query(`DELETE FROM "DepartmentLocation" WHERE "departmentId" = $1`, [
+      departmentId,
+    ]);
+
+    const deptLocationMap = new Map<string, number>();
+    locationMap.set(dept.slug, deptLocationMap);
+
+    for (const location of dept.locations) {
+      const result = await pgClient.query(
+        `INSERT INTO "DepartmentLocation" ("departmentId", "name", "badge", "badgeVariant", "street", "city", "mapsUrl", "amenities", "sort", "createdAt", "updatedAt")
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())
+         RETURNING id`,
+        [
+          departmentId,
+          location.name,
+          location.badge,
+          location.badgeVariant,
+          location.street,
+          location.city,
+          location.mapsUrl,
+          JSON.stringify(location.amenities),
+          location.sort,
+        ],
+      );
+
+      if (result.rows.length > 0) {
+        const locationId = result.rows[0].id;
+        deptLocationMap.set(location.name, locationId);
+        seededCount++;
+      }
+    }
+    console.log(`  Seeded ${dept.locations.length} locations for ${dept.name}`);
+  }
+
+  console.log(`Seeded ${seededCount} department locations total`);
+  return locationMap;
+};
+
+const seedDepartmentTrainingGroups = async (
+  pgClient: pg.Client,
+  departmentMap: DepartmentMap,
+): Promise<TrainingGroupMap> => {
+  console.log('\n--- Seeding Training Groups ---');
+
+  const trainingGroupMap: TrainingGroupMap = new Map();
+  let seededCount = 0;
+
+  for (const dept of SEED_DEPARTMENT_DATA) {
+    const departmentId = departmentMap.get(dept.slug);
+    if (!departmentId) {
+      console.warn(`  Warning: Department not found for slug: ${dept.slug}`);
+      continue;
+    }
+
+    // Delete existing training groups (and their sessions via cascade) for this department
+    await pgClient.query(`DELETE FROM "DepartmentTrainingGroup" WHERE "departmentId" = $1`, [
+      departmentId,
+    ]);
+
+    const deptGroupMap = new Map<string, number>();
+    trainingGroupMap.set(dept.slug, deptGroupMap);
+
+    for (const group of dept.trainingGroups) {
+      const result = await pgClient.query(
+        `INSERT INTO "DepartmentTrainingGroup" ("departmentId", "name", "ageRange", "icon", "variant", "sort", "createdAt", "updatedAt")
+         VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+         RETURNING id`,
+        [departmentId, group.name, group.ageRange, group.icon, group.variant, group.sort],
+      );
+
+      if (result.rows.length > 0) {
+        const groupId = result.rows[0].id;
+        deptGroupMap.set(group.name, groupId);
+        seededCount++;
+      }
+    }
+    console.log(`  Seeded ${dept.trainingGroups.length} training groups for ${dept.name}`);
+  }
+
+  console.log(`Seeded ${seededCount} training groups total`);
+  return trainingGroupMap;
+};
+
+const seedDepartmentTrainingSessions = async (
+  pgClient: pg.Client,
+  locationMap: LocationMap,
+  trainingGroupMap: TrainingGroupMap,
+): Promise<number> => {
+  console.log('\n--- Seeding Training Sessions ---');
+
+  let seededCount = 0;
+
+  for (const dept of SEED_DEPARTMENT_DATA) {
+    const deptLocationMap = locationMap.get(dept.slug);
+    const deptGroupMap = trainingGroupMap.get(dept.slug);
+
+    if (!deptLocationMap || !deptGroupMap) {
+      console.warn(`  Warning: Maps not found for department: ${dept.slug}`);
+      continue;
+    }
+
+    let deptSessionCount = 0;
+
+    for (const group of dept.trainingGroups) {
+      const groupId = deptGroupMap.get(group.name);
+      if (!groupId) {
+        console.warn(`  Warning: Group not found: ${group.name} in ${dept.slug}`);
+        continue;
+      }
+
+      for (const session of group.sessions) {
+        const locationId = deptLocationMap.get(session.locationName);
+        if (!locationId) {
+          console.warn(
+            `  Warning: Location not found: ${session.locationName} in ${dept.slug}`,
+          );
+          continue;
+        }
+
+          const result = await pgClient.query(
+          `INSERT INTO "DepartmentTrainingSession" ("trainingGroupId", "locationId", "day", "time", "sort", "createdAt", "updatedAt")
+           VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
+           RETURNING id`,
+          [groupId, locationId, session.day, session.time, session.sort],
+        );
+
+        if (result.rows.length > 0) {
+          seededCount++;
+          deptSessionCount++;
+        }
+      }
+    }
+    console.log(`  Seeded ${deptSessionCount} training sessions for ${dept.name}`);
+  }
+
+  console.log(`Seeded ${seededCount} training sessions total`);
+  return seededCount;
+};
+
+const seedHistory = async (pgClient: pg.Client): Promise<void> => {
+  console.log('\n--- Seeding History ---');
+
+  // Check if history already exists
+  const checkResult = await pgClient.query('SELECT id FROM "HistoryContent" WHERE id = 1');
+  if (checkResult.rows.length > 0) {
+    console.log('  History content already exists, skipping.');
+    return;
+  }
+
+  // 1. Create HistoryContent
+  await pgClient.query(
+    `INSERT INTO "HistoryContent" (
+      "id", "heroHeadline", "heroSubHeadline", "foundingHeadline", "foundingDescription",
+      "foundingFactCardHeadline", "foundingMilestonesHeadline", "developmentHeadline",
+      "developmentDescription", "festivalsHeadline", "festivalsDescription",
+      "achievementsHeadline", "ctaHeadline", "ctaDescription", "updatedAt"
+    ) VALUES (
+      $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, NOW()
+    )`,
+    [
+      1,
+      SEED_HISTORY.heroHeadline,
+      SEED_HISTORY.heroSubHeadline,
+      SEED_HISTORY.foundingHeadline,
+      SEED_HISTORY.foundingDescription,
+      SEED_HISTORY.foundingFactCardHeadline,
+      SEED_HISTORY.foundingMilestonesHeadline,
+      SEED_HISTORY.developmentHeadline,
+      SEED_HISTORY.developmentDescription,
+      SEED_HISTORY.festivalsHeadline,
+      SEED_HISTORY.festivalsDescription,
+      SEED_HISTORY.achievementsHeadline,
+      SEED_HISTORY.ctaHeadline,
+      SEED_HISTORY.ctaDescription,
+    ],
+  );
+
+  // 2. Seed Relations
+  for (let i = 0; i < SEED_HISTORY.foundingFacts.length; i++) {
+    const f = SEED_HISTORY.foundingFacts[i];
+    await pgClient.query(
+      `INSERT INTO "HistoryFact" ("historyContentId", "year", "headline", "description", "sort")
+       VALUES ($1, $2, $3, $4, $5)`,
+      [1, f.year, f.headline, f.description, i],
+    );
+  }
+
+  for (let i = 0; i < SEED_HISTORY.foundingMilestones.length; i++) {
+    const m = SEED_HISTORY.foundingMilestones[i];
+    await pgClient.query(
+      `INSERT INTO "HistoryMilestone" ("historyContentId", "year", "headline", "description", "sort")
+       VALUES ($1, $2, $3, $4, $5)`,
+      [1, m.year, m.headline, m.description, i],
+    );
+  }
+
+  // Chart Labels
+  for (let i = 0; i < SEED_HISTORY.developmentChartData.labels.length; i++) {
+    await pgClient.query(
+      `INSERT INTO "HistoryChartLabel" ("historyContentId", "label", "sort")
+       VALUES ($1, $2, $3)`,
+      [1, SEED_HISTORY.developmentChartData.labels[i], i],
+    );
+  }
+
+  // Datasets and Values
+  for (let i = 0; i < SEED_HISTORY.developmentChartData.datasets.length; i++) {
+    const ds = SEED_HISTORY.developmentChartData.datasets[i];
+    const dsResult = await pgClient.query(
+      `INSERT INTO "HistoryChartDataset" ("historyContentId", "label", "sort")
+       VALUES ($1, $2, $3) RETURNING id`,
+      [1, ds.label, i],
+    );
+    const dsId = dsResult.rows[0].id;
+
+    for (let j = 0; j < ds.data.length; j++) {
+      await pgClient.query(
+        `INSERT INTO "HistoryChartValue" ("datasetId", "value", "sort")
+         VALUES ($1, $2, $3)`,
+        [dsId, ds.data[j], j],
+      );
+    }
+  }
+
+  // Chronicle Groups
+  for (let i = 0; i < SEED_HISTORY.developmentChronicleGroups.length; i++) {
+    const g = SEED_HISTORY.developmentChronicleGroups[i];
+    const gResult = await pgClient.query(
+      `INSERT INTO "HistoryChronicleGroup" ("historyContentId", "headline", "sort")
+       VALUES ($1, $2, $3) RETURNING id`,
+      [1, g.headline, i],
+    );
+    const gId = gResult.rows[0].id;
+
+    for (let j = 0; j < g.content.length; j++) {
+      const e = g.content[j];
+      await pgClient.query(
+        `INSERT INTO "HistoryChronicleEntry" ("groupId", "year", "description", "sort")
+         VALUES ($1, $2, $3, $4)`,
+        [gId, e.year, e.description, j],
+      );
+    }
+  }
+
+  for (let i = 0; i < SEED_HISTORY.festivalsItems.length; i++) {
+    const f = SEED_HISTORY.festivalsItems[i];
+    await pgClient.query(
+      `INSERT INTO "HistoryFestivalItem" ("historyContentId", "headline", "text", "sort")
+       VALUES ($1, $2, $3, $4)`,
+      [1, f.headline, f.text, i],
+    );
+  }
+
+  for (let i = 0; i < SEED_HISTORY.achievementsItems.length; i++) {
+    const a = SEED_HISTORY.achievementsItems[i];
+    await pgClient.query(
+      `INSERT INTO "HistoryAchievement" ("historyContentId", "year", "headline", "description", "category", "sort")
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [1, a.year, a.headline, a.description, a.category, i],
+    );
+  }
+
+  console.log('  History content seeded successfully.');
 };
 
 // Migration functions
@@ -352,7 +1251,16 @@ const main = async (): Promise<void> => {
 
     // Seed users and departments first
     const usersSeeded = await seedUsers(pgClient);
-    const departmentsSeeded = await seedDepartments(pgClient);
+    const departmentMap = await seedDepartments(pgClient);
+    const statsSeeded = await seedDepartmentStats(pgClient, departmentMap);
+    const locationMap = await seedDepartmentLocations(pgClient, departmentMap);
+    const trainingGroupMap = await seedDepartmentTrainingGroups(pgClient, departmentMap);
+    const sessionsSeeded = await seedDepartmentTrainingSessions(
+      pgClient,
+      locationMap,
+      trainingGroupMap,
+    );
+    await seedHistory(pgClient);
 
     // Fetch categories from MySQL
     const [categoryRows] = await mysqlConn.query(CATEGORY_QUERY);
@@ -365,7 +1273,11 @@ const main = async (): Promise<void> => {
     // Summary
     console.log('\n=== Migration Complete ===');
     console.log(`Users seeded: ${usersSeeded}`);
-    console.log(`Departments seeded: ${departmentsSeeded}`);
+    console.log(`Departments seeded: ${departmentMap.size}`);
+    console.log(`Department stats seeded: ${statsSeeded}`);
+    console.log(`Department locations seeded: ${locationMap.size === 0 ? 0 : Array.from(locationMap.values()).reduce((sum, map) => sum + map.size, 0)}`);
+    console.log(`Training groups seeded: ${trainingGroupMap.size === 0 ? 0 : Array.from(trainingGroupMap.values()).reduce((sum, map) => sum + map.size, 0)}`);
+    console.log(`Training sessions seeded: ${sessionsSeeded}`);
     console.log(`Categories: ${categoryMap.size}`);
     console.log(`Posts: ${totalPosts}`);
   } catch (error) {

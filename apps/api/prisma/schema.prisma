@@ -252,26 +252,128 @@ model HistoryContent {
   heroSubHeadline            String
   // Founding Section
   foundingHeadline           String
-  foundingNarrative          Json     // Array of strings (paragraphs)
+  foundingDescription        String
   foundingFactCardHeadline   String
-  foundingFacts              Json     // Array of { label: string, value: string }
+  foundingFacts              HistoryFact[]
   foundingMilestonesHeadline String
-  foundingMilestones         Json     // Array of { year: string, title: string, description: string }
+  foundingMilestones         HistoryMilestone[]
   // Development Section
   developmentHeadline        String
-  developmentNarrative       Json     // Array of strings
-  developmentChartData       Json     // { labels: string[], datasets: { label: string, data: number[] }[] }
-  developmentChronicleGroups Json     // Array of { id: number, title: string, content: { year: string, text: string }[] }
+  developmentDescription     String
+  developmentChartLabels     HistoryChartLabel[]
+  developmentChartData       HistoryChartDataset[]
+  developmentChronicleGroups HistoryChronicleGroup[]
   // Festivals Section
   festivalsHeadline          String
   festivalsDescription       String
-  festivalsItems             Json     // Array of { title: string, subtitle: string, text: string, icon: string }
+  festivalsItems             HistoryFestivalItem[]
   // Achievements Section
   achievementsHeadline       String
-  achievementsItems          Json     // Array of { year: string, title: string, description: string, category: string }
+  achievementsItems          HistoryAchievement[]
   // CTA Section
   ctaHeadline                String
   ctaDescription             String
-  
-  updatedAt                  DateTime @updatedAt
+
+  updatedAt DateTime @updatedAt
+}
+
+model HistoryFact {
+  id               Int            @id @default(autoincrement())
+  historyContentId Int
+  historyContent   HistoryContent @relation(fields: [historyContentId], references: [id], onDelete: Cascade)
+  year             String
+  headline         String
+  description      String
+  sort             Int            @default(0)
+
+  @@index([historyContentId])
+}
+
+model HistoryMilestone {
+  id               Int            @id @default(autoincrement())
+  historyContentId Int
+  historyContent   HistoryContent @relation(fields: [historyContentId], references: [id], onDelete: Cascade)
+  year             String
+  headline         String
+  description      String
+  sort             Int            @default(0)
+
+  @@index([historyContentId])
+}
+
+model HistoryChartLabel {
+  id               Int            @id @default(autoincrement())
+  historyContentId Int
+  historyContent   HistoryContent @relation(fields: [historyContentId], references: [id], onDelete: Cascade)
+  label            String
+  sort             Int            @default(0)
+
+  @@index([historyContentId])
+}
+
+model HistoryChartDataset {
+  id               Int            @id @default(autoincrement())
+  historyContentId Int
+  historyContent   HistoryContent @relation(fields: [historyContentId], references: [id], onDelete: Cascade)
+  label            String
+  sort             Int            @default(0)
+  values           HistoryChartValue[]
+
+  @@index([historyContentId])
+}
+
+model HistoryChartValue {
+  id        Int                 @id @default(autoincrement())
+  datasetId Int
+  dataset   HistoryChartDataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+  value     Float
+  sort      Int                 @default(0)
+
+  @@index([datasetId])
+}
+
+model HistoryChronicleGroup {
+  id               Int            @id @default(autoincrement())
+  historyContentId Int
+  historyContent   HistoryContent @relation(fields: [historyContentId], references: [id], onDelete: Cascade)
+  headline         String
+  sort             Int            @default(0)
+  entries          HistoryChronicleEntry[]
+
+  @@index([historyContentId])
+}
+
+model HistoryChronicleEntry {
+  id          Int                   @id @default(autoincrement())
+  groupId     Int
+  group       HistoryChronicleGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  year        String
+  description String
+  sort        Int                   @default(0)
+
+  @@index([groupId])
+}
+
+model HistoryFestivalItem {
+  id               Int            @id @default(autoincrement())
+  historyContentId Int
+  historyContent   HistoryContent @relation(fields: [historyContentId], references: [id], onDelete: Cascade)
+  headline         String
+  text             String
+  sort             Int            @default(0)
+
+  @@index([historyContentId])
+}
+
+model HistoryAchievement {
+  id               Int            @id @default(autoincrement())
+  historyContentId Int
+  historyContent   HistoryContent @relation(fields: [historyContentId], references: [id], onDelete: Cascade)
+  year             String
+  headline         String
+  description      String
+  category         String
+  sort             Int            @default(0)
+
+  @@index([historyContentId])
 }

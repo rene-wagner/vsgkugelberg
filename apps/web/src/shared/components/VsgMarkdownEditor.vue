@@ -21,7 +21,9 @@ const emit = defineEmits<{
 }>();
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null);
+const containerRef = ref<HTMLElement | null>(null);
 let easyMDE: EasyMDE | null = null;
+let observer: IntersectionObserver | null = null;
 
 // Track if we're updating from the editor to prevent feedback loops
 let isUpdatingFromEditor = false;
@@ -64,9 +66,25 @@ function initEditor() {
   if (props.disabled) {
     easyMDE.codemirror.setOption('readOnly', true);
   }
+
+  // Use IntersectionObserver to refresh when revealed (handles v-show/tabs)
+  if (containerRef.value) {
+    observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && easyMDE) {
+          easyMDE.codemirror.refresh();
+        }
+      });
+    });
+    observer.observe(containerRef.value);
+  }
 }
 
 function destroyEditor() {
+  if (observer) {
+    observer.disconnect();
+    observer = null;
+  }
   if (easyMDE) {
     easyMDE.toTextArea();
     easyMDE = null;
@@ -82,6 +100,10 @@ watch(
     const newVal = newValue ?? '';
     if (currentValue !== newVal) {
       easyMDE.value(newVal);
+      // Force refresh to handle visibility/layout issues (e.g. initial render in hidden tab)
+      setTimeout(() => {
+        easyMDE?.codemirror.refresh();
+      }, 0);
     }
   },
 );
@@ -106,13 +128,22 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="vsg-markdown-editor">
+  <div ref="containerRef" class="vsg-markdown-editor">
     <textarea ref="textareaRef"></textarea>
   </div>
 </template>
 
-<style scoped>
+<style>
 .vsg-markdown-editor {
   width: 100%;
+}
+
+/* Ensure editor text is dark even if parent has light text */
+.vsg-markdown-editor .CodeMirror {
+  color: #1e293b !important; /* vsg-blue-900 equivalent or similar dark color */
+}
+
+.vsg-markdown-editor .editor-toolbar {
+  color: #1e293b !important;
 }
 </style>

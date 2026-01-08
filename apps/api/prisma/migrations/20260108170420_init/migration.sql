@@ -220,25 +220,118 @@ CREATE TABLE "HistoryContent" (
     "heroHeadline" TEXT NOT NULL,
     "heroSubHeadline" TEXT NOT NULL,
     "foundingHeadline" TEXT NOT NULL,
-    "foundingNarrative" JSONB NOT NULL,
+    "foundingDescription" TEXT NOT NULL,
     "foundingFactCardHeadline" TEXT NOT NULL,
-    "foundingFacts" JSONB NOT NULL,
     "foundingMilestonesHeadline" TEXT NOT NULL,
-    "foundingMilestones" JSONB NOT NULL,
     "developmentHeadline" TEXT NOT NULL,
-    "developmentNarrative" JSONB NOT NULL,
-    "developmentChartData" JSONB NOT NULL,
-    "developmentChronicleGroups" JSONB NOT NULL,
+    "developmentDescription" TEXT NOT NULL,
     "festivalsHeadline" TEXT NOT NULL,
     "festivalsDescription" TEXT NOT NULL,
-    "festivalsItems" JSONB NOT NULL,
     "achievementsHeadline" TEXT NOT NULL,
-    "achievementsItems" JSONB NOT NULL,
     "ctaHeadline" TEXT NOT NULL,
     "ctaDescription" TEXT NOT NULL,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "HistoryContent_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HistoryFact" (
+    "id" SERIAL NOT NULL,
+    "historyContentId" INTEGER NOT NULL,
+    "year" TEXT NOT NULL,
+    "headline" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "HistoryFact_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HistoryMilestone" (
+    "id" SERIAL NOT NULL,
+    "historyContentId" INTEGER NOT NULL,
+    "year" TEXT NOT NULL,
+    "headline" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "HistoryMilestone_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HistoryChartLabel" (
+    "id" SERIAL NOT NULL,
+    "historyContentId" INTEGER NOT NULL,
+    "label" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "HistoryChartLabel_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HistoryChartDataset" (
+    "id" SERIAL NOT NULL,
+    "historyContentId" INTEGER NOT NULL,
+    "label" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "HistoryChartDataset_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HistoryChartValue" (
+    "id" SERIAL NOT NULL,
+    "datasetId" INTEGER NOT NULL,
+    "value" DOUBLE PRECISION NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "HistoryChartValue_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HistoryChronicleGroup" (
+    "id" SERIAL NOT NULL,
+    "historyContentId" INTEGER NOT NULL,
+    "headline" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "HistoryChronicleGroup_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HistoryChronicleEntry" (
+    "id" SERIAL NOT NULL,
+    "groupId" INTEGER NOT NULL,
+    "year" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "HistoryChronicleEntry_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HistoryFestivalItem" (
+    "id" SERIAL NOT NULL,
+    "historyContentId" INTEGER NOT NULL,
+    "headline" TEXT NOT NULL,
+    "text" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "HistoryFestivalItem_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HistoryAchievement" (
+    "id" SERIAL NOT NULL,
+    "historyContentId" INTEGER NOT NULL,
+    "year" TEXT NOT NULL,
+    "headline" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "HistoryAchievement_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -331,6 +424,33 @@ CREATE INDEX "Media_folderId_idx" ON "Media"("folderId");
 CREATE INDEX "MediaFolder_parentId_idx" ON "MediaFolder"("parentId");
 
 -- CreateIndex
+CREATE INDEX "HistoryFact_historyContentId_idx" ON "HistoryFact"("historyContentId");
+
+-- CreateIndex
+CREATE INDEX "HistoryMilestone_historyContentId_idx" ON "HistoryMilestone"("historyContentId");
+
+-- CreateIndex
+CREATE INDEX "HistoryChartLabel_historyContentId_idx" ON "HistoryChartLabel"("historyContentId");
+
+-- CreateIndex
+CREATE INDEX "HistoryChartDataset_historyContentId_idx" ON "HistoryChartDataset"("historyContentId");
+
+-- CreateIndex
+CREATE INDEX "HistoryChartValue_datasetId_idx" ON "HistoryChartValue"("datasetId");
+
+-- CreateIndex
+CREATE INDEX "HistoryChronicleGroup_historyContentId_idx" ON "HistoryChronicleGroup"("historyContentId");
+
+-- CreateIndex
+CREATE INDEX "HistoryChronicleEntry_groupId_idx" ON "HistoryChronicleEntry"("groupId");
+
+-- CreateIndex
+CREATE INDEX "HistoryFestivalItem_historyContentId_idx" ON "HistoryFestivalItem"("historyContentId");
+
+-- CreateIndex
+CREATE INDEX "HistoryAchievement_historyContentId_idx" ON "HistoryAchievement"("historyContentId");
+
+-- CreateIndex
 CREATE INDEX "_CategoryToPost_B_index" ON "_CategoryToPost"("B");
 
 -- AddForeignKey
@@ -380,6 +500,33 @@ ALTER TABLE "Media" ADD CONSTRAINT "Media_folderId_fkey" FOREIGN KEY ("folderId"
 
 -- AddForeignKey
 ALTER TABLE "MediaFolder" ADD CONSTRAINT "MediaFolder_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "MediaFolder"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HistoryFact" ADD CONSTRAINT "HistoryFact_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HistoryMilestone" ADD CONSTRAINT "HistoryMilestone_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HistoryChartLabel" ADD CONSTRAINT "HistoryChartLabel_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HistoryChartDataset" ADD CONSTRAINT "HistoryChartDataset_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HistoryChartValue" ADD CONSTRAINT "HistoryChartValue_datasetId_fkey" FOREIGN KEY ("datasetId") REFERENCES "HistoryChartDataset"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HistoryChronicleGroup" ADD CONSTRAINT "HistoryChronicleGroup_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HistoryChronicleEntry" ADD CONSTRAINT "HistoryChronicleEntry_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "HistoryChronicleGroup"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HistoryFestivalItem" ADD CONSTRAINT "HistoryFestivalItem_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HistoryAchievement" ADD CONSTRAINT "HistoryAchievement_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_CategoryToPost" ADD CONSTRAINT "_CategoryToPost_A_fkey" FOREIGN KEY ("A") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;

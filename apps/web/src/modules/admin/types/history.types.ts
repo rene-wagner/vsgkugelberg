@@ -29,7 +29,7 @@ export interface ChronicleEntry {
 }
 
 export interface ChronicleGroup {
-  id: number;
+  id?: number;
   headline: string;
   content: ChronicleEntry[];
   sort?: number;
@@ -70,7 +70,7 @@ export interface HistoryContent {
   achievementsItems: AchievementItem[];
   ctaHeadline: string;
   ctaDescription: string;
-  updatedAt: Date;
+  updatedAt: string;
 }
 
 export type UpdateHistoryDto = Partial<

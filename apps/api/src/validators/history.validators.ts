@@ -6,35 +6,34 @@ export const updateHistoryValidator = [
   body('heroSubHeadline').optional().isString().trim(),
 
   body('foundingHeadline').optional().isString().trim().notEmpty(),
-  body('foundingNarrative').optional().isArray(),
-  body('foundingNarrative.*').isString().trim(),
+  body('foundingDescription').optional().isString().trim(),
   body('foundingFactCardHeadline').optional().isString().trim(),
   body('foundingFacts').optional().isArray(),
-  body('foundingFacts.*.label').isString().trim().notEmpty(),
-  body('foundingFacts.*.value').isString().trim().notEmpty(),
+  body('foundingFacts.*.year').isString().trim().notEmpty(),
+  body('foundingFacts.*.headline').isString().trim().notEmpty(),
+  body('foundingFacts.*.description').isString().trim(),
 
   body('foundingMilestonesHeadline').optional().isString().trim(),
   body('foundingMilestones').optional().isArray(),
   body('foundingMilestones.*.year').isString().trim().notEmpty(),
-  body('foundingMilestones.*.title').isString().trim().notEmpty(),
+  body('foundingMilestones.*.headline').isString().trim().notEmpty(),
   body('foundingMilestones.*.description').isString().trim(),
 
   body('developmentHeadline').optional().isString().trim().notEmpty(),
-  body('developmentNarrative').optional().isArray(),
-  body('developmentNarrative.*').isString().trim(),
+  body('developmentDescription').optional().isString().trim(),
   body('developmentChartData').optional().isObject(),
   body('developmentChartData.labels').optional().isArray(),
   body('developmentChartData.datasets').optional().isArray(),
 
   body('developmentChronicleGroups').optional().isArray(),
-  body('developmentChronicleGroups.*.id').isNumeric(),
-  body('developmentChronicleGroups.*.title').isString().trim().notEmpty(),
+  body('developmentChronicleGroups.*.id').optional().isNumeric(),
+  body('developmentChronicleGroups.*.headline').isString().trim().notEmpty(),
   body('developmentChronicleGroups.*.content').isArray(),
   body('developmentChronicleGroups.*.content.*.year')
     .isString()
     .trim()
     .notEmpty(),
-  body('developmentChronicleGroups.*.content.*.text')
+  body('developmentChronicleGroups.*.content.*.description')
     .isString()
     .trim()
     .notEmpty(),
@@ -42,15 +41,13 @@ export const updateHistoryValidator = [
   body('festivalsHeadline').optional().isString().trim().notEmpty(),
   body('festivalsDescription').optional().isString().trim(),
   body('festivalsItems').optional().isArray(),
-  body('festivalsItems.*.title').isString().trim().notEmpty(),
-  body('festivalsItems.*.subtitle').isString().trim(),
+  body('festivalsItems.*.headline').isString().trim().notEmpty(),
   body('festivalsItems.*.text').isString().trim(),
-  body('festivalsItems.*.icon').isString().trim().notEmpty(),
 
   body('achievementsHeadline').optional().isString().trim().notEmpty(),
   body('achievementsItems').optional().isArray(),
   body('achievementsItems.*.year').isString().trim().notEmpty(),
-  body('achievementsItems.*.title').isString().trim().notEmpty(),
+  body('achievementsItems.*.headline').isString().trim().notEmpty(),
   body('achievementsItems.*.description').isString().trim(),
   body('achievementsItems.*.category')
     .isString()
