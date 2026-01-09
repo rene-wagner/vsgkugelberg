@@ -90,7 +90,7 @@ onMounted(() => {
         </p>
       </div>
       <router-link
-        to="/admin/events/new"
+        to="/admin/termine/new"
         class="px-6 py-2.5 bg-vsg-gold-400 text-vsg-blue-900 font-display text-sm tracking-wider rounded-lg hover:bg-vsg-gold-300 transition-colors"
       >
         VERANSTALTUNG HINZUFUGEN
@@ -219,7 +219,7 @@ onMounted(() => {
               <td class="px-6 py-4">
                 <div class="flex items-center justify-end gap-2">
                   <router-link
-                    :to="`/admin/events/${event.id}/edit`"
+                    :to="`/admin/termine/${event.id}/edit`"
                     class="p-2 text-gray-400 hover:text-vsg-blue-600 transition-colors"
                     title="Bearbeiten"
                   >
@@ -267,7 +267,7 @@ onMounted(() => {
       <div v-if="baseEvents.length === 0" class="px-6 py-12 text-center">
         <p class="font-body text-gray-500">Keine Veranstaltungen vorhanden.</p>
         <router-link
-          to="/admin/events/new"
+          to="/admin/termine/new"
           class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm"
         >
           Erste Veranstaltung erstellen

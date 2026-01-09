@@ -133,7 +133,7 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
 
   // If we were in create mode, navigate to edit mode
   if (!isEditMode.value) {
-    router.replace(`/admin/departments/${savedDepartment.slug}/edit`);
+    router.replace(`/admin/abteilungen/${savedDepartment.slug}/edit`);
   }
 }
 </script>
@@ -146,7 +146,7 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
         class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2"
       >
         <router-link
-          to="/admin/departments"
+          to="/admin/abteilungen"
           class="hover:text-vsg-blue-600 transition-colors"
         >
           Abteilungen

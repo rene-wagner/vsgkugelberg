@@ -38,7 +38,7 @@ async function handleDelete(slug: string, name: string) {
         </p>
       </div>
       <router-link
-        to="/admin/departments/new"
+        to="/admin/abteilungen/new"
         class="px-6 py-2.5 bg-vsg-gold-400 text-vsg-blue-900 font-display text-sm tracking-wider rounded-lg hover:bg-vsg-gold-300 transition-colors"
       >
         ABTEILUNG HINZUFUGEN
@@ -120,7 +120,7 @@ async function handleDelete(slug: string, name: string) {
               <td class="px-6 py-4">
                 <div class="flex items-center justify-end gap-2">
                   <router-link
-                    :to="`/admin/departments/${department.slug}/edit`"
+                    :to="`/admin/abteilungen/${department.slug}/edit`"
                     class="p-2 text-gray-400 hover:text-vsg-blue-600 transition-colors"
                     title="Bearbeiten"
                   >
@@ -171,7 +171,7 @@ async function handleDelete(slug: string, name: string) {
       >
         <p class="font-body text-gray-500">Keine Abteilungen vorhanden.</p>
         <router-link
-          to="/admin/departments/new"
+          to="/admin/abteilungen/new"
           class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm"
         >
           Erste Abteilung erstellen

@@ -41,7 +41,7 @@ onMounted(async () => {
         class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2"
       >
         <router-link
-          to="/admin/users"
+          to="/admin/benutzer"
           class="hover:text-vsg-blue-600 transition-colors"
         >
           Benutzer
