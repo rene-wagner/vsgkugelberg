@@ -161,7 +161,7 @@
                 <strong class="text-vsg-blue-900">Fragen zur Satzung?</strong>
                 Wenden Sie sich gerne an unseren Vorstand uber die
                 <a
-                  href="/contact"
+                  href="/kontakt"
                   class="text-vsg-gold-600 underline hover:text-vsg-gold-700"
                   >Kontaktseite</a
                 >.

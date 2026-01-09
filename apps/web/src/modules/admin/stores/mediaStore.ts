@@ -1,5 +1,6 @@
 import { ref, reactive } from 'vue';
 import { defineStore } from 'pinia';
+import { api, ApiError } from '@shared/utils/api';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -39,23 +40,6 @@ export interface RegenerateThumbnailsResult {
   skipped: number;
 }
 
-interface PaginatedResponse {
-  data: MediaItem[];
-  meta: {
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
-}
-
-interface UploadProgress {
-  filename: string;
-  progress: number;
-  status: 'pending' | 'uploading' | 'complete' | 'error';
-  error?: string;
-}
-
 export const useMediaStore = defineStore('media', () => {
   const media = ref<MediaItem[]>([]);
   const folders = ref<MediaFolder[]>([]);
@@ -63,8 +47,23 @@ export const useMediaStore = defineStore('media', () => {
   const currentFolder = ref<MediaFolder | null>(null);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
-  const uploadProgress = reactive<Map<string, UploadProgress>>(new Map());
-  const meta = ref<PaginatedResponse['meta'] | null>(null);
+  const uploadProgress = reactive<
+    Map<
+      string,
+      {
+        filename: string;
+        progress: number;
+        status: 'pending' | 'uploading' | 'complete' | 'error';
+        error?: string;
+      }
+    >
+  >(new Map());
+  const meta = ref<{
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  } | null>(null);
 
   function getMediaUrl(item: MediaItem): string {
     return `${API_BASE_URL}/uploads/${item.filename}`;
@@ -81,23 +80,20 @@ export const useMediaStore = defineStore('media', () => {
 
     try {
       const folderParam = folderId === null ? 'null' : folderId;
-      const response = await fetch(
-        `${API_BASE_URL}/api/media?page=${page}&limit=${limit}&folderId=${folderParam}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch media');
-      }
-
-      const result = (await response.json()) as PaginatedResponse;
+      const result = await api.get<{
+        data: MediaItem[];
+        meta: {
+          total: number;
+          page: number;
+          limit: number;
+          totalPages: number;
+        };
+      }>(`/api/media?page=${page}&limit=${limit}&folderId=${folderParam}`);
       media.value = result.data;
       meta.value = result.meta;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
+      throw e;
     } finally {
       isLoading.value = false;
     }
@@ -108,20 +104,11 @@ export const useMediaStore = defineStore('media', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/media/folders/${id}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch folder details');
-      }
-
-      const result = (await response.json()) as MediaFolder;
+      const result = await api.get<MediaFolder>(`/api/media/folders/${id}`);
       currentFolder.value = result;
       return result;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -136,21 +123,12 @@ export const useMediaStore = defineStore('media', () => {
 
     try {
       const parentParam = parentId === null ? 'null' : parentId;
-      const response = await fetch(
-        `${API_BASE_URL}/api/media/folders?parentId=${parentParam}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        },
+      folders.value = await api.get<MediaFolder[]>(
+        `/api/media/folders?parentId=${parentParam}`,
       );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch folders');
-      }
-
-      folders.value = (await response.json()) as MediaFolder[];
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
+      throw e;
     } finally {
       isLoading.value = false;
     }
@@ -164,25 +142,15 @@ export const useMediaStore = defineStore('media', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/media/folders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, parentId }),
-        credentials: 'include',
+      const result = await api.post<MediaFolder>('/api/media/folders', {
+        name,
+        parentId,
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to create folder');
-      }
-
-      const result = (await response.json()) as MediaFolder;
       folders.value.push(result);
       folders.value.sort((a, b) => a.name.localeCompare(b.name));
       return result;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -194,19 +162,11 @@ export const useMediaStore = defineStore('media', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/media/folders/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete folder');
-      }
-
+      await api.delete(`/api/media/folders/${id}`);
       folders.value = folders.value.filter((f) => f.id !== id);
       return true;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return false;
     } finally {
       isLoading.value = false;
@@ -221,32 +181,17 @@ export const useMediaStore = defineStore('media', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/media/${mediaId}/move`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ folderId }),
-          credentials: 'include',
-        },
-      );
+      await api.patch(`/api/media/${mediaId}/move`, {
+        folderId,
+      });
 
-      if (!response.ok) {
-        throw new Error('Failed to move media');
-      }
-
-      // If we are currently in a folder, and the item was moved out, remove it from list
-      // Or if we move it INTO the current folder, we'd need to fetch it.
-      // For simplicity, we just refetch current view if it was affected
       if (currentFolderId.value !== folderId) {
         media.value = media.value.filter((m) => m.id !== mediaId);
       }
 
       return true;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return false;
     } finally {
       isLoading.value = false;
@@ -278,7 +223,6 @@ export const useMediaStore = defineStore('media', () => {
         formData.append('folderId', folderId.toString());
       }
 
-      // Use XMLHttpRequest for progress tracking
       const result = await new Promise<MediaItem>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
 
@@ -321,12 +265,10 @@ export const useMediaStore = defineStore('media', () => {
         status: 'complete',
       });
 
-      // Add to local state if we're in the same folder or if it was uploaded to root and we are at root
       if (currentFolderId.value === folderId) {
         media.value.unshift(result);
       }
 
-      // Clean up progress after a delay
       setTimeout(() => {
         uploadProgress.delete(uploadId);
       }, 3000);
@@ -341,7 +283,6 @@ export const useMediaStore = defineStore('media', () => {
         error: errorMessage,
       });
 
-      // Clean up after error display
       setTimeout(() => {
         uploadProgress.delete(uploadId);
       }, 5000);
@@ -371,19 +312,11 @@ export const useMediaStore = defineStore('media', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/media/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete media');
-      }
-
+      await api.delete(`/api/media/${id}`);
       media.value = media.value.filter((m) => m.id !== id);
       return true;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return false;
     } finally {
       isLoading.value = false;
@@ -405,24 +338,11 @@ export const useMediaStore = defineStore('media', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/media/${id}/regenerate-thumbnails`,
-        {
-          method: 'POST',
-          credentials: 'include',
-        },
+      const updatedMedia = await api.post<MediaItem>(
+        `/api/media/${id}/regenerate-thumbnails`,
+        {},
       );
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.message || 'Thumbnails konnten nicht regeneriert werden',
-        );
-      }
-
-      const updatedMedia = (await response.json()) as MediaItem;
-
-      // Update local state
       const index = media.value.findIndex((m) => m.id === id);
       if (index !== -1) {
         media.value[index] = updatedMedia;
@@ -431,7 +351,7 @@ export const useMediaStore = defineStore('media', () => {
       return updatedMedia;
     } catch (e) {
       error.value =
-        e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
+        e instanceof ApiError ? e.message : 'Ein Fehler ist aufgetreten';
       return null;
     } finally {
       isRegenerating.value = false;
@@ -444,30 +364,17 @@ export const useMediaStore = defineStore('media', () => {
     regenerateProgress.value = { current: 0, total: media.value.length };
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/media/regenerate-thumbnails`,
-        {
-          method: 'POST',
-          credentials: 'include',
-        },
+      const result = await api.post<RegenerateThumbnailsResult>(
+        '/api/media/regenerate-thumbnails',
+        {},
       );
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.message || 'Thumbnails konnten nicht regeneriert werden',
-        );
-      }
-
-      const result = (await response.json()) as RegenerateThumbnailsResult;
-
-      // Refresh media list to get updated thumbnails
       await fetchMedia();
 
       return result;
     } catch (e) {
       error.value =
-        e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
+        e instanceof ApiError ? e.message : 'Ein Fehler ist aufgetreten';
       return null;
     } finally {
       isRegenerating.value = false;

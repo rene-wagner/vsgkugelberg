@@ -1,9 +1,8 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
+import { api, ApiError } from '@shared/utils/api';
 import type { MediaItem } from './mediaStore';
 import type { DepartmentExtended } from '../types/department-extended.types';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export interface Department {
   id: number;
@@ -31,21 +30,9 @@ export interface UpdateDepartmentData {
   iconId?: number | null;
 }
 
-export interface PaginationMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-interface PaginatedResponse {
-  data: Department[];
-  meta: PaginationMeta;
-}
-
 export const useDepartmentsStore = defineStore('departments', () => {
   const departments = ref<Department[]>([]);
-  const meta = ref<PaginationMeta>({
+  const meta = ref({
     total: 0,
     page: 1,
     limit: 25,
@@ -59,23 +46,20 @@ export const useDepartmentsStore = defineStore('departments', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/departments?page=${page}&limit=${limit}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch departments');
-      }
-
-      const result = (await response.json()) as PaginatedResponse;
+      const result = await api.get<{
+        data: Department[];
+        meta: {
+          total: number;
+          page: number;
+          limit: number;
+          totalPages: number;
+        };
+      }>(`/api/departments?page=${page}&limit=${limit}`);
       departments.value = result.data;
       meta.value = result.meta;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
+      throw e;
     } finally {
       isLoading.value = false;
     }
@@ -88,18 +72,9 @@ export const useDepartmentsStore = defineStore('departments', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/departments/${slug}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch department');
-      }
-
-      return (await response.json()) as DepartmentExtended;
+      return await api.get<DepartmentExtended>(`/api/departments/${slug}`);
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -113,24 +88,14 @@ export const useDepartmentsStore = defineStore('departments', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/departments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create department');
-      }
-
-      const newDepartment = (await response.json()) as Department;
+      const newDepartment = await api.post<Department>(
+        '/api/departments',
+        data,
+      );
       departments.value.push(newDepartment);
       return newDepartment;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -145,27 +110,17 @@ export const useDepartmentsStore = defineStore('departments', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/departments/${slug}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update department');
-      }
-
-      const updatedDepartment = (await response.json()) as Department;
+      const updatedDepartment = await api.patch<Department>(
+        `/api/departments/${slug}`,
+        data,
+      );
       const index = departments.value.findIndex((d) => d.slug === slug);
       if (index !== -1) {
         departments.value[index] = updatedDepartment;
       }
       return updatedDepartment;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -177,19 +132,11 @@ export const useDepartmentsStore = defineStore('departments', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/departments/${slug}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete department');
-      }
-
+      await api.delete(`/api/departments/${slug}`);
       departments.value = departments.value.filter((d) => d.slug !== slug);
       return true;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return false;
     } finally {
       isLoading.value = false;

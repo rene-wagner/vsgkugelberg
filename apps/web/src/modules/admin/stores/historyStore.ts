@@ -1,8 +1,7 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
+import { api, ApiError } from '@shared/utils/api';
 import type { HistoryContent, UpdateHistoryDto } from '../types/history.types';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export const useHistoryStore = defineStore('history', () => {
   const history = ref<HistoryContent | null>(null);
@@ -16,20 +15,11 @@ export const useHistoryStore = defineStore('history', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/history`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch history content');
-      }
-
-      const data = (await response.json()) as HistoryContent;
+      const data = await api.get<HistoryContent>('/api/history');
       history.value = data;
       return data;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -44,28 +34,15 @@ export const useHistoryStore = defineStore('history', () => {
     successMessage.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/history/admin`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(
-          errorData.message || 'Failed to update history content',
-        );
-      }
-
-      const updatedData = (await response.json()) as HistoryContent;
+      const updatedData = await api.patch<HistoryContent>(
+        '/api/history/admin',
+        data,
+      );
       history.value = updatedData;
       successMessage.value = 'Historie erfolgreich gespeichert';
       return updatedData;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isSaving.value = false;

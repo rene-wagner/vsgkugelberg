@@ -1,7 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { api, ApiError } from '@shared/utils/api';
 
 export interface User {
   id: number;
@@ -23,21 +22,9 @@ export interface UpdateUserData {
   password?: string;
 }
 
-export interface PaginationMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-interface PaginatedResponse {
-  data: User[];
-  meta: PaginationMeta;
-}
-
 export const useUsersStore = defineStore('users', () => {
   const users = ref<User[]>([]);
-  const meta = ref<PaginationMeta>({
+  const meta = ref({
     total: 0,
     page: 1,
     limit: 25,
@@ -51,23 +38,20 @@ export const useUsersStore = defineStore('users', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/users?page=${page}&limit=${limit}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch users');
-      }
-
-      const result = (await response.json()) as PaginatedResponse;
+      const result = await api.get<{
+        data: User[];
+        meta: {
+          total: number;
+          page: number;
+          limit: number;
+          totalPages: number;
+        };
+      }>(`/api/users?page=${page}&limit=${limit}`);
       users.value = result.data;
       meta.value = result.meta;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
+      throw e;
     } finally {
       isLoading.value = false;
     }
@@ -78,18 +62,9 @@ export const useUsersStore = defineStore('users', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users/${id}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch user');
-      }
-
-      return (await response.json()) as User;
+      return await api.get<User>(`/api/users/${id}`);
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -101,24 +76,11 @@ export const useUsersStore = defineStore('users', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create user');
-      }
-
-      const newUser = (await response.json()) as User;
+      const newUser = await api.post<User>('/api/users', data);
       users.value.push(newUser);
       return newUser;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -133,27 +95,14 @@ export const useUsersStore = defineStore('users', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update user');
-      }
-
-      const updatedUser = (await response.json()) as User;
+      const updatedUser = await api.patch<User>(`/api/users/${id}`, data);
       const index = users.value.findIndex((u) => u.id === id);
       if (index !== -1) {
         users.value[index] = updatedUser;
       }
       return updatedUser;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -165,19 +114,11 @@ export const useUsersStore = defineStore('users', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/users/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete user');
-      }
-
+      await api.delete(`/api/users/${id}`);
       users.value = users.value.filter((u) => u.id !== id);
       return true;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return false;
     } finally {
       isLoading.value = false;

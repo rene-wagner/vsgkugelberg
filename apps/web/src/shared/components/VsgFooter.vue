@@ -10,7 +10,6 @@ const vereinLinks = [
   { label: 'Vorstand', href: '/verein/vorstand', isRouter: true },
   { label: 'Satzung', href: '/verein/satzung', isRouter: true },
   { label: 'Mitgliedschaft', href: '/verein/mitgliedschaft', isRouter: true },
-  { label: 'Sponsoren', href: '/verein/sponsoren', isRouter: true },
 ];
 
 const age = computed(() => {

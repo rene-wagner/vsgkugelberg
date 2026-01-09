@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import VsgNavbar from '@shared/components/VsgNavbar.vue';
 import VsgFooter from '@shared/components/VsgFooter.vue';
+import VsgToastContainer from '@shared/components/VsgToastContainer.vue';
 </script>
 
 <template>
@@ -10,5 +11,6 @@ import VsgFooter from '@shared/components/VsgFooter.vue';
       <router-view />
     </main>
     <VsgFooter />
+    <VsgToastContainer />
   </div>
 </template>

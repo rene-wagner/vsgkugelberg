@@ -1,7 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { api, ApiError } from '@shared/utils/api';
 
 export interface Author {
   id: number;
@@ -9,7 +8,7 @@ export interface Author {
   email: string;
 }
 
-export interface Category {
+export interface NewsCategory {
   id: number;
   name: string;
   slug: string;
@@ -35,7 +34,7 @@ export interface NewsItem {
   published: boolean;
   authorId: number;
   author: Author;
-  categories: Category[];
+  categories: NewsCategory[];
   thumbnailId: number | null;
   thumbnail: Thumbnail | null;
   createdAt: string;
@@ -59,21 +58,9 @@ export interface UpdateNewsData {
   thumbnailId?: number | null;
 }
 
-export interface PaginationMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-interface PaginatedResponse {
-  data: NewsItem[];
-  meta: PaginationMeta;
-}
-
 export const useNewsStore = defineStore('news', () => {
   const news = ref<NewsItem[]>([]);
-  const meta = ref<PaginationMeta>({
+  const meta = ref({
     total: 0,
     page: 1,
     limit: 25,
@@ -87,23 +74,20 @@ export const useNewsStore = defineStore('news', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/posts?page=${page}&limit=${limit}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch news');
-      }
-
-      const result = (await response.json()) as PaginatedResponse;
+      const result = await api.get<{
+        data: NewsItem[];
+        meta: {
+          total: number;
+          page: number;
+          limit: number;
+          totalPages: number;
+        };
+      }>(`/api/posts?page=${page}&limit=${limit}`);
       news.value = result.data;
       meta.value = result.meta;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
+      throw e;
     } finally {
       isLoading.value = false;
     }
@@ -114,18 +98,9 @@ export const useNewsStore = defineStore('news', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/posts/${slug}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch news item');
-      }
-
-      return (await response.json()) as NewsItem;
+      return await api.get<NewsItem>(`/api/posts/${slug}`);
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -137,24 +112,11 @@ export const useNewsStore = defineStore('news', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/posts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create news item');
-      }
-
-      const newNewsItem = (await response.json()) as NewsItem;
+      const newNewsItem = await api.post<NewsItem>('/api/posts', data);
       news.value.push(newNewsItem);
       return newNewsItem;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -169,27 +131,17 @@ export const useNewsStore = defineStore('news', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/posts/${slug}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update news item');
-      }
-
-      const updatedNewsItem = (await response.json()) as NewsItem;
+      const updatedNewsItem = await api.patch<NewsItem>(
+        `/api/posts/${slug}`,
+        data,
+      );
       const index = news.value.findIndex((n) => n.slug === slug);
       if (index !== -1) {
         news.value[index] = updatedNewsItem;
       }
       return updatedNewsItem;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -201,19 +153,11 @@ export const useNewsStore = defineStore('news', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/posts/${slug}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete news item');
-      }
-
+      await api.delete(`/api/posts/${slug}`);
       news.value = news.value.filter((n) => n.slug !== slug);
       return true;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return false;
     } finally {
       isLoading.value = false;

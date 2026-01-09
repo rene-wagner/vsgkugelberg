@@ -23,7 +23,6 @@ const vereinItems: MenuItem[] = [
   { label: 'Vorstand', to: '/verein/vorstand' },
   { label: 'Satzung', to: '/verein/satzung' },
   { label: 'Mitgliedschaft', to: '/verein/mitgliedschaft' },
-  { label: 'Sponsoren', to: '/verein/sponsoren' },
 ];
 
 const abteilungenItems = computed<MenuItem[]>(() => {
@@ -183,7 +182,7 @@ function toggleAbteilungen() {
             >Termine</a
           >
           <RouterLink
-            to="/contact"
+            to="/kontakt"
             class="font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             >Kontakt</RouterLink
           >
@@ -322,7 +321,7 @@ function toggleAbteilungen() {
       </div>
       <div class="mb-4 w-full max-w-xs">
         <RouterLink
-          to="/contact"
+          to="/kontakt"
           class="block font-display text-4xl tracking-wider text-white transition-colors hover:text-vsg-gold-400"
           @click="closeMenu"
           >KONTAKT</RouterLink

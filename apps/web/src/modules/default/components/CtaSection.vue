@@ -18,7 +18,7 @@ withDefaults(defineProps<Props>(), {
   primaryButtonText: 'MITGLIED WERDEN',
   primaryButtonLink: '/verein/mitgliedschaft',
   secondaryButtonText: 'KONTAKT',
-  secondaryButtonLink: '/contact',
+  secondaryButtonLink: '/kontakt',
   theme: 'gold',
 });
 </script>

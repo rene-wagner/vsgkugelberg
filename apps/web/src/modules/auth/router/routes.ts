@@ -1,40 +1,36 @@
 import type { RouteRecordRaw } from 'vue-router';
-import AuthLayout from '@shared/layouts/AuthLayout.vue';
-import LoginView from '../views/LoginView.vue';
-import ForgotPasswordView from '../views/ForgotPasswordView.vue';
-import ResetPasswordView from '../views/ResetPasswordView.vue';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/login',
-    component: AuthLayout,
+    component: () => import('@shared/layouts/AuthLayout.vue'),
     children: [
       {
         path: '',
         name: 'login',
-        component: LoginView,
+        component: () => import('../views/LoginView.vue'),
       },
     ],
   },
   {
     path: '/forgot-password',
-    component: AuthLayout,
+    component: () => import('@shared/layouts/AuthLayout.vue'),
     children: [
       {
         path: '',
         name: 'forgot-password',
-        component: ForgotPasswordView,
+        component: () => import('../views/ForgotPasswordView.vue'),
       },
     ],
   },
   {
     path: '/reset-password',
-    component: AuthLayout,
+    component: () => import('@shared/layouts/AuthLayout.vue'),
     children: [
       {
         path: '',
         name: 'reset-password',
-        component: ResetPasswordView,
+        component: () => import('../views/ResetPasswordView.vue'),
       },
     ],
   },

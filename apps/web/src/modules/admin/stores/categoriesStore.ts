@@ -1,7 +1,6 @@
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { api, ApiError } from '@shared/utils/api';
 
 export interface Category {
   id: number;
@@ -12,6 +11,10 @@ export interface Category {
   children: Category[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface FlattenedCategory extends Category {
+  depth: number;
 }
 
 export interface CreateCategoryData {
@@ -33,23 +36,40 @@ export const useCategoriesStore = defineStore('categories', () => {
   const error = ref<string | null>(null);
   const successMessage = ref<string | null>(null);
 
+  const flatCategories = computed(() => {
+    const result: FlattenedCategory[] = [];
+    function flatten(items: Category[], depth = 0): FlattenedCategory[] {
+      for (const item of items) {
+        result.push({ ...item, depth });
+        if (item.children?.length > 0) {
+          result.push(...flatten(item.children, depth + 1));
+        }
+      }
+      return result;
+    }
+    return flatten(categories.value);
+  });
+
+  const categoriesByParent = computed(() => {
+    const map = new Map<number | null, Category[]>();
+    categories.value.forEach((category) => {
+      if (!map.has(category.parentId)) {
+        map.set(category.parentId, []);
+      }
+      map.get(category.parentId)!.push(category);
+    });
+    return map;
+  });
+
   async function fetchCategories(): Promise<void> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/categories`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch categories');
-      }
-
-      categories.value = (await response.json()) as Category[];
+      categories.value = await api.get<Category[]>('/api/categories');
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
+      throw e;
     } finally {
       isLoading.value = false;
     }
@@ -60,18 +80,9 @@ export const useCategoriesStore = defineStore('categories', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/categories/${slug}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch category');
-      }
-
-      return (await response.json()) as Category;
+      return await api.get<Category>(`/api/categories/${slug}`);
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -85,24 +96,11 @@ export const useCategoriesStore = defineStore('categories', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/categories`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create category');
-      }
-
-      const newCategory = (await response.json()) as Category;
+      const newCategory = await api.post<Category>('/api/categories', data);
       categories.value.push(newCategory);
       return newCategory;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -117,27 +115,17 @@ export const useCategoriesStore = defineStore('categories', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/categories/${slug}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update category');
-      }
-
-      const updatedCategory = (await response.json()) as Category;
+      const updatedCategory = await api.patch<Category>(
+        `/api/categories/${slug}`,
+        data,
+      );
       const index = categories.value.findIndex((c) => c.slug === slug);
       if (index !== -1) {
         categories.value[index] = updatedCategory;
       }
       return updatedCategory;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -149,20 +137,11 @@ export const useCategoriesStore = defineStore('categories', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/categories/${slug}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete category');
-      }
-
-      // Re-fetch categories to properly update nested tree structure
+      await api.delete(`/api/categories/${slug}`);
       await fetchCategories();
       return true;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return false;
     } finally {
       isLoading.value = false;
@@ -175,26 +154,15 @@ export const useCategoriesStore = defineStore('categories', () => {
     successMessage.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/categories/recalculate-slugs`,
-        {
-          method: 'POST',
-          credentials: 'include',
-        },
+      const result = await api.post<{ updated: number }>(
+        '/api/categories/recalculate-slugs',
+        {},
       );
-
-      if (!response.ok) {
-        throw new Error('Failed to recalculate slugs');
-      }
-
-      const result = (await response.json()) as { updated: number };
       successMessage.value = `${result.updated} Kategorien aktualisiert`;
-
-      // Refresh categories list after successful recalculation
       await fetchCategories();
       return true;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return false;
     } finally {
       isRecalculating.value = false;
@@ -203,6 +171,8 @@ export const useCategoriesStore = defineStore('categories', () => {
 
   return {
     categories,
+    flatCategories,
+    categoriesByParent,
     isLoading,
     isRecalculating,
     error,

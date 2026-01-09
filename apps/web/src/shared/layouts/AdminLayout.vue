@@ -2,6 +2,7 @@
 import { RouterLink, useRouter, useRoute } from 'vue-router';
 import { ref, watch } from 'vue';
 import { useAuthStore } from '@/modules/auth/stores/authStore';
+import VsgToastContainer from '@shared/components/VsgToastContainer.vue';
 
 const isUserMenuOpen = ref(false);
 const router = useRouter();
@@ -326,5 +327,6 @@ async function handleLogout() {
         <router-view />
       </main>
     </div>
+    <VsgToastContainer />
   </div>
 </template>

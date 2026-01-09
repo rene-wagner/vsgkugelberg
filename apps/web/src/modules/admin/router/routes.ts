@@ -1,137 +1,120 @@
 import type { RouteRecordRaw } from 'vue-router';
-import AdminLayout from '@shared/layouts/AdminLayout.vue';
-import AdminDashboard from '../views/AdminDashboard.vue';
-import UsersListView from '../views/UsersListView.vue';
-import UserFormView from '../views/UserFormView.vue';
-import DepartmentsListView from '../views/DepartmentsListView.vue';
-import DepartmentFormView from '../views/DepartmentFormView.vue';
-import CategoriesListView from '../views/CategoriesListView.vue';
-import CategoryFormView from '../views/CategoryFormView.vue';
-import NewsListView from '../views/NewsListView.vue';
-import NewsFormView from '../views/NewsFormView.vue';
-import EventsListView from '../views/EventsListView.vue';
-import EventFormView from '../views/EventFormView.vue';
-import ContactPersonsListView from '../views/ContactPersonsListView.vue';
-import ContactPersonFormView from '../views/ContactPersonFormView.vue';
-import MediaLibraryView from '../views/MediaLibraryView.vue';
-import SettingsView from '../views/SettingsView.vue';
-import HistoryFormView from '../views/HistoryFormView.vue';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/admin',
-    component: AdminLayout,
+    component: () => import('@shared/layouts/AdminLayout.vue'),
     meta: { requiresAuth: true },
     children: [
       {
         path: '',
         name: 'admin-dashboard',
-        component: AdminDashboard,
+        component: () => import('../views/AdminDashboard.vue'),
       },
       {
         path: 'club-history',
         name: 'admin-history',
-        component: HistoryFormView,
+        component: () => import('../views/HistoryFormView.vue'),
       },
       {
         path: 'users',
         name: 'admin-users',
-        component: UsersListView,
+        component: () => import('../views/UsersListView.vue'),
       },
       {
         path: 'users/new',
         name: 'admin-user-new',
-        component: UserFormView,
+        component: () => import('../views/UserFormView.vue'),
       },
       {
         path: 'users/:id/edit',
         name: 'admin-user-edit',
-        component: UserFormView,
+        component: () => import('../views/UserFormView.vue'),
       },
       {
         path: 'departments',
         name: 'admin-departments',
-        component: DepartmentsListView,
+        component: () => import('../views/DepartmentsListView.vue'),
       },
       {
         path: 'departments/new',
         name: 'admin-department-new',
-        component: DepartmentFormView,
+        component: () => import('../views/DepartmentFormView.vue'),
       },
       {
         path: 'departments/:slug/edit',
         name: 'admin-department-edit',
-        component: DepartmentFormView,
+        component: () => import('../views/DepartmentFormView.vue'),
       },
       {
         path: 'categories',
         name: 'admin-categories',
-        component: CategoriesListView,
+        component: () => import('../views/CategoriesListView.vue'),
       },
       {
         path: 'categories/new',
         name: 'admin-category-new',
-        component: CategoryFormView,
+        component: () => import('../views/CategoryFormView.vue'),
       },
       {
         path: 'categories/:slug+/edit',
         name: 'admin-category-edit',
-        component: CategoryFormView,
+        component: () => import('../views/CategoryFormView.vue'),
       },
       {
         path: 'news',
         name: 'admin-news',
-        component: NewsListView,
+        component: () => import('../views/NewsListView.vue'),
       },
       {
         path: 'news/new',
         name: 'admin-news-new',
-        component: NewsFormView,
+        component: () => import('../views/NewsFormView.vue'),
       },
       {
         path: 'news/:slug/edit',
         name: 'admin-news-edit',
-        component: NewsFormView,
+        component: () => import('../views/NewsFormView.vue'),
       },
       {
         path: 'events',
         name: 'admin-events',
-        component: EventsListView,
+        component: () => import('../views/EventsListView.vue'),
       },
       {
         path: 'events/new',
         name: 'admin-event-new',
-        component: EventFormView,
+        component: () => import('../views/EventFormView.vue'),
       },
       {
         path: 'events/:id/edit',
         name: 'admin-event-edit',
-        component: EventFormView,
+        component: () => import('../views/EventFormView.vue'),
       },
       {
         path: 'contact-persons',
         name: 'admin-contact-persons',
-        component: ContactPersonsListView,
+        component: () => import('../views/ContactPersonsListView.vue'),
       },
       {
         path: 'contact-persons/new',
         name: 'admin-contact-person-new',
-        component: ContactPersonFormView,
+        component: () => import('../views/ContactPersonFormView.vue'),
       },
       {
         path: 'contact-persons/:id/edit',
         name: 'admin-contact-person-edit',
-        component: ContactPersonFormView,
+        component: () => import('../views/ContactPersonFormView.vue'),
       },
       {
         path: 'media',
         name: 'admin-media',
-        component: MediaLibraryView,
+        component: () => import('../views/MediaLibraryView.vue'),
       },
       {
         path: 'settings',
         name: 'admin-settings',
-        component: SettingsView,
+        component: () => import('../views/SettingsView.vue'),
       },
     ],
   },

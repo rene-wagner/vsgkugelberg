@@ -1,70 +1,54 @@
 import type { RouteRecordRaw } from 'vue-router';
-import DefaultLayout from '@shared/layouts/DefaultLayout.vue';
-import HomeView from '../views/HomeView.vue';
-import ImpressumView from '../views/ImpressumView.vue';
-import DatenschutzView from '../views/DatenschutzView.vue';
-import ContactView from '../views/ContactView.vue';
-import DepartmentDetailView from '../views/DepartmentDetailView.vue';
-import HistoryView from '../views/verein/HistoryView.vue';
-import BoardView from '../views/verein/BoardView.vue';
-import StatutesView from '../views/verein/StatutesView.vue';
-import MembershipView from '../views/verein/MembershipView.vue';
-import SponsorsView from '../views/verein/SponsorsView.vue';
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: DefaultLayout,
+    component: () => import('@shared/layouts/DefaultLayout.vue'),
     children: [
       {
         path: '',
         name: 'home',
-        component: HomeView,
+        component: () => import('../views/HomeView.vue'),
       },
       {
         path: 'impressum',
         name: 'impressum',
-        component: ImpressumView,
+        component: () => import('../views/ImpressumView.vue'),
       },
       {
         path: 'datenschutz',
         name: 'datenschutz',
-        component: DatenschutzView,
+        component: () => import('../views/DatenschutzView.vue'),
       },
       {
-        path: 'contact',
+        path: 'kontakt',
         name: 'contact',
-        component: ContactView,
+        component: () => import('../views/ContactView.vue'),
       },
       {
         path: 'verein/geschichte',
         name: 'verein-geschichte',
-        component: HistoryView,
+        component: () => import('../views/verein/HistoryView.vue'),
       },
       {
         path: 'verein/vorstand',
         name: 'verein-vorstand',
-        component: BoardView,
+        component: () => import('../views/verein/BoardView.vue'),
       },
       {
         path: 'verein/satzung',
         name: 'verein-satzung',
-        component: StatutesView,
+        component: () => import('../views/verein/StatutesView.vue'),
       },
       {
         path: 'verein/mitgliedschaft',
         name: 'verein-mitgliedschaft',
-        component: MembershipView,
-      },
-      {
-        path: 'verein/sponsoren',
-        name: 'verein-sponsoren',
-        component: SponsorsView,
+        component: () => import('../views/verein/MembershipView.vue'),
       },
       {
         path: 'abteilung/:slug',
         name: 'department-detail',
-        component: DepartmentDetailView,
+        component: () => import('../views/DepartmentDetailView.vue'),
       },
     ],
   },

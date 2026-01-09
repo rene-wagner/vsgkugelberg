@@ -6,12 +6,14 @@ interface Props {
   variant?: ButtonVariant;
   size?: ButtonSize;
   glow?: boolean;
+  ariaLabel?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   size: 'md',
   glow: false,
+  ariaLabel: undefined,
 });
 
 const baseClasses = 'font-display tracking-wider transition-colors';
@@ -46,6 +48,7 @@ const glowClass = props.glow
       sizeClasses[size],
       glowClass,
     ]"
+    :aria-label="ariaLabel"
   >
     <slot />
   </button>

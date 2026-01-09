@@ -196,7 +196,7 @@
                 <strong class="text-vsg-blue-900">Hinweis:</strong>
                 Fur Anfragen an den Vorstand nutzen Sie bitte unsere
                 <a
-                  href="/contact"
+                  href="/kontakt"
                   class="text-vsg-gold-600 hover:text-vsg-gold-700 underline"
                   >Kontaktseite</a
                 >.

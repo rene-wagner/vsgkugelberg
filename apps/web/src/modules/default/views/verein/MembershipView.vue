@@ -343,7 +343,7 @@
                 Schnuppertraining.
               </p>
               <a
-                href="/contact"
+                href="/kontakt"
                 class="mt-6 inline-block rounded-lg bg-vsg-gold-400 px-8 py-3 font-display text-lg tracking-wider text-vsg-blue-900 transition-all hover:bg-vsg-gold-500"
               >
                 KONTAKT AUFNEHMEN

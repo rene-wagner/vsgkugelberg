@@ -1,7 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { api, ApiError } from '@shared/utils/api';
 
 export type EventCategory = 'Meeting' | 'Sport' | 'Social' | 'Other';
 
@@ -57,23 +56,15 @@ export const useEventsStore = defineStore('events', () => {
     error.value = null;
 
     try {
-      let url = `${API_BASE_URL}/api/events?start=${start}&end=${end}`;
+      let query = `?start=${start}&end=${end}`;
       if (category) {
-        url += `&category=${category}`;
+        query += `&category=${category}`;
       }
 
-      const response = await fetch(url, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch events');
-      }
-
-      events.value = (await response.json()) as EventItem[];
+      events.value = await api.get<EventItem[]>(`/api/events${query}`);
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
+      throw e;
     } finally {
       isLoading.value = false;
     }
@@ -84,18 +75,9 @@ export const useEventsStore = defineStore('events', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/events/${id}`, {
-        method: 'GET',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch event');
-      }
-
-      return (await response.json()) as EventItem;
+      return await api.get<EventItem>(`/api/events/${id}`);
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -107,24 +89,11 @@ export const useEventsStore = defineStore('events', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/events`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create event');
-      }
-
-      const newEvent = (await response.json()) as EventItem;
+      const newEvent = await api.post<EventItem>('/api/events', data);
       events.value.push(newEvent);
       return newEvent;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -139,27 +108,17 @@ export const useEventsStore = defineStore('events', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/events/${id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to update event');
-      }
-
-      const updatedEvent = (await response.json()) as EventItem;
+      const updatedEvent = await api.patch<EventItem>(
+        `/api/events/${id}`,
+        data,
+      );
       const index = events.value.findIndex((e) => e.id === id);
       if (index !== -1) {
         events.value[index] = updatedEvent;
       }
       return updatedEvent;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -171,19 +130,11 @@ export const useEventsStore = defineStore('events', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/events/${id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete event');
-      }
-
+      await api.delete(`/api/events/${id}`);
       events.value = events.value.filter((e) => e.id !== id);
       return true;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return false;
     } finally {
       isLoading.value = false;

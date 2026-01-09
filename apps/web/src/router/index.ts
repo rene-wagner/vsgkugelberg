@@ -7,6 +7,9 @@ import { useAuthStore } from '@/modules/auth/stores/authStore';
 const router = createRouter({
   history: createWebHistory(),
   routes: [...defaultRoutes, ...adminRoutes, ...authRoutes],
+  scrollBehavior: () => {
+    return { top: 0, behavior: 'smooth' };
+  },
 });
 
 let isInitialized = false;
@@ -29,6 +32,19 @@ router.beforeEach(async (to) => {
   // Protect routes that require authentication
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     return '/login';
+  }
+
+  // Check permission-based routes
+  const requiredPermissions = to.meta.requiresPermission;
+  if (requiredPermissions && requiredPermissions.length > 0) {
+    const userPermissions = authStore.user?.permissions || [];
+    const hasPermission = requiredPermissions.some((perm) =>
+      userPermissions.includes(perm),
+    );
+
+    if (!hasPermission) {
+      return '/admin';
+    }
   }
 });
 

@@ -1,7 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { api, ApiError } from '@shared/utils/api';
 
 export interface Media {
   id: number;
@@ -49,21 +48,9 @@ export interface UpdateContactPersonData {
   profileImageId?: number | null;
 }
 
-export interface PaginationMeta {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-interface PaginatedResponse {
-  data: ContactPerson[];
-  meta: PaginationMeta;
-}
-
 export const useContactPersonsStore = defineStore('contactPersons', () => {
   const contactPersons = ref<ContactPerson[]>([]);
-  const meta = ref<PaginationMeta>({
+  const meta = ref({
     total: 0,
     page: 1,
     limit: 25,
@@ -77,23 +64,20 @@ export const useContactPersonsStore = defineStore('contactPersons', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/contact-persons?page=${page}&limit=${limit}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch contact persons');
-      }
-
-      const result = (await response.json()) as PaginatedResponse;
+      const result = await api.get<{
+        data: ContactPerson[];
+        meta: {
+          total: number;
+          page: number;
+          limit: number;
+          totalPages: number;
+        };
+      }>(`/api/contact-persons?page=${page}&limit=${limit}`);
       contactPersons.value = result.data;
       meta.value = result.meta;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
+      throw e;
     } finally {
       isLoading.value = false;
     }
@@ -104,21 +88,9 @@ export const useContactPersonsStore = defineStore('contactPersons', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/contact-persons/${id}`,
-        {
-          method: 'GET',
-          credentials: 'include',
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch contact person');
-      }
-
-      return (await response.json()) as ContactPerson;
+      return await api.get<ContactPerson>(`/api/contact-persons/${id}`);
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -132,24 +104,14 @@ export const useContactPersonsStore = defineStore('contactPersons', () => {
     error.value = null;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/contact-persons`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create contact person');
-      }
-
-      const newContactPerson = (await response.json()) as ContactPerson;
+      const newContactPerson = await api.post<ContactPerson>(
+        '/api/contact-persons',
+        data,
+      );
       contactPersons.value.push(newContactPerson);
       return newContactPerson;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -164,30 +126,17 @@ export const useContactPersonsStore = defineStore('contactPersons', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/contact-persons/${id}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include',
-          body: JSON.stringify(data),
-        },
+      const updatedContactPerson = await api.patch<ContactPerson>(
+        `/api/contact-persons/${id}`,
+        data,
       );
-
-      if (!response.ok) {
-        throw new Error('Failed to update contact person');
-      }
-
-      const updatedContactPerson = (await response.json()) as ContactPerson;
       const index = contactPersons.value.findIndex((cp) => cp.id === id);
       if (index !== -1) {
         contactPersons.value[index] = updatedContactPerson;
       }
       return updatedContactPerson;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return null;
     } finally {
       isLoading.value = false;
@@ -199,22 +148,11 @@ export const useContactPersonsStore = defineStore('contactPersons', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/contact-persons/${id}`,
-        {
-          method: 'DELETE',
-          credentials: 'include',
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to delete contact person');
-      }
-
+      await api.delete(`/api/contact-persons/${id}`);
       contactPersons.value = contactPersons.value.filter((cp) => cp.id !== id);
       return true;
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An error occurred';
+      error.value = e instanceof ApiError ? e.message : 'An error occurred';
       return false;
     } finally {
       isLoading.value = false;
