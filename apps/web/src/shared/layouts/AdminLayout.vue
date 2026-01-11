@@ -173,7 +173,7 @@ async function handleLogout() {
                   class="flex items-center gap-2 px-4 py-2 w-full font-body font-normal text-sm text-vsg-gold-300 hover:text-vsg-gold-400 hover:bg-vsg-blue-800/50 transition-colors"
                   @click="handleLogout"
                 >
-                  <FontAwesomeIcon icon="right-from-bracket" />
+                  <FontAwesomeIcon icon="arrow-right-from-bracket" />
                   Abmelden
                 </button>
               </div>
