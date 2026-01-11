@@ -1,13 +1,6 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue';
-import {
-  VsgFactCard,
-  VsgTimeline,
-  VsgChart,
-  VsgAccordion,
-  VsgSuccessList,
-  VsgMarkdownRenderer,
-} from '@/shared/components';
+import { VsgFactCard, VsgTimeline, VsgChart, VsgAccordion, VsgSuccessList, VsgMarkdownRenderer } from '@/shared/components';
 import CtaSection from '../../components/CtaSection.vue';
 import { useHistoryStore } from '../../stores/historyStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -61,17 +54,10 @@ const achievementItems = computed(() => {
     return {
       year: a.year,
       category: a.category,
-      categoryLabel: cat
-        ? cat.label.charAt(0) + cat.label.slice(1).toLowerCase()
-        : 'Allgemein',
+      categoryLabel: cat ? cat.label.charAt(0) + cat.label.slice(1).toLowerCase() : 'Allgemein',
       title: a.headline,
       description: a.description,
-      colorClass:
-        a.category === 'badminton'
-          ? 'border-vsg-gold-500'
-          : a.category === 'table-tennis'
-            ? 'border-vsg-blue-400'
-            : 'border-vsg-blue-600',
+      colorClass: a.category === 'badminton' ? 'border-vsg-gold-500' : a.category === 'table-tennis' ? 'border-vsg-blue-400' : 'border-vsg-blue-600',
     };
   });
 });
@@ -82,33 +68,19 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div
-    class="min-h-screen text-white overflow-x-hidden selection:bg-vsg-gold-500 selection:text-vsg-blue-900"
-  >
+  <div class="min-h-screen text-white overflow-x-hidden selection:bg-vsg-gold-500 selection:text-vsg-blue-900">
     <!-- Loading State -->
-    <div
-      v-if="historyStore.isLoading && !historyStore.history"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-vsg-blue-900"
-    >
+    <div v-if="historyStore.isLoading && !historyStore.history" class="fixed inset-0 z-50 flex items-center justify-center bg-vsg-blue-900">
       <div class="text-center">
-        <div
-          class="w-16 h-16 border-4 border-vsg-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"
-        ></div>
+        <div class="w-16 h-16 border-4 border-vsg-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
         <p class="font-display tracking-widest text-vsg-gold-400">LADEN...</p>
       </div>
     </div>
 
     <!-- Error State -->
-    <div
-      v-else-if="historyStore.error"
-      class="min-h-screen flex items-center justify-center pt-20"
-    >
-      <div
-        class="text-center p-8 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md"
-      >
-        <h2 class="font-display text-3xl text-vsg-gold-400 mb-4">
-          FEHLER BEIM LADEN
-        </h2>
+    <div v-else-if="historyStore.error" class="min-h-screen flex items-center justify-center pt-20">
+      <div class="text-center p-8 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md">
+        <h2 class="font-display text-3xl text-vsg-gold-400 mb-4">FEHLER BEIM LADEN</h2>
         <p class="font-body text-vsg-blue-200 mb-8">{{ historyStore.error }}</p>
         <button
           class="px-8 py-3 bg-vsg-gold-500 text-vsg-blue-900 font-display text-sm tracking-wider hover:bg-vsg-gold-400 transition-colors"
@@ -121,46 +93,28 @@ onMounted(async () => {
 
     <template v-else-if="historyStore.history">
       <!-- Hero Section -->
-      <header
-        class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden"
-      >
+      <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
         <!-- Background gradient overlay -->
-        <div
-          class="absolute inset-0 bg-linear-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"
-        ></div>
+        <div class="absolute inset-0 bg-linear-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"></div>
 
         <!-- Decorative elements -->
-        <div
-          class="absolute top-1/4 right-0 w-96 h-96 bg-vsg-gold-500/10 rounded-full blur-3xl"
-        ></div>
-        <div
-          class="absolute bottom-1/4 left-0 w-80 h-80 bg-vsg-blue-500/20 rounded-full blur-3xl"
-        ></div>
+        <div class="absolute top-1/4 right-0 w-96 h-96 bg-vsg-gold-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 left-0 w-80 h-80 bg-vsg-blue-500/20 rounded-full blur-3xl"></div>
 
         <div class="relative z-10 text-center px-6 max-w-4xl animate-fadeIn">
-          <span
-            class="inline-block font-body text-sm tracking-[0.6em] text-vsg-gold-400 uppercase mb-4 border border-vsg-gold-500/30 px-6 py-2"
-          >
+          <span class="inline-block font-body text-sm tracking-[0.6em] text-vsg-gold-400 uppercase mb-4 border border-vsg-gold-500/30 px-6 py-2">
             Tradition seit 1985
           </span>
-          <h1
-            class="font-display text-7xl md:text-9xl lg:text-[12rem] text-white tracking-tight leading-none mb-6 text-glow uppercase"
-          >
+          <h1 class="font-display text-7xl md:text-9xl lg:text-[12rem] text-white tracking-tight leading-none mb-6 text-glow uppercase">
             {{ historyStore.history.heroHeadline }}
           </h1>
-          <div
-            class="font-body text-vsg-blue-200 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto"
-          >
-            <VsgMarkdownRenderer
-              :content="historyStore.history.heroSubHeadline"
-            />
+          <div class="font-body text-vsg-blue-200 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
+            <VsgMarkdownRenderer :content="historyStore.history.heroSubHeadline" />
           </div>
         </div>
 
         <!-- Scroll indicator -->
-        <div
-          class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20"
-        >
+        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20">
           <FontAwesomeIcon icon="arrow-down" class="text-vsg-gold-400" />
         </div>
       </header>
@@ -173,20 +127,13 @@ onMounted(async () => {
             <div class="space-y-8 animate-fadeIn">
               <div class="flex items-center gap-4">
                 <div class="h-px w-12 bg-vsg-gold-600"></div>
-                <span
-                  class="font-display text-vsg-gold-600 text-2xl tracking-widest uppercase"
-                  >Der Ursprung</span
-                >
+                <span class="font-display text-vsg-gold-600 text-2xl tracking-widest uppercase">Der Ursprung</span>
               </div>
-              <h2
-                class="font-display text-5xl md:text-6xl text-vsg-blue-900 uppercase"
-              >
+              <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 uppercase">
                 {{ historyStore.history.foundingHeadline }}
               </h2>
               <div class="font-body text-gray-600 text-lg leading-relaxed">
-                <VsgMarkdownRenderer
-                  :content="historyStore.history.foundingDescription"
-                />
+                <VsgMarkdownRenderer :content="historyStore.history.foundingDescription" />
               </div>
 
               <VsgFactCard
@@ -219,32 +166,19 @@ onMounted(async () => {
       <section id="development" class="py-24 bg-gray-50">
         <div class="max-w-7xl mx-auto px-6">
           <div class="text-center mb-16">
-            <h2
-              class="font-display text-5xl md:text-6xl text-vsg-blue-900 mb-4 uppercase"
-            >
+            <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 mb-4 uppercase">
               {{ historyStore.history.developmentHeadline }}
             </h2>
             <div class="font-body text-gray-600 max-w-2xl mx-auto text-lg">
-              <VsgMarkdownRenderer
-                :content="historyStore.history.developmentDescription"
-              />
+              <VsgMarkdownRenderer :content="historyStore.history.developmentDescription" />
             </div>
           </div>
 
           <!-- Chart -->
-          <div
-            v-if="membershipChartData"
-            class="bg-white p-8 rounded-xl border border-gray-200 mb-20 shadow-sm"
-          >
+          <div v-if="membershipChartData" class="bg-white p-8 rounded-xl border border-gray-200 mb-20 shadow-sm">
             <div class="flex justify-between items-center mb-8">
-              <h3
-                class="font-display text-2xl text-vsg-gold-600 uppercase tracking-widest"
-              >
-                Mitgliederstatistik
-              </h3>
-              <div
-                class="flex items-center gap-4 text-xs uppercase tracking-tighter text-vsg-blue-600"
-              >
+              <h3 class="font-display text-2xl text-vsg-gold-600 uppercase tracking-widest">Mitgliederstatistik</h3>
+              <div class="flex items-center gap-4 text-xs uppercase tracking-tighter text-vsg-blue-600">
                 <span class="flex items-center gap-1"
                   ><div class="w-3 h-3 bg-vsg-gold-500 rounded-full"></div>
                   Mitgliederzahl</span
@@ -257,15 +191,8 @@ onMounted(async () => {
           </div>
 
           <!-- Chronicle Accordion -->
-          <div
-            v-if="chronicleGroups.length > 0"
-            class="max-w-4xl mx-auto space-y-4"
-          >
-            <h3
-              class="font-display text-3xl text-vsg-blue-900 mb-8 text-center uppercase tracking-widest"
-            >
-              Chronik der Ereignisse
-            </h3>
+          <div v-if="chronicleGroups.length > 0" class="max-w-4xl mx-auto space-y-4">
+            <h3 class="font-display text-3xl text-vsg-blue-900 mb-8 text-center uppercase tracking-widest">Chronik der Ereignisse</h3>
             <VsgAccordion :items="chronicleGroups" />
           </div>
         </div>
@@ -275,13 +202,8 @@ onMounted(async () => {
       <section id="festivals" class="py-24 bg-white">
         <div class="max-w-7xl mx-auto px-6">
           <div class="text-center mb-16">
-            <span
-              class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase"
-              >Vereinsleben</span
-            >
-            <h2
-              class="font-display text-5xl md:text-6xl text-vsg-blue-900 mt-2 uppercase"
-            >
+            <span class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase">Vereinsleben</span>
+            <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 mt-2 uppercase">
               {{ historyStore.history.festivalsHeadline }}
             </h2>
             <p class="font-body text-gray-600 mt-4 max-w-2xl mx-auto text-lg">
@@ -295,9 +217,7 @@ onMounted(async () => {
               :key="item.headline"
               class="bg-gray-50 border border-gray-200 p-8 hover:bg-gray-100 transition-all group overflow-hidden relative shadow-sm"
             >
-              <h4
-                class="font-display text-2xl text-vsg-blue-900 tracking-widest uppercase"
-              >
+              <h4 class="font-display text-2xl text-vsg-blue-900 tracking-widest uppercase">
                 {{ item.headline }}
               </h4>
               <p class="font-body text-base text-gray-600 mt-4 leading-relaxed">
@@ -312,21 +232,13 @@ onMounted(async () => {
       <section id="achievements" class="py-24 bg-gray-50">
         <div class="max-w-7xl mx-auto px-6">
           <div class="text-center mb-16">
-            <span
-              class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase"
-              >Unser Stolz</span
-            >
-            <h2
-              class="font-display text-5xl md:text-7xl text-vsg-blue-900 mt-2 uppercase"
-            >
+            <span class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase">Unser Stolz</span>
+            <h2 class="font-display text-5xl md:text-7xl text-vsg-blue-900 mt-2 uppercase">
               {{ historyStore.history.achievementsHeadline }}
             </h2>
           </div>
 
-          <VsgSuccessList
-            :items="achievementItems"
-            :categories="achievementCategories"
-          />
+          <VsgSuccessList :items="achievementItems" :categories="achievementCategories" />
         </div>
       </section>
 

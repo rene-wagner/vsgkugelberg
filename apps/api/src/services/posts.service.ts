@@ -1,22 +1,12 @@
 import { NotFoundException } from '@/errors/http-errors';
-import {
-  CreatePostDto,
-  UpdatePostDto,
-  Post,
-  PaginatedResponse,
-} from '@/types/post.types';
+import { CreatePostDto, UpdatePostDto, Post, PaginatedResponse } from '@/types/post.types';
 import { SlugifyService } from '@/services/slugify.service';
 import { Prisma, prisma } from '@/lib/prisma.lib';
 
 const slugifyService = new SlugifyService();
 
 export class PostsService {
-  async findAll(
-    published?: boolean,
-    categorySlug?: string,
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<PaginatedResponse<Post>> {
+  async findAll(published?: boolean, categorySlug?: string, page: number = 1, limit: number = 10): Promise<PaginatedResponse<Post>> {
     const where: Prisma.PostWhereInput = {};
 
     if (published !== undefined) {
@@ -105,9 +95,7 @@ export class PostsService {
       });
       if (categories.length !== createPostDto.categoryIds.length) {
         const foundIds = categories.map((c) => c.id);
-        const missingId = createPostDto.categoryIds.find(
-          (id) => !foundIds.includes(id),
-        );
+        const missingId = createPostDto.categoryIds.find((id) => !foundIds.includes(id));
         throw new NotFoundException(`Category with ID ${missingId} not found`);
       }
     }
@@ -118,9 +106,7 @@ export class PostsService {
         where: { id: createPostDto.thumbnailId },
       });
       if (!media) {
-        throw new NotFoundException(
-          `Media with ID ${createPostDto.thumbnailId} not found`,
-        );
+        throw new NotFoundException(`Media with ID ${createPostDto.thumbnailId} not found`);
       }
     }
 
@@ -156,13 +142,8 @@ export class PostsService {
 
       return post as Post;
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2003'
-      ) {
-        throw new NotFoundException(
-          `Author with ID ${createPostDto.authorId} not found`,
-        );
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2003') {
+        throw new NotFoundException(`Author with ID ${createPostDto.authorId} not found`);
       }
       throw error;
     }
@@ -186,9 +167,7 @@ export class PostsService {
       });
       if (categories.length !== updatePostDto.categoryIds.length) {
         const foundIds = categories.map((c) => c.id);
-        const missingId = updatePostDto.categoryIds.find(
-          (id) => !foundIds.includes(id),
-        );
+        const missingId = updatePostDto.categoryIds.find((id) => !foundIds.includes(id));
         throw new NotFoundException(`Category with ID ${missingId} not found`);
       }
     }
@@ -199,9 +178,7 @@ export class PostsService {
         where: { id: updatePostDto.thumbnailId },
       });
       if (!media) {
-        throw new NotFoundException(
-          `Media with ID ${updatePostDto.thumbnailId} not found`,
-        );
+        throw new NotFoundException(`Media with ID ${updatePostDto.thumbnailId} not found`);
       }
     }
 
@@ -210,10 +187,7 @@ export class PostsService {
     // If title is being updated, regenerate slug
     if (updatePostDto.title !== undefined) {
       updateData.title = updatePostDto.title;
-      updateData.slug = await slugifyService.generateUniqueSlug(
-        updatePostDto.title,
-        existingPost.id,
-      );
+      updateData.slug = await slugifyService.generateUniqueSlug(updatePostDto.title, existingPost.id);
     }
 
     if (updatePostDto.content !== undefined) {
@@ -265,10 +239,7 @@ export class PostsService {
 
       return post as Post;
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         throw new NotFoundException(`Post with slug "${slug}" not found`);
       }
       throw error;
@@ -306,10 +277,7 @@ export class PostsService {
 
       return post as Post;
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         throw new NotFoundException(`Post with slug "${slug}" not found`);
       }
       throw error;

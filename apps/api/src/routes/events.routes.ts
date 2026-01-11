@@ -4,17 +4,8 @@ import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
 import { validationMiddleware } from '@/middleware/validation.middleware';
 import { jwtMiddleware } from '@/middleware/jwt.middleware';
-import {
-  createEventValidator,
-  updateEventValidator,
-  idParamValidator,
-  eventsQueryValidator,
-} from '@/validators/event.validators';
-import {
-  CreateEventDto,
-  UpdateEventDto,
-  EventCategory,
-} from '@/types/event.types';
+import { createEventValidator, updateEventValidator, idParamValidator, eventsQueryValidator } from '@/validators/event.validators';
+import { CreateEventDto, UpdateEventDto, EventCategory } from '@/types/event.types';
 
 const router = Router();
 const eventsService = new EventsService();
@@ -30,11 +21,7 @@ router.get(
     const startDate = new Date(start as string);
     const endDate = new Date(end as string);
 
-    const events = await eventsService.findByDateRange(
-      startDate,
-      endDate,
-      category as EventCategory | undefined,
-    );
+    const events = await eventsService.findByDateRange(startDate, endDate, category as EventCategory | undefined);
 
     res.json(events);
   }),

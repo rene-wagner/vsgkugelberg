@@ -45,12 +45,7 @@ watch(
 );
 
 const canSubmit = computed(() => {
-  return (
-    firstName.value.trim() !== '' &&
-    lastName.value.trim() !== '' &&
-    type.value.trim() !== '' &&
-    phone.value.trim() !== ''
-  );
+  return firstName.value.trim() !== '' && lastName.value.trim() !== '' && type.value.trim() !== '' && phone.value.trim() !== '';
 });
 
 async function handleSubmit() {
@@ -72,16 +67,11 @@ async function handleSubmit() {
         profileImageId: profileImageId.value,
       };
 
-      const result = await contactPersonsStore.updateContactPerson(
-        props.contactPerson.id,
-        updateData,
-      );
+      const result = await contactPersonsStore.updateContactPerson(props.contactPerson.id, updateData);
       if (result) {
         router.push('/admin/contact-persons');
       } else {
-        error.value =
-          contactPersonsStore.error ||
-          'Fehler beim Aktualisieren des Ansprechpartners';
+        error.value = contactPersonsStore.error || 'Fehler beim Aktualisieren des Ansprechpartners';
       }
     } else {
       // Create new contact person
@@ -102,9 +92,7 @@ async function handleSubmit() {
       if (result) {
         router.push('/admin/contact-persons');
       } else {
-        error.value =
-          contactPersonsStore.error ||
-          'Fehler beim Erstellen des Ansprechpartners';
+        error.value = contactPersonsStore.error || 'Fehler beim Erstellen des Ansprechpartners';
       }
     }
   } catch {
@@ -123,16 +111,13 @@ async function handleDelete() {
   if (!confirmed) return;
 
   isSubmitting.value = true;
-  const success = await contactPersonsStore.deleteContactPerson(
-    props.contactPerson.id,
-  );
+  const success = await contactPersonsStore.deleteContactPerson(props.contactPerson.id);
   isSubmitting.value = false;
 
   if (success) {
     router.push('/admin/contact-persons');
   } else {
-    error.value =
-      contactPersonsStore.error || 'Fehler beim Löschen des Ansprechpartners';
+    error.value = contactPersonsStore.error || 'Fehler beim Löschen des Ansprechpartners';
   }
 }
 
@@ -144,27 +129,19 @@ function handleCancel() {
 <template>
   <form class="max-w-3xl" @submit.prevent="handleSubmit">
     <!-- Error Message -->
-    <div
-      v-if="error"
-      class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6"
-    >
+    <div v-if="error" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
       <p class="text-sm text-red-600 font-body">{{ error }}</p>
     </div>
 
     <!-- Contact Person Data Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        ANSPRECHPARTNER DATEN
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">ANSPRECHPARTNER DATEN</h2>
 
       <div class="space-y-6">
         <!-- First Name -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label
-              for="firstName"
-              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-            >
+            <label for="firstName" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
               Vorname <span class="text-red-500">*</span>
             </label>
             <input
@@ -179,10 +156,7 @@ function handleCancel() {
 
           <!-- Last Name -->
           <div>
-            <label
-              for="lastName"
-              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-            >
+            <label for="lastName" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
               Nachname <span class="text-red-500">*</span>
             </label>
             <input
@@ -198,10 +172,7 @@ function handleCancel() {
 
         <!-- Type -->
         <div>
-          <label
-            for="type"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="type" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             Funktion / Rolle <span class="text-red-500">*</span>
           </label>
           <input
@@ -216,10 +187,7 @@ function handleCancel() {
 
         <!-- Phone -->
         <div>
-          <label
-            for="phone"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="phone" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             Telefon <span class="text-red-500">*</span>
           </label>
           <input
@@ -234,12 +202,7 @@ function handleCancel() {
 
         <!-- Email -->
         <div>
-          <label
-            for="email"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            E-Mail
-          </label>
+          <label for="email" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> E-Mail </label>
           <input
             id="email"
             v-model="email"
@@ -251,12 +214,7 @@ function handleCancel() {
 
         <!-- Address -->
         <div>
-          <label
-            for="address"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Adresse
-          </label>
+          <label for="address" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Adresse </label>
           <textarea
             id="address"
             v-model="address"
@@ -270,27 +228,16 @@ function handleCancel() {
 
     <!-- Profile Image Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        PROFILBILD
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">PROFILBILD</h2>
 
       <div>
-        <label
-          class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-        >
-          Profilbild
-        </label>
-        <ProfileImageSelector
-          v-model="profileImageId"
-          :current-image="contactPerson?.profileImage ?? null"
-        />
+        <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Profilbild </label>
+        <ProfileImageSelector v-model="profileImageId" :current-image="contactPerson?.profileImage ?? null" />
       </div>
     </div>
 
     <!-- Form Actions -->
-    <div
-      class="flex items-center justify-between border-t border-gray-200 pt-6"
-    >
+    <div class="flex items-center justify-between border-t border-gray-200 pt-6">
       <button
         type="button"
         class="px-6 py-2.5 border border-gray-300 text-gray-600 font-body text-sm rounded-lg hover:bg-gray-50 transition-colors"

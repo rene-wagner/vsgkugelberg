@@ -52,9 +52,7 @@ export const useSettingsStore = defineStore('settings', () => {
     }
   }
 
-  async function updateSettings(
-    data: UpdateSettingsData,
-  ): Promise<ClubSettings | null> {
+  async function updateSettings(data: UpdateSettingsData): Promise<ClubSettings | null> {
     isSaving.value = true;
     error.value = null;
     successMessage.value = null;

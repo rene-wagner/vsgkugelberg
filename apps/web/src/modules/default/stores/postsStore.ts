@@ -55,12 +55,9 @@ export const useDefaultPostsStore = defineStore('default-posts', () => {
     error.value = null;
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/posts?published=true&limit=${limit}`,
-        {
-          method: 'GET',
-        },
-      );
+      const response = await fetch(`${API_BASE_URL}/api/posts?published=true&limit=${limit}`, {
+        method: 'GET',
+      });
 
       if (!response.ok) {
         throw new Error('Failed to fetch posts');

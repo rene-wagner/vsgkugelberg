@@ -1,11 +1,6 @@
 import { Event as PrismaEvent } from '@/lib/prisma.lib';
 
-export const EVENT_CATEGORIES = [
-  'Meeting',
-  'Sport',
-  'Social',
-  'Other',
-] as const;
+export const EVENT_CATEGORIES = ['Meeting', 'Sport', 'Social', 'Other'] as const;
 
 export type EventCategory = (typeof EVENT_CATEGORIES)[number];
 

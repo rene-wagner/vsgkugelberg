@@ -17,11 +17,7 @@ describe('Media API Integration Tests', () => {
 
   // Helper to create authenticated request
   async function createAuthenticatedUser() {
-    const user = await createTestUserWithPassword(
-      testUsername,
-      testEmail,
-      testPassword,
-    );
+    const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
     // Login to get JWT token
     const loginResponse = await request(app).post('/api/auth/login').send({
@@ -37,42 +33,26 @@ describe('Media API Integration Tests', () => {
   function createTestImageBuffer(): Buffer {
     // Create a minimal valid JPEG (1x1 pixel red image)
     return Buffer.from([
-      0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01,
-      0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0xff, 0xdb, 0x00, 0x43,
-      0x00, 0x08, 0x06, 0x06, 0x07, 0x06, 0x05, 0x08, 0x07, 0x07, 0x07, 0x09,
-      0x09, 0x08, 0x0a, 0x0c, 0x14, 0x0d, 0x0c, 0x0b, 0x0b, 0x0c, 0x19, 0x12,
-      0x13, 0x0f, 0x14, 0x1d, 0x1a, 0x1f, 0x1e, 0x1d, 0x1a, 0x1c, 0x1c, 0x20,
-      0x24, 0x2e, 0x27, 0x20, 0x22, 0x2c, 0x23, 0x1c, 0x1c, 0x28, 0x37, 0x29,
-      0x2c, 0x30, 0x31, 0x34, 0x34, 0x34, 0x1f, 0x27, 0x39, 0x3d, 0x38, 0x32,
-      0x3c, 0x2e, 0x33, 0x34, 0x32, 0xff, 0xc0, 0x00, 0x0b, 0x08, 0x00, 0x01,
-      0x00, 0x01, 0x01, 0x01, 0x11, 0x00, 0xff, 0xc4, 0x00, 0x1f, 0x00, 0x00,
-      0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00,
-      0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
-      0x09, 0x0a, 0x0b, 0xff, 0xc4, 0x00, 0xb5, 0x10, 0x00, 0x02, 0x01, 0x03,
-      0x03, 0x02, 0x04, 0x03, 0x05, 0x05, 0x04, 0x04, 0x00, 0x00, 0x01, 0x7d,
-      0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41, 0x06,
-      0x13, 0x51, 0x61, 0x07, 0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xa1, 0x08,
-      0x23, 0x42, 0xb1, 0xc1, 0x15, 0x52, 0xd1, 0xf0, 0x24, 0x33, 0x62, 0x72,
-      0x82, 0x09, 0x0a, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x25, 0x26, 0x27, 0x28,
-      0x29, 0x2a, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x43, 0x44, 0x45,
-      0x46, 0x47, 0x48, 0x49, 0x4a, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59,
-      0x5a, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x73, 0x74, 0x75,
-      0x76, 0x77, 0x78, 0x79, 0x7a, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89,
-      0x8a, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0xa2, 0xa3,
-      0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6,
-      0xb7, 0xb8, 0xb9, 0xba, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9,
-      0xca, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xe1, 0xe2,
-      0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xf1, 0xf2, 0xf3, 0xf4,
-      0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xff, 0xda, 0x00, 0x08, 0x01, 0x01,
-      0x00, 0x00, 0x3f, 0x00, 0xfb, 0xd5, 0xdb, 0x20, 0xa8, 0xf1, 0x85, 0xb8,
+      0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00, 0x01, 0x00, 0x00, 0xff, 0xdb, 0x00, 0x43,
+      0x00, 0x08, 0x06, 0x06, 0x07, 0x06, 0x05, 0x08, 0x07, 0x07, 0x07, 0x09, 0x09, 0x08, 0x0a, 0x0c, 0x14, 0x0d, 0x0c, 0x0b, 0x0b, 0x0c, 0x19, 0x12,
+      0x13, 0x0f, 0x14, 0x1d, 0x1a, 0x1f, 0x1e, 0x1d, 0x1a, 0x1c, 0x1c, 0x20, 0x24, 0x2e, 0x27, 0x20, 0x22, 0x2c, 0x23, 0x1c, 0x1c, 0x28, 0x37, 0x29,
+      0x2c, 0x30, 0x31, 0x34, 0x34, 0x34, 0x1f, 0x27, 0x39, 0x3d, 0x38, 0x32, 0x3c, 0x2e, 0x33, 0x34, 0x32, 0xff, 0xc0, 0x00, 0x0b, 0x08, 0x00, 0x01,
+      0x00, 0x01, 0x01, 0x01, 0x11, 0x00, 0xff, 0xc4, 0x00, 0x1f, 0x00, 0x00, 0x01, 0x05, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00,
+      0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0xff, 0xc4, 0x00, 0xb5, 0x10, 0x00, 0x02, 0x01, 0x03,
+      0x03, 0x02, 0x04, 0x03, 0x05, 0x05, 0x04, 0x04, 0x00, 0x00, 0x01, 0x7d, 0x01, 0x02, 0x03, 0x00, 0x04, 0x11, 0x05, 0x12, 0x21, 0x31, 0x41, 0x06,
+      0x13, 0x51, 0x61, 0x07, 0x22, 0x71, 0x14, 0x32, 0x81, 0x91, 0xa1, 0x08, 0x23, 0x42, 0xb1, 0xc1, 0x15, 0x52, 0xd1, 0xf0, 0x24, 0x33, 0x62, 0x72,
+      0x82, 0x09, 0x0a, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3a, 0x43, 0x44, 0x45,
+      0x46, 0x47, 0x48, 0x49, 0x4a, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58, 0x59, 0x5a, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68, 0x69, 0x6a, 0x73, 0x74, 0x75,
+      0x76, 0x77, 0x78, 0x79, 0x7a, 0x83, 0x84, 0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0xa2, 0xa3,
+      0xa4, 0xa5, 0xa6, 0xa7, 0xa8, 0xa9, 0xaa, 0xb2, 0xb3, 0xb4, 0xb5, 0xb6, 0xb7, 0xb8, 0xb9, 0xba, 0xc2, 0xc3, 0xc4, 0xc5, 0xc6, 0xc7, 0xc8, 0xc9,
+      0xca, 0xd2, 0xd3, 0xd4, 0xd5, 0xd6, 0xd7, 0xd8, 0xd9, 0xda, 0xe1, 0xe2, 0xe3, 0xe4, 0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xf1, 0xf2, 0xf3, 0xf4,
+      0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xff, 0xda, 0x00, 0x08, 0x01, 0x01, 0x00, 0x00, 0x3f, 0x00, 0xfb, 0xd5, 0xdb, 0x20, 0xa8, 0xf1, 0x85, 0xb8,
       0x47, 0x1e, 0x94, 0x01, 0xff, 0xd9,
     ]);
   }
 
   // Helper to create a larger test image using Sharp (for thumbnail generation tests)
-  async function createLargeTestImageBuffer(
-    format: 'jpeg' | 'png' | 'webp' = 'jpeg',
-  ): Promise<Buffer> {
+  async function createLargeTestImageBuffer(format: 'jpeg' | 'png' | 'webp' = 'jpeg'): Promise<Buffer> {
     // Create a 200x200 test image with Sharp
     const image = sharp({
       create: {
@@ -108,9 +88,7 @@ describe('Media API Integration Tests', () => {
     it('should return empty list when no media exists', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .get('/api/media')
-        .set('Cookie', cookies);
+      const response = await request(app).get('/api/media').set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body.data).toHaveLength(0);
@@ -147,9 +125,7 @@ describe('Media API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .get('/api/media')
-        .set('Cookie', cookies);
+      const response = await request(app).get('/api/media').set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body.data).toHaveLength(2);
@@ -178,9 +154,7 @@ describe('Media API Integration Tests', () => {
         });
       }
 
-      const response = await request(app)
-        .get('/api/media?page=2&limit=2')
-        .set('Cookie', cookies);
+      const response = await request(app).get('/api/media?page=2&limit=2').set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body.data).toHaveLength(2);
@@ -214,9 +188,7 @@ describe('Media API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .get(`/api/media/${media.id}`)
-        .set('Cookie', cookies);
+      const response = await request(app).get(`/api/media/${media.id}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -230,9 +202,7 @@ describe('Media API Integration Tests', () => {
     it('should return 404 for non-existent media', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .get('/api/media/99999')
-        .set('Cookie', cookies);
+      const response = await request(app).get('/api/media/99999').set('Cookie', cookies);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('not found');
@@ -247,9 +217,7 @@ describe('Media API Integration Tests', () => {
     it('should return 400 for invalid ID format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .get('/api/media/invalid')
-        .set('Cookie', cookies);
+      const response = await request(app).get('/api/media/invalid').set('Cookie', cookies);
 
       expect(response.status).toBe(400);
     });
@@ -259,10 +227,7 @@ describe('Media API Integration Tests', () => {
     it('should upload a valid JPEG image', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', createTestImageBuffer(), 'test-image.jpg');
+      const response = await request(app).post('/api/media').set('Cookie', cookies).attach('file', createTestImageBuffer(), 'test-image.jpg');
 
       expect(response.status).toBe(201);
       expect(response.body).toHaveProperty('id');
@@ -284,10 +249,7 @@ describe('Media API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
       const pngBuffer = await createLargeTestImageBuffer('png');
 
-      const response = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', pngBuffer, 'test-image.png');
+      const response = await request(app).post('/api/media').set('Cookie', cookies).attach('file', pngBuffer, 'test-image.png');
 
       expect(response.status).toBe(201);
       expect(response.body.originalName).toBe('test-image.png');
@@ -299,16 +261,12 @@ describe('Media API Integration Tests', () => {
     it('should upload a valid SVG image', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const svgContent =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="red" width="100" height="100"/></svg>';
+      const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="red" width="100" height="100"/></svg>';
 
-      const response = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', Buffer.from(svgContent), {
-          filename: 'test-image.svg',
-          contentType: 'image/svg+xml',
-        });
+      const response = await request(app).post('/api/media').set('Cookie', cookies).attach('file', Buffer.from(svgContent), {
+        filename: 'test-image.svg',
+        contentType: 'image/svg+xml',
+      });
 
       expect(response.status).toBe(201);
       expect(response.body.originalName).toBe('test-image.svg');
@@ -320,13 +278,10 @@ describe('Media API Integration Tests', () => {
     it('should reject invalid file type', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', Buffer.from('test content'), {
-          filename: 'test.txt',
-          contentType: 'text/plain',
-        });
+      const response = await request(app).post('/api/media').set('Cookie', cookies).attach('file', Buffer.from('test content'), {
+        filename: 'test.txt',
+        contentType: 'text/plain',
+      });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('Invalid file type');
@@ -335,18 +290,14 @@ describe('Media API Integration Tests', () => {
     it('should return 400 when no file is uploaded', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies);
+      const response = await request(app).post('/api/media').set('Cookie', cookies);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('No file uploaded');
     });
 
     it('should return 401 without authentication', async () => {
-      const response = await request(app)
-        .post('/api/media')
-        .attach('file', createTestImageBuffer(), 'test-image.jpg');
+      const response = await request(app).post('/api/media').attach('file', createTestImageBuffer(), 'test-image.jpg');
 
       expect(response.status).toBe(401);
     });
@@ -375,10 +326,7 @@ describe('Media API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
 
       // First upload a file
-      const uploadResponse = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', createTestImageBuffer(), 'to-delete.jpg');
+      const uploadResponse = await request(app).post('/api/media').set('Cookie', cookies).attach('file', createTestImageBuffer(), 'to-delete.jpg');
 
       expect(uploadResponse.status).toBe(201);
       const mediaId = uploadResponse.body.id;
@@ -390,9 +338,7 @@ describe('Media API Integration Tests', () => {
       expect(statsBeforeDelete.isFile()).toBe(true);
 
       // Delete the media
-      const deleteResponse = await request(app)
-        .delete(`/api/media/${mediaId}`)
-        .set('Cookie', cookies);
+      const deleteResponse = await request(app).delete(`/api/media/${mediaId}`).set('Cookie', cookies);
 
       expect(deleteResponse.status).toBe(200);
       expect(deleteResponse.body.id).toBe(mediaId);
@@ -408,9 +354,7 @@ describe('Media API Integration Tests', () => {
     it('should return 404 for non-existent media', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/media/99999')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/media/99999').set('Cookie', cookies);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('not found');
@@ -425,9 +369,7 @@ describe('Media API Integration Tests', () => {
     it('should return 400 for invalid ID format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/media/invalid')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/media/invalid').set('Cookie', cookies);
 
       expect(response.status).toBe(400);
     });
@@ -437,10 +379,7 @@ describe('Media API Integration Tests', () => {
 
       // Upload a JPEG image (generates thumbnails)
       const imageBuffer = await createLargeTestImageBuffer('jpeg');
-      const uploadResponse = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', imageBuffer, 'thumbnail-test.jpg');
+      const uploadResponse = await request(app).post('/api/media').set('Cookie', cookies).attach('file', imageBuffer, 'thumbnail-test.jpg');
 
       expect(uploadResponse.status).toBe(201);
       const mediaId = uploadResponse.body.id;
@@ -456,18 +395,13 @@ describe('Media API Integration Tests', () => {
 
       // Verify thumbnail files exist on disk
       for (const size of ['thumb', 'small', 'medium', 'large']) {
-        const thumbPath = path.join(
-          UPLOAD_DIR,
-          thumbnails[size as keyof typeof thumbnails],
-        );
+        const thumbPath = path.join(UPLOAD_DIR, thumbnails[size as keyof typeof thumbnails]);
         const stats = await fs.stat(thumbPath);
         expect(stats.isFile()).toBe(true);
       }
 
       // Delete the media
-      const deleteResponse = await request(app)
-        .delete(`/api/media/${mediaId}`)
-        .set('Cookie', cookies);
+      const deleteResponse = await request(app).delete(`/api/media/${mediaId}`).set('Cookie', cookies);
 
       expect(deleteResponse.status).toBe(200);
 
@@ -477,10 +411,7 @@ describe('Media API Integration Tests', () => {
 
       // Verify all thumbnails are deleted
       for (const size of ['thumb', 'small', 'medium', 'large']) {
-        const thumbPath = path.join(
-          UPLOAD_DIR,
-          thumbnails[size as keyof typeof thumbnails],
-        );
+        const thumbPath = path.join(UPLOAD_DIR, thumbnails[size as keyof typeof thumbnails]);
         await expect(fs.stat(thumbPath)).rejects.toThrow();
       }
     });
@@ -491,10 +422,7 @@ describe('Media API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
 
       const imageBuffer = await createLargeTestImageBuffer('jpeg');
-      const response = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', imageBuffer, 'jpeg-thumbnail-test.jpg');
+      const response = await request(app).post('/api/media').set('Cookie', cookies).attach('file', imageBuffer, 'jpeg-thumbnail-test.jpg');
 
       expect(response.status).toBe(201);
       expect(response.body.thumbnails).not.toBeNull();
@@ -511,10 +439,7 @@ describe('Media API Integration Tests', () => {
       uploadedFiles.push(response.body.thumbnails.large);
 
       // Verify thumbnail files exist with correct naming convention
-      const basename = path.basename(
-        response.body.filename,
-        path.extname(response.body.filename),
-      );
+      const basename = path.basename(response.body.filename, path.extname(response.body.filename));
       expect(response.body.thumbnails.thumb).toBe(`${basename}-thumb.webp`);
       expect(response.body.thumbnails.small).toBe(`${basename}-small.webp`);
       expect(response.body.thumbnails.medium).toBe(`${basename}-medium.webp`);
@@ -532,10 +457,7 @@ describe('Media API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
 
       const imageBuffer = await createLargeTestImageBuffer('png');
-      const response = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', imageBuffer, 'png-thumbnail-test.png');
+      const response = await request(app).post('/api/media').set('Cookie', cookies).attach('file', imageBuffer, 'png-thumbnail-test.png');
 
       expect(response.status).toBe(201);
       expect(response.body.thumbnails).not.toBeNull();
@@ -559,10 +481,7 @@ describe('Media API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
 
       const imageBuffer = await createLargeTestImageBuffer('webp');
-      const response = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', imageBuffer, 'webp-thumbnail-test.webp');
+      const response = await request(app).post('/api/media').set('Cookie', cookies).attach('file', imageBuffer, 'webp-thumbnail-test.webp');
 
       expect(response.status).toBe(201);
       expect(response.body.thumbnails).not.toBeNull();
@@ -582,16 +501,12 @@ describe('Media API Integration Tests', () => {
     it('should NOT generate thumbnails for SVG upload', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const svgContent =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="red" width="100" height="100"/></svg>';
+      const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="red" width="100" height="100"/></svg>';
 
-      const response = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', Buffer.from(svgContent), {
-          filename: 'no-thumbnails.svg',
-          contentType: 'image/svg+xml',
-        });
+      const response = await request(app).post('/api/media').set('Cookie', cookies).attach('file', Buffer.from(svgContent), {
+        filename: 'no-thumbnails.svg',
+        contentType: 'image/svg+xml',
+      });
 
       expect(response.status).toBe(201);
       expect(response.body.thumbnails).toBeNull();
@@ -603,10 +518,7 @@ describe('Media API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
 
       const imageBuffer = await createLargeTestImageBuffer('jpeg');
-      const uploadResponse = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', imageBuffer, 'response-test.jpg');
+      const uploadResponse = await request(app).post('/api/media').set('Cookie', cookies).attach('file', imageBuffer, 'response-test.jpg');
 
       expect(uploadResponse.status).toBe(201);
       const mediaId = uploadResponse.body.id;
@@ -619,9 +531,7 @@ describe('Media API Integration Tests', () => {
       uploadedFiles.push(uploadResponse.body.thumbnails.large);
 
       // Fetch the media and verify thumbnails are included
-      const getResponse = await request(app)
-        .get(`/api/media/${mediaId}`)
-        .set('Cookie', cookies);
+      const getResponse = await request(app).get(`/api/media/${mediaId}`).set('Cookie', cookies);
 
       expect(getResponse.status).toBe(200);
       expect(getResponse.body.thumbnails).not.toBeNull();
@@ -638,10 +548,7 @@ describe('Media API Integration Tests', () => {
 
       // Upload image
       const imageBuffer = await createLargeTestImageBuffer('jpeg');
-      const uploadResponse = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', imageBuffer, 'regenerate-test.jpg');
+      const uploadResponse = await request(app).post('/api/media').set('Cookie', cookies).attach('file', imageBuffer, 'regenerate-test.jpg');
 
       expect(uploadResponse.status).toBe(201);
       const mediaId = uploadResponse.body.id;
@@ -655,9 +562,7 @@ describe('Media API Integration Tests', () => {
       uploadedFiles.push(originalThumbnails.large);
 
       // Regenerate thumbnails
-      const regenerateResponse = await request(app)
-        .post(`/api/media/${mediaId}/regenerate-thumbnails`)
-        .set('Cookie', cookies);
+      const regenerateResponse = await request(app).post(`/api/media/${mediaId}/regenerate-thumbnails`).set('Cookie', cookies);
 
       expect(regenerateResponse.status).toBe(200);
       expect(regenerateResponse.body.thumbnails).not.toBeNull();
@@ -667,25 +572,19 @@ describe('Media API Integration Tests', () => {
       expect(regenerateResponse.body.thumbnails).toHaveProperty('large');
 
       // Thumbnails should have same filenames (same original file)
-      expect(regenerateResponse.body.thumbnails.thumb).toBe(
-        originalThumbnails.thumb,
-      );
+      expect(regenerateResponse.body.thumbnails.thumb).toBe(originalThumbnails.thumb);
     });
 
     it('should return 404 for non-existent media', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .post('/api/media/99999/regenerate-thumbnails')
-        .set('Cookie', cookies);
+      const response = await request(app).post('/api/media/99999/regenerate-thumbnails').set('Cookie', cookies);
 
       expect(response.status).toBe(404);
     });
 
     it('should return 401 without authentication', async () => {
-      const response = await request(app).post(
-        '/api/media/1/regenerate-thumbnails',
-      );
+      const response = await request(app).post('/api/media/1/regenerate-thumbnails');
 
       expect(response.status).toBe(401);
     });
@@ -694,25 +593,19 @@ describe('Media API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
 
       // Upload SVG
-      const svgContent =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="blue" width="100" height="100"/></svg>';
+      const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="blue" width="100" height="100"/></svg>';
 
-      const uploadResponse = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', Buffer.from(svgContent), {
-          filename: 'svg-regenerate.svg',
-          contentType: 'image/svg+xml',
-        });
+      const uploadResponse = await request(app).post('/api/media').set('Cookie', cookies).attach('file', Buffer.from(svgContent), {
+        filename: 'svg-regenerate.svg',
+        contentType: 'image/svg+xml',
+      });
 
       expect(uploadResponse.status).toBe(201);
       const mediaId = uploadResponse.body.id;
       uploadedFiles.push(uploadResponse.body.filename);
 
       // Regenerate thumbnails (should succeed but no thumbnails)
-      const regenerateResponse = await request(app)
-        .post(`/api/media/${mediaId}/regenerate-thumbnails`)
-        .set('Cookie', cookies);
+      const regenerateResponse = await request(app).post(`/api/media/${mediaId}/regenerate-thumbnails`).set('Cookie', cookies);
 
       expect(regenerateResponse.status).toBe(200);
       expect(regenerateResponse.body.thumbnails).toBeNull();
@@ -725,16 +618,10 @@ describe('Media API Integration Tests', () => {
 
       // Upload multiple images
       const imageBuffer1 = await createLargeTestImageBuffer('jpeg');
-      const uploadResponse1 = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', imageBuffer1, 'batch-test-1.jpg');
+      const uploadResponse1 = await request(app).post('/api/media').set('Cookie', cookies).attach('file', imageBuffer1, 'batch-test-1.jpg');
 
       const imageBuffer2 = await createLargeTestImageBuffer('png');
-      const uploadResponse2 = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', imageBuffer2, 'batch-test-2.png');
+      const uploadResponse2 = await request(app).post('/api/media').set('Cookie', cookies).attach('file', imageBuffer2, 'batch-test-2.png');
 
       // Track files for cleanup
       uploadedFiles.push(uploadResponse1.body.filename);
@@ -749,9 +636,7 @@ describe('Media API Integration Tests', () => {
       uploadedFiles.push(uploadResponse2.body.thumbnails.large);
 
       // Regenerate all thumbnails
-      const regenerateResponse = await request(app)
-        .post('/api/media/regenerate-thumbnails')
-        .set('Cookie', cookies);
+      const regenerateResponse = await request(app).post('/api/media/regenerate-thumbnails').set('Cookie', cookies);
 
       expect(regenerateResponse.status).toBe(200);
       expect(regenerateResponse.body).toHaveProperty('processed');
@@ -765,32 +650,24 @@ describe('Media API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
 
       // Upload an SVG
-      const svgContent =
-        '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="green" width="100" height="100"/></svg>';
+      const svgContent = '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="green" width="100" height="100"/></svg>';
 
-      const svgResponse = await request(app)
-        .post('/api/media')
-        .set('Cookie', cookies)
-        .attach('file', Buffer.from(svgContent), {
-          filename: 'batch-skip.svg',
-          contentType: 'image/svg+xml',
-        });
+      const svgResponse = await request(app).post('/api/media').set('Cookie', cookies).attach('file', Buffer.from(svgContent), {
+        filename: 'batch-skip.svg',
+        contentType: 'image/svg+xml',
+      });
 
       uploadedFiles.push(svgResponse.body.filename);
 
       // Regenerate all thumbnails
-      const regenerateResponse = await request(app)
-        .post('/api/media/regenerate-thumbnails')
-        .set('Cookie', cookies);
+      const regenerateResponse = await request(app).post('/api/media/regenerate-thumbnails').set('Cookie', cookies);
 
       expect(regenerateResponse.status).toBe(200);
       expect(regenerateResponse.body.skipped).toBeGreaterThanOrEqual(1);
     });
 
     it('should return 401 without authentication', async () => {
-      const response = await request(app).post(
-        '/api/media/regenerate-thumbnails',
-      );
+      const response = await request(app).post('/api/media/regenerate-thumbnails');
 
       expect(response.status).toBe(401);
     });
@@ -799,9 +676,7 @@ describe('Media API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
 
       // Don't upload any media
-      const regenerateResponse = await request(app)
-        .post('/api/media/regenerate-thumbnails')
-        .set('Cookie', cookies);
+      const regenerateResponse = await request(app).post('/api/media/regenerate-thumbnails').set('Cookie', cookies);
 
       expect(regenerateResponse.status).toBe(200);
       expect(regenerateResponse.body).toEqual({

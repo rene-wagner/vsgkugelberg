@@ -30,28 +30,13 @@ export const createEventValidator = [
     .isLength({ min: 3, max: 200 })
     .withMessage('Title must be between 3 and 200 characters'),
 
-  body('description')
-    .optional()
-    .isString()
-    .withMessage('Description must be a string'),
+  body('description').optional().isString().withMessage('Description must be a string'),
 
-  body('startDate')
-    .notEmpty()
-    .withMessage('Start date is required')
-    .isISO8601()
-    .withMessage('Start date must be a valid ISO 8601 date'),
+  body('startDate').notEmpty().withMessage('Start date is required').isISO8601().withMessage('Start date must be a valid ISO 8601 date'),
 
-  body('endDate')
-    .notEmpty()
-    .withMessage('End date is required')
-    .isISO8601()
-    .withMessage('End date must be a valid ISO 8601 date'),
+  body('endDate').notEmpty().withMessage('End date is required').isISO8601().withMessage('End date must be a valid ISO 8601 date'),
 
-  body('isFullDay')
-    .optional()
-    .isBoolean()
-    .withMessage('isFullDay must be a boolean')
-    .toBoolean(),
+  body('isFullDay').optional().isBoolean().withMessage('isFullDay must be a boolean').toBoolean(),
 
   body('location')
     .optional()
@@ -65,9 +50,7 @@ export const createEventValidator = [
     .isString()
     .withMessage('Recurrence must be a string')
     .custom(isValidRRule)
-    .withMessage(
-      'Recurrence must be a valid RRULE string (e.g., FREQ=WEEKLY;BYDAY=MO,WE)',
-    ),
+    .withMessage('Recurrence must be a valid RRULE string (e.g., FREQ=WEEKLY;BYDAY=MO,WE)'),
 
   body('category')
     .notEmpty()
@@ -77,32 +60,15 @@ export const createEventValidator = [
 ];
 
 export const updateEventValidator = [
-  body('title')
-    .optional()
-    .trim()
-    .isLength({ min: 3, max: 200 })
-    .withMessage('Title must be between 3 and 200 characters'),
+  body('title').optional().trim().isLength({ min: 3, max: 200 }).withMessage('Title must be between 3 and 200 characters'),
 
-  body('description')
-    .optional()
-    .isString()
-    .withMessage('Description must be a string'),
+  body('description').optional().isString().withMessage('Description must be a string'),
 
-  body('startDate')
-    .optional()
-    .isISO8601()
-    .withMessage('Start date must be a valid ISO 8601 date'),
+  body('startDate').optional().isISO8601().withMessage('Start date must be a valid ISO 8601 date'),
 
-  body('endDate')
-    .optional()
-    .isISO8601()
-    .withMessage('End date must be a valid ISO 8601 date'),
+  body('endDate').optional().isISO8601().withMessage('End date must be a valid ISO 8601 date'),
 
-  body('isFullDay')
-    .optional()
-    .isBoolean()
-    .withMessage('isFullDay must be a boolean')
-    .toBoolean(),
+  body('isFullDay').optional().isBoolean().withMessage('isFullDay must be a boolean').toBoolean(),
 
   body('location')
     .optional()
@@ -116,9 +82,7 @@ export const updateEventValidator = [
     .isString()
     .withMessage('Recurrence must be a string')
     .custom(isValidRRule)
-    .withMessage(
-      'Recurrence must be a valid RRULE string (e.g., FREQ=WEEKLY;BYDAY=MO,WE)',
-    ),
+    .withMessage('Recurrence must be a valid RRULE string (e.g., FREQ=WEEKLY;BYDAY=MO,WE)'),
 
   body('category')
     .optional()
@@ -127,26 +91,13 @@ export const updateEventValidator = [
 ];
 
 export const idParamValidator = [
-  param('id')
-    .notEmpty()
-    .withMessage('ID is required')
-    .isInt({ min: 1 })
-    .withMessage('ID must be a positive integer')
-    .toInt(),
+  param('id').notEmpty().withMessage('ID is required').isInt({ min: 1 }).withMessage('ID must be a positive integer').toInt(),
 ];
 
 export const eventsQueryValidator = [
-  query('start')
-    .notEmpty()
-    .withMessage('Start date is required')
-    .isISO8601()
-    .withMessage('Start date must be a valid ISO 8601 date'),
+  query('start').notEmpty().withMessage('Start date is required').isISO8601().withMessage('Start date must be a valid ISO 8601 date'),
 
-  query('end')
-    .notEmpty()
-    .withMessage('End date is required')
-    .isISO8601()
-    .withMessage('End date must be a valid ISO 8601 date'),
+  query('end').notEmpty().withMessage('End date is required').isISO8601().withMessage('End date must be a valid ISO 8601 date'),
 
   query('category')
     .optional()

@@ -54,12 +54,7 @@ const groupOrderChanged = ref(false);
 
 // Session pending changes (keyed by groupId)
 const pendingSessionCreates = ref<Map<number, LocalSession[]>>(new Map());
-const pendingSessionUpdates = ref<
-  Map<
-    number,
-    Map<number, { day: string; time: string; locationId: number | null }>
-  >
->(new Map());
+const pendingSessionUpdates = ref<Map<number, Map<number, { day: string; time: string; locationId: number | null }>>>(new Map());
 const pendingSessionDeletes = ref<Map<number, Set<number>>>(new Map());
 const sessionOrderChanged = ref<Set<number>>(new Set());
 const pendingSessionOrders = ref<Map<number, number[]>>(new Map());
@@ -106,10 +101,8 @@ const displayGroups = computed({
         const updatedGroup = pendingUpdate ? { ...g, ...pendingUpdate } : g;
 
         // Process sessions for this group
-        const deletedSessions =
-          pendingSessionDeletes.value.get(g.id) || new Set();
-        const sessionUpdates =
-          pendingSessionUpdates.value.get(g.id) || new Map();
+        const deletedSessions = pendingSessionDeletes.value.get(g.id) || new Set();
+        const sessionUpdates = pendingSessionUpdates.value.get(g.id) || new Map();
         const newSessions = pendingSessionCreates.value.get(g.id) || [];
 
         let currentSessions = updatedGroup.sessions
@@ -308,18 +301,11 @@ function handleSessionUpdate(
   }
 }
 
-function handleSessionDelete(
-  groupId: number,
-  sessionId: number,
-  isNewSession: boolean,
-  isNewGroup: boolean,
-) {
+function handleSessionDelete(groupId: number, sessionId: number, isNewSession: boolean, isNewGroup: boolean) {
   if (isNewGroup) {
     const group = pendingGroupCreates.value.get(groupId);
     if (group) {
-      group.sessions = group.sessions.filter(
-        (s) => (s as LocalSession)._tempId !== sessionId,
-      );
+      group.sessions = group.sessions.filter((s) => (s as LocalSession)._tempId !== sessionId);
       // Trigger reactivity
       pendingGroupCreates.value = new Map(pendingGroupCreates.value);
     }
@@ -383,25 +369,16 @@ async function handleSave() {
   try {
     // 1. Delete groups (cascades to sessions)
     for (const groupId of pendingGroupDeletes.value) {
-      const success = await trainingStore.deleteGroup(
-        props.departmentSlug,
-        groupId,
-      );
-      if (!success)
-        throw new Error('Fehler beim Löschen einer Trainingsgruppe');
+      const success = await trainingStore.deleteGroup(props.departmentSlug, groupId);
+      if (!success) throw new Error('Fehler beim Löschen einer Trainingsgruppe');
     }
 
     // 2. Delete sessions from existing groups
     for (const [groupId, sessionIds] of pendingSessionDeletes.value) {
       if (pendingGroupDeletes.value.has(groupId)) continue; // Group already deleted
       for (const sessionId of sessionIds) {
-        const success = await trainingStore.deleteSession(
-          props.departmentSlug,
-          groupId,
-          sessionId,
-        );
-        if (!success)
-          throw new Error('Fehler beim Löschen einer Trainingszeit');
+        const success = await trainingStore.deleteSession(props.departmentSlug, groupId, sessionId);
+        if (!success) throw new Error('Fehler beim Löschen einer Trainingszeit');
       }
     }
 
@@ -416,12 +393,8 @@ async function handleSave() {
         variant: group.variant,
       };
 
-      const createdGroup = await trainingStore.createGroup(
-        props.departmentSlug,
-        createDto,
-      );
-      if (!createdGroup)
-        throw new Error('Fehler beim Erstellen einer Trainingsgruppe');
+      const createdGroup = await trainingStore.createGroup(props.departmentSlug, createDto);
+      if (!createdGroup) throw new Error('Fehler beim Erstellen einer Trainingsgruppe');
 
       // Update sortableIds with the real ID
       const groupIdx = sortableIds.value.indexOf(group.id);
@@ -437,13 +410,8 @@ async function handleSave() {
           time: session.time,
           locationId: session.locationId,
         };
-        const createdSession = await trainingStore.createSession(
-          props.departmentSlug,
-          createdGroup.id,
-          sessionDto,
-        );
-        if (!createdSession)
-          throw new Error('Fehler beim Erstellen einer Trainingszeit');
+        const createdSession = await trainingStore.createSession(props.departmentSlug, createdGroup.id, sessionDto);
+        if (!createdSession) throw new Error('Fehler beim Erstellen einer Trainingszeit');
       }
     }
 
@@ -455,13 +423,8 @@ async function handleSave() {
         icon: data.icon,
         variant: data.variant,
       };
-      const result = await trainingStore.updateGroup(
-        props.departmentSlug,
-        groupId,
-        updateDto,
-      );
-      if (!result)
-        throw new Error('Fehler beim Aktualisieren einer Trainingsgruppe');
+      const result = await trainingStore.updateGroup(props.departmentSlug, groupId, updateDto);
+      if (!result) throw new Error('Fehler beim Aktualisieren einer Trainingsgruppe');
     }
 
     // 5. Create new sessions for existing groups
@@ -474,13 +437,8 @@ async function handleSave() {
           time: session.time,
           locationId: session.locationId,
         };
-        const result = await trainingStore.createSession(
-          props.departmentSlug,
-          groupId,
-          sessionDto,
-        );
-        if (!result)
-          throw new Error('Fehler beim Erstellen einer Trainingszeit');
+        const result = await trainingStore.createSession(props.departmentSlug, groupId, sessionDto);
+        if (!result) throw new Error('Fehler beim Erstellen einer Trainingszeit');
 
         // Update pendingSessionOrders with real ID
         const groupOrder = pendingSessionOrders.value.get(groupId);
@@ -502,14 +460,8 @@ async function handleSave() {
           time: data.time,
           locationId: data.locationId,
         };
-        const result = await trainingStore.updateSession(
-          props.departmentSlug,
-          groupId,
-          sessionId,
-          updateDto,
-        );
-        if (!result)
-          throw new Error('Fehler beim Aktualisieren einer Trainingszeit');
+        const result = await trainingStore.updateSession(props.departmentSlug, groupId, sessionId, updateDto);
+        if (!result) throw new Error('Fehler beim Aktualisieren einer Trainingszeit');
       }
     }
 
@@ -517,12 +469,8 @@ async function handleSave() {
     if (groupOrderChanged.value) {
       const existingIds = sortableIds.value.filter((id) => id > 0);
       if (existingIds.length > 0) {
-        const result = await trainingStore.reorderGroups(
-          props.departmentSlug,
-          existingIds,
-        );
-        if (!result)
-          throw new Error('Fehler beim Sortieren der Trainingsgruppen');
+        const result = await trainingStore.reorderGroups(props.departmentSlug, existingIds);
+        if (!result) throw new Error('Fehler beim Sortieren der Trainingsgruppen');
       }
     }
 
@@ -531,17 +479,10 @@ async function handleSave() {
       if (pendingGroupDeletes.value.has(groupId)) continue;
       const group = displayGroups.value.find((g) => g.id === groupId);
       if (group) {
-        const sessionIds = group.sessions
-          .filter((s) => !(s as LocalSession)._isNew)
-          .map((s) => s.id);
+        const sessionIds = group.sessions.filter((s) => !(s as LocalSession)._isNew).map((s) => s.id);
         if (sessionIds.length > 0) {
-          const result = await trainingStore.reorderSessions(
-            props.departmentSlug,
-            groupId,
-            sessionIds,
-          );
-          if (!result)
-            throw new Error('Fehler beim Sortieren der Trainingszeiten');
+          const result = await trainingStore.reorderSessions(props.departmentSlug, groupId, sessionIds);
+          if (!result) throw new Error('Fehler beim Sortieren der Trainingszeiten');
         }
       }
     }
@@ -561,8 +502,7 @@ async function handleSave() {
     localGroups.value = [...trainingStore.trainingGroups];
     sortableIds.value = localGroups.value.map((g) => g.id);
   } catch (e) {
-    saveError.value =
-      e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
+    saveError.value = e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
   } finally {
     isSaving.value = false;
   }
@@ -572,22 +512,14 @@ async function handleSave() {
 <template>
   <div class="space-y-4">
     <!-- Error Message -->
-    <div
-      v-if="saveError"
-      class="bg-red-50 border border-red-200 rounded-xl p-4"
-    >
+    <div v-if="saveError" class="bg-red-50 border border-red-200 rounded-xl p-4">
       <p class="text-sm text-red-600 font-body">{{ saveError }}</p>
     </div>
 
     <!-- Empty State -->
-    <div
-      v-if="displayGroups.length === 0"
-      class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300"
-    >
+    <div v-if="displayGroups.length === 0" class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
       <FontAwesomeIcon icon="clock" size="2x" class="mb-4 text-gray-400" />
-      <p class="text-gray-500 font-body mb-4">
-        Noch keine Trainingsgruppen vorhanden.
-      </p>
+      <p class="text-gray-500 font-body mb-4">Noch keine Trainingsgruppen vorhanden.</p>
       <button
         type="button"
         class="px-4 py-2 bg-vsg-blue-600 text-white font-body text-sm rounded-lg hover:bg-vsg-blue-700 transition-colors"
@@ -613,36 +545,14 @@ async function handleSave() {
           :group="group"
           :is-new="!!group._isNew"
           :locations="locationsStore.locations"
-          @update="
-            (data) =>
-              handleGroupUpdate(group._tempId || group.id, data, !!group._isNew)
-          "
+          @update="(data) => handleGroupUpdate(group._tempId || group.id, data, !!group._isNew)"
           @delete="handleGroupDelete(group._tempId || group.id, !!group._isNew)"
-          @session-add="
-            handleAddSession(group._tempId || group.id, !!group._isNew)
-          "
+          @session-add="handleAddSession(group._tempId || group.id, !!group._isNew)"
           @session-update="
-            (sessionId, data, isNewSession) =>
-              handleSessionUpdate(
-                group._tempId || group.id,
-                sessionId,
-                data,
-                isNewSession,
-                !!group._isNew,
-              )
+            (sessionId, data, isNewSession) => handleSessionUpdate(group._tempId || group.id, sessionId, data, isNewSession, !!group._isNew)
           "
-          @session-delete="
-            (sessionId, isNewSession) =>
-              handleSessionDelete(
-                group._tempId || group.id,
-                sessionId,
-                isNewSession,
-                !!group._isNew,
-              )
-          "
-          @sessions-reorder="
-            (newSessions) => handleSessionsReorder(group.id, newSessions)
-          "
+          @session-delete="(sessionId, isNewSession) => handleSessionDelete(group._tempId || group.id, sessionId, isNewSession, !!group._isNew)"
+          @sessions-reorder="(newSessions) => handleSessionsReorder(group.id, newSessions)"
         />
       </VueDraggable>
 

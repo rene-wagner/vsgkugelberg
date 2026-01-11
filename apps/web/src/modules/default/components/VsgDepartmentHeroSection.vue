@@ -26,27 +26,16 @@ function handleAnchorClick(e: MouseEvent, anchor: string) {
 </script>
 
 <template>
-  <section
-    class="relative flex min-h-[70vh] items-center justify-center overflow-hidden pt-20"
-  >
+  <section class="relative flex min-h-[70vh] items-center justify-center overflow-hidden pt-20">
     <!-- Background gradient overlay -->
-    <div
-      class="absolute inset-0 bg-linear-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"
-    />
+    <div class="absolute inset-0 bg-linear-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent" />
 
     <!-- Decorative elements -->
-    <div
-      class="absolute right-0 top-1/4 h-96 w-96 rounded-full bg-vsg-gold-400/10 blur-3xl"
-    />
-    <div
-      class="absolute bottom-1/4 left-0 h-80 w-80 rounded-full bg-vsg-blue-500/20 blur-3xl"
-    />
+    <div class="absolute right-0 top-1/4 h-96 w-96 rounded-full bg-vsg-gold-400/10 blur-3xl" />
+    <div class="absolute bottom-1/4 left-0 h-80 w-80 rounded-full bg-vsg-blue-500/20 blur-3xl" />
 
     <!-- Optional background icon -->
-    <div
-      v-if="iconUrl"
-      class="absolute right-10 top-1/2 -translate-y-1/2 opacity-7"
-    >
+    <div v-if="iconUrl" class="absolute right-10 top-1/2 -translate-y-1/2 opacity-7">
       <img :src="iconUrl" alt="" class="h-125 w-125 object-contain" />
     </div>
 

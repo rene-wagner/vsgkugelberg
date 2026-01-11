@@ -3,11 +3,7 @@ import request from 'supertest';
 import jwt from 'jsonwebtoken';
 import { app } from '@/app';
 import { jwtConfig } from '@/config/jwt.config';
-import {
-  createTestUserWithPassword,
-  extractCookieValue,
-  parseCookieAttributes,
-} from '../helpers';
+import { createTestUserWithPassword, extractCookieValue, parseCookieAttributes } from '../helpers';
 
 describe('Auth API Integration Tests', () => {
   const testPassword = 'Password123';
@@ -16,11 +12,7 @@ describe('Auth API Integration Tests', () => {
 
   describe('POST /api/auth/login - Success Cases', () => {
     it('should login successfully with valid username and password', async () => {
-      const user = await createTestUserWithPassword(
-        authUsername,
-        authEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
       const response = await request(app).post('/api/auth/login').send({
         username: authUsername,
@@ -38,11 +30,7 @@ describe('Auth API Integration Tests', () => {
     });
 
     it('should login successfully with valid email and password', async () => {
-      const user = await createTestUserWithPassword(
-        authUsername,
-        authEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
       const response = await request(app).post('/api/auth/login').send({
         username: authEmail, // Using email in username field
@@ -132,19 +120,15 @@ describe('Auth API Integration Tests', () => {
       // Response for non-existent user should be similar to wrong password
       await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
-      const nonExistentResponse = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: 'nonexistent',
-          password: testPassword,
-        });
+      const nonExistentResponse = await request(app).post('/api/auth/login').send({
+        username: 'nonexistent',
+        password: testPassword,
+      });
 
-      const wrongPasswordResponse = await request(app)
-        .post('/api/auth/login')
-        .send({
-          username: authUsername,
-          password: 'WrongPassword123',
-        });
+      const wrongPasswordResponse = await request(app).post('/api/auth/login').send({
+        username: authUsername,
+        password: 'WrongPassword123',
+      });
 
       // Both should return 401
       expect(nonExistentResponse.status).toBe(401);
@@ -166,9 +150,7 @@ describe('Auth API Integration Tests', () => {
       const cookies = response.headers['set-cookie'];
       expect(cookies).toBeDefined();
 
-      const accessTokenCookie = Array.isArray(cookies)
-        ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies;
+      const accessTokenCookie = Array.isArray(cookies) ? cookies.find((cookie) => cookie.startsWith('access_token=')) : cookies;
 
       expect(accessTokenCookie).toBeDefined();
     });
@@ -182,9 +164,7 @@ describe('Auth API Integration Tests', () => {
       });
 
       const cookies = response.headers['set-cookie'];
-      const accessTokenCookie = Array.isArray(cookies)
-        ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies;
+      const accessTokenCookie = Array.isArray(cookies) ? cookies.find((cookie) => cookie.startsWith('access_token=')) : cookies;
 
       expect(accessTokenCookie).toContain('HttpOnly');
     });
@@ -198,9 +178,7 @@ describe('Auth API Integration Tests', () => {
       });
 
       const cookies = response.headers['set-cookie'];
-      const accessTokenCookie = Array.isArray(cookies)
-        ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies;
+      const accessTokenCookie = Array.isArray(cookies) ? cookies.find((cookie) => cookie.startsWith('access_token=')) : cookies;
 
       const attributes = parseCookieAttributes(accessTokenCookie);
       expect(attributes.sameSite).toBe('strict');
@@ -215,9 +193,7 @@ describe('Auth API Integration Tests', () => {
       });
 
       const cookies = response.headers['set-cookie'];
-      const accessTokenCookie = Array.isArray(cookies)
-        ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies;
+      const accessTokenCookie = Array.isArray(cookies) ? cookies.find((cookie) => cookie.startsWith('access_token=')) : cookies;
 
       const attributes = parseCookieAttributes(accessTokenCookie);
       // maxAge in cookie is in seconds, so 3600000ms = 3600s
@@ -233,9 +209,7 @@ describe('Auth API Integration Tests', () => {
       });
 
       const cookies = response.headers['set-cookie'];
-      const accessTokenCookie = Array.isArray(cookies)
-        ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies;
+      const accessTokenCookie = Array.isArray(cookies) ? cookies.find((cookie) => cookie.startsWith('access_token=')) : cookies;
 
       const attributes = parseCookieAttributes(accessTokenCookie);
 
@@ -287,11 +261,7 @@ describe('Auth API Integration Tests', () => {
     });
 
     it('should have JWT token with user ID in sub claim', async () => {
-      const user = await createTestUserWithPassword(
-        authUsername,
-        authEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
       const response = await request(app).post('/api/auth/login').send({
         username: authUsername,
@@ -310,17 +280,12 @@ describe('Auth API Integration Tests', () => {
       const response = await request(app).post('/api/auth/logout');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty(
-        'message',
-        'Logged out successfully',
-      );
+      expect(response.body).toHaveProperty('message', 'Logged out successfully');
 
       const cookies = response.headers['set-cookie'];
       expect(cookies).toBeDefined();
 
-      const accessTokenCookie = Array.isArray(cookies)
-        ? cookies.find((cookie) => cookie.startsWith('access_token='))
-        : cookies;
+      const accessTokenCookie = Array.isArray(cookies) ? cookies.find((cookie) => cookie.startsWith('access_token=')) : cookies;
 
       expect(accessTokenCookie).toBeDefined();
       // Cookie should be cleared (empty value or expired)
@@ -331,10 +296,7 @@ describe('Auth API Integration Tests', () => {
       const response = await request(app).post('/api/auth/logout');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty(
-        'message',
-        'Logged out successfully',
-      );
+      expect(response.body).toHaveProperty('message', 'Logged out successfully');
     });
 
     it('should return success message', async () => {
@@ -371,11 +333,7 @@ describe('Auth API Integration Tests', () => {
     });
 
     it('should handle special characters in username', async () => {
-      await createTestUserWithPassword(
-        'user<script>alert(1)</script>',
-        authEmail,
-        testPassword,
-      );
+      await createTestUserWithPassword('user<script>alert(1)</script>', authEmail, testPassword);
 
       const response = await request(app).post('/api/auth/login').send({
         username: 'user<script>alert(1)</script>',
@@ -429,11 +387,7 @@ describe('Auth API Integration Tests', () => {
 
   describe('POST /api/auth/login - Edge Cases', () => {
     it('should be case-sensitive for username', async () => {
-      await createTestUserWithPassword(
-        'auth_TestUser',
-        authEmail,
-        testPassword,
-      );
+      await createTestUserWithPassword('auth_TestUser', authEmail, testPassword);
 
       const response = await request(app).post('/api/auth/login').send({
         username: authUsername, // lowercase: auth_testuser
@@ -544,17 +498,13 @@ describe('Auth API Integration Tests', () => {
     });
 
     it('should have rate limiting middleware applied to forgot-password endpoint', async () => {
-      const response = await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: 'test@example.com' });
+      const response = await request(app).post('/api/auth/forgot-password').send({ email: 'test@example.com' });
 
       expect(response.status).toBe(200);
     });
 
     it('should have rate limiting middleware applied to reset-password endpoint', async () => {
-      const response = await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token: 'invalid-token', password: 'NewPassword123' });
+      const response = await request(app).post('/api/auth/reset-password').send({ token: 'invalid-token', password: 'NewPassword123' });
 
       // Will be 400 due to invalid token, but endpoint is accessible
       expect(response.status).toBe(400);

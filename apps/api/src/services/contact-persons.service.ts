@@ -1,9 +1,5 @@
 import { NotFoundException, BadRequestException } from '@/errors/http-errors';
-import {
-  CreateContactPersonDto,
-  UpdateContactPersonDto,
-  ContactPersonWithImage,
-} from '@/types/contact-person.types';
+import { CreateContactPersonDto, UpdateContactPersonDto, ContactPersonWithImage } from '@/types/contact-person.types';
 import { PaginatedResponse } from '@/types/pagination.types';
 import { Prisma, prisma } from '@/lib/prisma.lib';
 
@@ -20,16 +16,11 @@ export class ContactPersonsService {
     }
 
     if (!ALLOWED_IMAGE_MIMETYPES.includes(media.mimetype)) {
-      throw new BadRequestException(
-        'Profile image must be a JPEG, PNG, or WebP file',
-      );
+      throw new BadRequestException('Profile image must be a JPEG, PNG, or WebP file');
     }
   }
 
-  async findAll(
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<PaginatedResponse<ContactPersonWithImage>> {
+  async findAll(page: number = 1, limit: number = 10): Promise<PaginatedResponse<ContactPersonWithImage>> {
     const skip = (page - 1) * limit;
 
     const [contactPersons, total] = await Promise.all([
@@ -68,9 +59,7 @@ export class ContactPersonsService {
     return contactPerson;
   }
 
-  async create(
-    createContactPersonDto: CreateContactPersonDto,
-  ): Promise<ContactPersonWithImage> {
+  async create(createContactPersonDto: CreateContactPersonDto): Promise<ContactPersonWithImage> {
     // Validate profile image if provided
     if (createContactPersonDto.profileImageId !== undefined) {
       await this.validateProfileImage(createContactPersonDto.profileImageId);
@@ -90,10 +79,7 @@ export class ContactPersonsService {
     });
   }
 
-  async update(
-    id: number,
-    updateContactPersonDto: UpdateContactPersonDto,
-  ): Promise<ContactPersonWithImage> {
+  async update(id: number, updateContactPersonDto: UpdateContactPersonDto): Promise<ContactPersonWithImage> {
     // First check if contact person exists
     const existingContactPerson = await prisma.contactPerson.findUnique({
       where: { id },
@@ -104,10 +90,7 @@ export class ContactPersonsService {
     }
 
     // Validate profile image if provided (not null)
-    if (
-      updateContactPersonDto.profileImageId !== undefined &&
-      updateContactPersonDto.profileImageId !== null
-    ) {
+    if (updateContactPersonDto.profileImageId !== undefined && updateContactPersonDto.profileImageId !== null) {
       await this.validateProfileImage(updateContactPersonDto.profileImageId);
     }
 

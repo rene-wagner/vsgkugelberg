@@ -19,9 +19,7 @@ const isUploading = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 const previewIcon = ref<MediaItem | null>(null);
 
-const hasContent = computed(
-  () => mediaStore.media.length > 0 || mediaStore.folders.length > 0,
-);
+const hasContent = computed(() => mediaStore.media.length > 0 || mediaStore.folders.length > 0);
 
 // Filter media to show only SVG files
 const svgMedia = computed(() => {
@@ -49,10 +47,7 @@ async function openGallery() {
 }
 
 async function loadFolder(folderId: number | null) {
-  const promises: Promise<any>[] = [
-    mediaStore.fetchMedia(1, 100, folderId),
-    mediaStore.fetchFolders(folderId),
-  ];
+  const promises: Promise<any>[] = [mediaStore.fetchMedia(1, 100, folderId), mediaStore.fetchFolders(folderId)];
 
   if (folderId !== null) {
     promises.push(mediaStore.fetchFolderDetails(folderId));
@@ -122,12 +117,7 @@ async function handleFileUpload(event: Event) {
         class="w-24 h-24 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center bg-gray-50 overflow-hidden"
         :class="{ 'border-solid border-vsg-blue-300': previewIcon }"
       >
-        <img
-          v-if="previewIcon"
-          :src="mediaStore.getMediaUrl(previewIcon)"
-          :alt="previewIcon.originalName"
-          class="w-16 h-16 object-contain"
-        />
+        <img v-if="previewIcon" :src="mediaStore.getMediaUrl(previewIcon)" :alt="previewIcon.originalName" class="w-16 h-16 object-contain" />
         <FontAwesomeIcon v-else icon="image" class="text-gray-300" />
       </div>
 
@@ -170,36 +160,16 @@ async function handleFileUpload(event: Event) {
     </div>
 
     <!-- Hidden File Input -->
-    <input
-      ref="fileInput"
-      type="file"
-      class="hidden"
-      accept=".svg,image/svg+xml"
-      @change="handleFileUpload"
-    />
+    <input ref="fileInput" type="file" class="hidden" accept=".svg,image/svg+xml" @change="handleFileUpload" />
 
     <!-- Gallery Modal -->
     <Teleport to="body">
-      <div
-        v-if="showGallery"
-        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-        @click.self="closeGallery"
-      >
-        <div
-          class="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[80vh] flex flex-col"
-        >
+      <div v-if="showGallery" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" @click.self="closeGallery">
+        <div class="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[80vh] flex flex-col">
           <!-- Header -->
-          <div
-            class="flex items-center justify-between px-6 py-4 border-b border-gray-200"
-          >
-            <h3 class="font-display text-lg tracking-wider text-vsg-blue-900">
-              SVG-Icon wählen
-            </h3>
-            <button
-              type="button"
-              class="p-1 text-gray-400 hover:text-gray-600 transition-colors"
-              @click="closeGallery"
-            >
+          <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <h3 class="font-display text-lg tracking-wider text-vsg-blue-900">SVG-Icon wählen</h3>
+            <button type="button" class="p-1 text-gray-400 hover:text-gray-600 transition-colors" @click="closeGallery">
               <FontAwesomeIcon icon="xmark" />
             </button>
           </div>
@@ -220,14 +190,10 @@ async function handleFileUpload(event: Event) {
 
             <!-- Empty State -->
             <div v-if="!hasContent" class="text-center py-12">
-              <div
-                class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
-              >
+              <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <FontAwesomeIcon icon="image" class="text-gray-400" />
               </div>
-              <p class="font-body text-gray-500">
-                Keine SVG-Dateien in der Mediathek.
-              </p>
+              <p class="font-body text-gray-500">Keine SVG-Dateien in der Mediathek.</p>
               <button
                 type="button"
                 class="mt-4 px-4 py-2 text-sm font-body bg-vsg-blue-600 text-white rounded-lg hover:bg-vsg-blue-700 transition-colors"
@@ -238,10 +204,7 @@ async function handleFileUpload(event: Event) {
             </div>
 
             <!-- SVG Grid -->
-            <div
-              v-else
-              class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3"
-            >
+            <div v-else class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3">
               <!-- Back to parent -->
               <button
                 v-if="mediaStore.currentFolderId !== null"
@@ -261,9 +224,7 @@ async function handleFileUpload(event: Event) {
                 @click="loadFolder(folder.id)"
               >
                 <FontAwesomeIcon icon="folder" class="text-vsg-blue-400" />
-                <span
-                  class="mt-1 font-body text-[10px] text-vsg-blue-900 font-medium px-1 text-center truncate w-full"
-                >
+                <span class="mt-1 font-body text-[10px] text-vsg-blue-900 font-medium px-1 text-center truncate w-full">
                   {{ folder.name }}
                 </span>
               </button>
@@ -274,27 +235,17 @@ async function handleFileUpload(event: Event) {
                 :key="item.id"
                 type="button"
                 class="aspect-square border-2 rounded-lg p-2 flex items-center justify-center transition-all hover:border-vsg-blue-400 hover:bg-vsg-blue-50"
-                :class="[
-                  modelValue === item.id
-                    ? 'border-vsg-blue-600 bg-vsg-blue-50'
-                    : 'border-gray-200 bg-white',
-                ]"
+                :class="[modelValue === item.id ? 'border-vsg-blue-600 bg-vsg-blue-50' : 'border-gray-200 bg-white']"
                 :title="item.originalName"
                 @click="selectIcon(item)"
               >
-                <img
-                  :src="mediaStore.getMediaUrl(item)"
-                  :alt="item.originalName"
-                  class="w-full h-full object-contain"
-                />
+                <img :src="mediaStore.getMediaUrl(item)" :alt="item.originalName" class="w-full h-full object-contain" />
               </button>
             </div>
           </div>
 
           <!-- Footer -->
-          <div
-            class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3"
-          >
+          <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
             <button
               type="button"
               class="px-4 py-2 text-sm font-body border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"

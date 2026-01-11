@@ -2,11 +2,7 @@
 import { ref, watch, computed } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import TrainingSessionRow from './TrainingSessionRow.vue';
-import type {
-  DepartmentTrainingGroup,
-  DepartmentTrainingSession,
-  DepartmentLocation,
-} from '../types/department-extended.types';
+import type { DepartmentTrainingGroup, DepartmentTrainingSession, DepartmentLocation } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 interface LocalSession extends DepartmentTrainingSession {
@@ -32,12 +28,7 @@ const emit = defineEmits<{
   ): void;
   (e: 'delete'): void;
   (e: 'session-add'): void;
-  (
-    e: 'session-update',
-    sessionId: number,
-    data: { day: string; time: string; locationId: number | null },
-    isNew: boolean,
-  ): void;
+  (e: 'session-update', sessionId: number, data: { day: string; time: string; locationId: number | null }, isNew: boolean): void;
   (e: 'session-delete', sessionId: number, isNew: boolean): void;
   (e: 'sessions-reorder', newSessions: LocalSession[]): void;
 }>();
@@ -83,11 +74,7 @@ function handleAddSession() {
   emit('session-add');
 }
 
-function handleSessionUpdate(
-  sessionId: number,
-  data: { day: string; time: string; locationId: number | null },
-  isNew: boolean,
-) {
+function handleSessionUpdate(sessionId: number, data: { day: string; time: string; locationId: number | null }, isNew: boolean) {
   emit('session-update', sessionId, data, isNew);
 }
 
@@ -101,32 +88,17 @@ function handleSessionsDragEnd() {
 </script>
 
 <template>
-  <div
-    class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
-    :class="{ 'border-vsg-lime-500': isNew }"
-  >
+  <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm" :class="{ 'border-vsg-lime-500': isNew }">
     <!-- Card Header -->
-    <div
-      class="flex items-center gap-3 p-4 bg-gray-50 border-b border-gray-200"
-    >
+    <div class="flex items-center gap-3 p-4 bg-gray-50 border-b border-gray-200">
       <!-- Drag Handle -->
-      <div
-        class="cursor-grab text-gray-400 hover:text-gray-600 group-drag-handle shrink-0"
-      >
+      <div class="cursor-grab text-gray-400 hover:text-gray-600 group-drag-handle shrink-0">
         <FontAwesomeIcon icon="grip" />
       </div>
 
       <!-- Expand/Collapse Toggle -->
-      <button
-        type="button"
-        class="p-1 hover:bg-gray-200 rounded transition-colors"
-        @click="isExpanded = !isExpanded"
-      >
-        <FontAwesomeIcon
-          icon="chevron-down"
-          class="text-gray-500 transition-transform"
-          :class="{ 'rotate-180': !isExpanded }"
-        />
+      <button type="button" class="p-1 hover:bg-gray-200 rounded transition-colors" @click="isExpanded = !isExpanded">
+        <FontAwesomeIcon icon="chevron-down" class="text-gray-500 transition-transform" :class="{ 'rotate-180': !isExpanded }" />
       </button>
 
       <!-- Group Title -->
@@ -140,9 +112,7 @@ function handleSessionsDragEnd() {
       </div>
 
       <!-- Session Count Badge -->
-      <span
-        class="px-2 py-1 bg-vsg-blue-100 text-vsg-blue-700 text-xs font-body rounded"
-      >
+      <span class="px-2 py-1 bg-vsg-blue-100 text-vsg-blue-700 text-xs font-body rounded">
         {{ sessionCount }} {{ sessionCount === 1 ? 'Termin' : 'Termine' }}
       </span>
 
@@ -163,11 +133,7 @@ function handleSessionsDragEnd() {
       <div class="grid grid-cols-3 gap-3">
         <!-- Age Range -->
         <div>
-          <label
-            class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-          >
-            Altersbereich
-          </label>
+          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Altersbereich </label>
           <input
             v-model="ageRange"
             type="text"
@@ -178,11 +144,7 @@ function handleSessionsDragEnd() {
 
         <!-- Icon -->
         <div>
-          <label
-            class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-          >
-            Icon
-          </label>
+          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Icon </label>
           <select
             v-model="icon"
             class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
@@ -194,11 +156,7 @@ function handleSessionsDragEnd() {
 
         <!-- Variant -->
         <div>
-          <label
-            class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-          >
-            Variante
-          </label>
+          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Variante </label>
           <select
             v-model="variant"
             class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
@@ -211,11 +169,7 @@ function handleSessionsDragEnd() {
 
       <!-- Sessions Section -->
       <div>
-        <h4
-          class="font-body text-xs text-gray-500 uppercase tracking-wider mb-2"
-        >
-          Trainingszeiten
-        </h4>
+        <h4 class="font-body text-xs text-gray-500 uppercase tracking-wider mb-2">Trainingszeiten</h4>
 
         <!-- Sessions List -->
         <div v-if="localSessions.length > 0" class="space-y-2 mb-3">
@@ -233,32 +187,15 @@ function handleSessionsDragEnd() {
               :session="session"
               :is-new="session._isNew"
               :locations="locations"
-              @update="
-                (data) =>
-                  handleSessionUpdate(
-                    session._tempId || session.id,
-                    data,
-                    !!session._isNew,
-                  )
-              "
-              @delete="
-                handleSessionDelete(
-                  session._tempId || session.id,
-                  !!session._isNew,
-                )
-              "
+              @update="(data) => handleSessionUpdate(session._tempId || session.id, data, !!session._isNew)"
+              @delete="handleSessionDelete(session._tempId || session.id, !!session._isNew)"
             />
           </VueDraggable>
         </div>
 
         <!-- Empty State for Sessions -->
-        <div
-          v-else
-          class="text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 mb-3"
-        >
-          <p class="text-gray-500 font-body text-sm">
-            Noch keine Trainingszeiten.
-          </p>
+        <div v-else class="text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 mb-3">
+          <p class="text-gray-500 font-body text-sm">Noch keine Trainingszeiten.</p>
         </div>
 
         <!-- Add Session Button -->

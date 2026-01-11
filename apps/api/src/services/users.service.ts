@@ -7,10 +7,7 @@ import { PaginatedResponse } from '@/types/pagination.types';
 const passwordService = new PasswordService();
 
 export class UsersService {
-  async findAll(
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<PaginatedResponse<UserResponse>> {
+  async findAll(page: number = 1, limit: number = 10): Promise<PaginatedResponse<UserResponse>> {
     const skip = (page - 1) * limit;
 
     const [users, total] = await Promise.all([
@@ -81,22 +78,14 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new ConflictException(
-          `User with this username or email already exists.`,
-        );
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new ConflictException(`User with this username or email already exists.`);
       }
       throw error;
     }
   }
 
-  async update(
-    id: number,
-    updateUserDto: UpdateUserDto,
-  ): Promise<UserResponse> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserResponse> {
     await this.findOne(id);
 
     const updateData: Prisma.UserUpdateInput = {};
@@ -128,10 +117,7 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
         const target = error.meta?.target as string[];
         const field = target?.[0] || 'field';
         throw new ConflictException(`User with this ${field} already exists`);
@@ -157,10 +143,7 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         throw new NotFoundException(`User with ID ${id} not found`);
       }
       throw error;

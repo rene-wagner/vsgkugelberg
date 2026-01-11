@@ -26,18 +26,13 @@ export const useHistoryStore = defineStore('history', () => {
     }
   }
 
-  async function updateHistory(
-    data: UpdateHistoryDto,
-  ): Promise<HistoryContent | null> {
+  async function updateHistory(data: UpdateHistoryDto): Promise<HistoryContent | null> {
     isSaving.value = true;
     error.value = null;
     successMessage.value = null;
 
     try {
-      const updatedData = await api.patch<HistoryContent>(
-        '/api/history/admin',
-        data,
-      );
+      const updatedData = await api.patch<HistoryContent>('/api/history/admin', data);
       history.value = updatedData;
       successMessage.value = 'Historie erfolgreich gespeichert';
       return updatedData;

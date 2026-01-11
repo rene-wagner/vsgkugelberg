@@ -87,10 +87,7 @@ export const useUsersStore = defineStore('users', () => {
     }
   }
 
-  async function updateUser(
-    id: number,
-    data: UpdateUserData,
-  ): Promise<User | null> {
+  async function updateUser(id: number, data: UpdateUserData): Promise<User | null> {
     isLoading.value = true;
     error.value = null;
 

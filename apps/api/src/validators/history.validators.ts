@@ -29,14 +29,8 @@ export const updateHistoryValidator = [
   body('developmentChronicleGroups.*.id').optional().isNumeric(),
   body('developmentChronicleGroups.*.headline').isString().trim().notEmpty(),
   body('developmentChronicleGroups.*.content').isArray(),
-  body('developmentChronicleGroups.*.content.*.year')
-    .isString()
-    .trim()
-    .notEmpty(),
-  body('developmentChronicleGroups.*.content.*.description')
-    .isString()
-    .trim()
-    .notEmpty(),
+  body('developmentChronicleGroups.*.content.*.year').isString().trim().notEmpty(),
+  body('developmentChronicleGroups.*.content.*.description').isString().trim().notEmpty(),
 
   body('festivalsHeadline').optional().isString().trim().notEmpty(),
   body('festivalsDescription').optional().isString().trim(),
@@ -59,9 +53,7 @@ export const updateHistoryValidator = [
         where: { slug: value },
       });
       if (!department) {
-        throw new Error(
-          `Invalid achievement category: ${value}. Must be 'Alle' or a valid department slug.`,
-        );
+        throw new Error(`Invalid achievement category: ${value}. Must be 'Alle' or a valid department slug.`);
       }
       return true;
     }),

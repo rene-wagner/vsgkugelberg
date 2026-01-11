@@ -55,28 +55,14 @@ function handleCancel() {
         aria-labelledby="dialog-title"
         aria-modal="true"
       >
-        <div
-          class="fixed inset-0 bg-black/50 backdrop-blur-sm"
-          aria-hidden="true"
-          @click="handleCancel"
-        />
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" aria-hidden="true" @click="handleCancel" />
 
-        <div
-          class="relative bg-vsg-blue-900 rounded-lg shadow-2xl max-w-md w-full p-6 border border-vsg-gold-400/20"
-        >
+        <div class="relative bg-vsg-blue-900 rounded-lg shadow-2xl max-w-md w-full p-6 border border-vsg-gold-400/20">
           <div class="flex items-start justify-between mb-4">
-            <h3
-              id="dialog-title"
-              class="text-lg font-display tracking-wider text-white"
-            >
+            <h3 id="dialog-title" class="text-lg font-display tracking-wider text-white">
               {{ title }}
             </h3>
-            <button
-              type="button"
-              class="text-vsg-blue-300 hover:text-white transition-colors"
-              aria-label="Dialog schließen"
-              @click="handleCancel"
-            >
+            <button type="button" class="text-vsg-blue-300 hover:text-white transition-colors" aria-label="Dialog schließen" @click="handleCancel">
               <FontAwesomeIcon icon="xmark" />
             </button>
           </div>

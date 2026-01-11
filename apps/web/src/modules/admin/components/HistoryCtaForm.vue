@@ -34,20 +34,11 @@ async function handleSubmit() {
 <template>
   <form class="space-y-6" @submit.prevent="handleSubmit">
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-      <h2
-        class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase"
-      >
-        Call to Action (CTA) Bereich
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase">Call to Action (CTA) Bereich</h2>
 
       <div class="space-y-6">
         <div>
-          <label
-            for="ctaHeadline"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Überschrift
-          </label>
+          <label for="ctaHeadline" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Überschrift </label>
           <input
             id="ctaHeadline"
             v-model="ctaHeadline"
@@ -58,10 +49,7 @@ async function handleSubmit() {
         </div>
 
         <div>
-          <label
-            for="ctaDescription"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="ctaDescription" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             Beschreibungstext
           </label>
           <textarea

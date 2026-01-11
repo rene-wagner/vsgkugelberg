@@ -4,16 +4,8 @@ import { AuthService, UserPayload } from '@/services/auth.service';
 import { passwordService } from '@/services/password.service';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { validationMiddleware } from '@/middleware/validation.middleware';
-import {
-  loginLimiter,
-  logoutLimiter,
-  forgotPasswordLimiter,
-  resetPasswordLimiter,
-} from '@/middleware/rate-limit.middleware';
-import {
-  forgotPasswordValidator,
-  resetPasswordValidator,
-} from '@/validators/password-reset.validators';
+import { loginLimiter, logoutLimiter, forgotPasswordLimiter, resetPasswordLimiter } from '@/middleware/rate-limit.middleware';
+import { forgotPasswordValidator, resetPasswordValidator } from '@/validators/password-reset.validators';
 import '@/strategies/local.strategy';
 
 const router = Router();
@@ -62,8 +54,7 @@ router.post(
 
     // Always return success to prevent user enumeration
     res.json({
-      message:
-        'Falls ein Konto mit dieser E-Mail existiert, wurde eine E-Mail gesendet.',
+      message: 'Falls ein Konto mit dieser E-Mail existiert, wurde eine E-Mail gesendet.',
     });
   }),
 );

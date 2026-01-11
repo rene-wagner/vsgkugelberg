@@ -123,18 +123,12 @@ export const useNewsStore = defineStore('news', () => {
     }
   }
 
-  async function updateNews(
-    slug: string,
-    data: UpdateNewsData,
-  ): Promise<NewsItem | null> {
+  async function updateNews(slug: string, data: UpdateNewsData): Promise<NewsItem | null> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const updatedNewsItem = await api.patch<NewsItem>(
-        `/api/posts/${slug}`,
-        data,
-      );
+      const updatedNewsItem = await api.patch<NewsItem>(`/api/posts/${slug}`, data);
       const index = news.value.findIndex((n) => n.slug === slug);
       if (index !== -1) {
         news.value[index] = updatedNewsItem;

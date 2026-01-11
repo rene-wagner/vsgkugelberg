@@ -39,19 +39,7 @@ function initEditor() {
     spellChecker: false,
     status: false,
     sideBySideFullscreen: false,
-    toolbar: [
-      'bold',
-      'italic',
-      'heading',
-      '|',
-      'link',
-      '|',
-      'unordered-list',
-      'ordered-list',
-      '|',
-      'preview',
-      'guide',
-    ],
+    toolbar: ['bold', 'italic', 'heading', '|', 'link', '|', 'unordered-list', 'ordered-list', '|', 'preview', 'guide'],
   });
 
   // Set up change handler to emit updates

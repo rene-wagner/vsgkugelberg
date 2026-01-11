@@ -10,11 +10,7 @@ describe('Departments API Integration Tests', () => {
 
   // Helper to create authenticated request
   async function createAuthenticatedUser() {
-    const user = await createTestUserWithPassword(
-      testUsername,
-      testEmail,
-      testPassword,
-    );
+    const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
     // Login to get JWT token
     const loginResponse = await request(app).post('/api/auth/login').send({
@@ -243,9 +239,7 @@ describe('Departments API Integration Tests', () => {
       // Verify locations
       expect(response.body.locations).toHaveLength(1);
       expect(response.body.locations[0].name).toBe('Sporthalle');
-      expect(response.body.locations[0].amenities).toEqual([
-        { text: 'Parkplatz' },
-      ]);
+      expect(response.body.locations[0].amenities).toEqual([{ text: 'Parkplatz' }]);
 
       // Verify trainers with contact person
       expect(response.body.trainers).toHaveLength(1);
@@ -272,9 +266,7 @@ describe('Departments API Integration Tests', () => {
     });
 
     it('should return 404 for non-existent department', async () => {
-      const response = await request(app).get(
-        '/api/departments/non-existent-slug',
-      );
+      const response = await request(app).get('/api/departments/non-existent-slug');
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('statusCode', 404);
@@ -298,10 +290,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Badminton department for all skill levels',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({
@@ -328,10 +317,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Table Tennis department',
       };
 
-      const response1 = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(department1);
+      const response1 = await request(app).post('/api/departments').set('Cookie', cookies).send(department1);
 
       expect(response1.status).toBe(201);
       expect(response1.body.slug).toBe('table-tennis');
@@ -342,10 +328,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Another Table Tennis department',
       };
 
-      const response2 = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(department2);
+      const response2 = await request(app).post('/api/departments').set('Cookie', cookies).send(department2);
 
       expect(response2.status).toBe(201);
       expect(response2.body.slug).toMatch(/^table-tennis-club-?\d*$/);
@@ -358,9 +341,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Volleyball department',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').send(newDepartment);
 
       expect(response.status).toBe(401);
     });
@@ -372,10 +353,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Some description',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       expect(response.status).toBe(400);
     });
@@ -387,10 +365,7 @@ describe('Departments API Integration Tests', () => {
         name: 'Badminton',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       expect(response.status).toBe(400);
     });
@@ -403,10 +378,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Badminton department',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toBeTruthy();
@@ -421,10 +393,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Some description',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toBeTruthy();
@@ -438,10 +407,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Short',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       expect(response.status).toBe(400);
     });
@@ -455,10 +421,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: longShortDesc,
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       expect(response.status).toBe(400);
     });
@@ -471,10 +434,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Combined department',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       expect(response.status).toBe(201);
       expect(response.body.slug).toMatch(/^table-tennis-badminton/);
@@ -497,10 +457,7 @@ describe('Departments API Integration Tests', () => {
         name: 'Updated Name',
       };
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/departments/${department.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.name).toBe('Updated Name');
@@ -522,10 +479,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Updated short description',
       };
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/departments/${department.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.shortDescription).toBe('Updated short description');
@@ -548,10 +502,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Updated short description',
       };
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/departments/${department.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -576,10 +527,7 @@ describe('Departments API Integration Tests', () => {
         name: 'Completely New Name',
       };
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/departments/${department.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.slug).toBe('completely-new-name');
@@ -604,9 +552,7 @@ describe('Departments API Integration Tests', () => {
         name: 'Updated Name',
       };
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}`)
-        .send(update);
+      const response = await request(app).patch(`/api/departments/${department.slug}`).send(update);
 
       expect(response.status).toBe(401);
     });
@@ -618,10 +564,7 @@ describe('Departments API Integration Tests', () => {
         name: 'Updated Name',
       };
 
-      const response = await request(app)
-        .patch('/api/departments/non-existent-slug')
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch('/api/departments/non-existent-slug').set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('not found');
@@ -642,10 +585,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Updated short only',
       };
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/departments/${department.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.name).toBe('Original Name');
@@ -667,10 +607,7 @@ describe('Departments API Integration Tests', () => {
         name: 'A', // Too short
       };
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/departments/${department.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(400);
     });
@@ -688,9 +625,7 @@ describe('Departments API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/departments/${department.slug}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/departments/${department.slug}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -715,9 +650,7 @@ describe('Departments API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).delete(
-        `/api/departments/${department.slug}`,
-      );
+      const response = await request(app).delete(`/api/departments/${department.slug}`);
 
       expect(response.status).toBe(401);
 
@@ -731,9 +664,7 @@ describe('Departments API Integration Tests', () => {
     it('should return 404 for non-existent department', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/departments/non-existent-slug')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/departments/non-existent-slug').set('Cookie', cookies);
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('statusCode', 404);
@@ -743,9 +674,7 @@ describe('Departments API Integration Tests', () => {
     it('should return 400 for invalid slug format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/departments/invalid slug!')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/departments/invalid slug!').set('Cookie', cookies);
 
       expect(response.status).toBe(400);
     });
@@ -753,10 +682,7 @@ describe('Departments API Integration Tests', () => {
 
   describe('Icon Support', () => {
     // Helper to create an SVG media file for tests
-    async function createTestMedia(
-      mimetype: string = 'image/svg+xml',
-      filename: string = 'test-icon.svg',
-    ) {
+    async function createTestMedia(mimetype: string = 'image/svg+xml', filename: string = 'test-icon.svg') {
       return prisma.media.create({
         data: {
           filename,
@@ -772,10 +698,7 @@ describe('Departments API Integration Tests', () => {
     describe('Create department with icon', () => {
       it('should create department with valid SVG icon', async () => {
         const { cookies } = await createAuthenticatedUser();
-        const svgMedia = await createTestMedia(
-          'image/svg+xml',
-          'badge-icon.svg',
-        );
+        const svgMedia = await createTestMedia('image/svg+xml', 'badge-icon.svg');
 
         const newDepartment = {
           name: 'Badminton',
@@ -783,10 +706,7 @@ describe('Departments API Integration Tests', () => {
           iconId: svgMedia.id,
         };
 
-        const response = await request(app)
-          .post('/api/departments')
-          .set('Cookie', cookies)
-          .send(newDepartment);
+        const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
         expect(response.status).toBe(201);
         expect(response.body.iconId).toBe(svgMedia.id);
@@ -804,10 +724,7 @@ describe('Departments API Integration Tests', () => {
           iconId: pngMedia.id,
         };
 
-        const response = await request(app)
-          .post('/api/departments')
-          .set('Cookie', cookies)
-          .send(newDepartment);
+        const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
         expect(response.status).toBe(400);
         expect(response.body.message).toContain('SVG');
@@ -822,10 +739,7 @@ describe('Departments API Integration Tests', () => {
           iconId: 99999,
         };
 
-        const response = await request(app)
-          .post('/api/departments')
-          .set('Cookie', cookies)
-          .send(newDepartment);
+        const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
         expect(response.status).toBe(404);
         expect(response.body.message).toContain('not found');
@@ -839,10 +753,7 @@ describe('Departments API Integration Tests', () => {
           shortDescription: 'Swimming department for all skill levels',
         };
 
-        const response = await request(app)
-          .post('/api/departments')
-          .set('Cookie', cookies)
-          .send(newDepartment);
+        const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
         expect(response.status).toBe(201);
         expect(response.body.iconId).toBeNull();
@@ -863,10 +774,7 @@ describe('Departments API Integration Tests', () => {
           },
         });
 
-        const response = await request(app)
-          .patch(`/api/departments/${department.slug}`)
-          .set('Cookie', cookies)
-          .send({ iconId: svgMedia.id });
+        const response = await request(app).patch(`/api/departments/${department.slug}`).set('Cookie', cookies).send({ iconId: svgMedia.id });
 
         expect(response.status).toBe(200);
         expect(response.body.iconId).toBe(svgMedia.id);
@@ -876,10 +784,7 @@ describe('Departments API Integration Tests', () => {
 
       it('should update department to remove icon (set null)', async () => {
         const { cookies } = await createAuthenticatedUser();
-        const svgMedia = await createTestMedia(
-          'image/svg+xml',
-          'remove-icon.svg',
-        );
+        const svgMedia = await createTestMedia('image/svg+xml', 'remove-icon.svg');
 
         const department = await prisma.department.create({
           data: {
@@ -890,10 +795,7 @@ describe('Departments API Integration Tests', () => {
           },
         });
 
-        const response = await request(app)
-          .patch(`/api/departments/${department.slug}`)
-          .set('Cookie', cookies)
-          .send({ iconId: null });
+        const response = await request(app).patch(`/api/departments/${department.slug}`).set('Cookie', cookies).send({ iconId: null });
 
         expect(response.status).toBe(200);
         expect(response.body.iconId).toBeNull();
@@ -912,10 +814,7 @@ describe('Departments API Integration Tests', () => {
           },
         });
 
-        const response = await request(app)
-          .patch(`/api/departments/${department.slug}`)
-          .set('Cookie', cookies)
-          .send({ iconId: jpgMedia.id });
+        const response = await request(app).patch(`/api/departments/${department.slug}`).set('Cookie', cookies).send({ iconId: jpgMedia.id });
 
         expect(response.status).toBe(400);
         expect(response.body.message).toContain('SVG');
@@ -924,10 +823,7 @@ describe('Departments API Integration Tests', () => {
 
     describe('GET departments with icon data', () => {
       it('should include icon data in GET all departments', async () => {
-        const svgMedia = await createTestMedia(
-          'image/svg+xml',
-          'list-icon.svg',
-        );
+        const svgMedia = await createTestMedia('image/svg+xml', 'list-icon.svg');
 
         await prisma.department.create({
           data: {
@@ -952,12 +848,8 @@ describe('Departments API Integration Tests', () => {
         expect(response.body.data).toHaveLength(2);
 
         // Find the department with icon
-        const tennisDepart = response.body.data.find(
-          (d: { name: string }) => d.name === 'Tennis',
-        );
-        const hockeyDepart = response.body.data.find(
-          (d: { name: string }) => d.name === 'Hockey',
-        );
+        const tennisDepart = response.body.data.find((d: { name: string }) => d.name === 'Tennis');
+        const hockeyDepart = response.body.data.find((d: { name: string }) => d.name === 'Hockey');
 
         expect(tennisDepart.icon).toBeTruthy();
         expect(tennisDepart.icon.id).toBe(svgMedia.id);
@@ -965,10 +857,7 @@ describe('Departments API Integration Tests', () => {
       });
 
       it('should include icon data in GET department by slug', async () => {
-        const svgMedia = await createTestMedia(
-          'image/svg+xml',
-          'single-icon.svg',
-        );
+        const svgMedia = await createTestMedia('image/svg+xml', 'single-icon.svg');
 
         await prisma.department.create({
           data: {
@@ -990,10 +879,7 @@ describe('Departments API Integration Tests', () => {
 
     describe('Media deletion cascade', () => {
       it('should set department iconId to null when media is deleted', async () => {
-        const svgMedia = await createTestMedia(
-          'image/svg+xml',
-          'cascade-icon.svg',
-        );
+        const svgMedia = await createTestMedia('image/svg+xml', 'cascade-icon.svg');
 
         const department = await prisma.department.create({
           data: {
@@ -1041,10 +927,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'Second badminton department',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       // Should fail due to unique constraint on name
       expect(response.status).toBe(409);
@@ -1059,10 +942,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: 'German sports department',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       expect(response.status).toBe(201);
       expect(response.body.name).toBe('Fußball & Tischtennis');
@@ -1077,10 +957,7 @@ describe('Departments API Integration Tests', () => {
         shortDescription: '  Short description  ',
       };
 
-      const response = await request(app)
-        .post('/api/departments')
-        .set('Cookie', cookies)
-        .send(newDepartment);
+      const response = await request(app).post('/api/departments').set('Cookie', cookies).send(newDepartment);
 
       expect(response.status).toBe(201);
       expect(response.body.name).toBe('Badminton');

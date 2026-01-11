@@ -4,16 +4,9 @@ import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
 import { validationMiddleware } from '@/middleware/validation.middleware';
 import { jwtMiddleware } from '@/middleware/jwt.middleware';
-import {
-  createContactPersonValidator,
-  updateContactPersonValidator,
-  idParamValidator,
-} from '@/validators/contact-person.validators';
+import { createContactPersonValidator, updateContactPersonValidator, idParamValidator } from '@/validators/contact-person.validators';
 import { paginationQueryValidator } from '@/validators/pagination.validators';
-import {
-  CreateContactPersonDto,
-  UpdateContactPersonDto,
-} from '@/types/contact-person.types';
+import { CreateContactPersonDto, UpdateContactPersonDto } from '@/types/contact-person.types';
 
 const router = Router();
 const contactPersonsService = new ContactPersonsService();
@@ -53,9 +46,7 @@ router.post(
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
     const createContactPersonDto: CreateContactPersonDto = req.body;
-    const contactPerson = await contactPersonsService.create(
-      createContactPersonDto,
-    );
+    const contactPerson = await contactPersonsService.create(createContactPersonDto);
     res.status(201).json(contactPerson);
   }),
 );
@@ -71,10 +62,7 @@ router.patch(
   asyncHandlerMiddleware(async (req, res) => {
     const id = Number(req.params.id);
     const updateContactPersonDto: UpdateContactPersonDto = req.body;
-    const contactPerson = await contactPersonsService.update(
-      id,
-      updateContactPersonDto,
-    );
+    const contactPerson = await contactPersonsService.update(id, updateContactPersonDto);
     res.json(contactPerson);
   }),
 );

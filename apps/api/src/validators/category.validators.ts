@@ -16,18 +16,11 @@ export const createCategoryValidator = [
     .isLength({ max: 500 })
     .withMessage('Description must not exceed 500 characters'),
 
-  body('parentId')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Parent ID must be a positive integer'),
+  body('parentId').optional().isInt({ min: 1 }).withMessage('Parent ID must be a positive integer'),
 ];
 
 export const updateCategoryValidator = [
-  body('name')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Name must be between 2 and 100 characters'),
+  body('name').optional().trim().isLength({ min: 2, max: 100 }).withMessage('Name must be between 2 and 100 characters'),
 
   body('description')
     .optional()
@@ -37,10 +30,7 @@ export const updateCategoryValidator = [
     .isLength({ max: 500 })
     .withMessage('Description must not exceed 500 characters'),
 
-  body('parentId')
-    .optional({ values: 'null' })
-    .isInt({ min: 1 })
-    .withMessage('Parent ID must be a positive integer or null'),
+  body('parentId').optional({ values: 'null' }).isInt({ min: 1 }).withMessage('Parent ID must be a positive integer or null'),
 ];
 
 /**
@@ -56,7 +46,5 @@ export const hierarchicalSlugValidator = [
     .isLength({ max: 255 })
     .withMessage('Slug must not exceed 255 characters')
     .matches(/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/)
-    .withMessage(
-      'Slug must be lowercase alphanumeric with hyphens, segments separated by /',
-    ),
+    .withMessage('Slug must be lowercase alphanumeric with hyphens, segments separated by /'),
 ];

@@ -1,7 +1,4 @@
-import {
-  Media as PrismaMedia,
-  MediaFolder as PrismaMediaFolder,
-} from '@/lib/prisma.lib';
+import { Media as PrismaMedia, MediaFolder as PrismaMediaFolder } from '@/lib/prisma.lib';
 
 export interface CreateMediaDto {
   filename: string;

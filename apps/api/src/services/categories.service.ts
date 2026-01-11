@@ -1,15 +1,5 @@
-import {
-  NotFoundException,
-  ConflictException,
-  BadRequestException,
-} from '@/errors/http-errors';
-import {
-  CreateCategoryDto,
-  UpdateCategoryDto,
-  Category,
-  CategoryWithChildren,
-  CategoryTreeNode,
-} from '@/types/category.types';
+import { NotFoundException, ConflictException, BadRequestException } from '@/errors/http-errors';
+import { CreateCategoryDto, UpdateCategoryDto, Category, CategoryWithChildren, CategoryTreeNode } from '@/types/category.types';
 import { SlugifyService } from '@/services/slugify.service';
 import { Prisma, prisma } from '@/lib/prisma.lib';
 
@@ -56,9 +46,7 @@ export class CategoriesService {
       });
 
       if (!parentExists) {
-        throw new BadRequestException(
-          `Parent category with ID ${parentId} not found`,
-        );
+        throw new BadRequestException(`Parent category with ID ${parentId} not found`);
       }
     }
 
@@ -74,16 +62,11 @@ export class CategoriesService {
     });
 
     if (existingCategory) {
-      throw new ConflictException(
-        `Category with name "${createCategoryDto.name}" already exists under this parent`,
-      );
+      throw new ConflictException(`Category with name "${createCategoryDto.name}" already exists under this parent`);
     }
 
     // Generate hierarchical slug from name and parent
-    const slug = await slugifyService.generateUniqueCategorySlug(
-      createCategoryDto.name,
-      parentId,
-    );
+    const slug = await slugifyService.generateUniqueCategorySlug(createCategoryDto.name, parentId);
 
     const category = await prisma.category.create({
       data: {
@@ -97,10 +80,7 @@ export class CategoriesService {
     return category;
   }
 
-  async update(
-    slug: string,
-    updateCategoryDto: UpdateCategoryDto,
-  ): Promise<Category> {
+  async update(slug: string, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
     // First, find the category by slug
     const existingCategory = await prisma.category.findFirst({
       where: { slug },
@@ -112,16 +92,10 @@ export class CategoriesService {
     }
 
     // Determine the new parentId (use existing if not provided)
-    const newParentId =
-      updateCategoryDto.parentId !== undefined
-        ? updateCategoryDto.parentId
-        : existingCategory.parentId;
+    const newParentId = updateCategoryDto.parentId !== undefined ? updateCategoryDto.parentId : existingCategory.parentId;
 
     // Validate parentId if it's being changed
-    if (
-      updateCategoryDto.parentId !== undefined &&
-      updateCategoryDto.parentId !== null
-    ) {
+    if (updateCategoryDto.parentId !== undefined && updateCategoryDto.parentId !== null) {
       // Cannot set self as parent
       if (updateCategoryDto.parentId === existingCategory.id) {
         throw new BadRequestException('Category cannot be its own parent');
@@ -132,18 +106,12 @@ export class CategoriesService {
       });
 
       if (!parentExists) {
-        throw new BadRequestException(
-          `Parent category with ID ${updateCategoryDto.parentId} not found`,
-        );
+        throw new BadRequestException(`Parent category with ID ${updateCategoryDto.parentId} not found`);
       }
 
       // Check for circular reference
-      if (
-        await this.isDescendant(updateCategoryDto.parentId, existingCategory.id)
-      ) {
-        throw new BadRequestException(
-          'Cannot set a descendant category as parent (circular reference)',
-        );
+      if (await this.isDescendant(updateCategoryDto.parentId, existingCategory.id)) {
+        throw new BadRequestException('Cannot set a descendant category as parent (circular reference)');
       }
     }
 
@@ -163,9 +131,7 @@ export class CategoriesService {
       });
 
       if (conflictingCategory) {
-        throw new ConflictException(
-          `Category with name "${updateCategoryDto.name}" already exists under this parent`,
-        );
+        throw new ConflictException(`Category with name "${updateCategoryDto.name}" already exists under this parent`);
       }
     }
 
@@ -177,9 +143,7 @@ export class CategoriesService {
 
     // Handle name change - regenerate slug
     const nameChanged = updateCategoryDto.name !== undefined;
-    const parentChanged =
-      updateCategoryDto.parentId !== undefined &&
-      updateCategoryDto.parentId !== existingCategory.parentId;
+    const parentChanged = updateCategoryDto.parentId !== undefined && updateCategoryDto.parentId !== existingCategory.parentId;
 
     if (nameChanged || parentChanged) {
       const newName = updateCategoryDto.name ?? existingCategory.name;
@@ -188,11 +152,7 @@ export class CategoriesService {
       }
 
       // Generate new hierarchical slug
-      const newSlug = await slugifyService.generateUniqueCategorySlug(
-        newName,
-        newParentId,
-        existingCategory.id,
-      );
+      const newSlug = await slugifyService.generateUniqueCategorySlug(newName, newParentId, existingCategory.id);
       updateData.slug = newSlug;
 
       if (parentChanged) {
@@ -222,10 +182,7 @@ export class CategoriesService {
 
       return category;
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         throw new NotFoundException(`Category with slug "${slug}" not found`);
       }
       throw error;
@@ -250,10 +207,7 @@ export class CategoriesService {
 
       return category;
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         throw new NotFoundException(`Category with slug "${slug}" not found`);
       }
       throw error;
@@ -263,10 +217,7 @@ export class CategoriesService {
   /**
    * Builds a nested tree structure from a flat array of categories.
    */
-  private buildTree(
-    categories: Category[],
-    parentId: number | null = null,
-  ): CategoryTreeNode[] {
+  private buildTree(categories: Category[], parentId: number | null = null): CategoryTreeNode[] {
     return categories
       .filter((cat) => cat.parentId === parentId)
       .map((cat) => ({
@@ -279,10 +230,7 @@ export class CategoriesService {
    * Checks if `potentialDescendantId` is a descendant of `ancestorId`.
    * Used to prevent circular references when moving categories.
    */
-  private async isDescendant(
-    potentialDescendantId: number,
-    ancestorId: number,
-  ): Promise<boolean> {
+  private async isDescendant(potentialDescendantId: number, ancestorId: number): Promise<boolean> {
     // Get all descendants of ancestorId
     const descendants = await this.getAllDescendantIds(ancestorId);
     return descendants.includes(potentialDescendantId);
@@ -312,10 +260,7 @@ export class CategoriesService {
    * @param categoryId - The category whose descendants need slug updates
    * @param newParentSlug - The new slug of the parent category
    */
-  private async updateDescendantSlugs(
-    categoryId: number,
-    newParentSlug: string,
-  ): Promise<void> {
+  private async updateDescendantSlugs(categoryId: number, newParentSlug: string): Promise<void> {
     const children = await prisma.category.findMany({
       where: { parentId: categoryId },
       select: { id: true, slug: true },
@@ -323,10 +268,7 @@ export class CategoriesService {
 
     for (const child of children) {
       // Build new slug for this child
-      const newSlug = slugifyService.buildCategorySlug(
-        child.slug,
-        newParentSlug,
-      );
+      const newSlug = slugifyService.buildCategorySlug(child.slug, newParentSlug);
 
       // Update the child's slug
       await prisma.category.update({
@@ -355,11 +297,7 @@ export class CategoriesService {
 
     for (const category of categories) {
       // Generate a new slug using the existing logic
-      const newSlug = await slugifyService.generateUniqueCategorySlug(
-        category.name,
-        category.parentId,
-        category.id,
-      );
+      const newSlug = await slugifyService.generateUniqueCategorySlug(category.name, category.parentId, category.id);
 
       // Update the category with the recalculated slug
       await prisma.category.update({

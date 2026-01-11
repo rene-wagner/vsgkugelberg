@@ -47,11 +47,7 @@ export const useEventsStore = defineStore('events', () => {
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
-  async function fetchEvents(
-    start: string,
-    end: string,
-    category?: EventCategory,
-  ): Promise<void> {
+  async function fetchEvents(start: string, end: string, category?: EventCategory): Promise<void> {
     isLoading.value = true;
     error.value = null;
 
@@ -100,18 +96,12 @@ export const useEventsStore = defineStore('events', () => {
     }
   }
 
-  async function updateEvent(
-    id: number,
-    data: UpdateEventData,
-  ): Promise<EventItem | null> {
+  async function updateEvent(id: number, data: UpdateEventData): Promise<EventItem | null> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const updatedEvent = await api.patch<EventItem>(
-        `/api/events/${id}`,
-        data,
-      );
+      const updatedEvent = await api.patch<EventItem>(`/api/events/${id}`, data);
       const index = events.value.findIndex((e) => e.id === id);
       if (index !== -1) {
         events.value[index] = updatedEvent;

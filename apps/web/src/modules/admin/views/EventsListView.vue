@@ -24,9 +24,7 @@ const baseEvents = computed(() => {
   for (const event of eventsStore.events) {
     // For non-recurring events, use the event id
     // For recurring instances, use the originalEventId to deduplicate
-    const uniqueId = event.isRecurrenceInstance
-      ? event.originalEventId!
-      : event.id;
+    const uniqueId = event.isRecurrenceInstance ? event.originalEventId! : event.id;
 
     if (!seen.has(uniqueId)) {
       seen.add(uniqueId);
@@ -83,12 +81,8 @@ onMounted(() => {
     <!-- Page Header -->
     <div class="mb-8 flex items-start justify-between">
       <div>
-        <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
-          VERANSTALTUNGEN
-        </h1>
-        <p class="font-body font-normal text-vsg-blue-600 mt-1">
-          Verwalte alle Veranstaltungen und Termine
-        </p>
+        <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">VERANSTALTUNGEN</h1>
+        <p class="font-body font-normal text-vsg-blue-600 mt-1">Verwalte alle Veranstaltungen und Termine</p>
       </div>
       <router-link
         to="/admin/termine/new"
@@ -99,91 +93,44 @@ onMounted(() => {
     </div>
 
     <!-- Loading State -->
-    <div
-      v-if="eventsStore.isLoading"
-      class="flex items-center justify-center py-12"
-    >
+    <div v-if="eventsStore.isLoading" class="flex items-center justify-center py-12">
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Error State -->
-    <div
-      v-else-if="eventsStore.error"
-      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
-    >
+    <div v-else-if="eventsStore.error" class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
       <p class="text-sm text-red-600 font-body">{{ eventsStore.error }}</p>
     </div>
 
     <!-- Table -->
-    <div
-      v-else
-      class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
-    >
+    <div v-else class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
             <tr class="bg-gray-50 border-b border-gray-200">
-              <th
-                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
-              >
-                Titel
-              </th>
-              <th
-                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
-              >
-                Datum
-              </th>
-              <th
-                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
-              >
-                Zeit
-              </th>
-              <th
-                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
-              >
-                Kategorie
-              </th>
-              <th
-                class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
-              >
-                Wiederkehrend
-              </th>
-              <th
-                class="text-right px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase"
-              >
-                Aktionen
-              </th>
+              <th class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase">Titel</th>
+              <th class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase">Datum</th>
+              <th class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase">Zeit</th>
+              <th class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase">Kategorie</th>
+              <th class="text-left px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase">Wiederkehrend</th>
+              <th class="text-right px-6 py-4 font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase">Aktionen</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr
-              v-for="event in baseEvents"
-              :key="event.id"
-              class="hover:bg-gray-50 transition-colors"
-            >
+            <tr v-for="event in baseEvents" :key="event.id" class="hover:bg-gray-50 transition-colors">
               <td class="px-6 py-4">
                 <div>
-                  <span
-                    class="font-body text-sm text-vsg-blue-900 font-medium"
-                    >{{ event.title }}</span
-                  >
+                  <span class="font-body text-sm text-vsg-blue-900 font-medium">{{ event.title }}</span>
                   <p v-if="event.location" class="text-xs text-gray-500 mt-0.5">
                     {{ event.location }}
                   </p>
                 </div>
               </td>
               <td class="px-6 py-4">
-                <span class="font-body text-sm text-gray-600">{{
-                  formatDate(event.startDate)
-                }}</span>
+                <span class="font-body text-sm text-gray-600">{{ formatDate(event.startDate) }}</span>
               </td>
               <td class="px-6 py-4">
-                <span
-                  v-if="event.isFullDay"
-                  class="font-body text-sm text-gray-500"
-                >
-                  Ganztags
-                </span>
+                <span v-if="event.isFullDay" class="font-body text-sm text-gray-500"> Ganztags </span>
                 <span v-else class="font-body text-sm text-gray-600">
                   {{ formatTime(event.startDate) }} -
                   {{ formatTime(event.endDate) }}
@@ -214,11 +161,7 @@ onMounted(() => {
                   >
                     <FontAwesomeIcon icon="pen-to-square" />
                   </router-link>
-                  <button
-                    class="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                    title="Löschen"
-                    @click="handleDelete(event)"
-                  >
+                  <button class="p-2 text-gray-400 hover:text-red-500 transition-colors" title="Löschen" @click="handleDelete(event)">
                     <FontAwesomeIcon icon="trash" />
                   </button>
                 </div>
@@ -231,24 +174,16 @@ onMounted(() => {
       <!-- Empty State -->
       <div v-if="baseEvents.length === 0" class="px-6 py-12 text-center">
         <p class="font-body text-gray-500">Keine Veranstaltungen vorhanden.</p>
-        <router-link
-          to="/admin/termine/new"
-          class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm"
-        >
+        <router-link to="/admin/termine/new" class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm">
           Erste Veranstaltung erstellen
         </router-link>
       </div>
 
       <!-- Pagination -->
-      <div
-        v-if="baseEvents.length > 0"
-        class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
-      >
+      <div v-if="baseEvents.length > 0" class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
         <div class="font-body font-normal text-sm text-gray-500">
           Zeige
-          <span class="text-vsg-blue-900 font-medium">{{
-            baseEvents.length
-          }}</span>
+          <span class="text-vsg-blue-900 font-medium">{{ baseEvents.length }}</span>
           Veranstaltungen
         </div>
       </div>

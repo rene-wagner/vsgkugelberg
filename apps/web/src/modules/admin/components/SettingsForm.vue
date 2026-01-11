@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import {
-  useSettingsStore,
-  type ClubSettings,
-  type UpdateSettingsData,
-} from '../stores/settingsStore';
+import { useSettingsStore, type ClubSettings, type UpdateSettingsData } from '../stores/settingsStore';
 
 const props = defineProps<{
   settings: ClubSettings | null;
@@ -46,9 +42,7 @@ async function handleSubmit() {
   settingsStore.clearMessages();
 
   const updateData: UpdateSettingsData = {
-    foundingDate: foundingDate.value
-      ? new Date(foundingDate.value).toISOString()
-      : null,
+    foundingDate: foundingDate.value ? new Date(foundingDate.value).toISOString() : null,
     address: address.value.trim() || null,
     memberCount: memberCount.value || null,
     contactEmail: contactEmail.value.trim() || null,
@@ -62,36 +56,25 @@ async function handleSubmit() {
 <template>
   <form class="max-w-3xl" @submit.prevent="handleSubmit">
     <!-- Success Message -->
-    <div
-      v-if="settingsStore.successMessage"
-      class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6"
-    >
+    <div v-if="settingsStore.successMessage" class="bg-green-50 border border-green-200 rounded-xl p-4 mb-6">
       <p class="text-sm text-green-600 font-body">
         {{ settingsStore.successMessage }}
       </p>
     </div>
 
     <!-- Error Message -->
-    <div
-      v-if="settingsStore.error"
-      class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6"
-    >
+    <div v-if="settingsStore.error" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
       <p class="text-sm text-red-600 font-body">{{ settingsStore.error }}</p>
     </div>
 
     <!-- Club Information Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        Vereinsdaten
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">Vereinsdaten</h2>
 
       <div class="space-y-6">
         <!-- Founding Date -->
         <div>
-          <label
-            for="foundingDate"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="foundingDate" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             Gründungsdatum
           </label>
           <input
@@ -104,10 +87,7 @@ async function handleSubmit() {
 
         <!-- Member Count -->
         <div>
-          <label
-            for="memberCount"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="memberCount" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             Mitgliederanzahl
           </label>
           <input
@@ -123,12 +103,7 @@ async function handleSubmit() {
 
         <!-- Address -->
         <div>
-          <label
-            for="address"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Adresse
-          </label>
+          <label for="address" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Adresse </label>
           <textarea
             id="address"
             v-model="address"
@@ -143,19 +118,12 @@ async function handleSubmit() {
 
     <!-- Contact Information Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        Kontaktdaten
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">Kontaktdaten</h2>
 
       <div class="space-y-6">
         <!-- Contact Email -->
         <div>
-          <label
-            for="contactEmail"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            E-Mail
-          </label>
+          <label for="contactEmail" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> E-Mail </label>
           <input
             id="contactEmail"
             v-model="contactEmail"
@@ -167,12 +135,7 @@ async function handleSubmit() {
 
         <!-- Contact Phone -->
         <div>
-          <label
-            for="contactPhone"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Telefon
-          </label>
+          <label for="contactPhone" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Telefon </label>
           <input
             id="contactPhone"
             v-model="contactPhone"

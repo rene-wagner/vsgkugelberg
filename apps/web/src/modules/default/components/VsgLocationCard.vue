@@ -11,9 +11,7 @@ interface Props {
 defineProps<Props>();
 
 function getBadgeClasses(variant: DepartmentLocation['badgeVariant']): string {
-  return variant === 'primary'
-    ? 'bg-vsg-gold-400 text-vsg-blue-900'
-    : 'bg-white text-vsg-blue-900';
+  return variant === 'primary' ? 'bg-vsg-gold-400 text-vsg-blue-900' : 'bg-white text-vsg-blue-900';
 }
 
 function getMediaUrl(filename: string): string {
@@ -22,24 +20,13 @@ function getMediaUrl(filename: string): string {
 </script>
 
 <template>
-  <div
-    class="card-hover overflow-hidden rounded-xl border border-gray-200 bg-white"
-  >
+  <div class="card-hover overflow-hidden rounded-xl border border-gray-200 bg-white">
     <!-- Location Image -->
     <div v-if="location.image" class="aspect-video relative">
-      <img
-        :src="getMediaUrl(location.image.filename)"
-        :alt="location.image.originalName"
-        class="w-full h-full object-cover"
-      />
+      <img :src="getMediaUrl(location.image.filename)" :alt="location.image.originalName" class="w-full h-full object-cover" />
       <!-- Badge -->
       <div class="absolute left-4 top-4">
-        <span
-          :class="[
-            getBadgeClasses(location.badgeVariant),
-            'inline-block rounded px-3 py-1 font-display text-sm tracking-wider shadow-sm',
-          ]"
-        >
+        <span :class="[getBadgeClasses(location.badgeVariant), 'inline-block rounded px-3 py-1 font-display text-sm tracking-wider shadow-sm']">
           {{ location.badge }}
         </span>
       </div>
@@ -48,10 +35,7 @@ function getMediaUrl(filename: string): string {
     <!-- Fallback if no image (just show badge) -->
     <div v-else class="p-4 bg-gray-50 border-b border-gray-100">
       <span
-        :class="[
-          getBadgeClasses(location.badgeVariant),
-          'inline-block rounded px-3 py-1 font-display text-sm tracking-wider border border-gray-200',
-        ]"
+        :class="[getBadgeClasses(location.badgeVariant), 'inline-block rounded px-3 py-1 font-display text-sm tracking-wider border border-gray-200']"
       >
         {{ location.badge }}
       </span>
@@ -66,10 +50,7 @@ function getMediaUrl(filename: string): string {
       <div class="mb-6 space-y-3">
         <!-- Address -->
         <div class="flex items-start gap-3">
-          <FontAwesomeIcon
-            icon="location-dot"
-            class="mt-0.5 text-vsg-blue-600"
-          />
+          <FontAwesomeIcon icon="location-dot" class="mt-0.5 text-vsg-blue-600" />
           <div>
             <p class="font-body font-semibold text-vsg-blue-800">
               {{ location.street }}
@@ -79,15 +60,9 @@ function getMediaUrl(filename: string): string {
         </div>
 
         <!-- Amenities -->
-        <div
-          v-if="location.amenities.length > 0"
-          class="flex items-start gap-3"
-        >
+        <div v-if="location.amenities.length > 0" class="flex items-start gap-3">
           <!-- Info Icon -->
-          <FontAwesomeIcon
-            icon="info-circle"
-            class="mt-0.5 text-vsg-blue-600"
-          />
+          <FontAwesomeIcon icon="info-circle" class="mt-0.5 text-vsg-blue-600" />
           <p class="font-body text-gray-600">
             {{ location.amenities.map((a) => a.text).join(', ') }}
           </p>

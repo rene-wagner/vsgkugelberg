@@ -1,8 +1,6 @@
 import { onMounted, onUnmounted, type MaybeRefOrGetter, toValue } from 'vue';
 
-export function useFocusTrap(
-  elementRef: MaybeRefOrGetter<HTMLElement | undefined>,
-) {
+export function useFocusTrap(elementRef: MaybeRefOrGetter<HTMLElement | undefined>) {
   let previouslyFocused: HTMLElement | null = null;
 
   onMounted(() => {
@@ -10,9 +8,7 @@ export function useFocusTrap(
     if (!element) return;
 
     previouslyFocused = document.activeElement as HTMLElement;
-    const focusableElements = element.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
+    const focusableElements = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
     const firstFocusable = focusableElements[0] as HTMLElement | null;
 
     firstFocusable?.focus();

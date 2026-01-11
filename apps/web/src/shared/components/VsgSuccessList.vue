@@ -56,13 +56,8 @@ const setFilter = (id: string) => {
           :class="item.colorClass"
         >
           <div class="flex justify-between items-start mb-4">
-            <span class="font-display text-xl text-vsg-gold-600">{{
-              item.year
-            }}</span>
-            <span
-              class="text-xs bg-gray-100 px-2 py-1 text-vsg-blue-600 uppercase tracking-widest"
-              >{{ item.categoryLabel }}</span
-            >
+            <span class="font-display text-xl text-vsg-gold-600">{{ item.year }}</span>
+            <span class="text-xs bg-gray-100 px-2 py-1 text-vsg-blue-600 uppercase tracking-widest">{{ item.categoryLabel }}</span>
           </div>
           <h5 class="font-bold text-vsg-blue-900 uppercase tracking-wider mb-2">
             {{ item.title }}

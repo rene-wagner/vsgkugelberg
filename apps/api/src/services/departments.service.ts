@@ -1,15 +1,5 @@
-import {
-  NotFoundException,
-  ConflictException,
-  BadRequestException,
-} from '@/errors/http-errors';
-import {
-  CreateDepartmentDto,
-  UpdateDepartmentDto,
-  Department,
-  DepartmentWithIcon,
-  DepartmentWithAllRelations,
-} from '@/types/department.types';
+import { NotFoundException, ConflictException, BadRequestException } from '@/errors/http-errors';
+import { CreateDepartmentDto, UpdateDepartmentDto, Department, DepartmentWithIcon, DepartmentWithAllRelations } from '@/types/department.types';
 import { PaginatedResponse } from '@/types/pagination.types';
 import { SlugifyService } from '@/services/slugify.service';
 import { Prisma, prisma } from '@/lib/prisma.lib';
@@ -27,16 +17,11 @@ export class DepartmentsService {
     }
 
     if (media.mimetype !== 'image/svg+xml') {
-      throw new BadRequestException(
-        'Icon must be an SVG file (image/svg+xml mimetype)',
-      );
+      throw new BadRequestException('Icon must be an SVG file (image/svg+xml mimetype)');
     }
   }
 
-  async findAll(
-    page: number = 1,
-    limit: number = 10,
-  ): Promise<PaginatedResponse<DepartmentWithIcon>> {
+  async findAll(page: number = 1, limit: number = 10): Promise<PaginatedResponse<DepartmentWithIcon>> {
     const skip = (page - 1) * limit;
 
     const [departments, total] = await Promise.all([
@@ -101,18 +86,14 @@ export class DepartmentsService {
     return department;
   }
 
-  async create(
-    createDepartmentDto: CreateDepartmentDto,
-  ): Promise<DepartmentWithIcon> {
+  async create(createDepartmentDto: CreateDepartmentDto): Promise<DepartmentWithIcon> {
     // Validate icon if provided
     if (createDepartmentDto.iconId !== undefined) {
       await this.validateSvgIcon(createDepartmentDto.iconId);
     }
 
     // Generate unique slug from name
-    const slug = await slugifyService.generateUniqueDepartmentSlug(
-      createDepartmentDto.name,
-    );
+    const slug = await slugifyService.generateUniqueDepartmentSlug(createDepartmentDto.name);
 
     try {
       return await prisma.department.create({
@@ -127,22 +108,14 @@ export class DepartmentsService {
         include: { icon: true },
       });
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new ConflictException(
-          `Department with name "${createDepartmentDto.name}" already exists`,
-        );
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new ConflictException(`Department with name "${createDepartmentDto.name}" already exists`);
       }
       throw error;
     }
   }
 
-  async update(
-    slug: string,
-    updateDepartmentDto: UpdateDepartmentDto,
-  ): Promise<DepartmentWithIcon> {
+  async update(slug: string, updateDepartmentDto: UpdateDepartmentDto): Promise<DepartmentWithIcon> {
     // First, find the department by slug
     const existingDepartment = await prisma.department.findUnique({
       where: { slug },
@@ -154,10 +127,7 @@ export class DepartmentsService {
     }
 
     // Validate icon if provided (not null)
-    if (
-      updateDepartmentDto.iconId !== undefined &&
-      updateDepartmentDto.iconId !== null
-    ) {
+    if (updateDepartmentDto.iconId !== undefined && updateDepartmentDto.iconId !== null) {
       await this.validateSvgIcon(updateDepartmentDto.iconId);
     }
 
@@ -166,10 +136,7 @@ export class DepartmentsService {
     // If name is being updated, regenerate slug
     if (updateDepartmentDto.name !== undefined) {
       updateData.name = updateDepartmentDto.name;
-      updateData.slug = await slugifyService.generateUniqueDepartmentSlug(
-        updateDepartmentDto.name,
-        existingDepartment.id,
-      );
+      updateData.slug = await slugifyService.generateUniqueDepartmentSlug(updateDepartmentDto.name, existingDepartment.id);
     }
 
     if (updateDepartmentDto.shortDescription !== undefined) {
@@ -188,18 +155,10 @@ export class DepartmentsService {
         include: { icon: true },
       });
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new ConflictException(
-          `Department with name "${updateDepartmentDto.name}" already exists`,
-        );
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new ConflictException(`Department with name "${updateDepartmentDto.name}" already exists`);
       }
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         throw new NotFoundException(`Department with slug "${slug}" not found`);
       }
       throw error;
@@ -222,10 +181,7 @@ export class DepartmentsService {
         where: { id: existingDepartment.id },
       });
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         throw new NotFoundException(`Department with slug "${slug}" not found`);
       }
       throw error;

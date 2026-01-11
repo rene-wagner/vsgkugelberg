@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import type {
-  DepartmentTrainingSession,
-  DepartmentLocation,
-} from '../types/department-extended.types';
+import type { DepartmentTrainingSession, DepartmentLocation } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
@@ -13,10 +10,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (
-    e: 'update',
-    data: { day: string; time: string; locationId: number | null },
-  ): void;
+  (e: 'update', data: { day: string; time: string; locationId: number | null }): void;
   (e: 'delete'): void;
 }>();
 
@@ -24,15 +18,7 @@ const day = ref(props.session.day);
 const time = ref(props.session.time);
 const locationId = ref(props.session.locationId);
 
-const dayOptions = [
-  'Montag',
-  'Dienstag',
-  'Mittwoch',
-  'Donnerstag',
-  'Freitag',
-  'Samstag',
-  'Sonntag',
-];
+const dayOptions = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'];
 
 // Watch for external session changes
 watch(
@@ -59,14 +45,9 @@ function handleDelete() {
 </script>
 
 <template>
-  <div
-    class="flex items-center gap-2 p-2 bg-white rounded border border-gray-200 group"
-    :class="{ 'border-vsg-lime-400 bg-vsg-lime-50': isNew }"
-  >
+  <div class="flex items-center gap-2 p-2 bg-white rounded border border-gray-200 group" :class="{ 'border-vsg-lime-400 bg-vsg-lime-50': isNew }">
     <!-- Drag Handle -->
-    <div
-      class="cursor-grab text-gray-400 hover:text-gray-600 session-drag-handle shrink-0"
-    >
+    <div class="cursor-grab text-gray-400 hover:text-gray-600 session-drag-handle shrink-0">
       <FontAwesomeIcon icon="grip" />
     </div>
 

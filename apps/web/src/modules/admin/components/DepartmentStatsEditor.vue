@@ -3,11 +3,7 @@ import { ref, computed, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useDepartmentStatsStore } from '../stores/departmentStatsStore';
 import DepartmentStatRow from './DepartmentStatRow.vue';
-import type {
-  DepartmentStat,
-  CreateDepartmentStatDto,
-  UpdateDepartmentStatDto,
-} from '../types/department-extended.types';
+import type { DepartmentStat, CreateDepartmentStatDto, UpdateDepartmentStatDto } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
@@ -20,12 +16,8 @@ const statsStore = useDepartmentStatsStore();
 // Local state for editing
 const localStats = ref<DepartmentStat[]>([]);
 const sortableIds = ref<number[]>([]);
-const pendingCreates = ref<
-  Array<{ tempId: number; label: string; value: string }>
->([]);
-const pendingUpdates = ref<Map<number, { label: string; value: string }>>(
-  new Map(),
-);
+const pendingCreates = ref<Array<{ tempId: number; label: string; value: string }>>([]);
+const pendingUpdates = ref<Map<number, { label: string; value: string }>>(new Map());
 const pendingDeletes = ref<Set<number>>(new Set());
 const orderChanged = ref(false);
 
@@ -83,12 +75,7 @@ const displayItems = computed({
 
 // Check if there are any unsaved changes
 const isDirty = computed(() => {
-  return (
-    pendingCreates.value.length > 0 ||
-    pendingUpdates.value.size > 0 ||
-    pendingDeletes.value.size > 0 ||
-    orderChanged.value
-  );
+  return pendingCreates.value.length > 0 || pendingUpdates.value.size > 0 || pendingDeletes.value.size > 0 || orderChanged.value;
 });
 
 // Expose isDirty for parent component
@@ -105,11 +92,7 @@ function handleAdd() {
   sortableIds.value.push(tempId);
 }
 
-function handleUpdate(
-  id: number,
-  data: { label: string; value: string },
-  isNew: boolean,
-) {
+function handleUpdate(id: number, data: { label: string; value: string }, isNew: boolean) {
   if (isNew) {
     // Update pending create
     const item = pendingCreates.value.find((i) => i.tempId === id);
@@ -174,10 +157,7 @@ async function handleSave() {
         label: item.label,
         value: item.value,
       };
-      const result = await statsStore.createStat(
-        props.departmentSlug,
-        createDto,
-      );
+      const result = await statsStore.createStat(props.departmentSlug, createDto);
       if (!result) {
         throw new Error('Fehler beim Erstellen einer Statistik');
       }
@@ -195,11 +175,7 @@ async function handleSave() {
         label: data.label,
         value: data.value,
       };
-      const result = await statsStore.updateStat(
-        props.departmentSlug,
-        id,
-        updateDto,
-      );
+      const result = await statsStore.updateStat(props.departmentSlug, id, updateDto);
       if (!result) {
         throw new Error('Fehler beim Aktualisieren einer Statistik');
       }
@@ -211,10 +187,7 @@ async function handleSave() {
       const existingIds = sortableIds.value.filter((id) => id > 0);
 
       if (existingIds.length > 0) {
-        const result = await statsStore.reorder(
-          props.departmentSlug,
-          existingIds,
-        );
+        const result = await statsStore.reorder(props.departmentSlug, existingIds);
         if (!result) {
           throw new Error('Fehler beim Sortieren der Statistiken');
         }
@@ -231,8 +204,7 @@ async function handleSave() {
     localStats.value = [...statsStore.stats];
     sortableIds.value = localStats.value.map((s) => s.id);
   } catch (e) {
-    saveError.value =
-      e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
+    saveError.value = e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
   } finally {
     isSaving.value = false;
   }
@@ -242,26 +214,14 @@ async function handleSave() {
 <template>
   <div class="space-y-4">
     <!-- Error Message -->
-    <div
-      v-if="saveError"
-      class="bg-red-50 border border-red-200 rounded-xl p-4"
-    >
+    <div v-if="saveError" class="bg-red-50 border border-red-200 rounded-xl p-4">
       <p class="text-sm text-red-600 font-body">{{ saveError }}</p>
     </div>
 
     <!-- Empty State -->
-    <div
-      v-if="displayItems.length === 0"
-      class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300"
-    >
-      <FontAwesomeIcon
-        icon="chart-simple"
-        size="2x"
-        class="mb-4 text-gray-400"
-      />
-      <p class="text-gray-500 font-body mb-4">
-        Noch keine Statistiken vorhanden.
-      </p>
+    <div v-if="displayItems.length === 0" class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+      <FontAwesomeIcon icon="chart-simple" size="2x" class="mb-4 text-gray-400" />
+      <p class="text-gray-500 font-body mb-4">Noch keine Statistiken vorhanden.</p>
       <button
         type="button"
         class="px-4 py-2 bg-vsg-blue-600 text-white font-body text-sm rounded-lg hover:bg-vsg-blue-700 transition-colors"
@@ -273,14 +233,7 @@ async function handleSave() {
 
     <!-- Stats List with Drag & Drop -->
     <template v-else>
-      <VueDraggable
-        v-model="displayItems"
-        :animation="200"
-        handle=".drag-handle"
-        ghost-class="opacity-50"
-        class="space-y-2"
-        @end="handleDragEnd"
-      >
+      <VueDraggable v-model="displayItems" :animation="200" handle=".drag-handle" ghost-class="opacity-50" class="space-y-2" @end="handleDragEnd">
         <DepartmentStatRow
           v-for="item in displayItems"
           :key="item.id"

@@ -50,9 +50,7 @@ defineExpose({ hasChanges });
     :class="{ 'border-vsg-lime-500 bg-vsg-lime-50': isNew }"
   >
     <!-- Drag Handle -->
-    <div
-      class="cursor-grab text-gray-400 hover:text-gray-600 drag-handle shrink-0"
-    >
+    <div class="cursor-grab text-gray-400 hover:text-gray-600 drag-handle shrink-0">
       <FontAwesomeIcon icon="grip" />
     </div>
 

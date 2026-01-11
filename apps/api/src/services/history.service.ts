@@ -6,9 +6,7 @@ export class HistoryService {
    * Get the history content.
    * There is only one record with ID 1.
    */
-  async get(
-    client: Prisma.TransactionClient | typeof prisma = prisma,
-  ): Promise<HistoryContent | null> {
+  async get(client: Prisma.TransactionClient | typeof prisma = prisma): Promise<HistoryContent | null> {
     const content = await client.historyContent.findUnique({
       where: { id: 1 },
       include: {
@@ -54,16 +52,14 @@ export class HistoryService {
           data: d.values.map((v) => v.value),
         })),
       },
-      developmentChronicleGroups: content.developmentChronicleGroups.map(
-        (g) => ({
-          id: g.id,
-          headline: g.headline,
-          content: g.entries.map((e) => ({
-            year: e.year,
-            description: e.description,
-          })),
-        }),
-      ),
+      developmentChronicleGroups: content.developmentChronicleGroups.map((g) => ({
+        id: g.id,
+        headline: g.headline,
+        content: g.entries.map((e) => ({
+          year: e.year,
+          description: e.description,
+        })),
+      })),
       festivalsItems: content.festivalsItems.map((i) => ({
         headline: i.headline,
         text: i.text,

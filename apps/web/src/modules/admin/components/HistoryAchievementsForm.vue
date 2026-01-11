@@ -20,9 +20,7 @@ watch(
   (newHistory) => {
     if (newHistory) {
       achievementsHeadline.value = newHistory.achievementsHeadline;
-      localItems.value = JSON.parse(
-        JSON.stringify(newHistory.achievementsItems),
-      );
+      localItems.value = JSON.parse(JSON.stringify(newHistory.achievementsItems));
     }
   },
   { immediate: true },
@@ -56,17 +54,10 @@ async function handleSubmit() {
 <template>
   <form class="space-y-6 pb-12" @submit.prevent="handleSubmit">
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-      <h2
-        class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase"
-      >
-        Hall of Fame Bereich
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase">Hall of Fame Bereich</h2>
 
       <div>
-        <label
-          for="achievementsHeadline"
-          class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-        >
+        <label for="achievementsHeadline" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
           Abschnitts-Überschrift
         </label>
         <input
@@ -80,19 +71,10 @@ async function handleSubmit() {
     </div>
 
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-      <h2
-        class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase"
-      >
-        Erfolge (Einträge)
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase">Erfolge (Einträge)</h2>
 
       <div class="space-y-4">
-        <VueDraggable
-          v-model="localItems"
-          handle=".drag-handle"
-          :animation="200"
-          class="space-y-3"
-        >
+        <VueDraggable v-model="localItems" handle=".drag-handle" :animation="200" class="space-y-3">
           <HistoryAchievementRow
             v-for="(item, index) in localItems"
             :key="index"

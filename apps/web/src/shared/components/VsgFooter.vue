@@ -22,10 +22,7 @@ const age = computed(() => {
   let years = today.getFullYear() - foundingDate.getFullYear();
   const monthDiff = today.getMonth() - foundingDate.getMonth();
 
-  if (
-    monthDiff < 0 ||
-    (monthDiff === 0 && today.getDate() < foundingDate.getDate())
-  ) {
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < foundingDate.getDate())) {
     years--;
   }
 
@@ -46,40 +43,22 @@ onMounted(() => {
         <!-- Brand -->
         <div class="md:col-span-2">
           <div class="mb-6 flex items-center gap-4">
-            <div
-              class="flex h-14 w-14 items-center justify-center rounded-lg bg-vsg-gold-400"
-            >
-              <img
-                src="@/assets/logo.svg"
-                alt="VSG Kugelberg Logo"
-                title="VSG Kugelberg Logo"
-              />
+            <div class="flex h-14 w-14 items-center justify-center rounded-lg bg-vsg-gold-400">
+              <img src="@/assets/logo.svg" alt="VSG Kugelberg Logo" title="VSG Kugelberg Logo" />
             </div>
             <div>
-              <span class="font-display text-3xl tracking-wider text-white"
-                >VSG KUGELBERG</span
-              >
-              <span
-                class="block font-body text-xs font-normal uppercase tracking-[0.3em] text-vsg-gold-400"
-                >Weißenfels</span
-              >
+              <span class="font-display text-3xl tracking-wider text-white">VSG KUGELBERG</span>
+              <span class="block font-body text-xs font-normal uppercase tracking-[0.3em] text-vsg-gold-400">Weißenfels</span>
             </div>
           </div>
-          <p
-            class="max-w-md font-body font-normal leading-relaxed text-vsg-blue-300"
-          >
-            Seit über {{ age }} Jahren der Sportverein für Weißenfels und
-            Umgebung. Tradition, Gemeinschaft und sportliche Exzellenz.
+          <p class="max-w-md font-body font-normal leading-relaxed text-vsg-blue-300">
+            Seit über {{ age }} Jahren der Sportverein für Weißenfels und Umgebung. Tradition, Gemeinschaft und sportliche Exzellenz.
           </p>
         </div>
 
         <!-- Links -->
         <div class="md:col-start-4 md:text-right">
-          <h5
-            class="mb-6 font-display text-xl tracking-wider text-vsg-gold-400"
-          >
-            Verein
-          </h5>
+          <h5 class="mb-6 font-display text-xl tracking-wider text-vsg-gold-400">Verein</h5>
           <ul class="space-y-3">
             <li v-for="link in vereinLinks" :key="link.label">
               <RouterLink
@@ -89,11 +68,7 @@ onMounted(() => {
               >
                 {{ link.label }}
               </RouterLink>
-              <a
-                v-else
-                :href="link.href"
-                class="font-body font-normal text-vsg-blue-300 transition-colors hover:text-vsg-gold-400"
-              >
+              <a v-else :href="link.href" class="font-body font-normal text-vsg-blue-300 transition-colors hover:text-vsg-gold-400">
                 {{ link.label }}
               </a>
             </li>
@@ -101,21 +76,13 @@ onMounted(() => {
         </div>
       </div>
 
-      <div
-        class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-vsg-gold-400/10 pt-8 md:flex-row"
-      >
-        <span class="font-body text-sm font-normal text-vsg-blue-400">
-          &copy; 2024 VSG Kugelberg e.V. Alle Rechte vorbehalten.
-        </span>
+      <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-vsg-gold-400/10 pt-8 md:flex-row">
+        <span class="font-body text-sm font-normal text-vsg-blue-400"> &copy; 2024 VSG Kugelberg e.V. Alle Rechte vorbehalten. </span>
         <div class="flex gap-6">
-          <RouterLink
-            to="/impressum"
-            class="font-body text-sm font-normal text-vsg-blue-400 transition-colors hover:text-vsg-gold-400"
+          <RouterLink to="/impressum" class="font-body text-sm font-normal text-vsg-blue-400 transition-colors hover:text-vsg-gold-400"
             >Impressum</RouterLink
           >
-          <RouterLink
-            to="/datenschutz"
-            class="font-body text-sm font-normal text-vsg-blue-400 transition-colors hover:text-vsg-gold-400"
+          <RouterLink to="/datenschutz" class="font-body text-sm font-normal text-vsg-blue-400 transition-colors hover:text-vsg-gold-400"
             >Datenschutz</RouterLink
           >
         </div>

@@ -3,9 +3,7 @@ export interface ValidationRule {
   message: string;
 }
 
-export function required(
-  message = 'Dieses Feld ist erforderlich',
-): ValidationRule {
+export function required(message = 'Dieses Feld ist erforderlich'): ValidationRule {
   return {
     validate: (value) => {
       if (!value || value.trim() === '') {
@@ -17,9 +15,7 @@ export function required(
   };
 }
 
-export function email(
-  message = 'Bitte eine gültige E-Mail-Adresse eingeben',
-): ValidationRule {
+export function email(message = 'Bitte eine gültige E-Mail-Adresse eingeben'): ValidationRule {
   return {
     validate: (value) => {
       if (!value || value.trim() === '') {
@@ -67,20 +63,14 @@ export function maxLength(max: number, message?: string): ValidationRule {
   };
 }
 
-export function length(
-  min?: number,
-  max?: number,
-  message?: string,
-): ValidationRule {
+export function length(min?: number, max?: number, message?: string): ValidationRule {
   return {
     validate: (value) => {
       if (!value) {
         return null;
       }
       if (min !== undefined && value.length < min) {
-        return (
-          message || `Dieses Feld muss mindestens ${min} Zeichen lang sein`
-        );
+        return message || `Dieses Feld muss mindestens ${min} Zeichen lang sein`;
       }
       if (max !== undefined && value.length > max) {
         return message || `Dieses Feld darf maximal ${max} Zeichen lang sein`;

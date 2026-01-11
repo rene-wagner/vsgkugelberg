@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
-import type {
-  DepartmentLocation,
-  LocationAmenity,
-  ContactPersonMedia,
-} from '../types/department-extended.types';
+import type { DepartmentLocation, LocationAmenity, ContactPersonMedia } from '../types/department-extended.types';
 import ImageSelector from './ImageSelector.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -62,17 +58,7 @@ watch(
 // Emit updates when values change
 watch(
   [name, badge, badgeVariant, street, city, mapsUrl, amenities, imageId, image],
-  ([
-    newName,
-    newBadge,
-    newVariant,
-    newStreet,
-    newCity,
-    newMapsUrl,
-    newAmenities,
-    newImageId,
-    newImage,
-  ]) => {
+  ([newName, newBadge, newVariant, newStreet, newCity, newMapsUrl, newAmenities, newImageId, newImage]) => {
     // Check if anything actually changed to prevent recursive updates via parent re-rendering
     if (
       newName === props.location.name &&
@@ -81,8 +67,7 @@ watch(
       newStreet === props.location.street &&
       newCity === props.location.city &&
       newMapsUrl === (props.location.mapsUrl || '') &&
-      JSON.stringify(newAmenities) ===
-        JSON.stringify(props.location.amenities) &&
+      JSON.stringify(newAmenities) === JSON.stringify(props.location.amenities) &&
       newImageId === (props.location.imageId ?? null) &&
       newImage?.id === props.location.image?.id
     ) {
@@ -122,32 +107,17 @@ function handleRemoveAmenity(index: number) {
 </script>
 
 <template>
-  <div
-    class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
-    :class="{ 'border-vsg-lime-500': isNew }"
-  >
+  <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm" :class="{ 'border-vsg-lime-500': isNew }">
     <!-- Card Header -->
-    <div
-      class="flex items-center gap-3 p-4 bg-gray-50 border-b border-gray-200"
-    >
+    <div class="flex items-center gap-3 p-4 bg-gray-50 border-b border-gray-200">
       <!-- Drag Handle -->
-      <div
-        class="cursor-grab text-gray-400 hover:text-gray-600 location-drag-handle shrink-0"
-      >
+      <div class="cursor-grab text-gray-400 hover:text-gray-600 location-drag-handle shrink-0">
         <FontAwesomeIcon icon="grip" />
       </div>
 
       <!-- Expand/Collapse Toggle -->
-      <button
-        type="button"
-        class="p-1 hover:bg-gray-200 rounded transition-colors"
-        @click="isExpanded = !isExpanded"
-      >
-        <FontAwesomeIcon
-          icon="chevron-down"
-          class="text-gray-500 transition-transform"
-          :class="{ 'rotate-180': !isExpanded }"
-        />
+      <button type="button" class="p-1 hover:bg-gray-200 rounded transition-colors" @click="isExpanded = !isExpanded">
+        <FontAwesomeIcon icon="chevron-down" class="text-gray-500 transition-transform" :class="{ 'rotate-180': !isExpanded }" />
       </button>
 
       <!-- Location Icon -->
@@ -164,9 +134,7 @@ function handleRemoveAmenity(index: number) {
       </div>
 
       <!-- Amenity Count Badge -->
-      <span
-        class="px-2 py-1 bg-vsg-blue-100 text-vsg-blue-700 text-xs font-body rounded"
-      >
+      <span class="px-2 py-1 bg-vsg-blue-100 text-vsg-blue-700 text-xs font-body rounded">
         {{ amenityCount }}
         {{ amenityCount === 1 ? 'Ausstattung' : 'Ausstattungen' }}
       </span>
@@ -186,26 +154,14 @@ function handleRemoveAmenity(index: number) {
     <div v-show="isExpanded" class="p-4 space-y-4">
       <!-- Image Selection -->
       <div>
-        <label
-          class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-2"
-        >
-          Standortfoto
-        </label>
-        <ImageSelector
-          v-model:media-id="imageId"
-          v-model:media="image"
-          label="Foto auswählen oder hochladen"
-        />
+        <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-2"> Standortfoto </label>
+        <ImageSelector v-model:media-id="imageId" v-model:media="image" label="Foto auswählen oder hochladen" />
       </div>
 
       <!-- Badge Row -->
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label
-            class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-          >
-            Badge Text
-          </label>
+          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Badge Text </label>
           <input
             v-model="badge"
             type="text"
@@ -214,11 +170,7 @@ function handleRemoveAmenity(index: number) {
           />
         </div>
         <div>
-          <label
-            class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-          >
-            Badge Variante
-          </label>
+          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Badge Variante </label>
           <select
             v-model="badgeVariant"
             class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
@@ -232,11 +184,7 @@ function handleRemoveAmenity(index: number) {
       <!-- Address Row -->
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label
-            class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-          >
-            Straße
-          </label>
+          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Straße </label>
           <input
             v-model="street"
             type="text"
@@ -245,11 +193,7 @@ function handleRemoveAmenity(index: number) {
           />
         </div>
         <div>
-          <label
-            class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-          >
-            Stadt
-          </label>
+          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Stadt </label>
           <input
             v-model="city"
             type="text"
@@ -261,11 +205,7 @@ function handleRemoveAmenity(index: number) {
 
       <!-- Maps URL -->
       <div>
-        <label
-          class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-        >
-          Maps URL
-        </label>
+        <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Maps URL </label>
         <input
           v-model="mapsUrl"
           type="url"
@@ -276,11 +216,7 @@ function handleRemoveAmenity(index: number) {
 
       <!-- Amenities Section -->
       <div>
-        <label
-          class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-2"
-        >
-          Ausstattung
-        </label>
+        <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-2"> Ausstattung </label>
 
         <!-- Amenities List -->
         <div v-if="amenities.length > 0" class="flex flex-wrap gap-2 mb-3">
@@ -290,11 +226,7 @@ function handleRemoveAmenity(index: number) {
             class="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded-full text-sm text-vsg-blue-900"
           >
             <span>{{ amenity.text }}</span>
-            <button
-              type="button"
-              class="p-0.5 text-gray-400 hover:text-red-500 rounded-full"
-              @click="handleRemoveAmenity(index)"
-            >
+            <button type="button" class="p-0.5 text-gray-400 hover:text-red-500 rounded-full" @click="handleRemoveAmenity(index)">
               <FontAwesomeIcon icon="xmark" />
             </button>
           </div>

@@ -4,12 +4,7 @@ import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
 import { validationMiddleware } from '@/middleware/validation.middleware';
 import { jwtMiddleware } from '@/middleware/jwt.middleware';
-import {
-  createPostValidator,
-  updatePostValidator,
-  slugParamValidator,
-  postsQueryValidator,
-} from '@/validators/post.validators';
+import { createPostValidator, updatePostValidator, slugParamValidator, postsQueryValidator } from '@/validators/post.validators';
 import { CreatePostDto, UpdatePostDto } from '@/types/post.types';
 
 const router = Router();
@@ -24,19 +19,13 @@ router.get(
     const { published, category, page, limit } = req.query;
 
     // Convert query string to boolean if present
-    const publishedFilter =
-      published === 'true' ? true : published === 'false' ? false : undefined;
+    const publishedFilter = published === 'true' ? true : published === 'false' ? false : undefined;
 
     // Parse pagination params with defaults (express-validator toInt() converts them)
     const pageNum = page ? Number(page) : 1;
     const limitNum = limit ? Number(limit) : 10;
 
-    const result = await postsService.findAll(
-      publishedFilter,
-      category as string | undefined,
-      pageNum,
-      limitNum,
-    );
+    const result = await postsService.findAll(publishedFilter, category as string | undefined, pageNum, limitNum);
 
     res.json(result);
   }),

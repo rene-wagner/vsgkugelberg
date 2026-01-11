@@ -3,12 +3,7 @@ import { ref, computed, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useDepartmentTrainersStore } from '../stores/departmentTrainersStore';
 import TrainerCard from './TrainerCard.vue';
-import type {
-  DepartmentTrainer,
-  TrainerLicense,
-  CreateDepartmentTrainerDto,
-  UpdateDepartmentTrainerDto,
-} from '../types/department-extended.types';
+import type { DepartmentTrainer, TrainerLicense, CreateDepartmentTrainerDto, UpdateDepartmentTrainerDto } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 interface LocalTrainer extends DepartmentTrainer {
@@ -101,12 +96,7 @@ const usedContactPersonIds = computed(() => {
 });
 
 const isDirty = computed(() => {
-  return (
-    pendingCreates.value.size > 0 ||
-    pendingUpdates.value.size > 0 ||
-    pendingDeletes.value.size > 0 ||
-    orderChanged.value
-  );
+  return pendingCreates.value.size > 0 || pendingUpdates.value.size > 0 || pendingDeletes.value.size > 0 || orderChanged.value;
 });
 
 defineExpose({ isDirty });
@@ -189,10 +179,7 @@ async function handleSave() {
   try {
     // 1. Delete trainers
     for (const id of pendingDeletes.value) {
-      const success = await trainersStore.deleteTrainer(
-        props.departmentSlug,
-        id,
-      );
+      const success = await trainersStore.deleteTrainer(props.departmentSlug, id);
       if (!success) throw new Error('Fehler beim Löschen eines Trainers');
     }
 
@@ -206,10 +193,7 @@ async function handleSave() {
         licenses: trainer.licenses,
       };
 
-      const result = await trainersStore.createTrainer(
-        props.departmentSlug,
-        createDto,
-      );
+      const result = await trainersStore.createTrainer(props.departmentSlug, createDto);
       if (!result) throw new Error('Fehler beim Erstellen eines Trainers');
 
       // Update sortableIds with the real ID
@@ -226,11 +210,7 @@ async function handleSave() {
         licenses: data.licenses,
       };
 
-      const result = await trainersStore.updateTrainer(
-        props.departmentSlug,
-        id,
-        updateDto,
-      );
+      const result = await trainersStore.updateTrainer(props.departmentSlug, id, updateDto);
       if (!result) throw new Error('Fehler beim Aktualisieren eines Trainers');
     }
 
@@ -239,10 +219,7 @@ async function handleSave() {
       const existingIds = sortableIds.value.filter((id) => id > 0);
 
       if (existingIds.length > 0) {
-        const result = await trainersStore.reorder(
-          props.departmentSlug,
-          existingIds,
-        );
+        const result = await trainersStore.reorder(props.departmentSlug, existingIds);
         if (!result) throw new Error('Fehler beim Sortieren der Trainer');
       }
     }
@@ -257,8 +234,7 @@ async function handleSave() {
     localTrainers.value = [...trainersStore.trainers];
     sortableIds.value = localTrainers.value.map((t) => t.id);
   } catch (e) {
-    saveError.value =
-      e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
+    saveError.value = e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
   } finally {
     isSaving.value = false;
   }
@@ -268,23 +244,13 @@ async function handleSave() {
 <template>
   <div class="space-y-4">
     <!-- Error Message -->
-    <div
-      v-if="saveError"
-      class="bg-red-50 border border-red-200 rounded-xl p-4"
-    >
+    <div v-if="saveError" class="bg-red-50 border border-red-200 rounded-xl p-4">
       <p class="text-sm text-red-600 font-body">{{ saveError }}</p>
     </div>
 
     <!-- Empty State -->
-    <div
-      v-if="displayTrainers.length === 0"
-      class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300"
-    >
-      <FontAwesomeIcon
-        icon="people-group"
-        size="2x"
-        class="mb-4 text-gray-400"
-      />
+    <div v-if="displayTrainers.length === 0" class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+      <FontAwesomeIcon icon="people-group" size="2x" class="mb-4 text-gray-400" />
       <p class="text-gray-500 font-body mb-4">Noch keine Trainer vorhanden.</p>
       <button
         type="button"
@@ -311,17 +277,8 @@ async function handleSave() {
           :trainer="trainer"
           :is-new="!!trainer._isNew"
           :used-contact-person-ids="usedContactPersonIds"
-          @update="
-            (data) =>
-              handleUpdate(
-                trainer._tempId || trainer.id,
-                data,
-                !!trainer._isNew,
-              )
-          "
-          @delete="
-            handleDelete(trainer._tempId || trainer.id, !!trainer._isNew)
-          "
+          @update="(data) => handleUpdate(trainer._tempId || trainer.id, data, !!trainer._isNew)"
+          @delete="handleDelete(trainer._tempId || trainer.id, !!trainer._isNew)"
         />
       </VueDraggable>
 

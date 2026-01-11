@@ -19,9 +19,7 @@ process.env.SMTP_PASS = '';
 process.env.SMTP_FROM = 'noreply@vsg-kugelberg.de';
 
 if (!process.env.DATABASE_URL?.includes('test')) {
-  console.warn(
-    '⚠️  Warning: DATABASE_URL does not contain "test" - you may be using your development database!',
-  );
+  console.warn('⚠️  Warning: DATABASE_URL does not contain "test" - you may be using your development database!');
 }
 
 beforeAll(async () => {
@@ -31,9 +29,7 @@ beforeAll(async () => {
     // Clear any leftover emails from previous test runs
     await clearEmails().catch(() => {
       // MailHog may not be running in all environments
-      console.warn(
-        '⚠️  Warning: Could not clear MailHog emails. Make sure MailHog is running for email tests.',
-      );
+      console.warn('⚠️  Warning: Could not clear MailHog emails. Make sure MailHog is running for email tests.');
     });
   } catch (error) {
     console.error('❌ Failed to connect to test database:', error);

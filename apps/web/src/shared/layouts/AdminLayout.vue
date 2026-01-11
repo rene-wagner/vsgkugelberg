@@ -131,46 +131,24 @@ async function handleLogout() {
 <template>
   <div class="min-h-screen text-vsg-blue-900 overflow-x-hidden">
     <!-- Header -->
-    <header
-      class="fixed top-0 left-0 right-0 z-50 h-16 bg-vsg-blue-900 border-b border-vsg-gold-400/20"
-    >
+    <header class="fixed top-0 left-0 right-0 z-50 h-16 bg-vsg-blue-900 border-b border-vsg-gold-400/20">
       <div class="h-full px-6 flex items-center justify-between">
         <!-- Logo -->
         <RouterLink to="/" class="flex items-center gap-3">
-          <div
-            class="w-10 h-10 bg-vsg-gold-400 rounded-lg flex items-center justify-center"
-          >
-            <span class="font-display text-vsg-blue-900 text-xl tracking-tight"
-              >VK</span
-            >
+          <div class="w-10 h-10 bg-vsg-gold-400 rounded-lg flex items-center justify-center">
+            <span class="font-display text-vsg-blue-900 text-xl tracking-tight">VK</span>
           </div>
           <div class="hidden sm:block">
-            <span class="font-display text-xl tracking-wider text-white"
-              >VSG KUGELBERG</span
-            >
-            <span
-              class="block text-[10px] font-body font-normal tracking-[0.3em] text-vsg-gold-400 uppercase"
-              >Admin Dashboard</span
-            >
+            <span class="font-display text-xl tracking-wider text-white">VSG KUGELBERG</span>
+            <span class="block text-[10px] font-body font-normal tracking-[0.3em] text-vsg-gold-400 uppercase">Admin Dashboard</span>
           </div>
         </RouterLink>
 
         <!-- User Menu -->
-        <div
-          class="relative"
-          @mouseenter="isUserMenuOpen = true"
-          @mouseleave="isUserMenuOpen = false"
-        >
-          <button
-            class="flex items-center gap-3 p-2 rounded-lg hover:bg-vsg-blue-800 transition-colors"
-          >
-            <span
-              class="hidden sm:block font-body font-normal text-sm text-vsg-blue-200"
-              >{{ authStore.user?.username ?? 'Benutzer' }}</span
-            >
-            <div
-              class="w-10 h-10 bg-vsg-blue-700 rounded-full flex items-center justify-center border-2 border-vsg-gold-400/30"
-            >
+        <div class="relative" @mouseenter="isUserMenuOpen = true" @mouseleave="isUserMenuOpen = false">
+          <button class="flex items-center gap-3 p-2 rounded-lg hover:bg-vsg-blue-800 transition-colors">
+            <span class="hidden sm:block font-body font-normal text-sm text-vsg-blue-200">{{ authStore.user?.username ?? 'Benutzer' }}</span>
+            <div class="w-10 h-10 bg-vsg-blue-700 rounded-full flex items-center justify-center border-2 border-vsg-gold-400/30">
               <FontAwesomeIcon icon="user" class="text-vsg-gold-400" />
             </div>
           </button>
@@ -184,19 +162,11 @@ async function handleLogout() {
             leave-from-class="opacity-100 translate-y-0"
             leave-to-class="opacity-0 translate-y-2"
           >
-            <div
-              v-if="isUserMenuOpen"
-              class="absolute top-full right-0 mt-2 w-48 bg-vsg-blue-900 border border-vsg-gold-400/20 rounded-lg shadow-xl"
-            >
+            <div v-if="isUserMenuOpen" class="absolute top-full right-0 mt-2 w-48 bg-vsg-blue-900 border border-vsg-gold-400/20 rounded-lg shadow-xl">
               <div class="py-2">
                 <div class="px-4 py-2 border-b border-vsg-gold-400/10">
-                  <span class="block font-body text-sm text-white">{{
-                    authStore.user?.username ?? 'Benutzer'
-                  }}</span>
-                  <span
-                    class="block font-body font-normal text-xs text-vsg-blue-300"
-                    >{{ authStore.user?.email ?? '' }}</span
-                  >
+                  <span class="block font-body text-sm text-white">{{ authStore.user?.username ?? 'Benutzer' }}</span>
+                  <span class="block font-body font-normal text-xs text-vsg-blue-300">{{ authStore.user?.email ?? '' }}</span>
                 </div>
                 <button
                   type="button"
@@ -216,15 +186,10 @@ async function handleLogout() {
     <!-- Main Layout -->
     <div class="flex pt-16 min-h-screen">
       <!-- Sidebar -->
-      <aside
-        class="fixed left-0 top-16 bottom-0 w-64 bg-vsg-blue-950 border-r border-vsg-gold-400/10 overflow-y-auto"
-      >
+      <aside class="fixed left-0 top-16 bottom-0 w-64 bg-vsg-blue-950 border-r border-vsg-gold-400/10 overflow-y-auto">
         <nav class="py-6">
           <div class="px-4 mb-4">
-            <span
-              class="font-body font-normal text-xs tracking-widest text-vsg-blue-400 uppercase"
-              >Navigation</span
-            >
+            <span class="font-body font-normal text-xs tracking-widest text-vsg-blue-400 uppercase">Navigation</span>
           </div>
 
           <ul class="space-y-1">
@@ -238,14 +203,8 @@ async function handleLogout() {
                   @click="toggleExpand(item.name)"
                 >
                   <div class="flex items-center gap-3">
-                    <FontAwesomeIcon
-                      :icon="item.icon"
-                      class="text-vsg-blue-400"
-                    />
-                    <span
-                      class="font-body font-normal text-sm text-vsg-blue-200"
-                      >{{ item.name }}</span
-                    >
+                    <FontAwesomeIcon :icon="item.icon" class="text-vsg-blue-400" />
+                    <span class="font-body font-normal text-sm text-vsg-blue-200">{{ item.name }}</span>
                   </div>
                   <FontAwesomeIcon
                     icon="chevron-down"
@@ -258,9 +217,7 @@ async function handleLogout() {
                 <div
                   class="overflow-hidden transition-all duration-300 ease-in-out"
                   :style="{
-                    maxHeight: expandedItems.includes(item.name)
-                      ? `${item.children.length * 40}px`
-                      : '0',
+                    maxHeight: expandedItems.includes(item.name) ? `${item.children.length * 40}px` : '0',
                   }"
                 >
                   <ul class="pl-12 space-y-1 py-1">
@@ -285,9 +242,7 @@ async function handleLogout() {
                 active-class="active"
               >
                 <FontAwesomeIcon :icon="item.icon" class="text-vsg-blue-400" />
-                <span class="font-body font-normal text-sm text-vsg-blue-200">{{
-                  item.name
-                }}</span>
+                <span class="font-body font-normal text-sm text-vsg-blue-200">{{ item.name }}</span>
               </RouterLink>
             </li>
           </ul>

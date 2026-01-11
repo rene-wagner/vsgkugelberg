@@ -1,20 +1,10 @@
 import { NotFoundException } from '@/errors/http-errors';
-import {
-  CreateEventDto,
-  UpdateEventDto,
-  Event,
-  EventInstance,
-  EventCategory,
-} from '@/types/event.types';
+import { CreateEventDto, UpdateEventDto, Event, EventInstance, EventCategory } from '@/types/event.types';
 import { Prisma, prisma } from '@/lib/prisma.lib';
 import { RRule } from 'rrule';
 
 export class EventsService {
-  async findByDateRange(
-    start: Date,
-    end: Date,
-    category?: EventCategory,
-  ): Promise<EventInstance[]> {
+  async findByDateRange(start: Date, end: Date, category?: EventCategory): Promise<EventInstance[]> {
     const where: Prisma.EventWhereInput = {
       OR: [
         // Non-recurring events that fall within the range
@@ -59,33 +49,23 @@ export class EventsService {
     }
 
     // Sort all instances by start date
-    instances.sort(
-      (a, b) =>
-        new Date(a.startDate).getTime() - new Date(b.startDate).getTime(),
-    );
+    instances.sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
     return instances;
   }
 
-  private expandRecurringEvent(
-    event: Event,
-    rangeStart: Date,
-    rangeEnd: Date,
-  ): EventInstance[] {
+  private expandRecurringEvent(event: Event, rangeStart: Date, rangeEnd: Date): EventInstance[] {
     const instances: EventInstance[] = [];
 
     try {
       // Parse the RRULE string
-      const rule = RRule.fromString(
-        `DTSTART:${this.formatDateForRRule(event.startDate)}\nRRULE:${event.recurrence}`,
-      );
+      const rule = RRule.fromString(`DTSTART:${this.formatDateForRRule(event.startDate)}\nRRULE:${event.recurrence}`);
 
       // Get occurrences within the date range
       const occurrences = rule.between(rangeStart, rangeEnd, true);
 
       // Calculate the duration of the original event
-      const duration =
-        new Date(event.endDate).getTime() - new Date(event.startDate).getTime();
+      const duration = new Date(event.endDate).getTime() - new Date(event.startDate).getTime();
 
       for (const occurrence of occurrences) {
         const instanceEndDate = new Date(occurrence.getTime() + duration);

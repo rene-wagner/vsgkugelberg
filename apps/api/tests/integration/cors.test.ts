@@ -21,9 +21,7 @@ describe('CORS Integration Tests', () => {
       process.env.NODE_ENV = 'development';
       delete process.env.CORS_ORIGINS;
 
-      const response = await request(app)
-        .get(HEALTH_ENDPOINT)
-        .set('Origin', DEV_ORIGIN);
+      const response = await request(app).get(HEALTH_ENDPOINT).set('Origin', DEV_ORIGIN);
 
       expect(response.status).toBe(200);
       expect(response.headers['access-control-allow-origin']).toBe(DEV_ORIGIN);
@@ -36,14 +34,10 @@ describe('CORS Integration Tests', () => {
       process.env.NODE_ENV = 'production';
       process.env.CORS_ORIGINS = `${OTHER_ORIGIN}, ${DEV_ORIGIN}`;
 
-      const response = await request(app)
-        .get(HEALTH_ENDPOINT)
-        .set('Origin', OTHER_ORIGIN);
+      const response = await request(app).get(HEALTH_ENDPOINT).set('Origin', OTHER_ORIGIN);
 
       expect(response.status).toBe(200);
-      expect(response.headers['access-control-allow-origin']).toBe(
-        OTHER_ORIGIN,
-      );
+      expect(response.headers['access-control-allow-origin']).toBe(OTHER_ORIGIN);
       expect(response.headers['access-control-allow-credentials']).toBe('true');
     });
 
@@ -51,15 +45,11 @@ describe('CORS Integration Tests', () => {
       process.env.NODE_ENV = 'production';
       process.env.CORS_ORIGINS = OTHER_ORIGIN;
 
-      const response = await request(app)
-        .get(HEALTH_ENDPOINT)
-        .set('Origin', DEV_ORIGIN);
+      const response = await request(app).get(HEALTH_ENDPOINT).set('Origin', DEV_ORIGIN);
 
       expect(response.status).toBe(200);
       expect(response.headers['access-control-allow-origin']).toBeUndefined();
-      expect(
-        response.headers['access-control-allow-credentials'],
-      ).toBeUndefined();
+      expect(response.headers['access-control-allow-credentials']).toBeUndefined();
     });
   });
 
@@ -68,10 +58,7 @@ describe('CORS Integration Tests', () => {
       process.env.NODE_ENV = 'development';
       delete process.env.CORS_ORIGINS;
 
-      const response = await request(app)
-        .options(HEALTH_ENDPOINT)
-        .set('Origin', DEV_ORIGIN)
-        .set('Access-Control-Request-Method', 'GET');
+      const response = await request(app).options(HEALTH_ENDPOINT).set('Origin', DEV_ORIGIN).set('Access-Control-Request-Method', 'GET');
 
       expect([200, 204]).toContain(response.status);
       expect(response.headers['access-control-allow-origin']).toBe(DEV_ORIGIN);

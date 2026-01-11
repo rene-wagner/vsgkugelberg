@@ -3,12 +3,7 @@ import { PasswordService } from './password.service';
 import { jwtConfig } from '@/config/jwt.config';
 import { prisma } from '@/lib/prisma.lib';
 import { emailService } from './email.service';
-import {
-  createResetToken,
-  validateResetToken,
-  consumeResetToken,
-  buildResetUrl,
-} from './password-reset.service';
+import { createResetToken, validateResetToken, consumeResetToken, buildResetUrl } from './password-reset.service';
 
 export interface JwtPayload {
   username: string;
@@ -33,10 +28,7 @@ export interface LoginResponse {
 export class AuthService {
   constructor(private passwordService: PasswordService) {}
 
-  async validateUser(
-    usernameOrEmail: string,
-    password: string,
-  ): Promise<UserPayload | null> {
+  async validateUser(usernameOrEmail: string, password: string): Promise<UserPayload | null> {
     const user = await prisma.user.findFirst({
       where: {
         OR: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
@@ -112,10 +104,7 @@ export class AuthService {
    * Reset a user's password using a valid reset token.
    * Returns success status and optional error type.
    */
-  async resetPassword(
-    token: string,
-    newPassword: string,
-  ): Promise<{ success: boolean; error?: string }> {
+  async resetPassword(token: string, newPassword: string): Promise<{ success: boolean; error?: string }> {
     const validation = await validateResetToken(token);
 
     if (!validation.valid) {

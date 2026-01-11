@@ -65,9 +65,7 @@ export const useDepartmentsStore = defineStore('departments', () => {
     }
   }
 
-  async function fetchDepartment(
-    slug: string,
-  ): Promise<DepartmentExtended | null> {
+  async function fetchDepartment(slug: string): Promise<DepartmentExtended | null> {
     isLoading.value = true;
     error.value = null;
 
@@ -81,17 +79,12 @@ export const useDepartmentsStore = defineStore('departments', () => {
     }
   }
 
-  async function createDepartment(
-    data: CreateDepartmentData,
-  ): Promise<Department | null> {
+  async function createDepartment(data: CreateDepartmentData): Promise<Department | null> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const newDepartment = await api.post<Department>(
-        '/api/departments',
-        data,
-      );
+      const newDepartment = await api.post<Department>('/api/departments', data);
       departments.value.push(newDepartment);
       return newDepartment;
     } catch (e) {
@@ -102,18 +95,12 @@ export const useDepartmentsStore = defineStore('departments', () => {
     }
   }
 
-  async function updateDepartment(
-    slug: string,
-    data: UpdateDepartmentData,
-  ): Promise<Department | null> {
+  async function updateDepartment(slug: string, data: UpdateDepartmentData): Promise<Department | null> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const updatedDepartment = await api.patch<Department>(
-        `/api/departments/${slug}`,
-        data,
-      );
+      const updatedDepartment = await api.patch<Department>(`/api/departments/${slug}`, data);
       const index = departments.value.findIndex((d) => d.slug === slug);
       if (index !== -1) {
         departments.value[index] = updatedDepartment;

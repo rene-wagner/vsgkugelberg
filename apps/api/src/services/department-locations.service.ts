@@ -1,9 +1,5 @@
 import { NotFoundException } from '@/errors/http-errors';
-import {
-  CreateDepartmentLocationDto,
-  UpdateDepartmentLocationDto,
-  DepartmentLocation,
-} from '@/types/department-location.types';
+import { CreateDepartmentLocationDto, UpdateDepartmentLocationDto, DepartmentLocation } from '@/types/department-location.types';
 import { prisma } from '@/lib/prisma.lib';
 
 export class DepartmentLocationsService {
@@ -20,10 +16,7 @@ export class DepartmentLocationsService {
     return department.id;
   }
 
-  async create(
-    departmentSlug: string,
-    dto: CreateDepartmentLocationDto,
-  ): Promise<DepartmentLocation> {
+  async create(departmentSlug: string, dto: CreateDepartmentLocationDto): Promise<DepartmentLocation> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     return prisma.departmentLocation.create({
@@ -43,11 +36,7 @@ export class DepartmentLocationsService {
     });
   }
 
-  async update(
-    departmentSlug: string,
-    id: number,
-    dto: UpdateDepartmentLocationDto,
-  ): Promise<DepartmentLocation> {
+  async update(departmentSlug: string, id: number, dto: UpdateDepartmentLocationDto): Promise<DepartmentLocation> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify location belongs to this department
@@ -56,9 +45,7 @@ export class DepartmentLocationsService {
     });
 
     if (!location) {
-      throw new NotFoundException(
-        `Location with ID ${id} not found for this department`,
-      );
+      throw new NotFoundException(`Location with ID ${id} not found for this department`);
     }
 
     return prisma.departmentLocation.update({
@@ -80,10 +67,7 @@ export class DepartmentLocationsService {
     });
   }
 
-  async remove(
-    departmentSlug: string,
-    id: number,
-  ): Promise<DepartmentLocation> {
+  async remove(departmentSlug: string, id: number): Promise<DepartmentLocation> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify location belongs to this department
@@ -92,9 +76,7 @@ export class DepartmentLocationsService {
     });
 
     if (!location) {
-      throw new NotFoundException(
-        `Location with ID ${id} not found for this department`,
-      );
+      throw new NotFoundException(`Location with ID ${id} not found for this department`);
     }
 
     return prisma.departmentLocation.delete({
@@ -102,10 +84,7 @@ export class DepartmentLocationsService {
     });
   }
 
-  async reorder(
-    departmentSlug: string,
-    ids: number[],
-  ): Promise<DepartmentLocation[]> {
+  async reorder(departmentSlug: string, ids: number[]): Promise<DepartmentLocation[]> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify all locations belong to this department
@@ -116,9 +95,7 @@ export class DepartmentLocationsService {
     const existingIds = new Set(locations.map((l) => l.id));
     for (const id of ids) {
       if (!existingIds.has(id)) {
-        throw new NotFoundException(
-          `Location with ID ${id} not found for this department`,
-        );
+        throw new NotFoundException(`Location with ID ${id} not found for this department`);
       }
     }
 

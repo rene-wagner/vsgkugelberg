@@ -10,11 +10,7 @@ describe('Posts API Integration Tests', () => {
 
   // Helper to create authenticated request
   async function createAuthenticatedUser() {
-    const user = await createTestUserWithPassword(
-      testUsername,
-      testEmail,
-      testPassword,
-    );
+    const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
     // Login to get JWT token
     const loginResponse = await request(app).post('/api/auth/login').send({
@@ -240,9 +236,7 @@ describe('Posts API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/posts?published=true&category=technology',
-      );
+      const response = await request(app).get('/api/posts?published=true&category=technology');
 
       expect(response.status).toBe(200);
       expect(response.body.data).toHaveLength(1);
@@ -262,9 +256,7 @@ describe('Posts API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/posts?category=nonexistent',
-      );
+      const response = await request(app).get('/api/posts?category=nonexistent');
 
       expect(response.status).toBe(200);
       expect(response.body.data).toHaveLength(0);
@@ -373,9 +365,7 @@ describe('Posts API Integration Tests', () => {
         });
       }
 
-      const response = await request(app).get(
-        '/api/posts?published=true&page=1&limit=5',
-      );
+      const response = await request(app).get('/api/posts?published=true&page=1&limit=5');
 
       expect(response.status).toBe(200);
       expect(response.body.data).toHaveLength(5);
@@ -421,12 +411,8 @@ describe('Posts API Integration Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body.data).toHaveLength(2);
 
-      const postWithThumb = response.body.data.find(
-        (p: { slug: string }) => p.slug === 'post-with-thumbnail',
-      );
-      const postWithoutThumb = response.body.data.find(
-        (p: { slug: string }) => p.slug === 'post-without-thumbnail',
-      );
+      const postWithThumb = response.body.data.find((p: { slug: string }) => p.slug === 'post-with-thumbnail');
+      const postWithoutThumb = response.body.data.find((p: { slug: string }) => p.slug === 'post-without-thumbnail');
 
       expect(postWithThumb.thumbnail).toBeTruthy();
       expect(postWithThumb.thumbnail.id).toBe(media.id);
@@ -548,9 +534,7 @@ describe('Posts API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/posts/post-without-thumbnail',
-      );
+      const response = await request(app).get('/api/posts/post-without-thumbnail');
 
       expect(response.status).toBe(200);
       expect(response.body.thumbnail).toBeNull();
@@ -568,10 +552,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({
@@ -604,10 +585,7 @@ describe('Posts API Integration Tests', () => {
         categoryIds: [category1.id, category2.id],
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.categories).toHaveLength(2);
@@ -622,10 +600,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response1 = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(post1);
+      const response1 = await request(app).post('/api/posts').set('Cookie', cookies).send(post1);
 
       expect(response1.status).toBe(201);
       expect(response1.body.slug).toBe('test-post');
@@ -637,10 +612,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response2 = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(post2);
+      const response2 = await request(app).post('/api/posts').set('Cookie', cookies).send(post2);
 
       expect(response2.status).toBe(201);
       expect(response2.body.slug).toMatch(/^test-post-\w+$/);
@@ -656,10 +628,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.published).toBe(false);
@@ -687,10 +656,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(400);
     });
@@ -703,10 +669,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.content).toBeNull();
@@ -720,10 +683,7 @@ describe('Posts API Integration Tests', () => {
         content: 'Content',
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(400);
     });
@@ -737,10 +697,7 @@ describe('Posts API Integration Tests', () => {
         authorId: 99999,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('Author');
@@ -756,10 +713,7 @@ describe('Posts API Integration Tests', () => {
         categoryIds: [99999],
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('Category');
@@ -775,10 +729,7 @@ describe('Posts API Integration Tests', () => {
         published: 'not-a-boolean',
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(400);
     });
@@ -793,10 +744,7 @@ describe('Posts API Integration Tests', () => {
         hits: 100,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.hits).toBe(100);
@@ -812,10 +760,7 @@ describe('Posts API Integration Tests', () => {
         oldPost: true,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.oldPost).toBe(true);
@@ -830,10 +775,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.hits).toBe(0);
@@ -848,10 +790,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.oldPost).toBe(false);
@@ -867,10 +806,7 @@ describe('Posts API Integration Tests', () => {
         hits: -5,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(400);
     });
@@ -885,10 +821,7 @@ describe('Posts API Integration Tests', () => {
         hits: 'not-a-number',
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(400);
     });
@@ -903,10 +836,7 @@ describe('Posts API Integration Tests', () => {
         oldPost: 'not-a-boolean',
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(400);
     });
@@ -922,10 +852,7 @@ describe('Posts API Integration Tests', () => {
         thumbnailId: media.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.thumbnailId).toBe(media.id);
@@ -943,10 +870,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.thumbnailId).toBeNull();
@@ -963,10 +887,7 @@ describe('Posts API Integration Tests', () => {
         thumbnailId: 99999,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('Media');
@@ -990,10 +911,7 @@ describe('Posts API Integration Tests', () => {
         title: 'Updated Title',
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.title).toBe('Updated Title');
@@ -1016,10 +934,7 @@ describe('Posts API Integration Tests', () => {
         content: 'Updated content',
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.content).toBe('Updated content');
@@ -1043,10 +958,7 @@ describe('Posts API Integration Tests', () => {
         published: true,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.published).toBe(true);
@@ -1071,10 +983,7 @@ describe('Posts API Integration Tests', () => {
         published: true,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -1105,10 +1014,7 @@ describe('Posts API Integration Tests', () => {
         categoryIds: [category2.id],
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.categories).toHaveLength(1);
@@ -1131,10 +1037,7 @@ describe('Posts API Integration Tests', () => {
         title: 'Completely New Title',
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.slug).toBe('completely-new-title');
@@ -1162,9 +1065,7 @@ describe('Posts API Integration Tests', () => {
         title: 'Updated Title',
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).send(update);
 
       expect(response.status).toBe(401);
     });
@@ -1176,10 +1077,7 @@ describe('Posts API Integration Tests', () => {
         title: 'Updated Title',
       };
 
-      const response = await request(app)
-        .patch('/api/posts/non-existent-slug')
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch('/api/posts/non-existent-slug').set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('not found');
@@ -1201,10 +1099,7 @@ describe('Posts API Integration Tests', () => {
         categoryIds: [99999],
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('Category');
@@ -1227,10 +1122,7 @@ describe('Posts API Integration Tests', () => {
         published: true,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.title).toBe('Original Title');
@@ -1255,10 +1147,7 @@ describe('Posts API Integration Tests', () => {
         hits: 50,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.hits).toBe(50);
@@ -1281,10 +1170,7 @@ describe('Posts API Integration Tests', () => {
         oldPost: true,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.oldPost).toBe(true);
@@ -1312,10 +1198,7 @@ describe('Posts API Integration Tests', () => {
         oldPost: true,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -1342,10 +1225,7 @@ describe('Posts API Integration Tests', () => {
         hits: -10,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(400);
     });
@@ -1366,10 +1246,7 @@ describe('Posts API Integration Tests', () => {
         oldPost: 'not-a-boolean',
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(400);
     });
@@ -1391,10 +1268,7 @@ describe('Posts API Integration Tests', () => {
         thumbnailId: media.id,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.thumbnailId).toBe(media.id);
@@ -1420,10 +1294,7 @@ describe('Posts API Integration Tests', () => {
         thumbnailId: null,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.thumbnailId).toBeNull();
@@ -1449,10 +1320,7 @@ describe('Posts API Integration Tests', () => {
         thumbnailId: media2.id,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.thumbnailId).toBe(media2.id);
@@ -1481,10 +1349,7 @@ describe('Posts API Integration Tests', () => {
         thumbnailId: 99999,
       };
 
-      const response = await request(app)
-        .patch(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/posts/${post.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('Media');
@@ -1504,9 +1369,7 @@ describe('Posts API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/posts/${post.slug}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -1538,9 +1401,7 @@ describe('Posts API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/posts/${post.slug}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/posts/${post.slug}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body.categories).toHaveLength(1);
@@ -1584,9 +1445,7 @@ describe('Posts API Integration Tests', () => {
     it('should return 404 for non-existent post', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/posts/non-existent-slug')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/posts/non-existent-slug').set('Cookie', cookies);
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('statusCode', 404);
@@ -1596,9 +1455,7 @@ describe('Posts API Integration Tests', () => {
     it('should return 400 for invalid slug format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/posts/invalid slug!')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/posts/invalid slug!').set('Cookie', cookies);
 
       expect(response.status).toBe(400);
     });
@@ -1615,10 +1472,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toBeTruthy();
@@ -1633,10 +1487,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.slug).toMatch(/^test-post-special-characters/);
@@ -1651,10 +1502,7 @@ describe('Posts API Integration Tests', () => {
         authorId: user.id,
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.content).toBe('');
@@ -1670,10 +1518,7 @@ describe('Posts API Integration Tests', () => {
         categoryIds: [],
       };
 
-      const response = await request(app)
-        .post('/api/posts')
-        .set('Cookie', cookies)
-        .send(newPost);
+      const response = await request(app).post('/api/posts').set('Cookie', cookies).send(newPost);
 
       expect(response.status).toBe(201);
       expect(response.body.categories).toHaveLength(0);

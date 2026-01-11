@@ -10,10 +10,7 @@ import {
   locationIdParamValidator,
   reorderDepartmentLocationsValidator,
 } from '@/validators/department-location.validators';
-import {
-  CreateDepartmentLocationDto,
-  UpdateDepartmentLocationDto,
-} from '@/types/department-location.types';
+import { CreateDepartmentLocationDto, UpdateDepartmentLocationDto } from '@/types/department-location.types';
 
 // Router with mergeParams to access :slug from parent router
 const router = Router({ mergeParams: true });

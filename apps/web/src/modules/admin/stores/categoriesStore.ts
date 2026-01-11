@@ -89,9 +89,7 @@ export const useCategoriesStore = defineStore('categories', () => {
     }
   }
 
-  async function createCategory(
-    data: CreateCategoryData,
-  ): Promise<Category | null> {
+  async function createCategory(data: CreateCategoryData): Promise<Category | null> {
     isLoading.value = true;
     error.value = null;
 
@@ -107,18 +105,12 @@ export const useCategoriesStore = defineStore('categories', () => {
     }
   }
 
-  async function updateCategory(
-    slug: string,
-    data: UpdateCategoryData,
-  ): Promise<Category | null> {
+  async function updateCategory(slug: string, data: UpdateCategoryData): Promise<Category | null> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const updatedCategory = await api.patch<Category>(
-        `/api/categories/${slug}`,
-        data,
-      );
+      const updatedCategory = await api.patch<Category>(`/api/categories/${slug}`, data);
       const index = categories.value.findIndex((c) => c.slug === slug);
       if (index !== -1) {
         categories.value[index] = updatedCategory;
@@ -154,10 +146,7 @@ export const useCategoriesStore = defineStore('categories', () => {
     successMessage.value = null;
 
     try {
-      const result = await api.post<{ updated: number }>(
-        '/api/categories/recalculate-slugs',
-        {},
-      );
+      const result = await api.post<{ updated: number }>('/api/categories/recalculate-slugs', {});
       successMessage.value = `${result.updated} Kategorien aktualisiert`;
       await fetchCategories();
       return true;

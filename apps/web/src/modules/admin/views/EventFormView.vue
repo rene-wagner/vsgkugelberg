@@ -12,17 +12,9 @@ const event = ref<EventItem | null>(null);
 const isLoading = ref(false);
 
 const isEditMode = computed(() => !!route.params.id);
-const pageTitle = computed(() =>
-  isEditMode.value ? 'VERANSTALTUNG BEARBEITEN' : 'VERANSTALTUNG ERSTELLEN',
-);
-const pageSubtitle = computed(() =>
-  isEditMode.value
-    ? 'Bearbeite die Veranstaltungsdaten'
-    : 'Erstelle eine neue Veranstaltung',
-);
-const breadcrumbAction = computed(() =>
-  isEditMode.value ? 'Bearbeiten' : 'Erstellen',
-);
+const pageTitle = computed(() => (isEditMode.value ? 'VERANSTALTUNG BEARBEITEN' : 'VERANSTALTUNG ERSTELLEN'));
+const pageSubtitle = computed(() => (isEditMode.value ? 'Bearbeite die Veranstaltungsdaten' : 'Erstelle eine neue Veranstaltung'));
+const breadcrumbAction = computed(() => (isEditMode.value ? 'Bearbeiten' : 'Erstellen'));
 
 onMounted(async () => {
   if (isEditMode.value) {
@@ -38,15 +30,8 @@ onMounted(async () => {
   <div>
     <!-- Page Header -->
     <div class="mb-8">
-      <div
-        class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2"
-      >
-        <router-link
-          to="/admin/termine"
-          class="hover:text-vsg-blue-600 transition-colors"
-        >
-          Veranstaltungen
-        </router-link>
+      <div class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2">
+        <router-link to="/admin/termine" class="hover:text-vsg-blue-600 transition-colors"> Veranstaltungen </router-link>
         <FontAwesomeIcon icon="chevron-right" />
         <span class="text-vsg-blue-600">{{ breadcrumbAction }}</span>
       </div>

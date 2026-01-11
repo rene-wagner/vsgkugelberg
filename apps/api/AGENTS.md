@@ -19,6 +19,7 @@ The API is built as a RESTful service using **Node.js**, **Express**, and **Type
 ## Architecture
 
 The application follows a layered architecture:
+
 1.  **Routes** (`src/routes`): Define API endpoints.
 2.  **Middleware** (`src/middleware`): Handle request processing (auth, validation, error handling).
 3.  **Services** (`src/services`): Contain business logic.
@@ -35,5 +36,6 @@ The application follows a layered architecture:
 ## Database
 
 The project uses **PostgreSQL** with **Prisma**.
+
 - Schema location: `prisma/schema.prisma`
 - Migrations: `prisma/migrations/`

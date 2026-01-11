@@ -63,10 +63,7 @@ describe('History API Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('heroHeadline', 'ORIGINAL HEADLINE');
-      expect(response.body).toHaveProperty(
-        'foundingDescription',
-        'Description',
-      );
+      expect(response.body).toHaveProperty('foundingDescription', 'Description');
     });
 
     it('should be publicly accessible', async () => {
@@ -84,10 +81,7 @@ describe('History API Integration Tests', () => {
         foundingDescription: 'NEW DESCRIPTION',
       };
 
-      const response = await request(app)
-        .patch('/api/history/admin')
-        .set('Cookie', cookies)
-        .send(updateData);
+      const response = await request(app).patch('/api/history/admin').set('Cookie', cookies).send(updateData);
 
       expect(response.status).toBe(200);
       expect(response.body.heroHeadline).toBe('NEW HEADLINE');
@@ -102,9 +96,7 @@ describe('History API Integration Tests', () => {
     });
 
     it('should return 401 without authentication', async () => {
-      const response = await request(app)
-        .patch('/api/history/admin')
-        .send({ heroHeadline: 'UNAUTHORIZED' });
+      const response = await request(app).patch('/api/history/admin').send({ heroHeadline: 'UNAUTHORIZED' });
 
       expect(response.status).toBe(401);
     });
@@ -160,9 +152,7 @@ describe('History API Integration Tests', () => {
         });
       expect(response.status).toBe(400);
       const errorMsg = JSON.parse(response.body.message);
-      expect(errorMsg.errors[0].message).toContain(
-        'Invalid achievement category',
-      );
+      expect(errorMsg.errors[0].message).toContain('Invalid achievement category');
     });
 
     it('should handle complex relational fields', async () => {
@@ -174,26 +164,15 @@ describe('History API Integration Tests', () => {
           datasets: [{ label: 'Members', data: [100, 110] }],
         },
         festivalsItems: [{ headline: 'Fest', text: 'Text' }],
-        foundingFacts: [
-          { year: '1985', headline: 'Fact', description: 'Desc' },
-        ],
+        foundingFacts: [{ year: '1985', headline: 'Fact', description: 'Desc' }],
       };
 
-      const response = await request(app)
-        .patch('/api/history/admin')
-        .set('Cookie', cookies)
-        .send(complexData);
+      const response = await request(app).patch('/api/history/admin').set('Cookie', cookies).send(complexData);
 
       expect(response.status).toBe(200);
-      expect(response.body.developmentChartData).toMatchObject(
-        complexData.developmentChartData,
-      );
-      expect(response.body.festivalsItems).toMatchObject(
-        complexData.festivalsItems,
-      );
-      expect(response.body.foundingFacts).toMatchObject(
-        complexData.foundingFacts,
-      );
+      expect(response.body.developmentChartData).toMatchObject(complexData.developmentChartData);
+      expect(response.body.festivalsItems).toMatchObject(complexData.festivalsItems);
+      expect(response.body.foundingFacts).toMatchObject(complexData.foundingFacts);
     });
 
     it('should preserve existing relations on partial update', async () => {
@@ -201,26 +180,18 @@ describe('History API Integration Tests', () => {
 
       // 1. Initial full setup
       const initialData = {
-        foundingFacts: [
-          { year: '1985', headline: 'Fact 1', description: 'Desc 1' },
-        ],
+        foundingFacts: [{ year: '1985', headline: 'Fact 1', description: 'Desc 1' }],
         festivalsItems: [{ headline: 'Fest 1', text: 'Text 1' }],
       };
 
-      await request(app)
-        .patch('/api/history/admin')
-        .set('Cookie', cookies)
-        .send(initialData);
+      await request(app).patch('/api/history/admin').set('Cookie', cookies).send(initialData);
 
       // 2. Partial update (only Hero headline)
       const partialUpdate = {
         heroHeadline: 'NEW HERO HEADLINE',
       };
 
-      const response = await request(app)
-        .patch('/api/history/admin')
-        .set('Cookie', cookies)
-        .send(partialUpdate);
+      const response = await request(app).patch('/api/history/admin').set('Cookie', cookies).send(partialUpdate);
 
       expect(response.status).toBe(200);
       expect(response.body.heroHeadline).toBe('NEW HERO HEADLINE');

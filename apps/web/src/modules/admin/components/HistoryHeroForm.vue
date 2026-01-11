@@ -35,18 +35,11 @@ async function handleSubmit() {
 <template>
   <form class="space-y-6" @submit.prevent="handleSubmit">
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        HERO BEREICH
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">HERO BEREICH</h2>
 
       <div class="space-y-6">
         <div>
-          <label
-            for="heroHeadline"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Überschrift
-          </label>
+          <label for="heroHeadline" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Überschrift </label>
           <input
             id="heroHeadline"
             v-model="heroHeadline"
@@ -57,18 +50,10 @@ async function handleSubmit() {
         </div>
 
         <div>
-          <label
-            for="heroSubHeadline"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="heroSubHeadline" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             Unterüberschrift
           </label>
-          <VsgMarkdownEditor
-            id="heroSubHeadline"
-            v-model="heroSubHeadline"
-            placeholder="Unterüberschrift der Historie..."
-            min-height="150px"
-          />
+          <VsgMarkdownEditor id="heroSubHeadline" v-model="heroSubHeadline" placeholder="Unterüberschrift der Historie..." min-height="150px" />
         </div>
       </div>
     </div>

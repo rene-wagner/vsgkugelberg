@@ -38,9 +38,7 @@ router.beforeEach(async (to) => {
   const requiredPermissions = to.meta.requiresPermission;
   if (requiredPermissions && requiredPermissions.length > 0) {
     const userPermissions = authStore.user?.permissions || [];
-    const hasPermission = requiredPermissions.some((perm) =>
-      userPermissions.includes(perm),
-    );
+    const hasPermission = requiredPermissions.some((perm) => userPermissions.includes(perm));
 
     if (!hasPermission) {
       return '/admin';

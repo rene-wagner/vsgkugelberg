@@ -14,9 +14,7 @@ const emit = defineEmits<{
 }>();
 
 const departmentsStore = useDepartmentsStore();
-const categories = ref<{ id: string; label: string }[]>([
-  { id: 'Alle', label: 'ALLE' },
-]);
+const categories = ref<{ id: string; label: string }[]>([{ id: 'Alle', label: 'ALLE' }]);
 
 onMounted(async () => {
   if (departmentsStore.departments.length === 0) {
@@ -36,12 +34,8 @@ function handleInput(field: keyof AchievementItem, value: string) {
 </script>
 
 <template>
-  <div
-    class="flex items-start gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg group"
-  >
-    <div
-      class="drag-handle cursor-grab active:cursor-grabbing text-gray-400 mt-2"
-    >
+  <div class="flex items-start gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg group">
+    <div class="drag-handle cursor-grab active:cursor-grabbing text-gray-400 mt-2">
       <FontAwesomeIcon icon="grip" />
     </div>
 
@@ -52,9 +46,7 @@ function handleInput(field: keyof AchievementItem, value: string) {
           type="text"
           placeholder="Jahr"
           class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-vsg-blue-900 focus:border-vsg-blue-600 outline-none font-bold text-center"
-          @input="
-            handleInput('year', ($event.target as HTMLInputElement).value)
-          "
+          @input="handleInput('year', ($event.target as HTMLInputElement).value)"
         />
       </div>
 
@@ -62,9 +54,7 @@ function handleInput(field: keyof AchievementItem, value: string) {
         <select
           :value="achievement.category"
           class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-vsg-blue-900 focus:border-vsg-blue-600 outline-none"
-          @change="
-            handleInput('category', ($event.target as HTMLSelectElement).value)
-          "
+          @change="handleInput('category', ($event.target as HTMLSelectElement).value)"
         >
           <option v-for="cat in categories" :key="cat.id" :value="cat.id">
             {{ cat.label }}
@@ -78,9 +68,7 @@ function handleInput(field: keyof AchievementItem, value: string) {
           type="text"
           placeholder="Titel des Erfolgs"
           class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-vsg-blue-900 font-display tracking-widest focus:border-vsg-blue-600 outline-none"
-          @input="
-            handleInput('headline', ($event.target as HTMLInputElement).value)
-          "
+          @input="handleInput('headline', ($event.target as HTMLInputElement).value)"
         />
 
         <textarea
@@ -88,21 +76,12 @@ function handleInput(field: keyof AchievementItem, value: string) {
           placeholder="Details zum Erfolg..."
           rows="3"
           class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-vsg-blue-900 focus:border-vsg-blue-600 outline-none"
-          @input="
-            handleInput(
-              'description',
-              ($event.target as HTMLTextAreaElement).value,
-            )
-          "
+          @input="handleInput('description', ($event.target as HTMLTextAreaElement).value)"
         ></textarea>
       </div>
     </div>
 
-    <button
-      type="button"
-      class="text-gray-400 hover:text-red-600 transition-colors mt-2"
-      @click="emit('delete')"
-    >
+    <button type="button" class="text-gray-400 hover:text-red-600 transition-colors mt-2" @click="emit('delete')">
       <FontAwesomeIcon icon="trash" />
     </button>
   </div>

@@ -19,24 +19,13 @@ onMounted(async () => {
   <div>
     <!-- Page Header -->
     <div class="mb-8">
-      <div
-        class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2"
-      >
-        <router-link
-          to="/admin"
-          class="hover:text-vsg-blue-600 transition-colors"
-        >
-          Dashboard
-        </router-link>
+      <div class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2">
+        <router-link to="/admin" class="hover:text-vsg-blue-600 transition-colors"> Dashboard </router-link>
         <FontAwesomeIcon icon="chevron-right" />
         <span class="text-vsg-blue-600">Einstellungen</span>
       </div>
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
-        Vereinseinstellungen
-      </h1>
-      <p class="font-body font-normal text-vsg-blue-600 mt-1">
-        Verwalte die globalen Vereinsdaten
-      </p>
+      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">Vereinseinstellungen</h1>
+      <p class="font-body font-normal text-vsg-blue-600 mt-1">Verwalte die globalen Vereinsdaten</p>
     </div>
 
     <!-- Loading State -->

@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import {
-  useDefaultContactPersonsStore,
-  type ContactPerson,
-} from '../stores/contactPersonsStore';
+import { useDefaultContactPersonsStore, type ContactPerson } from '../stores/contactPersonsStore';
 import ContactForm from '../components/ContactForm.vue';
 import VsgSecureContact from '../components/VsgSecureContact.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -15,11 +12,7 @@ const selectedContactPerson = computed<ContactPerson | null>(() => {
   if (selectedContactPersonId.value === null) {
     return null;
   }
-  return (
-    contactPersonsStore.contactPersons.find(
-      (cp) => cp.id === selectedContactPersonId.value,
-    ) || null
-  );
+  return contactPersonsStore.contactPersons.find((cp) => cp.id === selectedContactPersonId.value) || null;
 });
 
 onMounted(() => {
@@ -64,12 +57,8 @@ function encodeBase64(value: string): string {
     <!-- Header Section -->
     <section class="bg-vsg-blue-900 pb-20 pt-40">
       <div class="mx-auto max-w-4xl px-6 text-center">
-        <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">
-          Kontakt
-        </h1>
-        <p class="mt-4 font-body text-lg text-vsg-blue-200">
-          Finden Sie den richtigen Ansprechpartner
-        </p>
+        <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">Kontakt</h1>
+        <p class="mt-4 font-body text-lg text-vsg-blue-200">Finden Sie den richtigen Ansprechpartner</p>
       </div>
     </section>
 
@@ -77,40 +66,26 @@ function encodeBase64(value: string): string {
     <section class="py-16">
       <div class="mx-auto max-w-2xl px-6">
         <!-- Loading State -->
-        <div
-          v-if="contactPersonsStore.isLoading"
-          class="flex items-center justify-center py-12"
-        >
+        <div v-if="contactPersonsStore.isLoading" class="flex items-center justify-center py-12">
           <div class="text-vsg-blue-600 font-body">Laden...</div>
         </div>
 
         <!-- Error State -->
-        <div
-          v-else-if="contactPersonsStore.error"
-          class="bg-red-50 border border-red-200 rounded-xl p-6 text-center"
-        >
+        <div v-else-if="contactPersonsStore.error" class="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
           <p class="text-sm text-red-600 font-body">
             {{ contactPersonsStore.error }}
           </p>
         </div>
 
         <!-- Empty State -->
-        <div
-          v-else-if="contactPersonsStore.contactPersons.length === 0"
-          class="text-center py-12"
-        >
-          <p class="font-body text-vsg-blue-600">
-            Derzeit sind keine Ansprechpartner verfugbar.
-          </p>
+        <div v-else-if="contactPersonsStore.contactPersons.length === 0" class="text-center py-12">
+          <p class="font-body text-vsg-blue-600">Derzeit sind keine Ansprechpartner verfugbar.</p>
         </div>
 
         <!-- Contact Person Selector -->
         <div v-else>
           <div class="mb-8">
-            <label
-              for="contact-person-select"
-              class="block font-body font-normal text-sm tracking-wider text-vsg-blue-600 uppercase mb-3"
-            >
+            <label for="contact-person-select" class="block font-body font-normal text-sm tracking-wider text-vsg-blue-600 uppercase mb-3">
               Ansprechpartner wählen
             </label>
             <select
@@ -125,11 +100,7 @@ function encodeBase64(value: string): string {
               "
             >
               <option :value="null">Bitte wählen...</option>
-              <option
-                v-for="cp in contactPersonsStore.contactPersons"
-                :key="cp.id"
-                :value="cp.id"
-              >
+              <option v-for="cp in contactPersonsStore.contactPersons" :key="cp.id" :value="cp.id">
                 {{ formatOptionLabel(cp) }}
               </option>
             </select>
@@ -144,17 +115,12 @@ function encodeBase64(value: string): string {
             leave-from-class="opacity-100 translate-y-0"
             leave-to-class="opacity-0 translate-y-4"
           >
-            <div
-              v-if="selectedContactPerson"
-              class="bg-vsg-blue-50 border border-vsg-blue-100 rounded-2xl p-8"
-            >
+            <div v-if="selectedContactPerson" class="bg-vsg-blue-50 border border-vsg-blue-100 rounded-2xl p-8">
               <!-- Profile Image and Name/Role Header -->
               <div class="mb-6 pb-6 border-b border-vsg-blue-200">
                 <div class="flex items-center gap-6">
                   <!-- Profile Image or Initials Fallback -->
-                  <div
-                    class="shrink-0 w-32 h-32 rounded-full overflow-hidden bg-vsg-blue-100 flex items-center justify-center"
-                  >
+                  <div class="shrink-0 w-32 h-32 rounded-full overflow-hidden bg-vsg-blue-100 flex items-center justify-center">
                     <img
                       v-if="selectedContactPerson.profileImage"
                       :src="getProfileImageUrl(selectedContactPerson)!"
@@ -162,24 +128,17 @@ function encodeBase64(value: string): string {
                       class="w-full h-full object-cover"
                       loading="lazy"
                     />
-                    <span
-                      v-else
-                      class="text-3xl font-display text-vsg-blue-400"
-                    >
+                    <span v-else class="text-3xl font-display text-vsg-blue-400">
                       {{ getInitials(selectedContactPerson) }}
                     </span>
                   </div>
                   <!-- Name and Role -->
                   <div>
-                    <h2
-                      class="font-display text-2xl tracking-wider text-vsg-blue-900"
-                    >
+                    <h2 class="font-display text-2xl tracking-wider text-vsg-blue-900">
                       {{ selectedContactPerson.firstName }}
                       {{ selectedContactPerson.lastName }}
                     </h2>
-                    <span
-                      class="inline-block mt-2 px-3 py-1 bg-vsg-gold-400 text-vsg-blue-900 text-sm font-body rounded-full"
-                    >
+                    <span class="inline-block mt-2 px-3 py-1 bg-vsg-gold-400 text-vsg-blue-900 text-sm font-body rounded-full">
                       {{ selectedContactPerson.type }}
                     </span>
                   </div>
@@ -190,16 +149,11 @@ function encodeBase64(value: string): string {
               <div class="space-y-4">
                 <!-- Phone -->
                 <div class="flex items-start gap-4">
-                  <div
-                    class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
-                  >
+                  <div class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center">
                     <FontAwesomeIcon icon="phone" class="text-vsg-blue-600" />
                   </div>
                   <div>
-                    <span
-                      class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider"
-                      >Telefon</span
-                    >
+                    <span class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider">Telefon</span>
                     <VsgSecureContact
                       :encrypted="encodeBase64(selectedContactPerson.phone)"
                       type="phone"
@@ -210,19 +164,11 @@ function encodeBase64(value: string): string {
 
                 <!-- Email -->
                 <div class="flex items-start gap-4">
-                  <div
-                    class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
-                  >
-                    <FontAwesomeIcon
-                      icon="envelope"
-                      class="text-vsg-blue-600"
-                    />
+                  <div class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center">
+                    <FontAwesomeIcon icon="envelope" class="text-vsg-blue-600" />
                   </div>
                   <div>
-                    <span
-                      class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider"
-                      >E-Mail</span
-                    >
+                    <span class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider">E-Mail</span>
                     <VsgSecureContact
                       :encrypted="encodeBase64(selectedContactPerson.email)"
                       class="font-body text-lg text-vsg-blue-900 hover:text-vsg-gold-600 transition-colors"
@@ -231,26 +177,13 @@ function encodeBase64(value: string): string {
                 </div>
 
                 <!-- Address (if available) -->
-                <div
-                  v-if="selectedContactPerson.address"
-                  class="flex items-start gap-4"
-                >
-                  <div
-                    class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
-                  >
-                    <FontAwesomeIcon
-                      icon="location-dot"
-                      class="text-vsg-blue-600"
-                    />
+                <div v-if="selectedContactPerson.address" class="flex items-start gap-4">
+                  <div class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center">
+                    <FontAwesomeIcon icon="location-dot" class="text-vsg-blue-600" />
                   </div>
                   <div>
-                    <span
-                      class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider"
-                      >Adresse</span
-                    >
-                    <p
-                      class="font-body text-lg text-vsg-blue-900 whitespace-pre-line"
-                    >
+                    <span class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider">Adresse</span>
+                    <p class="font-body text-lg text-vsg-blue-900 whitespace-pre-line">
                       {{ selectedContactPerson.address }}
                     </p>
                   </div>
@@ -276,15 +209,9 @@ function encodeBase64(value: string): string {
           </Transition>
 
           <!-- Default Message when no selection -->
-          <div
-            v-if="!selectedContactPerson"
-            class="text-center py-12 bg-gray-50 rounded-2xl border border-gray-100"
-          >
+          <div v-if="!selectedContactPerson" class="text-center py-12 bg-gray-50 rounded-2xl border border-gray-100">
             <FontAwesomeIcon icon="users" class="mx-auto text-vsg-blue-200" />
-            <p class="mt-4 font-body text-vsg-blue-500">
-              Wählen Sie einen Ansprechpartner aus der Liste, um die
-              Kontaktdaten anzuzeigen.
-            </p>
+            <p class="mt-4 font-body text-vsg-blue-500">Wählen Sie einen Ansprechpartner aus der Liste, um die Kontaktdaten anzuzeigen.</p>
           </div>
         </div>
       </div>

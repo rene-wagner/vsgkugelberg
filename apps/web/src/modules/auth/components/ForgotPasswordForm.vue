@@ -19,13 +19,9 @@ async function handleSubmit() {
     const result = await authStore.requestPasswordReset(email.value);
     if (result.success) {
       isSubmitted.value = true;
-      successMessage.value =
-        result.message ||
-        'Falls ein Konto mit dieser E-Mail existiert, wurde ein Link gesendet.';
+      successMessage.value = result.message || 'Falls ein Konto mit dieser E-Mail existiert, wurde ein Link gesendet.';
     } else {
-      error.value =
-        result.message ||
-        'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
+      error.value = result.message || 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
     }
   } catch {
     error.value = 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';
@@ -38,9 +34,7 @@ async function handleSubmit() {
 <template>
   <!-- Success State -->
   <div v-if="isSubmitted" class="text-center animate-slide-up">
-    <div
-      class="w-16 h-16 mx-auto mb-4 bg-vsg-gold-400/20 rounded-full flex items-center justify-center"
-    >
+    <div class="w-16 h-16 mx-auto mb-4 bg-vsg-gold-400/20 rounded-full flex items-center justify-center">
       <FontAwesomeIcon icon="check" class="text-vsg-gold-400" />
     </div>
     <p class="font-body font-normal text-vsg-blue-100">
@@ -50,21 +44,13 @@ async function handleSubmit() {
 
   <!-- Form -->
   <form v-else class="space-y-6" @submit.prevent="handleSubmit">
-    <div
-      v-if="error"
-      class="rounded-lg bg-red-500/20 border border-red-500/30 p-4"
-    >
+    <div v-if="error" class="rounded-lg bg-red-500/20 border border-red-500/30 p-4">
       <p class="text-sm text-red-300">{{ error }}</p>
     </div>
 
     <!-- Email Input -->
     <div class="animate-slide-up delay-300">
-      <label
-        for="email"
-        class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
-      >
-        E-Mail Adresse
-      </label>
+      <label for="email" class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"> E-Mail Adresse </label>
       <input
         id="email"
         v-model="email"

@@ -15,24 +15,13 @@ export const createDepartmentValidator = [
     .isLength({ min: 10, max: 5000 })
     .withMessage('Short description must be between 10 and 5000 characters'),
 
-  body('iconId')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Icon ID must be a positive integer'),
+  body('iconId').optional().isInt({ min: 1 }).withMessage('Icon ID must be a positive integer'),
 ];
 
 export const updateDepartmentValidator = [
-  body('name')
-    .optional()
-    .trim()
-    .isLength({ min: 2, max: 100 })
-    .withMessage('Name must be between 2 and 100 characters'),
+  body('name').optional().trim().isLength({ min: 2, max: 100 }).withMessage('Name must be between 2 and 100 characters'),
 
-  body('shortDescription')
-    .optional()
-    .trim()
-    .isLength({ min: 10, max: 5000 })
-    .withMessage('Short description must be between 10 and 5000 characters'),
+  body('shortDescription').optional().trim().isLength({ min: 10, max: 5000 }).withMessage('Short description must be between 10 and 5000 characters'),
 
   body('iconId')
     .optional({ nullable: true })

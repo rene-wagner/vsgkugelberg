@@ -4,11 +4,7 @@ import { jwtConfig } from '@/config/jwt.config';
 import { JwtPayload } from '@/services/auth.service';
 import { HttpException, UnauthorizedException } from '@/errors/http-errors';
 
-export const jwtMiddleware = (
-  req: Request,
-  _res: Response,
-  next: NextFunction,
-) => {
+export const jwtMiddleware = (req: Request, _res: Response, next: NextFunction) => {
   try {
     // Try to get token from cookie first, then Authorization header
     let token: string | undefined;

@@ -20,12 +20,8 @@ function handleInput(field: 'year' | 'description', value: string) {
 </script>
 
 <template>
-  <div
-    class="flex items-start gap-4 p-3 bg-white border border-gray-200 rounded-lg group"
-  >
-    <div
-      class="drag-handle cursor-grab active:cursor-grabbing text-gray-400 mt-2"
-    >
+  <div class="flex items-start gap-4 p-3 bg-white border border-gray-200 rounded-lg group">
+    <div class="drag-handle cursor-grab active:cursor-grabbing text-gray-400 mt-2">
       <FontAwesomeIcon icon="grip" />
     </div>
 
@@ -36,9 +32,7 @@ function handleInput(field: 'year' | 'description', value: string) {
           type="text"
           placeholder="Jahr/Zeit"
           class="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-vsg-blue-900 focus:border-vsg-blue-600 outline-none"
-          @input="
-            handleInput('year', ($event.target as HTMLInputElement).value)
-          "
+          @input="handleInput('year', ($event.target as HTMLInputElement).value)"
         />
       </div>
       <div class="col-span-9">
@@ -47,21 +41,12 @@ function handleInput(field: 'year' | 'description', value: string) {
           placeholder="Ereignis Beschreibung"
           rows="3"
           class="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-sm text-vsg-blue-900 focus:border-vsg-blue-600 outline-none"
-          @input="
-            handleInput(
-              'description',
-              ($event.target as HTMLTextAreaElement).value,
-            )
-          "
+          @input="handleInput('description', ($event.target as HTMLTextAreaElement).value)"
         ></textarea>
       </div>
     </div>
 
-    <button
-      type="button"
-      class="text-gray-400 hover:text-red-600 transition-colors mt-2"
-      @click="emit('delete')"
-    >
+    <button type="button" class="text-gray-400 hover:text-red-600 transition-colors mt-2" @click="emit('delete')">
       <FontAwesomeIcon icon="trash" />
     </button>
   </div>

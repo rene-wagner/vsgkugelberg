@@ -2,11 +2,7 @@ import { Router } from 'express';
 import { UsersService } from '@/services/users.service';
 import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { validationMiddleware } from '@/middleware/validation.middleware';
-import {
-  createUserValidator,
-  updateUserValidator,
-  idParamValidator,
-} from '@/validators/user.validators';
+import { createUserValidator, updateUserValidator, idParamValidator } from '@/validators/user.validators';
 import { paginationQueryValidator } from '@/validators/pagination.validators';
 import { CreateUserDto, UpdateUserDto } from '@/types/user.types';
 import { prisma } from '@/lib/prisma.lib';
@@ -54,10 +50,7 @@ router.patch(
   updateUserValidator,
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
-    const user = await usersService.update(
-      Number(req.params.id),
-      req.body as UpdateUserDto,
-    );
+    const user = await usersService.update(Number(req.params.id), req.body as UpdateUserDto);
     res.json(user);
   }),
 );

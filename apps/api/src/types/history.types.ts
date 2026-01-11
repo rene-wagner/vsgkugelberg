@@ -73,6 +73,4 @@ export interface HistoryContent {
   updatedAt: Date;
 }
 
-export type UpdateHistoryDto = Partial<
-  Omit<HistoryContent, 'id' | 'updatedAt'>
->;
+export type UpdateHistoryDto = Partial<Omit<HistoryContent, 'id' | 'updatedAt'>>;

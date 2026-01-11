@@ -2,11 +2,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import sharp from 'sharp';
 import { UPLOAD_DIR } from '@/config/upload.config';
-import {
-  ThumbnailConfig,
-  ThumbnailsMap,
-  ThumbnailSize,
-} from '@/types/media.types';
+import { ThumbnailConfig, ThumbnailsMap, ThumbnailSize } from '@/types/media.types';
 
 // Thumbnail size configurations
 const THUMBNAIL_SIZES: ThumbnailConfig[] = [
@@ -45,18 +41,12 @@ export class ThumbnailService {
    * @param filename Original filename (used to derive thumbnail names)
    * @returns ThumbnailsMap with filenames for each size, or null if generation fails
    */
-  async generateThumbnails(
-    inputPath: string,
-    filename: string,
-  ): Promise<ThumbnailsMap | null> {
+  async generateThumbnails(inputPath: string, filename: string): Promise<ThumbnailsMap | null> {
     const thumbnails: ThumbnailsMap = {};
 
     try {
       for (const sizeConfig of THUMBNAIL_SIZES) {
-        const thumbnailFilename = this.getThumbnailFilename(
-          filename,
-          sizeConfig.name,
-        );
+        const thumbnailFilename = this.getThumbnailFilename(filename, sizeConfig.name);
         const outputPath = path.join(UPLOAD_DIR, thumbnailFilename);
 
         await sharp(inputPath)
@@ -87,10 +77,7 @@ export class ThumbnailService {
    */
   async deleteThumbnails(filename: string): Promise<void> {
     for (const sizeConfig of THUMBNAIL_SIZES) {
-      const thumbnailFilename = this.getThumbnailFilename(
-        filename,
-        sizeConfig.name,
-      );
+      const thumbnailFilename = this.getThumbnailFilename(filename, sizeConfig.name);
       const thumbnailPath = path.join(UPLOAD_DIR, thumbnailFilename);
 
       try {

@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
-import {
-  useContactPersonsStore,
-  type ContactPerson,
-} from '@/modules/admin/stores/contactPersonsStore';
+import { useContactPersonsStore, type ContactPerson } from '@/modules/admin/stores/contactPersonsStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
@@ -32,10 +29,7 @@ onMounted(async () => {
 });
 
 function handleClickOutside(event: MouseEvent) {
-  if (
-    containerRef.value &&
-    !containerRef.value.contains(event.target as Node)
-  ) {
+  if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
     isOpen.value = false;
   }
 }
@@ -51,11 +45,7 @@ const filteredContactPersons = computed(() => {
   // Filter by search query
   if (searchQuery.value.trim()) {
     const query = searchQuery.value.toLowerCase();
-    persons = persons.filter(
-      (p) =>
-        p.firstName.toLowerCase().includes(query) ||
-        p.lastName.toLowerCase().includes(query),
-    );
+    persons = persons.filter((p) => p.firstName.toLowerCase().includes(query) || p.lastName.toLowerCase().includes(query));
   }
 
   return persons;
@@ -63,10 +53,7 @@ const filteredContactPersons = computed(() => {
 
 const selectedPerson = computed(() => {
   if (!props.modelValue) return null;
-  return (
-    contactPersonsStore.contactPersons.find((p) => p.id === props.modelValue) ||
-    null
-  );
+  return contactPersonsStore.contactPersons.find((p) => p.id === props.modelValue) || null;
 });
 
 function selectPerson(person: ContactPerson) {
@@ -107,40 +94,23 @@ watch(isOpen, (open) => {
           :alt="`${selectedPerson.firstName} ${selectedPerson.lastName}`"
           class="w-8 h-8 rounded-full object-cover"
         />
-        <div
-          v-else
-          class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-medium"
-        >
+        <div v-else class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-medium">
           {{ selectedPerson.firstName[0] }}{{ selectedPerson.lastName[0] }}
         </div>
-        <span class="text-vsg-blue-900">
-          {{ selectedPerson.firstName }} {{ selectedPerson.lastName }}
-        </span>
+        <span class="text-vsg-blue-900"> {{ selectedPerson.firstName }} {{ selectedPerson.lastName }} </span>
       </div>
       <span v-else class="text-gray-400">Ansprechpartner auswählen...</span>
 
       <div class="flex items-center gap-2">
-        <button
-          v-if="selectedPerson"
-          type="button"
-          class="text-gray-400 hover:text-gray-600"
-          @click.stop="clearSelection"
-        >
+        <button v-if="selectedPerson" type="button" class="text-gray-400 hover:text-gray-600" @click.stop="clearSelection">
           <FontAwesomeIcon icon="xmark" />
         </button>
-        <FontAwesomeIcon
-          icon="chevron-down"
-          class="text-gray-400 transition-transform"
-          :class="{ 'rotate-180': isOpen }"
-        />
+        <FontAwesomeIcon icon="chevron-down" class="text-gray-400 transition-transform" :class="{ 'rotate-180': isOpen }" />
       </div>
     </div>
 
     <!-- Dropdown -->
-    <div
-      v-if="isOpen"
-      class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-hidden"
-    >
+    <div v-if="isOpen" class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-hidden">
       <!-- Search Input -->
       <div class="p-2 border-b border-gray-200">
         <input
@@ -154,12 +124,7 @@ watch(isOpen, (open) => {
 
       <!-- Options List -->
       <div class="overflow-y-auto max-h-48">
-        <div
-          v-if="filteredContactPersons.length === 0"
-          class="px-4 py-3 text-sm text-gray-500 text-center"
-        >
-          Keine Ansprechpartner gefunden
-        </div>
+        <div v-if="filteredContactPersons.length === 0" class="px-4 py-3 text-sm text-gray-500 text-center">Keine Ansprechpartner gefunden</div>
         <button
           v-for="person in filteredContactPersons"
           :key="person.id"
@@ -174,16 +139,11 @@ watch(isOpen, (open) => {
             :alt="`${person.firstName} ${person.lastName}`"
             class="w-8 h-8 rounded-full object-cover"
           />
-          <div
-            v-else
-            class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-medium"
-          >
+          <div v-else class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-medium">
             {{ person.firstName[0] }}{{ person.lastName[0] }}
           </div>
           <div>
-            <div class="text-sm text-vsg-blue-900">
-              {{ person.firstName }} {{ person.lastName }}
-            </div>
+            <div class="text-sm text-vsg-blue-900">{{ person.firstName }} {{ person.lastName }}</div>
             <div class="text-xs text-gray-500">{{ person.type }}</div>
           </div>
         </button>

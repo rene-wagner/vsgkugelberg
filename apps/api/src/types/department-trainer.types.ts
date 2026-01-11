@@ -1,7 +1,4 @@
-import {
-  DepartmentTrainer as PrismaDepartmentTrainer,
-  Prisma,
-} from '@/lib/prisma.lib';
+import { DepartmentTrainer as PrismaDepartmentTrainer, Prisma } from '@/lib/prisma.lib';
 
 export interface TrainerLicense {
   name: string;
@@ -23,11 +20,10 @@ export interface UpdateDepartmentTrainerDto {
 
 export type DepartmentTrainer = PrismaDepartmentTrainer;
 
-export type DepartmentTrainerWithContactPerson =
-  Prisma.DepartmentTrainerGetPayload<{
-    include: {
-      contactPerson: {
-        include: { profileImage: true };
-      };
+export type DepartmentTrainerWithContactPerson = Prisma.DepartmentTrainerGetPayload<{
+  include: {
+    contactPerson: {
+      include: { profileImage: true };
     };
-  }>;
+  };
+}>;

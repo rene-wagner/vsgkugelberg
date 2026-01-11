@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import {
-  useContactPersonsStore,
-  type ContactPerson,
-} from '../stores/contactPersonsStore';
+import { useContactPersonsStore, type ContactPerson } from '../stores/contactPersonsStore';
 import ContactPersonForm from '../components/ContactPersonForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -15,17 +12,9 @@ const contactPerson = ref<ContactPerson | null>(null);
 const isLoading = ref(false);
 
 const isEditMode = computed(() => !!route.params.id);
-const pageTitle = computed(() =>
-  isEditMode.value ? 'ANSPRECHPARTNER BEARBEITEN' : 'ANSPRECHPARTNER ERSTELLEN',
-);
-const pageSubtitle = computed(() =>
-  isEditMode.value
-    ? 'Bearbeite die Ansprechpartner-Daten'
-    : 'Erstelle einen neuen Ansprechpartner',
-);
-const breadcrumbAction = computed(() =>
-  isEditMode.value ? 'Bearbeiten' : 'Erstellen',
-);
+const pageTitle = computed(() => (isEditMode.value ? 'ANSPRECHPARTNER BEARBEITEN' : 'ANSPRECHPARTNER ERSTELLEN'));
+const pageSubtitle = computed(() => (isEditMode.value ? 'Bearbeite die Ansprechpartner-Daten' : 'Erstelle einen neuen Ansprechpartner'));
+const breadcrumbAction = computed(() => (isEditMode.value ? 'Bearbeiten' : 'Erstellen'));
 
 onMounted(async () => {
   if (isEditMode.value) {
@@ -41,15 +30,8 @@ onMounted(async () => {
   <div>
     <!-- Page Header -->
     <div class="mb-8">
-      <div
-        class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2"
-      >
-        <router-link
-          to="/admin/kontakt"
-          class="hover:text-vsg-blue-600 transition-colors"
-        >
-          Ansprechpartner
-        </router-link>
+      <div class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2">
+        <router-link to="/admin/kontakt" class="hover:text-vsg-blue-600 transition-colors"> Ansprechpartner </router-link>
         <FontAwesomeIcon icon="chevron-right" />
         <span class="text-vsg-blue-600">{{ breadcrumbAction }}</span>
       </div>
@@ -67,10 +49,6 @@ onMounted(async () => {
     </div>
 
     <!-- Form -->
-    <ContactPersonForm
-      v-else
-      :contact-person="contactPerson"
-      :is-edit-mode="isEditMode"
-    />
+    <ContactPersonForm v-else :contact-person="contactPerson" :is-edit-mode="isEditMode" />
   </div>
 </template>

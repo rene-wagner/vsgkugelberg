@@ -10,10 +10,7 @@ import {
   statIdParamValidator,
   reorderDepartmentStatsValidator,
 } from '@/validators/department-stat.validators';
-import {
-  CreateDepartmentStatDto,
-  UpdateDepartmentStatDto,
-} from '@/types/department-stat.types';
+import { CreateDepartmentStatDto, UpdateDepartmentStatDto } from '@/types/department-stat.types';
 
 // Router with mergeParams to access :slug from parent router
 const router = Router({ mergeParams: true });

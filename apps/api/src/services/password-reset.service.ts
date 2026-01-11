@@ -67,9 +67,7 @@ export interface TokenValidationResult {
  * Validate a password reset token.
  * Checks if the token exists, is not expired, and has not been used.
  */
-export async function validateResetToken(
-  token: string,
-): Promise<TokenValidationResult> {
+export async function validateResetToken(token: string): Promise<TokenValidationResult> {
   const tokenHash = hashToken(token);
 
   const resetToken = await prisma.passwordResetToken.findFirst({

@@ -11,10 +11,7 @@ import {
   updateMediaFolderValidator,
 } from '@/validators/media-folder.validators';
 
-import {
-  CreateMediaFolderDto,
-  UpdateMediaFolderDto,
-} from '@/types/media.types';
+import { CreateMediaFolderDto, UpdateMediaFolderDto } from '@/types/media.types';
 
 const router = Router();
 const folderService = new MediaFolderService();
@@ -27,11 +24,7 @@ router.get(
   mediaFolderQueryValidator,
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
-    const parentId = req.query.parentId
-      ? req.query.parentId === 'null'
-        ? null
-        : Number(req.query.parentId)
-      : null;
+    const parentId = req.query.parentId ? (req.query.parentId === 'null' ? null : Number(req.query.parentId)) : null;
     const folders = await folderService.findAll(parentId);
     res.json(folders);
   }),
@@ -74,10 +67,7 @@ router.patch(
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
     const id = Number(req.params.id);
-    const folder = await folderService.update(
-      id,
-      req.body as UpdateMediaFolderDto,
-    );
+    const folder = await folderService.update(id, req.body as UpdateMediaFolderDto);
     res.json(folder);
   }),
 );

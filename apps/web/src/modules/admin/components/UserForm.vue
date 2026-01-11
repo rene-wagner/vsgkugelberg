@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import {
-  useUsersStore,
-  type User,
-  type CreateUserData,
-  type UpdateUserData,
-} from '../stores/usersStore';
+import { useUsersStore, type User, type CreateUserData, type UpdateUserData } from '../stores/usersStore';
 import VsgPasswordInput from '@shared/components/VsgPasswordInput.vue';
 
 const props = defineProps<{
@@ -82,8 +77,7 @@ async function handleSubmit() {
       if (result) {
         router.push('/admin/users');
       } else {
-        error.value =
-          usersStore.error || 'Fehler beim Aktualisieren des Benutzers';
+        error.value = usersStore.error || 'Fehler beim Aktualisieren des Benutzers';
       }
     } else {
       // Create new user
@@ -110,9 +104,7 @@ async function handleSubmit() {
 async function handleDelete() {
   if (!props.user) return;
 
-  const confirmed = window.confirm(
-    `Möchtest du den Benutzer "${props.user.username}" wirklich löschen?`,
-  );
+  const confirmed = window.confirm(`Möchtest du den Benutzer "${props.user.username}" wirklich löschen?`);
   if (!confirmed) return;
 
   isSubmitting.value = true;
@@ -134,26 +126,18 @@ function handleCancel() {
 <template>
   <form class="max-w-3xl" @submit.prevent="handleSubmit">
     <!-- Error Message -->
-    <div
-      v-if="error"
-      class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6"
-    >
+    <div v-if="error" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
       <p class="text-sm text-red-600 font-body">{{ error }}</p>
     </div>
 
     <!-- Account Data Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        KONTODATEN
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">KONTODATEN</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Username -->
         <div>
-          <label
-            for="username"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="username" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             Benutzername <span class="text-red-500">*</span>
           </label>
           <input
@@ -168,10 +152,7 @@ function handleCancel() {
 
         <!-- Email -->
         <div>
-          <label
-            for="email"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="email" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             E-Mail Adresse <span class="text-red-500">*</span>
           </label>
           <input
@@ -191,12 +172,7 @@ function handleCancel() {
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
         {{ isEditMode ? 'PASSWORT ANDERN' : 'PASSWORT' }}
       </h2>
-      <p
-        v-if="isEditMode"
-        class="font-body font-normal text-sm text-gray-500 mb-6"
-      >
-        Lasse die Felder leer, um das Passwort nicht zu andern.
-      </p>
+      <p v-if="isEditMode" class="font-body font-normal text-sm text-gray-500 mb-6">Lasse die Felder leer, um das Passwort nicht zu andern.</p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Password -->
@@ -213,13 +189,7 @@ function handleCancel() {
         </VsgPasswordInput>
 
         <!-- Confirm Password -->
-        <VsgPasswordInput
-          id="confirmPassword"
-          v-model="confirmPassword"
-          label="Passwort bestatigen"
-          :required="!isEditMode"
-          variant="admin"
-        >
+        <VsgPasswordInput id="confirmPassword" v-model="confirmPassword" label="Passwort bestatigen" :required="!isEditMode" variant="admin">
           <template v-if="!isEditMode" #label-suffix>
             <span class="text-red-500">*</span>
           </template>
@@ -233,9 +203,7 @@ function handleCancel() {
     </div>
 
     <!-- Form Actions -->
-    <div
-      class="flex items-center justify-between border-t border-gray-200 pt-6"
-    >
+    <div class="flex items-center justify-between border-t border-gray-200 pt-6">
       <button
         type="button"
         class="px-6 py-2.5 border border-gray-300 text-gray-600 font-body text-sm rounded-lg hover:bg-gray-50 transition-colors"

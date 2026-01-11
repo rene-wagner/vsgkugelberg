@@ -4,16 +4,9 @@ import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
 import { validationMiddleware } from '@/middleware/validation.middleware';
 import { jwtMiddleware } from '@/middleware/jwt.middleware';
-import {
-  createDepartmentValidator,
-  updateDepartmentValidator,
-  slugParamValidator,
-} from '@/validators/department.validators';
+import { createDepartmentValidator, updateDepartmentValidator, slugParamValidator } from '@/validators/department.validators';
 import { paginationQueryValidator } from '@/validators/pagination.validators';
-import {
-  CreateDepartmentDto,
-  UpdateDepartmentDto,
-} from '@/types/department.types';
+import { CreateDepartmentDto, UpdateDepartmentDto } from '@/types/department.types';
 
 // Import nested routers
 import { departmentStatsRouter } from './department-stats.routes';
@@ -75,10 +68,7 @@ router.patch(
   asyncHandlerMiddleware(async (req, res) => {
     const { slug } = req.params;
     const updateDepartmentDto: UpdateDepartmentDto = req.body;
-    const department = await departmentsService.update(
-      slug,
-      updateDepartmentDto,
-    );
+    const department = await departmentsService.update(slug, updateDepartmentDto);
     res.json(department);
   }),
 );

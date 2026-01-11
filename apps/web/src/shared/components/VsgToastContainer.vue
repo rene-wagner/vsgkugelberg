@@ -14,28 +14,17 @@ const typeClasses = {
 
 <template>
   <Teleport to="body">
-    <TransitionGroup
-      name="toast"
-      tag="div"
-      class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"
-    >
+    <TransitionGroup name="toast" tag="div" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        :class="[
-          'px-4 py-3 rounded-lg shadow-lg text-white font-display tracking-wider transition-all duration-300',
-          typeClasses[toast.type],
-        ]"
+        :class="['px-4 py-3 rounded-lg shadow-lg text-white font-display tracking-wider transition-all duration-300', typeClasses[toast.type]]"
         role="alert"
         aria-live="polite"
       >
         <div class="flex items-center justify-between gap-4">
           <span class="text-sm">{{ toast.message }}</span>
-          <button
-            class="ml-2 hover:opacity-80 transition-opacity"
-            aria-label="Close notification"
-            @click="remove(toast.id)"
-          >
+          <button class="ml-2 hover:opacity-80 transition-opacity" aria-label="Close notification" @click="remove(toast.id)">
             <FontAwesomeIcon icon="xmark" />
           </button>
         </div>

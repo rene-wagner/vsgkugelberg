@@ -15,17 +15,7 @@ import {
   type ChartData,
 } from 'chart.js';
 
-Chart.register(
-  LineController,
-  LineElement,
-  PointElement,
-  LinearScale,
-  CategoryScale,
-  Title,
-  Filler,
-  Tooltip,
-  Legend,
-);
+Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Title, Filler, Tooltip, Legend);
 
 const props = defineProps<{
   data: ChartData<'line'>;

@@ -20,16 +20,9 @@ export const updateSettingsValidator = [
     .isLength({ max: 500 })
     .withMessage('Address must not exceed 500 characters'),
 
-  body('memberCount')
-    .optional({ values: 'null' })
-    .isInt({ min: 1, max: 100000 })
-    .withMessage('Member count must be between 1 and 100000'),
+  body('memberCount').optional({ values: 'null' }).isInt({ min: 1, max: 100000 }).withMessage('Member count must be between 1 and 100000'),
 
-  body('contactEmail')
-    .optional({ values: 'null' })
-    .trim()
-    .isEmail()
-    .withMessage('Contact email must be a valid email address'),
+  body('contactEmail').optional({ values: 'null' }).trim().isEmail().withMessage('Contact email must be a valid email address'),
 
   body('contactPhone')
     .optional({ values: 'null' })

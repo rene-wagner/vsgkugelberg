@@ -67,10 +67,7 @@ export async function getEmails(): Promise<MailHogMessage[]> {
     return data.items;
   } catch (error) {
     if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error(
-        `MailHog is not accessible at ${MAILHOG_API_URL}. ` +
-          'Start it with: docker compose --profile test up -d mailhog',
-      );
+      throw new Error(`MailHog is not accessible at ${MAILHOG_API_URL}. ` + 'Start it with: docker compose --profile test up -d mailhog');
     }
     throw error;
   }
@@ -83,9 +80,7 @@ export async function getEmails(): Promise<MailHogMessage[]> {
  */
 export async function getEmailsTo(email: string): Promise<MailHogMessage[]> {
   const emails = await getEmails();
-  return emails.filter((msg) =>
-    msg.To.some((to) => `${to.Mailbox}@${to.Domain}` === email),
-  );
+  return emails.filter((msg) => msg.To.some((to) => `${to.Mailbox}@${to.Domain}` === email));
 }
 
 /**
@@ -102,10 +97,7 @@ export async function clearEmails(): Promise<void> {
     }
   } catch (error) {
     if (error instanceof TypeError && error.message.includes('fetch')) {
-      throw new Error(
-        `MailHog is not accessible at ${MAILHOG_API_URL}. ` +
-          'Start it with: docker compose --profile test up -d mailhog',
-      );
+      throw new Error(`MailHog is not accessible at ${MAILHOG_API_URL}. ` + 'Start it with: docker compose --profile test up -d mailhog');
     }
     throw error;
   }

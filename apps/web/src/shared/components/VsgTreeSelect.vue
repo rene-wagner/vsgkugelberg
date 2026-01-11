@@ -36,10 +36,7 @@ const isOpen = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
 
 // Flatten tree structure for rendering with depth information
-function flattenOptions(
-  options: TreeOption[],
-  depth: number = 0,
-): FlattenedOption[] {
+function flattenOptions(options: TreeOption[], depth: number = 0): FlattenedOption[] {
   const result: FlattenedOption[] = [];
 
   for (const option of options) {
@@ -61,9 +58,7 @@ function flattenOptions(
 const flattenedOptions = computed(() => flattenOptions(props.options));
 
 const selectedLabel = computed(() => {
-  const option = flattenedOptions.value.find(
-    (opt) => opt.value === props.modelValue,
-  );
+  const option = flattenedOptions.value.find((opt) => opt.value === props.modelValue);
   return option ? option.label : null;
 });
 
@@ -78,10 +73,7 @@ function selectOption(value: number | string | null) {
 }
 
 function handleClickOutside(event: MouseEvent) {
-  if (
-    containerRef.value &&
-    !containerRef.value.contains(event.target as Node)
-  ) {
+  if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
     isOpen.value = false;
   }
 }
@@ -115,25 +107,17 @@ onUnmounted(() => {
       <span :class="selectedLabel ? 'text-vsg-blue-900' : 'text-gray-400'">
         {{ selectedLabel || placeholder }}
       </span>
-      <FontAwesomeIcon
-        icon="chevron-down"
-        class="w-4 h-4 text-gray-400 transition-transform"
-        :class="{ 'rotate-180': isOpen }"
-      />
+      <FontAwesomeIcon icon="chevron-down" class="w-4 h-4 text-gray-400 transition-transform" :class="{ 'rotate-180': isOpen }" />
     </button>
 
     <!-- Dropdown -->
-    <div
-      v-if="isOpen"
-      class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto"
-    >
+    <div v-if="isOpen" class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
       <!-- Clear/None option -->
       <button
         type="button"
         class="w-full px-4 py-2 text-sm text-left text-gray-500 hover:bg-gray-50 transition-colors"
         :class="{
-          'bg-vsg-blue-50 text-vsg-blue-600':
-            modelValue === null || modelValue === undefined,
+          'bg-vsg-blue-50 text-vsg-blue-600': modelValue === null || modelValue === undefined,
         }"
         @click="selectOption(null)"
       >
@@ -146,11 +130,7 @@ onUnmounted(() => {
         :key="option.value"
         type="button"
         class="w-full py-2 pr-4 text-sm text-left hover:bg-gray-50 transition-colors flex items-center"
-        :class="
-          modelValue === option.value
-            ? 'bg-vsg-blue-50 text-vsg-blue-600'
-            : 'text-vsg-blue-900'
-        "
+        :class="modelValue === option.value ? 'bg-vsg-blue-50 text-vsg-blue-600' : 'text-vsg-blue-900'"
         :style="{ paddingLeft: getPaddingLeft(option.depth) }"
         @click="selectOption(option.value)"
       >

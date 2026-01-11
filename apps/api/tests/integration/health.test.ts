@@ -132,11 +132,7 @@ describe('Health API Integration Tests', () => {
       const promise2 = request(app).get('/api/health');
       const promise3 = request(app).get('/api/health');
 
-      const [response1, response2, response3] = await Promise.all([
-        promise1,
-        promise2,
-        promise3,
-      ]);
+      const [response1, response2, response3] = await Promise.all([promise1, promise2, promise3]);
 
       expect(response1.status).toBe(200);
       expect(response2.status).toBe(200);

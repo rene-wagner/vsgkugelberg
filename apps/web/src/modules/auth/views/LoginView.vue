@@ -5,45 +5,26 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 </script>
 
 <template>
-  <section
-    class="min-h-screen flex items-center justify-center overflow-hidden"
-  >
+  <section class="min-h-screen flex items-center justify-center overflow-hidden">
     <div class="relative z-10 w-full max-w-md mx-auto px-6 py-12">
       <!-- Logo and Brand -->
       <div class="text-center mb-10 animate-slide-up">
         <RouterLink to="/" class="inline-flex items-center gap-4 mb-6">
-          <div
-            class="w-14 h-14 bg-vsg-gold-400 rounded-lg flex items-center justify-center animate-pulse-gold"
-          >
-            <span class="font-display text-vsg-blue-900 text-3xl tracking-tight"
-              >VK</span
-            >
+          <div class="w-14 h-14 bg-vsg-gold-400 rounded-lg flex items-center justify-center animate-pulse-gold">
+            <span class="font-display text-vsg-blue-900 text-3xl tracking-tight">VK</span>
           </div>
           <div class="text-left">
-            <span class="font-display text-3xl tracking-wider text-white block"
-              >VSG KUGELBERG</span
-            >
-            <span
-              class="text-xs font-body font-normal tracking-[0.3em] text-vsg-gold-400 uppercase"
-              >Weissenfels</span
-            >
+            <span class="font-display text-3xl tracking-wider text-white block">VSG KUGELBERG</span>
+            <span class="text-xs font-body font-normal tracking-[0.3em] text-vsg-gold-400 uppercase">Weissenfels</span>
           </div>
         </RouterLink>
       </div>
 
       <!-- Login Card -->
-      <div
-        class="bg-vsg-blue-900/80 backdrop-blur-md border border-vsg-gold-400/20 rounded-2xl p-8 animate-scale-in delay-200"
-      >
+      <div class="bg-vsg-blue-900/80 backdrop-blur-md border border-vsg-gold-400/20 rounded-2xl p-8 animate-scale-in delay-200">
         <div class="text-center mb-8">
-          <h1
-            class="font-display text-4xl md:text-5xl tracking-wider text-white text-glow"
-          >
-            ANMELDEN
-          </h1>
-          <p class="font-body font-normal text-vsg-blue-200 mt-2">
-            Melde dich im Mitgliederbereich an
-          </p>
+          <h1 class="font-display text-4xl md:text-5xl tracking-wider text-white text-glow">ANMELDEN</h1>
+          <p class="font-body font-normal text-vsg-blue-200 mt-2">Melde dich im Mitgliederbereich an</p>
         </div>
 
         <LoginForm />

@@ -2,12 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { HttpException } from '@/errors/http-errors';
 import { Prisma } from '@/lib/prisma.lib';
 
-export const errorHandlerMiddleware = (
-  err: Error,
-  _req: Request,
-  res: Response,
-  _next: NextFunction,
-) => {
+export const errorHandlerMiddleware = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof HttpException) {
     return res.status(err.statusCode).json({
       statusCode: err.statusCode,
@@ -61,19 +56,12 @@ export const errorHandlerMiddleware = (
   console.error('Unhandled error:', err);
   return res.status(500).json({
     statusCode: 500,
-    message:
-      process.env.NODE_ENV === 'production'
-        ? 'Internal server error'
-        : err.message,
+    message: process.env.NODE_ENV === 'production' ? 'Internal server error' : err.message,
     error: 'InternalServerError',
   });
 };
 
-export const notFoundHandler = (
-  req: Request,
-  res: Response,
-  _next: NextFunction,
-) => {
+export const notFoundHandler = (req: Request, res: Response, _next: NextFunction) => {
   res.status(404).json({
     statusCode: 404,
     message: `Cannot ${req.method} ${req.path}`,

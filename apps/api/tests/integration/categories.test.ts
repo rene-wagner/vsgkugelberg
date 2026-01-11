@@ -10,11 +10,7 @@ describe('Categories API Integration Tests', () => {
 
   // Helper to create authenticated request
   async function createAuthenticatedUser() {
-    const user = await createTestUserWithPassword(
-      testUsername,
-      testEmail,
-      testPassword,
-    );
+    const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
     // Login to get JWT token
     const loginResponse = await request(app).post('/api/auth/login').send({
@@ -158,9 +154,7 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/categories/sports/volleyball',
-      );
+      const response = await request(app).get('/api/categories/sports/volleyball');
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -185,10 +179,7 @@ describe('Categories API Integration Tests', () => {
         parentId: parent.id,
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').set('Cookie', cookies).send(newCategory);
 
       expect(response.status).toBe(201);
       expect(response.body.name).toBe('Volleyball');
@@ -217,10 +208,7 @@ describe('Categories API Integration Tests', () => {
         parentId: child.id,
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').set('Cookie', cookies).send(newCategory);
 
       expect(response.status).toBe(201);
       expect(response.body.slug).toBe('sports/ball-sports/volleyball');
@@ -238,19 +226,13 @@ describe('Categories API Integration Tests', () => {
       });
 
       // Create "News" under Sports
-      const response1 = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send({ name: 'News', parentId: parent1.id });
+      const response1 = await request(app).post('/api/categories').set('Cookie', cookies).send({ name: 'News', parentId: parent1.id });
 
       expect(response1.status).toBe(201);
       expect(response1.body.slug).toBe('sports/news');
 
       // Create "News" under Club Events - should succeed
-      const response2 = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send({ name: 'News', parentId: parent2.id });
+      const response2 = await request(app).post('/api/categories').set('Cookie', cookies).send({ name: 'News', parentId: parent2.id });
 
       expect(response2.status).toBe(201);
       expect(response2.body.slug).toBe('club-events/news');
@@ -263,10 +245,7 @@ describe('Categories API Integration Tests', () => {
         name: 'Minimal Category',
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').set('Cookie', cookies).send(newCategory);
 
       expect(response.status).toBe(201);
       expect(response.body.name).toBe('Minimal Category');
@@ -281,10 +260,7 @@ describe('Categories API Integration Tests', () => {
         description: 'Programming languages',
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').set('Cookie', cookies).send(newCategory);
 
       expect(response.status).toBe(201);
       expect(response.body.slug).toMatch(/^c-python/);
@@ -295,9 +271,7 @@ describe('Categories API Integration Tests', () => {
         name: 'Unauthorized Category',
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').send(newCategory);
 
       expect(response.status).toBe(401);
     });
@@ -309,10 +283,7 @@ describe('Categories API Integration Tests', () => {
         description: 'Missing name',
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').set('Cookie', cookies).send(newCategory);
 
       expect(response.status).toBe(400);
     });
@@ -324,10 +295,7 @@ describe('Categories API Integration Tests', () => {
         name: 'A', // Only 1 character
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').set('Cookie', cookies).send(newCategory);
 
       expect(response.status).toBe(400);
     });
@@ -340,10 +308,7 @@ describe('Categories API Integration Tests', () => {
         name: longName,
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').set('Cookie', cookies).send(newCategory);
 
       expect(response.status).toBe(400);
     });
@@ -357,10 +322,7 @@ describe('Categories API Integration Tests', () => {
         description: longDescription,
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').set('Cookie', cookies).send(newCategory);
 
       expect(response.status).toBe(400);
     });
@@ -379,10 +341,7 @@ describe('Categories API Integration Tests', () => {
         name: 'TECHNOLOGY', // Different case, same parent (root)
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').set('Cookie', cookies).send(newCategory);
 
       expect(response.status).toBe(409);
       expect(response.body.message).toContain('already exists');
@@ -396,10 +355,7 @@ describe('Categories API Integration Tests', () => {
         parentId: 99999, // Non-existent
       };
 
-      const response = await request(app)
-        .post('/api/categories')
-        .set('Cookie', cookies)
-        .send(newCategory);
+      const response = await request(app).post('/api/categories').set('Cookie', cookies).send(newCategory);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('not found');
@@ -422,10 +378,7 @@ describe('Categories API Integration Tests', () => {
         name: 'Updated Name',
       };
 
-      const response = await request(app)
-        .patch(`/api/categories/${category.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/categories/${category.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.name).toBe('Updated Name');
@@ -448,10 +401,7 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch('/api/categories/sports/volleyball')
-        .set('Cookie', cookies)
-        .send({ name: 'Indoor Volleyball' });
+      const response = await request(app).patch('/api/categories/sports/volleyball').set('Cookie', cookies).send({ name: 'Indoor Volleyball' });
 
       expect(response.status).toBe(200);
       expect(response.body.name).toBe('Indoor Volleyball');
@@ -473,10 +423,7 @@ describe('Categories API Integration Tests', () => {
         description: 'Updated description',
       };
 
-      const response = await request(app)
-        .patch(`/api/categories/${category.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/categories/${category.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.description).toBe('Updated description');
@@ -499,10 +446,7 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/categories/${category.slug}`)
-        .set('Cookie', cookies)
-        .send({ parentId: parent.id });
+      const response = await request(app).patch(`/api/categories/${category.slug}`).set('Cookie', cookies).send({ parentId: parent.id });
 
       expect(response.status).toBe(200);
       expect(response.body.parentId).toBe(parent.id);
@@ -525,10 +469,7 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch('/api/categories/sports/volleyball')
-        .set('Cookie', cookies)
-        .send({ parentId: null });
+      const response = await request(app).patch('/api/categories/sports/volleyball').set('Cookie', cookies).send({ parentId: null });
 
       expect(response.status).toBe(200);
       expect(response.body.parentId).toBeNull();
@@ -565,10 +506,7 @@ describe('Categories API Integration Tests', () => {
       });
 
       // Move Volleyball to Activities
-      const response = await request(app)
-        .patch('/api/categories/sports/volleyball')
-        .set('Cookie', cookies)
-        .send({ parentId: parent2.id });
+      const response = await request(app).patch('/api/categories/sports/volleyball').set('Cookie', cookies).send({ parentId: parent2.id });
 
       expect(response.status).toBe(200);
       expect(response.body.slug).toBe('activities/volleyball');
@@ -592,9 +530,7 @@ describe('Categories API Integration Tests', () => {
         name: 'Updated',
       };
 
-      const response = await request(app)
-        .patch(`/api/categories/${category.slug}`)
-        .send(update);
+      const response = await request(app).patch(`/api/categories/${category.slug}`).send(update);
 
       expect(response.status).toBe(401);
     });
@@ -606,10 +542,7 @@ describe('Categories API Integration Tests', () => {
         name: 'Updated',
       };
 
-      const response = await request(app)
-        .patch('/api/categories/non-existent')
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch('/api/categories/non-existent').set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('not found');
@@ -636,10 +569,7 @@ describe('Categories API Integration Tests', () => {
         name: 'Existing Category',
       };
 
-      const response = await request(app)
-        .patch(`/api/categories/${category.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/categories/${category.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(409);
       expect(response.body.message).toContain('already exists');
@@ -652,10 +582,7 @@ describe('Categories API Integration Tests', () => {
         data: { name: 'Sports', slug: 'sports', description: null },
       });
 
-      const response = await request(app)
-        .patch(`/api/categories/${category.slug}`)
-        .set('Cookie', cookies)
-        .send({ parentId: category.id });
+      const response = await request(app).patch(`/api/categories/${category.slug}`).set('Cookie', cookies).send({ parentId: category.id });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('own parent');
@@ -677,10 +604,7 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/categories/${parent.slug}`)
-        .set('Cookie', cookies)
-        .send({ parentId: child.id });
+      const response = await request(app).patch(`/api/categories/${parent.slug}`).set('Cookie', cookies).send({ parentId: child.id });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('circular');
@@ -693,10 +617,7 @@ describe('Categories API Integration Tests', () => {
         data: { name: 'Sports', slug: 'sports', description: null },
       });
 
-      const response = await request(app)
-        .patch(`/api/categories/${category.slug}`)
-        .set('Cookie', cookies)
-        .send({ parentId: 99999 });
+      const response = await request(app).patch(`/api/categories/${category.slug}`).set('Cookie', cookies).send({ parentId: 99999 });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('not found');
@@ -717,10 +638,7 @@ describe('Categories API Integration Tests', () => {
         description: 'Only description changed',
       };
 
-      const response = await request(app)
-        .patch(`/api/categories/${category.slug}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/categories/${category.slug}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.name).toBe('Original Name');
@@ -741,9 +659,7 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/categories/${category.slug}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/categories/${category.slug}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -775,9 +691,7 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete('/api/categories/sports/volleyball')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/categories/sports/volleyball').set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body.id).toBe(child.id);
@@ -797,9 +711,7 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).delete(
-        `/api/categories/${category.slug}`,
-      );
+      const response = await request(app).delete(`/api/categories/${category.slug}`);
 
       expect(response.status).toBe(401);
 
@@ -813,9 +725,7 @@ describe('Categories API Integration Tests', () => {
     it('should return 404 for non-existent category', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/categories/non-existent-slug')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/categories/non-existent-slug').set('Cookie', cookies);
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('statusCode', 404);
@@ -825,9 +735,7 @@ describe('Categories API Integration Tests', () => {
     it('should return 400 for invalid slug format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/categories/invalid slug!')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/categories/invalid slug!').set('Cookie', cookies);
 
       expect(response.status).toBe(400);
     });
@@ -857,9 +765,7 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/categories/${parent.slug}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/categories/${parent.slug}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
 
@@ -881,9 +787,7 @@ describe('Categories API Integration Tests', () => {
         ],
       });
 
-      const response = await request(app)
-        .post('/api/categories/recalculate-slugs')
-        .set('Cookie', cookies);
+      const response = await request(app).post('/api/categories/recalculate-slugs').set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({ updated: 3 });
@@ -893,11 +797,7 @@ describe('Categories API Integration Tests', () => {
         select: { slug: true },
         orderBy: { slug: 'asc' },
       });
-      expect(categories).toEqual([
-        { slug: 'events' },
-        { slug: 'news' },
-        { slug: 'sports' },
-      ]);
+      expect(categories).toEqual([{ slug: 'events' }, { slug: 'news' }, { slug: 'sports' }]);
     });
 
     it('should recalculate hierarchical slugs correctly', async () => {
@@ -925,9 +825,7 @@ describe('Categories API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .post('/api/categories/recalculate-slugs')
-        .set('Cookie', cookies);
+      const response = await request(app).post('/api/categories/recalculate-slugs').set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({ updated: 3 });
@@ -947,9 +845,7 @@ describe('Categories API Integration Tests', () => {
     });
 
     it('should return 401 without authentication', async () => {
-      const response = await request(app).post(
-        '/api/categories/recalculate-slugs',
-      );
+      const response = await request(app).post('/api/categories/recalculate-slugs');
 
       expect(response.status).toBe(401);
     });
@@ -971,9 +867,7 @@ describe('Categories API Integration Tests', () => {
         data: { name: 'New Name' },
       });
 
-      const response = await request(app)
-        .post('/api/categories/recalculate-slugs')
-        .set('Cookie', cookies);
+      const response = await request(app).post('/api/categories/recalculate-slugs').set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({ updated: 1 });
@@ -988,9 +882,7 @@ describe('Categories API Integration Tests', () => {
     it('should return updated: 0 when no categories exist', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .post('/api/categories/recalculate-slugs')
-        .set('Cookie', cookies);
+      const response = await request(app).post('/api/categories/recalculate-slugs').set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({ updated: 0 });

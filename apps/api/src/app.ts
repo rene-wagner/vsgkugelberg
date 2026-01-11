@@ -4,10 +4,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
 import { router } from './routes';
-import {
-  errorHandlerMiddleware,
-  notFoundHandler,
-} from './middleware/error-handler.middleware';
+import { errorHandlerMiddleware, notFoundHandler } from './middleware/error-handler.middleware';
 import './strategies/local.strategy';
 import { createCorsOptions } from './config/cors.config';
 import { UPLOAD_DIR } from './config/upload.config';

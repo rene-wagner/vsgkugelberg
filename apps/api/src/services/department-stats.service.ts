@@ -1,9 +1,5 @@
 import { NotFoundException } from '@/errors/http-errors';
-import {
-  CreateDepartmentStatDto,
-  UpdateDepartmentStatDto,
-  DepartmentStat,
-} from '@/types/department-stat.types';
+import { CreateDepartmentStatDto, UpdateDepartmentStatDto, DepartmentStat } from '@/types/department-stat.types';
 import { prisma } from '@/lib/prisma.lib';
 
 export class DepartmentStatsService {
@@ -20,10 +16,7 @@ export class DepartmentStatsService {
     return department.id;
   }
 
-  async create(
-    departmentSlug: string,
-    dto: CreateDepartmentStatDto,
-  ): Promise<DepartmentStat> {
+  async create(departmentSlug: string, dto: CreateDepartmentStatDto): Promise<DepartmentStat> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     return prisma.departmentStat.create({
@@ -36,11 +29,7 @@ export class DepartmentStatsService {
     });
   }
 
-  async update(
-    departmentSlug: string,
-    id: number,
-    dto: UpdateDepartmentStatDto,
-  ): Promise<DepartmentStat> {
+  async update(departmentSlug: string, id: number, dto: UpdateDepartmentStatDto): Promise<DepartmentStat> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify stat belongs to this department
@@ -49,9 +38,7 @@ export class DepartmentStatsService {
     });
 
     if (!stat) {
-      throw new NotFoundException(
-        `Stat with ID ${id} not found for this department`,
-      );
+      throw new NotFoundException(`Stat with ID ${id} not found for this department`);
     }
 
     return prisma.departmentStat.update({
@@ -73,9 +60,7 @@ export class DepartmentStatsService {
     });
 
     if (!stat) {
-      throw new NotFoundException(
-        `Stat with ID ${id} not found for this department`,
-      );
+      throw new NotFoundException(`Stat with ID ${id} not found for this department`);
     }
 
     return prisma.departmentStat.delete({
@@ -83,10 +68,7 @@ export class DepartmentStatsService {
     });
   }
 
-  async reorder(
-    departmentSlug: string,
-    ids: number[],
-  ): Promise<DepartmentStat[]> {
+  async reorder(departmentSlug: string, ids: number[]): Promise<DepartmentStat[]> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify all stats belong to this department
@@ -97,9 +79,7 @@ export class DepartmentStatsService {
     const existingIds = new Set(stats.map((s) => s.id));
     for (const id of ids) {
       if (!existingIds.has(id)) {
-        throw new NotFoundException(
-          `Stat with ID ${id} not found for this department`,
-        );
+        throw new NotFoundException(`Stat with ID ${id} not found for this department`);
       }
     }
 

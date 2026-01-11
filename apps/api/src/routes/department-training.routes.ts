@@ -68,11 +68,7 @@ router.patch(
   asyncHandlerMiddleware(async (req, res) => {
     const { slug, groupId } = req.params;
     const dto: UpdateDepartmentTrainingGroupDto = req.body;
-    const group = await trainingService.updateGroup(
-      slug,
-      parseInt(groupId, 10),
-      dto,
-    );
+    const group = await trainingService.updateGroup(slug, parseInt(groupId, 10), dto);
     res.json(group);
   }),
 );
@@ -86,10 +82,7 @@ router.delete(
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
     const { slug, groupId } = req.params;
-    const group = await trainingService.removeGroup(
-      slug,
-      parseInt(groupId, 10),
-    );
+    const group = await trainingService.removeGroup(slug, parseInt(groupId, 10));
     res.json(group);
   }),
 );
@@ -107,11 +100,7 @@ router.patch(
   asyncHandlerMiddleware(async (req, res) => {
     const { slug, groupId } = req.params;
     const body = req.body as { ids: number[] };
-    const sessions = await trainingService.reorderSessions(
-      slug,
-      parseInt(groupId, 10),
-      body.ids,
-    );
+    const sessions = await trainingService.reorderSessions(slug, parseInt(groupId, 10), body.ids);
     res.json(sessions);
   }),
 );
@@ -127,11 +116,7 @@ router.post(
   asyncHandlerMiddleware(async (req, res) => {
     const { slug, groupId } = req.params;
     const dto: CreateDepartmentTrainingSessionDto = req.body;
-    const session = await trainingService.createSession(
-      slug,
-      parseInt(groupId, 10),
-      dto,
-    );
+    const session = await trainingService.createSession(slug, parseInt(groupId, 10), dto);
     res.status(201).json(session);
   }),
 );
@@ -148,12 +133,7 @@ router.patch(
   asyncHandlerMiddleware(async (req, res) => {
     const { slug, groupId, id } = req.params;
     const dto: UpdateDepartmentTrainingSessionDto = req.body;
-    const session = await trainingService.updateSession(
-      slug,
-      parseInt(groupId, 10),
-      parseInt(id, 10),
-      dto,
-    );
+    const session = await trainingService.updateSession(slug, parseInt(groupId, 10), parseInt(id, 10), dto);
     res.json(session);
   }),
 );
@@ -168,11 +148,7 @@ router.delete(
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
     const { slug, groupId, id } = req.params;
-    const session = await trainingService.removeSession(
-      slug,
-      parseInt(groupId, 10),
-      parseInt(id, 10),
-    );
+    const session = await trainingService.removeSession(slug, parseInt(groupId, 10), parseInt(id, 10));
     res.json(session);
   }),
 );

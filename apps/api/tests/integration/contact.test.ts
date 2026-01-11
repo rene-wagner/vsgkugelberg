@@ -176,9 +176,7 @@ describe('Contact Form API Integration Tests', () => {
 
     it('should return 200 (silent reject) when timestamp is expired', async () => {
       // Generate a timestamp from 2 hours ago (expired - max is 1 hour)
-      const expiredTimestamp = encryptTimestamp(
-        Date.now() - 2 * 60 * 60 * 1000,
-      );
+      const expiredTimestamp = encryptTimestamp(Date.now() - 2 * 60 * 60 * 1000);
 
       const response = await request(app).post('/api/contact').send({
         contactPersonId,
@@ -215,8 +213,7 @@ describe('Contact Form API Integration Tests', () => {
         senderName: 'Max Müller',
         senderEmail: 'mueller@example.com',
         subject: 'Anfrage über Vereinsbeitritt',
-        message:
-          'Guten Tag, ich möchte dem Verein beitreten. Können Sie mir mehr Informationen zusenden?',
+        message: 'Guten Tag, ich möchte dem Verein beitreten. Können Sie mir mehr Informationen zusenden?',
         timestamp: validTimestamp,
       });
 

@@ -26,10 +26,7 @@ export class SlugifyService {
    * @param excludePostId - Optional post ID to exclude from uniqueness check (for updates)
    * @returns A unique slug
    */
-  async generateUniqueSlug(
-    title: string,
-    excludePostId?: number,
-  ): Promise<string> {
+  async generateUniqueSlug(title: string, excludePostId?: number): Promise<string> {
     const baseSlug = this.slugify(title);
     let slug = baseSlug;
     let counter = 1;
@@ -41,10 +38,7 @@ export class SlugifyService {
       });
 
       // If no post exists with this slug, or it's the same post we're updating
-      if (
-        !existingPost ||
-        (excludePostId && existingPost.id === excludePostId)
-      ) {
+      if (!existingPost || (excludePostId && existingPost.id === excludePostId)) {
         return slug;
       }
 
@@ -63,11 +57,7 @@ export class SlugifyService {
    * @param excludeCategoryId - Optional category ID to exclude from uniqueness check (for updates)
    * @returns A unique hierarchical slug
    */
-  async generateUniqueCategorySlug(
-    name: string,
-    parentId: number | null = null,
-    excludeCategoryId?: number,
-  ): Promise<string> {
+  async generateUniqueCategorySlug(name: string, parentId: number | null = null, excludeCategoryId?: number): Promise<string> {
     const nameSlug = this.slugify(name);
 
     // Get parent's slug if parentId is provided
@@ -131,10 +121,7 @@ export class SlugifyService {
    * @param excludeDepartmentId - Optional department ID to exclude from uniqueness check (for updates)
    * @returns A unique slug
    */
-  async generateUniqueDepartmentSlug(
-    name: string,
-    excludeDepartmentId?: number,
-  ): Promise<string> {
+  async generateUniqueDepartmentSlug(name: string, excludeDepartmentId?: number): Promise<string> {
     const baseSlug = this.slugify(name);
     let slug = baseSlug;
     let counter = 1;
@@ -146,10 +133,7 @@ export class SlugifyService {
       });
 
       // If no department exists with this slug, or it's the same department we're updating
-      if (
-        !existingDepartment ||
-        (excludeDepartmentId && existingDepartment.id === excludeDepartmentId)
-      ) {
+      if (!existingDepartment || (excludeDepartmentId && existingDepartment.id === excludeDepartmentId)) {
         return slug;
       }
 

@@ -44,10 +44,7 @@ describe('Department Locations API Integration Tests', () => {
           street: 'Kugelbergstraße 15',
           city: '06667 Weißenfels',
           mapsUrl: 'https://maps.google.com/?q=test',
-          amenities: [
-            { text: '8 Tischtennisplatten' },
-            { text: 'Umkleiden vorhanden' },
-          ],
+          amenities: [{ text: '8 Tischtennisplatten' }, { text: 'Umkleiden vorhanden' }],
         });
 
       expect(response.status).toBe(201);
@@ -66,18 +63,15 @@ describe('Department Locations API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/locations`)
-        .set('Cookie', cookies)
-        .send({
-          name: 'Test Hall',
-          badge: 'TEST',
-          badgeVariant: 'secondary',
-          street: 'Test Street 1',
-          city: 'Test City',
-          mapsUrl: 'https://maps.google.com/?q=test',
-          amenities: [],
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/locations`).set('Cookie', cookies).send({
+        name: 'Test Hall',
+        badge: 'TEST',
+        badgeVariant: 'secondary',
+        street: 'Test Street 1',
+        city: 'Test City',
+        mapsUrl: 'https://maps.google.com/?q=test',
+        amenities: [],
+      });
 
       expect(response.status).toBe(201);
       expect(response.body.amenities).toEqual([]);
@@ -97,13 +91,7 @@ describe('Department Locations API Integration Tests', () => {
           street: 'Test Street 1',
           city: 'Test City',
           mapsUrl: 'https://maps.openstreetmap.org/?q=test',
-          amenities: [
-            { text: 'One' },
-            { text: 'Two' },
-            { text: 'Three' },
-            { text: 'Four' },
-            { text: 'Five' },
-          ],
+          amenities: [{ text: 'One' }, { text: 'Two' }, { text: 'Three' }, { text: 'Four' }, { text: 'Five' }],
         });
 
       expect(response.status).toBe(201);
@@ -155,18 +143,15 @@ describe('Department Locations API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/locations`)
-        .set('Cookie', cookies)
-        .send({
-          name: 'Test Hall',
-          badge: 'TEST',
-          badgeVariant: 'primary',
-          street: 'Test Street 1',
-          city: 'Test City',
-          mapsUrl: 'not-a-url',
-          amenities: [],
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/locations`).set('Cookie', cookies).send({
+        name: 'Test Hall',
+        badge: 'TEST',
+        badgeVariant: 'primary',
+        street: 'Test Street 1',
+        city: 'Test City',
+        mapsUrl: 'not-a-url',
+        amenities: [],
+      });
 
       expect(response.status).toBe(400);
     });
@@ -175,18 +160,15 @@ describe('Department Locations API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/locations`)
-        .set('Cookie', cookies)
-        .send({
-          name: 'Test Hall',
-          badge: 'TEST',
-          badgeVariant: 'invalid',
-          street: 'Test Street 1',
-          city: 'Test City',
-          mapsUrl: 'https://maps.google.com/?q=test',
-          amenities: [],
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/locations`).set('Cookie', cookies).send({
+        name: 'Test Hall',
+        badge: 'TEST',
+        badgeVariant: 'invalid',
+        street: 'Test Street 1',
+        city: 'Test City',
+        mapsUrl: 'https://maps.google.com/?q=test',
+        amenities: [],
+      });
 
       expect(response.status).toBe(400);
     });
@@ -194,17 +176,15 @@ describe('Department Locations API Integration Tests', () => {
     it('should return 401 without authentication', async () => {
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/locations`)
-        .send({
-          name: 'Test Hall',
-          badge: 'TEST',
-          badgeVariant: 'primary',
-          street: 'Test Street 1',
-          city: 'Test City',
-          mapsUrl: 'https://maps.google.com/?q=test',
-          amenities: [],
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/locations`).send({
+        name: 'Test Hall',
+        badge: 'TEST',
+        badgeVariant: 'primary',
+        street: 'Test Street 1',
+        city: 'Test City',
+        mapsUrl: 'https://maps.google.com/?q=test',
+        amenities: [],
+      });
 
       expect(response.status).toBe(401);
     });
@@ -283,9 +263,7 @@ describe('Department Locations API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/departments/${department.slug}/locations/${location.id}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/departments/${department.slug}/locations/${location.id}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
 
@@ -310,9 +288,7 @@ describe('Department Locations API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).delete(
-        `/api/departments/${department.slug}/locations/${location.id}`,
-      );
+      const response = await request(app).delete(`/api/departments/${department.slug}/locations/${location.id}`);
 
       expect(response.status).toBe(401);
     });
@@ -405,10 +381,7 @@ describe('Department Locations API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}/locations/reorder`)
-        .set('Cookie', cookies)
-        .send({ ids: [] });
+      const response = await request(app).patch(`/api/departments/${department.slug}/locations/reorder`).set('Cookie', cookies).send({ ids: [] });
 
       expect(response.status).toBe(400);
     });

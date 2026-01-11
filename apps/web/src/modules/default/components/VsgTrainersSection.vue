@@ -17,11 +17,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 // Vary the gradient slightly for visual interest
 function getAvatarGradient(index: number): string {
-  const gradients = [
-    'from-vsg-blue-400 to-vsg-blue-600',
-    'from-vsg-blue-500 to-vsg-blue-700',
-    'from-vsg-blue-600 to-vsg-blue-800',
-  ];
+  const gradients = ['from-vsg-blue-400 to-vsg-blue-600', 'from-vsg-blue-500 to-vsg-blue-700', 'from-vsg-blue-600 to-vsg-blue-800'];
   return gradients[index % gradients.length];
 }
 </script>
@@ -31,31 +27,19 @@ function getAvatarGradient(index: number): string {
     <div class="mx-auto max-w-7xl px-6">
       <!-- Section Header -->
       <div class="mb-16 text-center">
-        <span
-          class="font-body text-sm font-normal uppercase tracking-[0.4em] text-vsg-blue-600"
-        >
+        <span class="font-body text-sm font-normal uppercase tracking-[0.4em] text-vsg-blue-600">
           {{ subtitle }}
         </span>
-        <h2
-          class="mt-4 font-display text-5xl tracking-wider text-vsg-blue-900 md:text-7xl"
-        >
+        <h2 class="mt-4 font-display text-5xl tracking-wider text-vsg-blue-900 md:text-7xl">
           {{ title }}
         </h2>
-        <p
-          v-if="description"
-          class="mx-auto mt-4 max-w-2xl font-body text-lg font-normal text-gray-600"
-        >
+        <p v-if="description" class="mx-auto mt-4 max-w-2xl font-body text-lg font-normal text-gray-600">
           {{ description }}
         </p>
       </div>
 
       <!-- Trainers Grid -->
-      <div
-        :class="[
-          'gap-8',
-          trainers.length === 1 ? 'flex justify-center' : 'grid md:grid-cols-3',
-        ]"
-      >
+      <div :class="['gap-8', trainers.length === 1 ? 'flex justify-center' : 'grid md:grid-cols-3']">
         <VsgTrainerCard
           v-for="(trainer, index) in trainers"
           :key="trainer.name"

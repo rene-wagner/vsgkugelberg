@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import VsgContactPersonSelect from '@/shared/components/VsgContactPersonSelect.vue';
-import type {
-  DepartmentTrainer,
-  TrainerLicense,
-} from '../types/department-extended.types';
+import type { DepartmentTrainer, TrainerLicense } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
@@ -25,9 +22,7 @@ const emit = defineEmits<{
   (e: 'delete'): void;
 }>();
 
-const contactPersonId = ref<number | null>(
-  props.trainer.contactPersonId || null,
-);
+const contactPersonId = ref<number | null>(props.trainer.contactPersonId || null);
 const role = ref(props.trainer.role);
 const licenses = ref<TrainerLicense[]>([...props.trainer.licenses]);
 const isExpanded = ref(true);
@@ -63,9 +58,7 @@ watch(
 
 // Exclude IDs that are already used (except current trainer's contact person)
 const excludedContactPersonIds = computed(() => {
-  return props.usedContactPersonIds.filter(
-    (id) => id !== props.trainer.contactPersonId,
-  );
+  return props.usedContactPersonIds.filter((id) => id !== props.trainer.contactPersonId);
 });
 
 const licenseCount = computed(() => licenses.value.length);
@@ -99,45 +92,22 @@ function handleRemoveLicense(index: number) {
 </script>
 
 <template>
-  <div
-    class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
-    :class="{ 'border-vsg-lime-500': isNew }"
-  >
+  <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm" :class="{ 'border-vsg-lime-500': isNew }">
     <!-- Card Header -->
-    <div
-      class="flex items-center gap-3 p-4 bg-gray-50 border-b border-gray-200"
-    >
+    <div class="flex items-center gap-3 p-4 bg-gray-50 border-b border-gray-200">
       <!-- Drag Handle -->
-      <div
-        class="cursor-grab text-gray-400 hover:text-gray-600 trainer-drag-handle shrink-0"
-      >
+      <div class="cursor-grab text-gray-400 hover:text-gray-600 trainer-drag-handle shrink-0">
         <FontAwesomeIcon icon="grip" />
       </div>
 
       <!-- Expand/Collapse Toggle -->
-      <button
-        type="button"
-        class="p-1 hover:bg-gray-200 rounded transition-colors"
-        @click="isExpanded = !isExpanded"
-      >
-        <FontAwesomeIcon
-          icon="chevron-down"
-          class="text-gray-500 transition-transform"
-          :class="{ 'rotate-180': !isExpanded }"
-        />
+      <button type="button" class="p-1 hover:bg-gray-200 rounded transition-colors" @click="isExpanded = !isExpanded">
+        <FontAwesomeIcon icon="chevron-down" class="text-gray-500 transition-transform" :class="{ 'rotate-180': !isExpanded }" />
       </button>
 
       <!-- Trainer Avatar -->
-      <img
-        v-if="profileImageUrl"
-        :src="profileImageUrl"
-        :alt="trainerName"
-        class="w-10 h-10 rounded-full object-cover shrink-0"
-      />
-      <div
-        v-else
-        class="w-10 h-10 rounded-full bg-vsg-blue-100 flex items-center justify-center text-vsg-blue-600 text-sm font-medium shrink-0"
-      >
+      <img v-if="profileImageUrl" :src="profileImageUrl" :alt="trainerName" class="w-10 h-10 rounded-full object-cover shrink-0" />
+      <div v-else class="w-10 h-10 rounded-full bg-vsg-blue-100 flex items-center justify-center text-vsg-blue-600 text-sm font-medium shrink-0">
         <FontAwesomeIcon icon="user" />
       </div>
 
@@ -152,9 +122,7 @@ function handleRemoveLicense(index: number) {
       </div>
 
       <!-- License Count Badge -->
-      <span
-        class="px-2 py-1 bg-vsg-blue-100 text-vsg-blue-700 text-xs font-body rounded"
-      >
+      <span class="px-2 py-1 bg-vsg-blue-100 text-vsg-blue-700 text-xs font-body rounded">
         {{ licenseCount }} {{ licenseCount === 1 ? 'Lizenz' : 'Lizenzen' }}
       </span>
 
@@ -173,27 +141,16 @@ function handleRemoveLicense(index: number) {
     <div v-show="isExpanded" class="p-4 space-y-4">
       <!-- Contact Person Select -->
       <div>
-        <label
-          class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-        >
+        <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1">
           Ansprechpartner <span class="text-red-500">*</span>
         </label>
-        <VsgContactPersonSelect
-          v-model="contactPersonId"
-          :exclude-ids="excludedContactPersonIds"
-        />
-        <p class="mt-1 text-xs text-gray-400">
-          Der Trainer muss als Ansprechpartner angelegt sein.
-        </p>
+        <VsgContactPersonSelect v-model="contactPersonId" :exclude-ids="excludedContactPersonIds" />
+        <p class="mt-1 text-xs text-gray-400">Der Trainer muss als Ansprechpartner angelegt sein.</p>
       </div>
 
       <!-- Role -->
       <div>
-        <label
-          class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"
-        >
-          Rolle
-        </label>
+        <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Rolle </label>
         <input
           v-model="role"
           type="text"
@@ -204,11 +161,7 @@ function handleRemoveLicense(index: number) {
 
       <!-- Licenses Section -->
       <div>
-        <label
-          class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-2"
-        >
-          Lizenzen
-        </label>
+        <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-2"> Lizenzen </label>
 
         <!-- Licenses List -->
         <div v-if="licenses.length > 0" class="flex flex-wrap gap-2 mb-3">
@@ -216,18 +169,10 @@ function handleRemoveLicense(index: number) {
             v-for="(license, index) in licenses"
             :key="index"
             class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm"
-            :class="
-              license.variant === 'gold'
-                ? 'bg-amber-100 text-amber-800'
-                : 'bg-blue-100 text-blue-800'
-            "
+            :class="license.variant === 'gold' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'"
           >
             <span>{{ license.name }}</span>
-            <button
-              type="button"
-              class="p-0.5 hover:bg-white/30 rounded-full"
-              @click="handleRemoveLicense(index)"
-            >
+            <button type="button" class="p-0.5 hover:bg-white/30 rounded-full" @click="handleRemoveLicense(index)">
               <FontAwesomeIcon icon="xmark" />
             </button>
           </div>

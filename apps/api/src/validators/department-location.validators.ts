@@ -8,11 +8,7 @@ const amenitiesValidator = (isRequired: boolean) =>
     .custom((amenities: unknown[]) => {
       if (!Array.isArray(amenities)) return true;
       for (const amenity of amenities) {
-        if (
-          typeof amenity !== 'object' ||
-          amenity === null ||
-          !('text' in amenity)
-        ) {
+        if (typeof amenity !== 'object' || amenity === null || !('text' in amenity)) {
           throw new Error('Each amenity must have a text property');
         }
         const text = (amenity as { text: unknown }).text;
@@ -76,15 +72,9 @@ export const createDepartmentLocationValidator = [
 
   amenitiesValidator(true),
 
-  body('sort')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Sort must be a non-negative integer'),
+  body('sort').optional().isInt({ min: 0 }).withMessage('Sort must be a non-negative integer'),
 
-  body('imageId')
-    .optional({ nullable: true })
-    .isInt({ min: 1 })
-    .withMessage('imageId must be a positive integer'),
+  body('imageId').optional({ nullable: true }).isInt({ min: 1 }).withMessage('imageId must be a positive integer'),
 ];
 
 export const updateDepartmentLocationValidator = [
@@ -104,11 +94,7 @@ export const updateDepartmentLocationValidator = [
     .isLength({ min: 1, max: 50 })
     .withMessage('Badge must be between 1 and 50 characters'),
 
-  body('badgeVariant')
-    .optional()
-    .trim()
-    .isIn(['primary', 'secondary'])
-    .withMessage("Badge variant must be 'primary' or 'secondary'"),
+  body('badgeVariant').optional().trim().isIn(['primary', 'secondary']).withMessage("Badge variant must be 'primary' or 'secondary'"),
 
   body('street')
     .optional()
@@ -141,27 +127,17 @@ export const updateDepartmentLocationValidator = [
 
   amenitiesValidator(false),
 
-  body('sort')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Sort must be a non-negative integer'),
+  body('sort').optional().isInt({ min: 0 }).withMessage('Sort must be a non-negative integer'),
 
-  body('imageId')
-    .optional({ nullable: true })
-    .isInt({ min: 1 })
-    .withMessage('imageId must be a positive integer'),
+  body('imageId').optional({ nullable: true }).isInt({ min: 1 }).withMessage('imageId must be a positive integer'),
 ];
 
-export const locationIdParamValidator = [
-  param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer'),
-];
+export const locationIdParamValidator = [param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer')];
 
 export const reorderDepartmentLocationsValidator = [
   body('ids').isArray({ min: 1 }).withMessage('IDs must be a non-empty array'),
 
-  body('ids.*')
-    .isInt({ min: 1 })
-    .withMessage('Each ID must be a positive integer'),
+  body('ids.*').isInt({ min: 1 }).withMessage('Each ID must be a positive integer'),
 
   body('ids').custom((ids: number[]) => {
     const uniqueIds = new Set(ids);

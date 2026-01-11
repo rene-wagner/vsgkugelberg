@@ -61,9 +61,7 @@ describe('Department Trainers API Integration Tests', () => {
         role: 'Abteilungsleiter & Cheftrainer',
         sort: 0,
       });
-      expect(response.body.licenses).toEqual([
-        { name: 'DTTB C-Lizenz', variant: 'gold' },
-      ]);
+      expect(response.body.licenses).toEqual([{ name: 'DTTB C-Lizenz', variant: 'gold' }]);
       expect(response.body.contactPerson).toMatchObject({
         firstName: 'Michael',
         lastName: 'Weber',
@@ -97,24 +95,18 @@ describe('Department Trainers API Integration Tests', () => {
       const contactPerson = await createTestContactPerson();
 
       // Create first trainer
-      await request(app)
-        .post(`/api/departments/${department.slug}/trainers`)
-        .set('Cookie', cookies)
-        .send({
-          contactPersonId: contactPerson.id,
-          role: 'First Role',
-          licenses: [],
-        });
+      await request(app).post(`/api/departments/${department.slug}/trainers`).set('Cookie', cookies).send({
+        contactPersonId: contactPerson.id,
+        role: 'First Role',
+        licenses: [],
+      });
 
       // Try to create duplicate
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/trainers`)
-        .set('Cookie', cookies)
-        .send({
-          contactPersonId: contactPerson.id,
-          role: 'Second Role',
-          licenses: [],
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/trainers`).set('Cookie', cookies).send({
+        contactPersonId: contactPerson.id,
+        role: 'Second Role',
+        licenses: [],
+      });
 
       expect(response.status).toBe(409);
     });
@@ -123,14 +115,11 @@ describe('Department Trainers API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/trainers`)
-        .set('Cookie', cookies)
-        .send({
-          contactPersonId: 99999,
-          role: 'Trainer',
-          licenses: [],
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/trainers`).set('Cookie', cookies).send({
+        contactPersonId: 99999,
+        role: 'Trainer',
+        licenses: [],
+      });
 
       expect(response.status).toBe(404);
     });
@@ -162,14 +151,11 @@ describe('Department Trainers API Integration Tests', () => {
         variant: 'gold' as const,
       }));
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/trainers`)
-        .set('Cookie', cookies)
-        .send({
-          contactPersonId: contactPerson.id,
-          role: 'Trainer',
-          licenses,
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/trainers`).set('Cookie', cookies).send({
+        contactPersonId: contactPerson.id,
+        role: 'Trainer',
+        licenses,
+      });
 
       expect(response.status).toBe(400);
     });
@@ -178,13 +164,11 @@ describe('Department Trainers API Integration Tests', () => {
       const department = await createTestDepartment();
       const contactPerson = await createTestContactPerson();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/trainers`)
-        .send({
-          contactPersonId: contactPerson.id,
-          role: 'Trainer',
-          licenses: [],
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/trainers`).send({
+        contactPersonId: contactPerson.id,
+        role: 'Trainer',
+        licenses: [],
+      });
 
       expect(response.status).toBe(401);
     });
@@ -214,9 +198,7 @@ describe('Department Trainers API Integration Tests', () => {
 
       expect(response.status).toBe(200);
       expect(response.body.role).toBe('Updated Role');
-      expect(response.body.licenses).toEqual([
-        { name: 'New License', variant: 'blue' },
-      ]);
+      expect(response.body.licenses).toEqual([{ name: 'New License', variant: 'blue' }]);
     });
 
     it('should return 404 for trainer from different department', async () => {
@@ -256,9 +238,7 @@ describe('Department Trainers API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/departments/${department.slug}/trainers/${trainer.id}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/departments/${department.slug}/trainers/${trainer.id}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
 
@@ -287,9 +267,7 @@ describe('Department Trainers API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).delete(
-        `/api/departments/${department.slug}/trainers/${trainer.id}`,
-      );
+      const response = await request(app).delete(`/api/departments/${department.slug}/trainers/${trainer.id}`);
 
       expect(response.status).toBe(401);
     });

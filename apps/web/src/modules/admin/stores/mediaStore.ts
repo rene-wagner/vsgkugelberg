@@ -69,11 +69,7 @@ export const useMediaStore = defineStore('media', () => {
     return `${API_BASE_URL}/uploads/${item.filename}`;
   }
 
-  async function fetchMedia(
-    page: number = 1,
-    limit: number = 24,
-    folderId: number | null = currentFolderId.value,
-  ): Promise<void> {
+  async function fetchMedia(page: number = 1, limit: number = 24, folderId: number | null = currentFolderId.value): Promise<void> {
     isLoading.value = true;
     error.value = null;
     currentFolderId.value = folderId;
@@ -115,17 +111,13 @@ export const useMediaStore = defineStore('media', () => {
     }
   }
 
-  async function fetchFolders(
-    parentId: number | null = currentFolderId.value,
-  ): Promise<void> {
+  async function fetchFolders(parentId: number | null = currentFolderId.value): Promise<void> {
     isLoading.value = true;
     error.value = null;
 
     try {
       const parentParam = parentId === null ? 'null' : parentId;
-      folders.value = await api.get<MediaFolder[]>(
-        `/api/media/folders?parentId=${parentParam}`,
-      );
+      folders.value = await api.get<MediaFolder[]>(`/api/media/folders?parentId=${parentParam}`);
     } catch (e) {
       error.value = e instanceof ApiError ? e.message : 'An error occurred';
       throw e;
@@ -134,10 +126,7 @@ export const useMediaStore = defineStore('media', () => {
     }
   }
 
-  async function createFolder(
-    name: string,
-    parentId: number | null = currentFolderId.value,
-  ): Promise<MediaFolder | null> {
+  async function createFolder(name: string, parentId: number | null = currentFolderId.value): Promise<MediaFolder | null> {
     isLoading.value = true;
     error.value = null;
 
@@ -173,10 +162,7 @@ export const useMediaStore = defineStore('media', () => {
     }
   }
 
-  async function moveMedia(
-    mediaId: number,
-    folderId: number | null,
-  ): Promise<boolean> {
+  async function moveMedia(mediaId: number, folderId: number | null): Promise<boolean> {
     isLoading.value = true;
     error.value = null;
 
@@ -198,10 +184,7 @@ export const useMediaStore = defineStore('media', () => {
     }
   }
 
-  async function uploadMedia(
-    file: File,
-    folderId: number | null = currentFolderId.value,
-  ): Promise<MediaItem | null> {
+  async function uploadMedia(file: File, folderId: number | null = currentFolderId.value): Promise<MediaItem | null> {
     const uploadId = `${file.name}-${Date.now()}`;
 
     uploadProgress.set(uploadId, {
@@ -291,10 +274,7 @@ export const useMediaStore = defineStore('media', () => {
     }
   }
 
-  async function uploadMultipleMedia(
-    files: File[],
-    folderId: number | null = currentFolderId.value,
-  ): Promise<MediaItem[]> {
+  async function uploadMultipleMedia(files: File[], folderId: number | null = currentFolderId.value): Promise<MediaItem[]> {
     const results: MediaItem[] = [];
 
     for (const file of files) {
@@ -338,10 +318,7 @@ export const useMediaStore = defineStore('media', () => {
     error.value = null;
 
     try {
-      const updatedMedia = await api.post<MediaItem>(
-        `/api/media/${id}/regenerate-thumbnails`,
-        {},
-      );
+      const updatedMedia = await api.post<MediaItem>(`/api/media/${id}/regenerate-thumbnails`, {});
 
       const index = media.value.findIndex((m) => m.id === id);
       if (index !== -1) {
@@ -350,8 +327,7 @@ export const useMediaStore = defineStore('media', () => {
 
       return updatedMedia;
     } catch (e) {
-      error.value =
-        e instanceof ApiError ? e.message : 'Ein Fehler ist aufgetreten';
+      error.value = e instanceof ApiError ? e.message : 'Ein Fehler ist aufgetreten';
       return null;
     } finally {
       isRegenerating.value = false;
@@ -364,17 +340,13 @@ export const useMediaStore = defineStore('media', () => {
     regenerateProgress.value = { current: 0, total: media.value.length };
 
     try {
-      const result = await api.post<RegenerateThumbnailsResult>(
-        '/api/media/regenerate-thumbnails',
-        {},
-      );
+      const result = await api.post<RegenerateThumbnailsResult>('/api/media/regenerate-thumbnails', {});
 
       await fetchMedia();
 
       return result;
     } catch (e) {
-      error.value =
-        e instanceof ApiError ? e.message : 'Ein Fehler ist aufgetreten';
+      error.value = e instanceof ApiError ? e.message : 'Ein Fehler ist aufgetreten';
       return null;
     } finally {
       isRegenerating.value = false;
@@ -383,23 +355,14 @@ export const useMediaStore = defineStore('media', () => {
   }
 
   function hasThumbnails(item: MediaItem): boolean {
-    return !!(
-      item.thumbnails &&
-      (item.thumbnails.thumb ||
-        item.thumbnails.small ||
-        item.thumbnails.medium ||
-        item.thumbnails.large)
-    );
+    return !!(item.thumbnails && (item.thumbnails.thumb || item.thumbnails.small || item.thumbnails.medium || item.thumbnails.large));
   }
 
   function canHaveThumbnails(item: MediaItem): boolean {
     return ['image/jpeg', 'image/png', 'image/webp'].includes(item.mimetype);
   }
 
-  function getThumbnailUrl(
-    item: MediaItem,
-    size: keyof ThumbnailsMap = 'small',
-  ): string | null {
+  function getThumbnailUrl(item: MediaItem, size: keyof ThumbnailsMap = 'small'): string | null {
     if (!item.thumbnails || !item.thumbnails[size]) {
       return null;
     }

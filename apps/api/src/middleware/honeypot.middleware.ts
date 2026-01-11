@@ -3,12 +3,9 @@ import type { Request, Response, NextFunction } from 'express';
 import type { HoneypotValidationResult } from '@/types/contact-form.types';
 
 // Configuration from environment with defaults
-const HONEYPOT_SECRET =
-  process.env.HONEYPOT_SECRET || 'default-honeypot-secret-change-in-production';
-const MIN_SUBMISSION_TIME =
-  parseInt(process.env.CONTACT_FORM_MIN_TIME || '3', 10) * 1000; // Convert to ms
-const MAX_SUBMISSION_TIME =
-  parseInt(process.env.CONTACT_FORM_MAX_TIME || '3600', 10) * 1000; // Convert to ms
+const HONEYPOT_SECRET = process.env.HONEYPOT_SECRET || 'default-honeypot-secret-change-in-production';
+const MIN_SUBMISSION_TIME = parseInt(process.env.CONTACT_FORM_MIN_TIME || '3', 10) * 1000; // Convert to ms
+const MAX_SUBMISSION_TIME = parseInt(process.env.CONTACT_FORM_MAX_TIME || '3600', 10) * 1000; // Convert to ms
 
 // Encryption algorithm
 const ALGORITHM = 'aes-256-gcm';
@@ -83,10 +80,7 @@ export function decryptTimestamp(encryptedTimestamp: string): number | null {
  * @param timestamp - The encrypted timestamp field
  * @returns Validation result indicating if the submission is spam
  */
-export function validateHoneypot(
-  website: string | undefined,
-  timestamp: string | undefined,
-): HoneypotValidationResult {
+export function validateHoneypot(website: string | undefined, timestamp: string | undefined): HoneypotValidationResult {
   // Check honeypot field - must be empty or undefined
   if (website && website.trim() !== '') {
     return { isSpam: true, reason: 'honeypot_filled' };
@@ -123,11 +117,7 @@ export function validateHoneypot(
  * If spam is detected, returns 200 OK silently (no email sent).
  * Sets req.honeypotResult for use in the route handler.
  */
-export function honeypotMiddleware(
-  req: Request,
-  _res: Response,
-  next: NextFunction,
-): void {
+export function honeypotMiddleware(req: Request, _res: Response, next: NextFunction): void {
   const { website, timestamp } = req.body as {
     website?: string;
     timestamp?: string;
@@ -135,9 +125,7 @@ export function honeypotMiddleware(
   const result = validateHoneypot(website, timestamp);
 
   // Attach result to request for use in route handler
-  (
-    req as Request & { honeypotResult: HoneypotValidationResult }
-  ).honeypotResult = result;
+  (req as Request & { honeypotResult: HoneypotValidationResult }).honeypotResult = result;
 
   next();
 }
@@ -146,8 +134,5 @@ export function honeypotMiddleware(
  * Helper to check if request was marked as spam by honeypot middleware
  */
 export function isSpamRequest(req: Request): boolean {
-  return (
-    (req as Request & { honeypotResult?: HoneypotValidationResult })
-      .honeypotResult?.isSpam === true
-  );
+  return (req as Request & { honeypotResult?: HoneypotValidationResult }).honeypotResult?.isSpam === true;
 }

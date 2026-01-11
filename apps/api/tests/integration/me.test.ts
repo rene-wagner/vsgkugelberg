@@ -10,11 +10,7 @@ describe('Auth API Integration Tests', () => {
 
   describe('GET /api/me', () => {
     it('should return current user when authenticated via cookie', async () => {
-      const user = await createTestUserWithPassword(
-        authUsername,
-        authEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(authUsername, authEmail, testPassword);
 
       const loginResponse = await request(app).post('/api/auth/login').send({
         username: authUsername,

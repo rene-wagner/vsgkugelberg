@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import {
-  useCategoriesStore,
-  type Category,
-  type CreateCategoryData,
-  type UpdateCategoryData,
-} from '../stores/categoriesStore';
+import { useCategoriesStore, type Category, type CreateCategoryData, type UpdateCategoryData } from '../stores/categoriesStore';
 import VsgTreeSelect from '@/shared/components/VsgTreeSelect.vue';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 
@@ -41,10 +36,7 @@ function getDescendantIds(category: Category): number[] {
 }
 
 // Filter out current category and its descendants to prevent circular references
-function filterCategories(
-  categories: Category[],
-  excludeIds: Set<number>,
-): Category[] {
+function filterCategories(categories: Category[], excludeIds: Set<number>): Category[] {
   return categories
     .filter((cat) => !excludeIds.has(cat.id))
     .map((cat) => ({
@@ -95,15 +87,11 @@ async function handleSubmit() {
         parentId: selectedParentId.value,
       };
 
-      const result = await categoriesStore.updateCategory(
-        props.category.slug,
-        updateData,
-      );
+      const result = await categoriesStore.updateCategory(props.category.slug, updateData);
       if (result) {
         router.push('/admin/categories');
       } else {
-        error.value =
-          categoriesStore.error || 'Fehler beim Aktualisieren der Kategorie';
+        error.value = categoriesStore.error || 'Fehler beim Aktualisieren der Kategorie';
       }
     } else {
       // Create new category
@@ -117,8 +105,7 @@ async function handleSubmit() {
       if (result) {
         router.push('/admin/categories');
       } else {
-        error.value =
-          categoriesStore.error || 'Fehler beim Erstellen der Kategorie';
+        error.value = categoriesStore.error || 'Fehler beim Erstellen der Kategorie';
       }
     }
   } catch {
@@ -131,9 +118,7 @@ async function handleSubmit() {
 async function handleDelete() {
   if (!props.category) return;
 
-  const confirmed = window.confirm(
-    `Möchtest du die Kategorie "${props.category.name}" wirklich löschen?`,
-  );
+  const confirmed = window.confirm(`Möchtest du die Kategorie "${props.category.name}" wirklich löschen?`);
   if (!confirmed) return;
 
   isSubmitting.value = true;
@@ -155,26 +140,18 @@ function handleCancel() {
 <template>
   <form class="max-w-3xl" @submit.prevent="handleSubmit">
     <!-- Error Message -->
-    <div
-      v-if="error"
-      class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6"
-    >
+    <div v-if="error" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
       <p class="text-sm text-red-600 font-body">{{ error }}</p>
     </div>
 
     <!-- Category Data Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        KATEGORIEDATEN
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">KATEGORIEDATEN</h2>
 
       <div class="space-y-6">
         <!-- Name -->
         <div>
-          <label
-            for="name"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="name" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             Name <span class="text-red-500">*</span>
           </label>
           <input
@@ -189,43 +166,26 @@ function handleCancel() {
 
         <!-- Description -->
         <div>
-          <label
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Beschreibung
-          </label>
-          <VsgMarkdownEditor
-            v-model="description"
-            placeholder="Optionale Beschreibung der Kategorie..."
-            min-height="200px"
-          />
+          <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Beschreibung </label>
+          <VsgMarkdownEditor v-model="description" placeholder="Optionale Beschreibung der Kategorie..." min-height="200px" />
         </div>
 
         <!-- Parent Category -->
         <div>
-          <label
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Übergeordnete Kategorie
-          </label>
+          <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Übergeordnete Kategorie </label>
           <VsgTreeSelect
             v-model="selectedParentId"
             :options="availableParentCategories"
             placeholder="Keine übergeordnete Kategorie"
             :disabled="categoriesStore.isLoading"
           />
-          <p class="mt-1.5 text-xs text-gray-500 font-body">
-            Optional: Wähle eine übergeordnete Kategorie, um eine Unterkategorie
-            zu erstellen.
-          </p>
+          <p class="mt-1.5 text-xs text-gray-500 font-body">Optional: Wähle eine übergeordnete Kategorie, um eine Unterkategorie zu erstellen.</p>
         </div>
       </div>
     </div>
 
     <!-- Form Actions -->
-    <div
-      class="flex items-center justify-between border-t border-gray-200 pt-6"
-    >
+    <div class="flex items-center justify-between border-t border-gray-200 pt-6">
       <button
         type="button"
         class="px-6 py-2.5 border border-gray-300 text-gray-600 font-body text-sm rounded-lg hover:bg-gray-50 transition-colors"

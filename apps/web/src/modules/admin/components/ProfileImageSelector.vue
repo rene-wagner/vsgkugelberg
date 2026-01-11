@@ -21,15 +21,11 @@ const previewImage = ref<MediaItem | null>(null);
 
 const ALLOWED_MIMETYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
-const hasContent = computed(
-  () => mediaStore.media.length > 0 || mediaStore.folders.length > 0,
-);
+const hasContent = computed(() => mediaStore.media.length > 0 || mediaStore.folders.length > 0);
 
 // Filter media to show only allowed image types (JPEG, PNG, WebP)
 const imageMedia = computed(() => {
-  return mediaStore.media.filter((item) =>
-    ALLOWED_MIMETYPES.includes(item.mimetype),
-  );
+  return mediaStore.media.filter((item) => ALLOWED_MIMETYPES.includes(item.mimetype));
 });
 
 // Watch for currentImage prop to set the preview
@@ -53,10 +49,7 @@ async function openGallery() {
 }
 
 async function loadFolder(folderId: number | null) {
-  const promises: Promise<any>[] = [
-    mediaStore.fetchMedia(1, 100, folderId),
-    mediaStore.fetchFolders(folderId),
-  ];
+  const promises: Promise<any>[] = [mediaStore.fetchMedia(1, 100, folderId), mediaStore.fetchFolders(folderId)];
 
   if (folderId !== null) {
     promises.push(mediaStore.fetchFolderDetails(folderId));
@@ -126,21 +119,14 @@ async function handleFileUpload(event: Event) {
         class="w-32 h-32 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center bg-gray-50 overflow-hidden"
         :class="{ 'border-solid border-vsg-blue-300': previewImage }"
       >
-        <img
-          v-if="previewImage"
-          :src="mediaStore.getMediaUrl(previewImage)"
-          :alt="previewImage.originalName"
-          class="w-full h-full object-cover"
-        />
+        <img v-if="previewImage" :src="mediaStore.getMediaUrl(previewImage)" :alt="previewImage.originalName" class="w-full h-full object-cover" />
         <FontAwesomeIcon v-else icon="user" class="text-gray-400" />
       </div>
 
       <!-- Actions -->
       <div class="flex-1 space-y-2">
         <p class="font-body text-sm text-gray-600">
-          {{
-            previewImage ? previewImage.originalName : 'Kein Bild ausgewählt'
-          }}
+          {{ previewImage ? previewImage.originalName : 'Kein Bild ausgewählt' }}
         </p>
 
         <div class="flex flex-wrap gap-2">
@@ -171,43 +157,21 @@ async function handleFileUpload(event: Event) {
           </button>
         </div>
 
-        <p class="font-body text-xs text-gray-400">
-          Erlaubte Formate: JPEG, PNG, WebP
-        </p>
+        <p class="font-body text-xs text-gray-400">Erlaubte Formate: JPEG, PNG, WebP</p>
       </div>
     </div>
 
     <!-- Hidden File Input -->
-    <input
-      ref="fileInput"
-      type="file"
-      class="hidden"
-      accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
-      @change="handleFileUpload"
-    />
+    <input ref="fileInput" type="file" class="hidden" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" @change="handleFileUpload" />
 
     <!-- Gallery Modal -->
     <Teleport to="body">
-      <div
-        v-if="showGallery"
-        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-        @click.self="closeGallery"
-      >
-        <div
-          class="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[80vh] flex flex-col"
-        >
+      <div v-if="showGallery" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" @click.self="closeGallery">
+        <div class="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[80vh] flex flex-col">
           <!-- Header -->
-          <div
-            class="flex items-center justify-between px-6 py-4 border-b border-gray-200"
-          >
-            <h3 class="font-display text-lg tracking-wider text-vsg-blue-900">
-              Profilbild wählen
-            </h3>
-            <button
-              type="button"
-              class="p-1 text-gray-400 hover:text-gray-600 transition-colors"
-              @click="closeGallery"
-            >
+          <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <h3 class="font-display text-lg tracking-wider text-vsg-blue-900">Profilbild wählen</h3>
+            <button type="button" class="p-1 text-gray-400 hover:text-gray-600 transition-colors" @click="closeGallery">
               <FontAwesomeIcon icon="xmark" />
             </button>
           </div>
@@ -228,14 +192,10 @@ async function handleFileUpload(event: Event) {
 
             <!-- Empty State -->
             <div v-if="!hasContent" class="text-center py-12">
-              <div
-                class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
-              >
+              <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <FontAwesomeIcon icon="image" class="w-8 h-8 text-gray-400" />
               </div>
-              <p class="font-body text-gray-500">
-                Keine passenden Bilder in der Mediathek.
-              </p>
+              <p class="font-body text-gray-500">Keine passenden Bilder in der Mediathek.</p>
               <button
                 type="button"
                 class="mt-4 px-4 py-2 text-sm font-body bg-vsg-blue-600 text-white rounded-lg hover:bg-vsg-blue-700 transition-colors"
@@ -246,10 +206,7 @@ async function handleFileUpload(event: Event) {
             </div>
 
             <!-- Image Grid -->
-            <div
-              v-else
-              class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"
-            >
+            <div v-else class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
               <!-- Back to parent -->
               <button
                 v-if="mediaStore.currentFolderId !== null"
@@ -269,9 +226,7 @@ async function handleFileUpload(event: Event) {
                 @click="loadFolder(folder.id)"
               >
                 <FontAwesomeIcon icon="folder" class="text-vsg-blue-400" />
-                <span
-                  class="mt-1 font-body text-[10px] text-vsg-blue-900 font-medium px-1 text-center truncate w-full"
-                >
+                <span class="mt-1 font-body text-[10px] text-vsg-blue-900 font-medium px-1 text-center truncate w-full">
                   {{ folder.name }}
                 </span>
               </button>
@@ -282,27 +237,17 @@ async function handleFileUpload(event: Event) {
                 :key="item.id"
                 type="button"
                 class="aspect-square border-2 rounded-lg overflow-hidden transition-all hover:border-vsg-blue-400 hover:ring-2 hover:ring-vsg-blue-100"
-                :class="[
-                  modelValue === item.id
-                    ? 'border-vsg-blue-600 ring-2 ring-vsg-blue-100'
-                    : 'border-gray-200',
-                ]"
+                :class="[modelValue === item.id ? 'border-vsg-blue-600 ring-2 ring-vsg-blue-100' : 'border-gray-200']"
                 :title="item.originalName"
                 @click="selectImage(item)"
               >
-                <img
-                  :src="mediaStore.getMediaUrl(item)"
-                  :alt="item.originalName"
-                  class="w-full h-full object-cover"
-                />
+                <img :src="mediaStore.getMediaUrl(item)" :alt="item.originalName" class="w-full h-full object-cover" />
               </button>
             </div>
           </div>
 
           <!-- Footer -->
-          <div
-            class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3"
-          >
+          <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
             <button
               type="button"
               class="px-4 py-2 text-sm font-body border border-gray-300 text-gray-600 rounded-lg hover:bg-gray-50 transition-colors"

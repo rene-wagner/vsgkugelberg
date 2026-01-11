@@ -2,11 +2,7 @@
 import { ref, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useHistoryStore } from '../stores/historyStore';
-import type {
-  HistoryContent,
-  ChronicleGroup,
-  ChartData,
-} from '../types/history.types';
+import type { HistoryContent, ChronicleGroup, ChartData } from '../types/history.types';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 import HistoryChartEditor from './HistoryChartEditor.vue';
 import HistoryChronicleGroupEditor from './HistoryChronicleGroupEditor.vue';
@@ -29,12 +25,8 @@ watch(
     if (newHistory) {
       developmentHeadline.value = newHistory.developmentHeadline;
       developmentDescription.value = newHistory.developmentDescription;
-      localChartData.value = JSON.parse(
-        JSON.stringify(newHistory.developmentChartData),
-      );
-      localChronicleGroups.value = JSON.parse(
-        JSON.stringify(newHistory.developmentChronicleGroups),
-      );
+      localChartData.value = JSON.parse(JSON.stringify(newHistory.developmentChartData));
+      localChronicleGroups.value = JSON.parse(JSON.stringify(newHistory.developmentChronicleGroups));
     }
   },
   { immediate: true },
@@ -66,16 +58,11 @@ async function handleSubmit() {
   <form class="space-y-6 pb-12" @submit.prevent="handleSubmit">
     <!-- Development Basics -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        ENTWICKLUNGSDATEN
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">ENTWICKLUNGSDATEN</h2>
 
       <div class="space-y-6">
         <div>
-          <label
-            for="developmentHeadline"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="developmentHeadline" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             Abschnitts-Überschrift
           </label>
           <input
@@ -88,47 +75,27 @@ async function handleSubmit() {
         </div>
 
         <div>
-          <label
-            for="developmentDescription"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
+          <label for="developmentDescription" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
             Beschreibung (Markdown)
           </label>
-          <VsgMarkdownEditor
-            v-model="developmentDescription"
-            placeholder="Die Geschichte der Entwicklung..."
-            min-height="200px"
-          />
+          <VsgMarkdownEditor v-model="developmentDescription" placeholder="Die Geschichte der Entwicklung..." min-height="200px" />
         </div>
       </div>
     </div>
 
     <!-- Chart Editor -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-      <h2
-        class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase"
-      >
-        Mitgliederstatistik (Diagramm)
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase">Mitgliederstatistik (Diagramm)</h2>
 
       <HistoryChartEditor v-model="localChartData" />
     </div>
 
     <!-- Chronicle Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-      <h2
-        class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase"
-      >
-        Chronik der Ereignisse
-      </h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase">Chronik der Ereignisse</h2>
 
       <div class="space-y-6">
-        <VueDraggable
-          v-model="localChronicleGroups"
-          handle=".drag-handle"
-          :animation="200"
-          class="space-y-6"
-        >
+        <VueDraggable v-model="localChronicleGroups" handle=".drag-handle" :animation="200" class="space-y-6">
           <HistoryChronicleGroupEditor
             v-for="(group, index) in localChronicleGroups"
             :key="index"

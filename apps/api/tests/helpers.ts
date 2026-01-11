@@ -73,11 +73,7 @@ export async function disconnectDatabase() {
   }
 }
 
-export async function createTestUserWithPassword(
-  username: string,
-  email: string,
-  password: string,
-) {
+export async function createTestUserWithPassword(username: string, email: string, password: string) {
   const hashedPassword = await passwordService.hash(password);
 
   return prisma.user.create({
@@ -89,17 +85,12 @@ export async function createTestUserWithPassword(
   });
 }
 
-export function extractCookieValue(
-  response: Response,
-  cookieName: string,
-): string | undefined {
+export function extractCookieValue(response: Response, cookieName: string): string | undefined {
   const cookies = response.headers['set-cookie'];
   if (!cookies) return undefined;
 
   const cookieArray = Array.isArray(cookies) ? cookies : [cookies];
-  const targetCookie = cookieArray.find((cookie) =>
-    cookie.startsWith(`${cookieName}=`),
-  );
+  const targetCookie = cookieArray.find((cookie) => cookie.startsWith(`${cookieName}=`));
 
   if (!targetCookie) return undefined;
 

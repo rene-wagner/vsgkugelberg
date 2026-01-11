@@ -38,9 +38,7 @@ function handleTabClick(tab: TabDefinition) {
               : 'border-transparent text-gray-500 hover:text-vsg-blue-600 hover:border-gray-300',
         ]"
         :disabled="tab.disabled"
-        :title="
-          tab.disabled && tab.disabledTooltip ? tab.disabledTooltip : undefined
-        "
+        :title="tab.disabled && tab.disabledTooltip ? tab.disabledTooltip : undefined"
         @click="handleTabClick(tab)"
       >
         {{ tab.label }}

@@ -4,10 +4,7 @@ import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
 import { validationMiddleware } from '@/middleware/validation.middleware';
 import { jwtMiddleware } from '@/middleware/jwt.middleware';
-import {
-  createCategoryValidator,
-  updateCategoryValidator,
-} from '@/validators/category.validators';
+import { createCategoryValidator, updateCategoryValidator } from '@/validators/category.validators';
 import { CreateCategoryDto, UpdateCategoryDto } from '@/types/category.types';
 import { BadRequestException } from '@/errors/http-errors';
 
@@ -28,12 +25,9 @@ function extractSlug(req: Request): string {
   }
 
   // Validate slug format: lowercase alphanumeric with hyphens, segments separated by /
-  const slugPattern =
-    /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/;
+  const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)*$/;
   if (!slugPattern.test(slug)) {
-    throw new BadRequestException(
-      'Slug must be lowercase alphanumeric with hyphens, segments separated by /',
-    );
+    throw new BadRequestException('Slug must be lowercase alphanumeric with hyphens, segments separated by /');
   }
 
   if (slug.length > 255) {

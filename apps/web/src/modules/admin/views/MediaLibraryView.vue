@@ -12,21 +12,14 @@ const showRegenerateConfirm = ref(false);
 const regenerateResult = ref<RegenerateThumbnailsResult | null>(null);
 const showNewFolderModal = ref(false);
 const newFolderName = ref('');
-const breadcrumbs = ref<{ id: number | null; name: string }[]>([
-  { id: null, name: 'Mediathek' },
-]);
+const breadcrumbs = ref<{ id: number | null; name: string }[]>([{ id: null, name: 'Mediathek' }]);
 
 onMounted(() => {
   loadContent();
 });
 
-async function loadContent(
-  folderId: number | null = mediaStore.currentFolderId,
-) {
-  const promises: Promise<any>[] = [
-    mediaStore.fetchMedia(1, 48, folderId),
-    mediaStore.fetchFolders(folderId),
-  ];
+async function loadContent(folderId: number | null = mediaStore.currentFolderId) {
+  const promises: Promise<any>[] = [mediaStore.fetchMedia(1, 48, folderId), mediaStore.fetchFolders(folderId)];
 
   if (folderId !== null) {
     promises.push(mediaStore.fetchFolderDetails(folderId));
@@ -97,12 +90,8 @@ async function executeRegenerateAll() {
   <div>
     <!-- Page Header -->
     <div class="mb-8">
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
-        MEDIATHEK
-      </h1>
-      <p class="font-body font-normal text-vsg-blue-600 mt-1">
-        Verwalte Bilder und Medien
-      </p>
+      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">MEDIATHEK</h1>
+      <p class="font-body font-normal text-vsg-blue-600 mt-1">Verwalte Bilder und Medien</p>
     </div>
 
     <!-- Upload Zone -->
@@ -117,18 +106,12 @@ async function executeRegenerateAll() {
           <button
             type="button"
             class="hover:text-vsg-blue-900 transition-colors"
-            :class="
-              index === breadcrumbs.length - 1
-                ? 'text-vsg-blue-900 font-medium'
-                : 'text-vsg-blue-500'
-            "
+            :class="index === breadcrumbs.length - 1 ? 'text-vsg-blue-900 font-medium' : 'text-vsg-blue-500'"
             @click="navigateToFolder(crumb.id)"
           >
             {{ crumb.name }}
           </button>
-          <span v-if="index < breadcrumbs.length - 1" class="text-vsg-blue-300"
-            >/</span
-          >
+          <span v-if="index < breadcrumbs.length - 1" class="text-vsg-blue-300">/</span>
         </template>
       </nav>
 
@@ -154,48 +137,28 @@ async function executeRegenerateAll() {
     </div>
 
     <!-- Loading State -->
-    <div
-      v-if="mediaStore.isLoading && mediaStore.media.length === 0"
-      class="flex items-center justify-center py-12"
-    >
+    <div v-if="mediaStore.isLoading && mediaStore.media.length === 0" class="flex items-center justify-center py-12">
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Error State -->
-    <div
-      v-else-if="mediaStore.error"
-      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
-    >
+    <div v-else-if="mediaStore.error" class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
       <p class="text-sm text-red-600 font-body">{{ mediaStore.error }}</p>
-      <button
-        type="button"
-        class="mt-3 text-sm text-red-700 underline hover:no-underline"
-        @click="mediaStore.clearError()"
-      >
-        Schliessen
-      </button>
+      <button type="button" class="mt-3 text-sm text-red-700 underline hover:no-underline" @click="mediaStore.clearError()">Schliessen</button>
     </div>
 
     <!-- Gallery Section -->
-    <div
-      v-else
-      class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm"
-    >
+    <div v-else class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="font-display text-xl tracking-wider text-vsg-blue-900">
-          GALERIE
-        </h2>
+        <h2 class="font-display text-xl tracking-wider text-vsg-blue-900">GALERIE</h2>
         <div class="flex items-center gap-4">
-          <span class="font-body text-sm text-gray-500">
-            {{ mediaCount }} von {{ totalCount }} Medien
-          </span>
+          <span class="font-body text-sm text-gray-500"> {{ mediaCount }} von {{ totalCount }} Medien </span>
           <button
             type="button"
             class="px-4 py-2 bg-vsg-blue-600 text-white font-body text-sm rounded-lg hover:bg-vsg-blue-700 transition-colors flex items-center gap-2"
             :disabled="mediaStore.isRegenerating || mediaCount === 0"
             :class="{
-              'opacity-50 cursor-not-allowed':
-                mediaStore.isRegenerating || mediaCount === 0,
+              'opacity-50 cursor-not-allowed': mediaStore.isRegenerating || mediaCount === 0,
             }"
             @click="openRegenerateConfirm"
           >
@@ -216,22 +179,14 @@ async function executeRegenerateAll() {
         @click.self="closeRegenerateConfirm"
       >
         <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-xl">
-          <h3
-            class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4"
-          >
-            THUMBNAILS REGENERIEREN
-          </h3>
+          <h3 class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4">THUMBNAILS REGENERIEREN</h3>
 
           <!-- Confirmation State -->
           <div v-if="!mediaStore.isRegenerating && !regenerateResult">
             <p class="font-body text-gray-600 mb-6">
-              Möchtest du die Thumbnails für alle {{ totalCount }} Medien neu
-              generieren? Dieser Vorgang kann einige Zeit dauern.
+              Möchtest du die Thumbnails für alle {{ totalCount }} Medien neu generieren? Dieser Vorgang kann einige Zeit dauern.
             </p>
-            <p class="font-body text-sm text-gray-500 mb-6">
-              SVG-Dateien werden übersprungen, da sie keine Thumbnails
-              benötigen.
-            </p>
+            <p class="font-body text-sm text-gray-500 mb-6">SVG-Dateien werden übersprungen, da sie keine Thumbnails benötigen.</p>
 
             <div class="flex justify-end gap-3">
               <button
@@ -253,37 +208,23 @@ async function executeRegenerateAll() {
 
           <!-- Loading State -->
           <div v-else-if="mediaStore.isRegenerating" class="text-center py-8">
-            <div
-              class="w-12 h-12 border-4 border-vsg-blue-200 border-t-vsg-blue-600 rounded-full animate-spin mx-auto mb-4"
-            ></div>
-            <p class="font-body text-gray-600">
-              Thumbnails werden regeneriert...
-            </p>
-            <p class="font-body text-sm text-gray-500 mt-2">
-              Bitte warten, dies kann einige Zeit dauern.
-            </p>
+            <div class="w-12 h-12 border-4 border-vsg-blue-200 border-t-vsg-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <p class="font-body text-gray-600">Thumbnails werden regeneriert...</p>
+            <p class="font-body text-sm text-gray-500 mt-2">Bitte warten, dies kann einige Zeit dauern.</p>
           </div>
 
           <!-- Result State -->
           <div v-else-if="regenerateResult">
-            <div
-              class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6"
-            >
+            <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
               <div class="flex items-center gap-2 mb-2">
                 <FontAwesomeIcon icon="check" class="text-green-600" />
-                <span class="font-body font-medium text-green-800">
-                  Regenerierung abgeschlossen
-                </span>
+                <span class="font-body font-medium text-green-800"> Regenerierung abgeschlossen </span>
               </div>
               <div class="font-body text-sm text-green-700 space-y-1">
                 <p>Verarbeitet: {{ regenerateResult.processed }}</p>
                 <p>Erfolgreich: {{ regenerateResult.succeeded }}</p>
-                <p v-if="regenerateResult.failed > 0" class="text-red-600">
-                  Fehlgeschlagen: {{ regenerateResult.failed }}
-                </p>
-                <p v-if="regenerateResult.skipped > 0">
-                  Ubersprungen (SVG): {{ regenerateResult.skipped }}
-                </p>
+                <p v-if="regenerateResult.failed > 0" class="text-red-600">Fehlgeschlagen: {{ regenerateResult.failed }}</p>
+                <p v-if="regenerateResult.skipped > 0">Ubersprungen (SVG): {{ regenerateResult.skipped }}</p>
               </div>
             </div>
 
@@ -309,17 +250,9 @@ async function executeRegenerateAll() {
         @click.self="showNewFolderModal = false"
       >
         <div class="bg-white rounded-xl p-6 max-w-sm w-full shadow-xl">
-          <h3
-            class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4"
-          >
-            NEUER ORDNER
-          </h3>
+          <h3 class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4">NEUER ORDNER</h3>
           <div class="mb-6">
-            <label
-              class="block text-sm font-body font-medium text-vsg-blue-900 mb-1"
-            >
-              Name
-            </label>
+            <label class="block text-sm font-body font-medium text-vsg-blue-900 mb-1"> Name </label>
             <input
               v-model="newFolderName"
               type="text"

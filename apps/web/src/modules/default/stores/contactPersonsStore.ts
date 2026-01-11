@@ -47,43 +47,37 @@ interface PaginatedResponse {
   };
 }
 
-export const useDefaultContactPersonsStore = defineStore(
-  'default-contact-persons',
-  () => {
-    const contactPersons = ref<ContactPerson[]>([]);
-    const isLoading = ref(false);
-    const error = ref<string | null>(null);
+export const useDefaultContactPersonsStore = defineStore('default-contact-persons', () => {
+  const contactPersons = ref<ContactPerson[]>([]);
+  const isLoading = ref(false);
+  const error = ref<string | null>(null);
 
-    async function fetchContactPersons(): Promise<void> {
-      isLoading.value = true;
-      error.value = null;
+  async function fetchContactPersons(): Promise<void> {
+    isLoading.value = true;
+    error.value = null;
 
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/api/contact-persons?limit=50`,
-          {
-            method: 'GET',
-          },
-        );
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/contact-persons?limit=50`, {
+        method: 'GET',
+      });
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch contact persons');
-        }
-
-        const result = (await response.json()) as PaginatedResponse;
-        contactPersons.value = result.data;
-      } catch (e) {
-        error.value = e instanceof Error ? e.message : 'An error occurred';
-      } finally {
-        isLoading.value = false;
+      if (!response.ok) {
+        throw new Error('Failed to fetch contact persons');
       }
-    }
 
-    return {
-      contactPersons,
-      isLoading,
-      error,
-      fetchContactPersons,
-    };
-  },
-);
+      const result = (await response.json()) as PaginatedResponse;
+      contactPersons.value = result.data;
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'An error occurred';
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  return {
+    contactPersons,
+    isLoading,
+    error,
+    fetchContactPersons,
+  };
+});

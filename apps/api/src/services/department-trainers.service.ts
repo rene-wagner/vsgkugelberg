@@ -1,9 +1,5 @@
 import { NotFoundException, ConflictException } from '@/errors/http-errors';
-import {
-  CreateDepartmentTrainerDto,
-  UpdateDepartmentTrainerDto,
-  DepartmentTrainerWithContactPerson,
-} from '@/types/department-trainer.types';
+import { CreateDepartmentTrainerDto, UpdateDepartmentTrainerDto, DepartmentTrainerWithContactPerson } from '@/types/department-trainer.types';
 import { prisma, Prisma } from '@/lib/prisma.lib';
 
 export class DepartmentTrainersService {
@@ -26,16 +22,11 @@ export class DepartmentTrainersService {
     });
 
     if (!contactPerson) {
-      throw new NotFoundException(
-        `Contact person with ID ${contactPersonId} not found`,
-      );
+      throw new NotFoundException(`Contact person with ID ${contactPersonId} not found`);
     }
   }
 
-  async create(
-    departmentSlug: string,
-    dto: CreateDepartmentTrainerDto,
-  ): Promise<DepartmentTrainerWithContactPerson> {
+  async create(departmentSlug: string, dto: CreateDepartmentTrainerDto): Promise<DepartmentTrainerWithContactPerson> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
     await this.validateContactPerson(dto.contactPersonId);
 
@@ -55,23 +46,14 @@ export class DepartmentTrainersService {
         },
       });
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2002'
-      ) {
-        throw new ConflictException(
-          `This contact person is already a trainer for this department`,
-        );
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+        throw new ConflictException(`This contact person is already a trainer for this department`);
       }
       throw error;
     }
   }
 
-  async update(
-    departmentSlug: string,
-    id: number,
-    dto: UpdateDepartmentTrainerDto,
-  ): Promise<DepartmentTrainerWithContactPerson> {
+  async update(departmentSlug: string, id: number, dto: UpdateDepartmentTrainerDto): Promise<DepartmentTrainerWithContactPerson> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify trainer belongs to this department
@@ -80,9 +62,7 @@ export class DepartmentTrainersService {
     });
 
     if (!trainer) {
-      throw new NotFoundException(
-        `Trainer with ID ${id} not found for this department`,
-      );
+      throw new NotFoundException(`Trainer with ID ${id} not found for this department`);
     }
 
     return prisma.departmentTrainer.update({
@@ -100,10 +80,7 @@ export class DepartmentTrainersService {
     });
   }
 
-  async remove(
-    departmentSlug: string,
-    id: number,
-  ): Promise<DepartmentTrainerWithContactPerson> {
+  async remove(departmentSlug: string, id: number): Promise<DepartmentTrainerWithContactPerson> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify trainer belongs to this department
@@ -112,9 +89,7 @@ export class DepartmentTrainersService {
     });
 
     if (!trainer) {
-      throw new NotFoundException(
-        `Trainer with ID ${id} not found for this department`,
-      );
+      throw new NotFoundException(`Trainer with ID ${id} not found for this department`);
     }
 
     return prisma.departmentTrainer.delete({
@@ -127,10 +102,7 @@ export class DepartmentTrainersService {
     });
   }
 
-  async reorder(
-    departmentSlug: string,
-    ids: number[],
-  ): Promise<DepartmentTrainerWithContactPerson[]> {
+  async reorder(departmentSlug: string, ids: number[]): Promise<DepartmentTrainerWithContactPerson[]> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify all trainers belong to this department
@@ -141,9 +113,7 @@ export class DepartmentTrainersService {
     const existingIds = new Set(trainers.map((t) => t.id));
     for (const id of ids) {
       if (!existingIds.has(id)) {
-        throw new NotFoundException(
-          `Trainer with ID ${id} not found for this department`,
-        );
+        throw new NotFoundException(`Trainer with ID ${id} not found for this department`);
       }
     }
 

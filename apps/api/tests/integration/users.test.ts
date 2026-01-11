@@ -210,11 +210,9 @@ describe('Users API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/users/${testUser.id}`)
-        .send({
-          username: 'updateduser',
-        });
+      const response = await request(app).patch(`/api/users/${testUser.id}`).send({
+        username: 'updateduser',
+      });
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -234,11 +232,9 @@ describe('Users API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/users/${testUser.id}`)
-        .send({
-          email: 'newemail@example.com',
-        });
+      const response = await request(app).patch(`/api/users/${testUser.id}`).send({
+        email: 'newemail@example.com',
+      });
 
       expect(response.status).toBe(200);
       expect(response.body.email).toBe('newemail@example.com');
@@ -254,11 +250,9 @@ describe('Users API Integration Tests', () => {
       });
 
       const newPassword = 'NewPassword123';
-      const response = await request(app)
-        .patch(`/api/users/${testUser.id}`)
-        .send({
-          password: newPassword,
-        });
+      const response = await request(app).patch(`/api/users/${testUser.id}`).send({
+        password: newPassword,
+      });
 
       expect(response.status).toBe(200);
 
@@ -277,12 +271,10 @@ describe('Users API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/users/${testUser.id}`)
-        .send({
-          username: 'totallyupdated',
-          email: 'totally@example.com',
-        });
+      const response = await request(app).patch(`/api/users/${testUser.id}`).send({
+        username: 'totallyupdated',
+        email: 'totally@example.com',
+      });
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -316,11 +308,9 @@ describe('Users API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/users/${testUser.id}`)
-        .send({
-          username: 'another', // Try to use another user's username
-        });
+      const response = await request(app).patch(`/api/users/${testUser.id}`).send({
+        username: 'another', // Try to use another user's username
+      });
 
       expect(response.status).toBe(409);
     });

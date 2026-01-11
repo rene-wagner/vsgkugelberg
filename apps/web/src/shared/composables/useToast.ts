@@ -9,10 +9,7 @@ export interface ToastMessage {
 export function useToast() {
   const toasts = ref<ToastMessage[]>([]);
 
-  function show(
-    message: string,
-    type: 'success' | 'error' | 'warning' | 'info',
-  ) {
+  function show(message: string, type: 'success' | 'error' | 'warning' | 'info') {
     const id = Date.now();
     toasts.value.push({ id, message, type });
     setTimeout(() => remove(id), 5000);

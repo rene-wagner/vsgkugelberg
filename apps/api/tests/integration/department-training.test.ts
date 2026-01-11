@@ -35,15 +35,12 @@ describe('Department Training API Integration Tests', () => {
         const cookies = await createAuthenticatedUser();
         const department = await createTestDepartment();
 
-        const response = await request(app)
-          .post(`/api/departments/${department.slug}/training-groups`)
-          .set('Cookie', cookies)
-          .send({
-            name: 'Kinder & Jugend',
-            ageRange: '6 - 17 Jahre',
-            icon: 'youth',
-            variant: 'primary',
-          });
+        const response = await request(app).post(`/api/departments/${department.slug}/training-groups`).set('Cookie', cookies).send({
+          name: 'Kinder & Jugend',
+          ageRange: '6 - 17 Jahre',
+          icon: 'youth',
+          variant: 'primary',
+        });
 
         expect(response.status).toBe(201);
         expect(response.body).toMatchObject({
@@ -60,14 +57,11 @@ describe('Department Training API Integration Tests', () => {
         const cookies = await createAuthenticatedUser();
         const department = await createTestDepartment();
 
-        const response = await request(app)
-          .post(`/api/departments/${department.slug}/training-groups`)
-          .set('Cookie', cookies)
-          .send({
-            name: 'Erwachsene',
-            icon: 'adults',
-            variant: 'secondary',
-          });
+        const response = await request(app).post(`/api/departments/${department.slug}/training-groups`).set('Cookie', cookies).send({
+          name: 'Erwachsene',
+          icon: 'adults',
+          variant: 'secondary',
+        });
 
         expect(response.status).toBe(201);
         expect(response.body.ageRange).toBeNull();
@@ -77,15 +71,12 @@ describe('Department Training API Integration Tests', () => {
         const cookies = await createAuthenticatedUser();
         const department = await createTestDepartment();
 
-        const response = await request(app)
-          .post(`/api/departments/${department.slug}/training-groups`)
-          .set('Cookie', cookies)
-          .send({
-            name: 'Erwachsene',
-            ageRange: '',
-            icon: 'adults',
-            variant: 'secondary',
-          });
+        const response = await request(app).post(`/api/departments/${department.slug}/training-groups`).set('Cookie', cookies).send({
+          name: 'Erwachsene',
+          ageRange: '',
+          icon: 'adults',
+          variant: 'secondary',
+        });
 
         expect(response.status).toBe(201);
         expect(response.body.ageRange).toBe('');
@@ -95,15 +86,12 @@ describe('Department Training API Integration Tests', () => {
         const cookies = await createAuthenticatedUser();
         const department = await createTestDepartment();
 
-        const response = await request(app)
-          .post(`/api/departments/${department.slug}/training-groups`)
-          .set('Cookie', cookies)
-          .send({
-            name: 'Test',
-            ageRange: '6 - 17',
-            icon: 'invalid',
-            variant: 'primary',
-          });
+        const response = await request(app).post(`/api/departments/${department.slug}/training-groups`).set('Cookie', cookies).send({
+          name: 'Test',
+          ageRange: '6 - 17',
+          icon: 'invalid',
+          variant: 'primary',
+        });
 
         expect(response.status).toBe(400);
       });
@@ -112,15 +100,12 @@ describe('Department Training API Integration Tests', () => {
         const cookies = await createAuthenticatedUser();
         const department = await createTestDepartment();
 
-        const response = await request(app)
-          .post(`/api/departments/${department.slug}/training-groups`)
-          .set('Cookie', cookies)
-          .send({
-            name: 'Test',
-            ageRange: '6 - 17',
-            icon: 'youth',
-            variant: 'invalid',
-          });
+        const response = await request(app).post(`/api/departments/${department.slug}/training-groups`).set('Cookie', cookies).send({
+          name: 'Test',
+          ageRange: '6 - 17',
+          icon: 'youth',
+          variant: 'invalid',
+        });
 
         expect(response.status).toBe(400);
       });
@@ -128,14 +113,12 @@ describe('Department Training API Integration Tests', () => {
       it('should return 401 without authentication', async () => {
         const department = await createTestDepartment();
 
-        const response = await request(app)
-          .post(`/api/departments/${department.slug}/training-groups`)
-          .send({
-            name: 'Test',
-            ageRange: '6 - 17',
-            icon: 'youth',
-            variant: 'primary',
-          });
+        const response = await request(app).post(`/api/departments/${department.slug}/training-groups`).send({
+          name: 'Test',
+          ageRange: '6 - 17',
+          icon: 'youth',
+          variant: 'primary',
+        });
 
         expect(response.status).toBe(401);
       });
@@ -155,15 +138,10 @@ describe('Department Training API Integration Tests', () => {
           },
         });
 
-        const response = await request(app)
-          .patch(
-            `/api/departments/${department.slug}/training-groups/${group.id}`,
-          )
-          .set('Cookie', cookies)
-          .send({
-            name: 'Updated',
-            variant: 'secondary',
-          });
+        const response = await request(app).patch(`/api/departments/${department.slug}/training-groups/${group.id}`).set('Cookie', cookies).send({
+          name: 'Updated',
+          variant: 'secondary',
+        });
 
         expect(response.status).toBe(200);
         expect(response.body.name).toBe('Updated');
@@ -185,9 +163,7 @@ describe('Department Training API Integration Tests', () => {
         });
 
         const response = await request(app)
-          .patch(
-            `/api/departments/${department2.slug}/training-groups/${group.id}`,
-          )
+          .patch(`/api/departments/${department2.slug}/training-groups/${group.id}`)
           .set('Cookie', cookies)
           .send({ name: 'Updated' });
 
@@ -216,11 +192,7 @@ describe('Department Training API Integration Tests', () => {
           },
         });
 
-        const response = await request(app)
-          .delete(
-            `/api/departments/${department.slug}/training-groups/${group.id}`,
-          )
-          .set('Cookie', cookies);
+        const response = await request(app).delete(`/api/departments/${department.slug}/training-groups/${group.id}`).set('Cookie', cookies);
 
         expect(response.status).toBe(200);
 
@@ -253,9 +225,7 @@ describe('Department Training API Integration Tests', () => {
         });
 
         const response = await request(app)
-          .post(
-            `/api/departments/${department.slug}/training-groups/${group.id}/sessions`,
-          )
+          .post(`/api/departments/${department.slug}/training-groups/${group.id}/sessions`)
           .set('Cookie', cookies)
           .send({
             day: 'Montag',
@@ -274,15 +244,10 @@ describe('Department Training API Integration Tests', () => {
         const cookies = await createAuthenticatedUser();
         const department = await createTestDepartment();
 
-        const response = await request(app)
-          .post(
-            `/api/departments/${department.slug}/training-groups/99999/sessions`,
-          )
-          .set('Cookie', cookies)
-          .send({
-            day: 'Montag',
-            time: '16:00 - 17:30',
-          });
+        const response = await request(app).post(`/api/departments/${department.slug}/training-groups/99999/sessions`).set('Cookie', cookies).send({
+          day: 'Montag',
+          time: '16:00 - 17:30',
+        });
 
         expect(response.status).toBe(404);
       });
@@ -301,9 +266,7 @@ describe('Department Training API Integration Tests', () => {
         });
 
         const response = await request(app)
-          .post(
-            `/api/departments/${department.slug}/training-groups/${group.id}/sessions`,
-          )
+          .post(`/api/departments/${department.slug}/training-groups/${group.id}/sessions`)
           .set('Cookie', cookies)
           .send({
             time: '16:00 - 17:30',
@@ -335,9 +298,7 @@ describe('Department Training API Integration Tests', () => {
         });
 
         const response = await request(app)
-          .patch(
-            `/api/departments/${department.slug}/training-groups/${group.id}/sessions/${session.id}`,
-          )
+          .patch(`/api/departments/${department.slug}/training-groups/${group.id}/sessions/${session.id}`)
           .set('Cookie', cookies)
           .send({
             day: 'Dienstag',
@@ -372,9 +333,7 @@ describe('Department Training API Integration Tests', () => {
         });
 
         const response = await request(app)
-          .delete(
-            `/api/departments/${department.slug}/training-groups/${group.id}/sessions/${session.id}`,
-          )
+          .delete(`/api/departments/${department.slug}/training-groups/${group.id}/sessions/${session.id}`)
           .set('Cookie', cookies);
 
         expect(response.status).toBe(200);
@@ -418,9 +377,7 @@ describe('Department Training API Integration Tests', () => {
         });
 
         const response = await request(app)
-          .patch(
-            `/api/departments/${department.slug}/training-groups/${group.id}/sessions/reorder`,
-          )
+          .patch(`/api/departments/${department.slug}/training-groups/${group.id}/sessions/reorder`)
           .set('Cookie', cookies)
           .send({ ids: [session2.id, session1.id] });
 
@@ -462,9 +419,7 @@ describe('Department Training API Integration Tests', () => {
         });
 
         const response = await request(app)
-          .patch(
-            `/api/departments/${department.slug}/training-groups/${group1.id}/sessions/reorder`,
-          )
+          .patch(`/api/departments/${department.slug}/training-groups/${group1.id}/sessions/reorder`)
           .set('Cookie', cookies)
           .send({ ids: [session1.id, session2.id] });
 
@@ -484,9 +439,7 @@ describe('Department Training API Integration Tests', () => {
         });
 
         const response = await request(app)
-          .patch(
-            `/api/departments/${department.slug}/training-groups/${group.id}/sessions/reorder`,
-          )
+          .patch(`/api/departments/${department.slug}/training-groups/${group.id}/sessions/reorder`)
           .send({ ids: [1, 2] });
 
         expect(response.status).toBe(401);

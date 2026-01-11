@@ -3,13 +3,7 @@ import request from 'supertest';
 import { app } from '@/app';
 import { createTestUserWithPassword, prisma } from '../helpers';
 import { generateToken, hashToken } from '@/services/password-reset.service';
-import {
-  clearEmails,
-  getEmailsTo,
-  getEmailSubject,
-  getEmailBody,
-  getEmailRecipient,
-} from '../helpers/mailhog';
+import { clearEmails, getEmailsTo, getEmailSubject, getEmailBody, getEmailRecipient } from '../helpers/mailhog';
 
 describe('Password Reset API Integration Tests', () => {
   const testPassword = 'Password123';
@@ -26,9 +20,7 @@ describe('Password Reset API Integration Tests', () => {
     it('should return success message for valid email', async () => {
       await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
-      const response = await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      const response = await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('message');
@@ -36,9 +28,7 @@ describe('Password Reset API Integration Tests', () => {
     });
 
     it('should return success message for non-existent email (prevent enumeration)', async () => {
-      const response = await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: 'nonexistent@example.com' });
+      const response = await request(app).post('/api/auth/forgot-password').send({ email: 'nonexistent@example.com' });
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('message');
@@ -46,15 +36,9 @@ describe('Password Reset API Integration Tests', () => {
     });
 
     it('should create a token record for valid email', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       const token = await prisma.passwordResetToken.findFirst({
         where: { userId: user.id },
@@ -69,54 +53,38 @@ describe('Password Reset API Integration Tests', () => {
     it('should not create a token for non-existent email', async () => {
       const countBefore = await prisma.passwordResetToken.count();
 
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: 'nonexistent@example.com' });
+      await request(app).post('/api/auth/forgot-password').send({ email: 'nonexistent@example.com' });
 
       const countAfter = await prisma.passwordResetToken.count();
       expect(countAfter).toBe(countBefore);
     });
 
     it('should return 400 for invalid email format', async () => {
-      const response = await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: 'not-an-email' });
+      const response = await request(app).post('/api/auth/forgot-password').send({ email: 'not-an-email' });
 
       expect(response.status).toBe(400);
     });
 
     it('should return 400 for missing email', async () => {
-      const response = await request(app)
-        .post('/api/auth/forgot-password')
-        .send({});
+      const response = await request(app).post('/api/auth/forgot-password').send({});
 
       expect(response.status).toBe(400);
     });
 
     it('should return 400 for empty email', async () => {
-      const response = await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: '' });
+      const response = await request(app).post('/api/auth/forgot-password').send({ email: '' });
 
       expect(response.status).toBe(400);
     });
 
     it('should allow multiple reset requests for same user', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       // First request
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       // Second request
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       const tokens = await prisma.passwordResetToken.findMany({
         where: { userId: user.id },
@@ -128,11 +96,7 @@ describe('Password Reset API Integration Tests', () => {
 
   describe('POST /api/auth/reset-password', () => {
     it('should reset password with valid token', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       // Create a valid token directly
       const token = generateToken();
@@ -145,9 +109,7 @@ describe('Password Reset API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: newPassword });
+      const response = await request(app).post('/api/auth/reset-password').send({ token, password: newPassword });
 
       expect(response.status).toBe(200);
       expect(response.body.message).toContain('erfolgreich');
@@ -162,11 +124,7 @@ describe('Password Reset API Integration Tests', () => {
     });
 
     it('should mark token as used after successful reset', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       const token = generateToken();
       const tokenHash = hashToken(token);
@@ -178,9 +136,7 @@ describe('Password Reset API Integration Tests', () => {
         },
       });
 
-      await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: newPassword });
+      await request(app).post('/api/auth/reset-password').send({ token, password: newPassword });
 
       const updatedToken = await prisma.passwordResetToken.findUnique({
         where: { id: resetToken.id },
@@ -190,11 +146,7 @@ describe('Password Reset API Integration Tests', () => {
     });
 
     it('should return 400 for expired token', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       const token = generateToken();
       const tokenHash = hashToken(token);
@@ -206,20 +158,14 @@ describe('Password Reset API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: newPassword });
+      const response = await request(app).post('/api/auth/reset-password').send({ token, password: newPassword });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('abgelaufen');
     });
 
     it('should return 400 for already used token', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       const token = generateToken();
       const tokenHash = hashToken(token);
@@ -232,9 +178,7 @@ describe('Password Reset API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: newPassword });
+      const response = await request(app).post('/api/auth/reset-password').send({ token, password: newPassword });
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('bereits verwendet');
@@ -253,9 +197,7 @@ describe('Password Reset API Integration Tests', () => {
     });
 
     it('should return 400 for missing token', async () => {
-      const response = await request(app)
-        .post('/api/auth/reset-password')
-        .send({ password: newPassword });
+      const response = await request(app).post('/api/auth/reset-password').send({ password: newPassword });
 
       expect(response.status).toBe(400);
     });
@@ -269,11 +211,7 @@ describe('Password Reset API Integration Tests', () => {
     });
 
     it('should return 400 for weak password (too short)', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       const token = generateToken();
       const tokenHash = hashToken(token);
@@ -285,19 +223,13 @@ describe('Password Reset API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: 'short' });
+      const response = await request(app).post('/api/auth/reset-password').send({ token, password: 'short' });
 
       expect(response.status).toBe(400);
     });
 
     it('should return 400 for password without uppercase', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       const token = generateToken();
       const tokenHash = hashToken(token);
@@ -309,19 +241,13 @@ describe('Password Reset API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: 'password123' }); // no uppercase
+      const response = await request(app).post('/api/auth/reset-password').send({ token, password: 'password123' }); // no uppercase
 
       expect(response.status).toBe(400);
     });
 
     it('should return 400 for password without lowercase', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       const token = generateToken();
       const tokenHash = hashToken(token);
@@ -333,19 +259,13 @@ describe('Password Reset API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: 'PASSWORD123' }); // no lowercase
+      const response = await request(app).post('/api/auth/reset-password').send({ token, password: 'PASSWORD123' }); // no lowercase
 
       expect(response.status).toBe(400);
     });
 
     it('should return 400 for password without number', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       const token = generateToken();
       const tokenHash = hashToken(token);
@@ -357,19 +277,13 @@ describe('Password Reset API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: 'PasswordNoNum' }); // no number
+      const response = await request(app).post('/api/auth/reset-password').send({ token, password: 'PasswordNoNum' }); // no number
 
       expect(response.status).toBe(400);
     });
 
     it('should not consume token on password validation failure', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       const token = generateToken();
       const tokenHash = hashToken(token);
@@ -382,9 +296,7 @@ describe('Password Reset API Integration Tests', () => {
       });
 
       // First attempt with weak password
-      await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: 'weak' });
+      await request(app).post('/api/auth/reset-password').send({ token, password: 'weak' });
 
       // Token should still be usable
       const tokenAfterFailure = await prisma.passwordResetToken.findUnique({
@@ -393,19 +305,13 @@ describe('Password Reset API Integration Tests', () => {
       expect(tokenAfterFailure?.usedAt).toBeNull();
 
       // Second attempt with valid password should work
-      const response = await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: newPassword });
+      const response = await request(app).post('/api/auth/reset-password').send({ token, password: newPassword });
 
       expect(response.status).toBe(200);
     });
 
     it('should invalidate old password after reset', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       const token = generateToken();
       const tokenHash = hashToken(token);
@@ -417,9 +323,7 @@ describe('Password Reset API Integration Tests', () => {
         },
       });
 
-      await request(app)
-        .post('/api/auth/reset-password')
-        .send({ token, password: newPassword });
+      await request(app).post('/api/auth/reset-password').send({ token, password: newPassword });
 
       // Old password should no longer work
       const loginResponse = await request(app).post('/api/auth/login').send({
@@ -433,19 +337,11 @@ describe('Password Reset API Integration Tests', () => {
 
   describe('Password Reset Security', () => {
     it('should use different tokens for multiple reset requests', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       const tokens = await prisma.passwordResetToken.findMany({
         where: { userId: user.id },
@@ -456,15 +352,9 @@ describe('Password Reset API Integration Tests', () => {
     });
 
     it('should store hashed token, not plaintext', async () => {
-      const user = await createTestUserWithPassword(
-        testUsername,
-        testEmail,
-        testPassword,
-      );
+      const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       const token = await prisma.passwordResetToken.findFirst({
         where: { userId: user.id },
@@ -481,9 +371,7 @@ describe('Password Reset API Integration Tests', () => {
     it('should send password reset email to correct recipient', async () => {
       await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       // Verify email was captured by MailHog
       const emails = await getEmailsTo(testEmail);
@@ -494,23 +382,17 @@ describe('Password Reset API Integration Tests', () => {
     it('should send email with correct subject line', async () => {
       await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       const emails = await getEmailsTo(testEmail);
       expect(emails).toHaveLength(1);
-      expect(getEmailSubject(emails[0])).toBe(
-        'Passwort zuruecksetzen - VSG Kugelberg',
-      );
+      expect(getEmailSubject(emails[0])).toBe('Passwort zuruecksetzen - VSG Kugelberg');
     });
 
     it('should include reset link with valid token in email body', async () => {
       await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       const emails = await getEmailsTo(testEmail);
       expect(emails).toHaveLength(1);
@@ -525,17 +407,13 @@ describe('Password Reset API Integration Tests', () => {
       const decodedBody = body.replace(/=\r?\n/g, '').replace(/=3D/g, '=');
 
       // Extract token from decoded body and verify it's a 64-char hex string
-      const tokenMatch = decodedBody.match(
-        /reset-password\?token=([a-f0-9]{64})/,
-      );
+      const tokenMatch = decodedBody.match(/reset-password\?token=([a-f0-9]{64})/);
       expect(tokenMatch).not.toBeNull();
       expect(tokenMatch![1]).toHaveLength(64);
     });
 
     it('should not send email for non-existent user', async () => {
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: 'nonexistent@example.com' });
+      await request(app).post('/api/auth/forgot-password').send({ email: 'nonexistent@example.com' });
 
       // No email should be captured
       const emails = await getEmailsTo('nonexistent@example.com');
@@ -546,14 +424,10 @@ describe('Password Reset API Integration Tests', () => {
       await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
       // First request
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       // Second request
-      await request(app)
-        .post('/api/auth/forgot-password')
-        .send({ email: testEmail });
+      await request(app).post('/api/auth/forgot-password').send({ email: testEmail });
 
       // Should have 2 emails
       const emails = await getEmailsTo(testEmail);

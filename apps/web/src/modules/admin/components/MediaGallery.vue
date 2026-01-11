@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import {
-  useMediaStore,
-  type MediaItem,
-  type MediaFolder,
-} from '../stores/mediaStore';
+import { useMediaStore, type MediaItem, type MediaFolder } from '../stores/mediaStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const mediaStore = useMediaStore();
@@ -21,9 +17,7 @@ const copiedId = ref<number | null>(null);
 const regeneratingId = ref<number | null>(null);
 const regeneratedId = ref<number | null>(null);
 
-const hasContent = computed(
-  () => mediaStore.media.length > 0 || mediaStore.folders.length > 0,
-);
+const hasContent = computed(() => mediaStore.media.length > 0 || mediaStore.folders.length > 0);
 
 function navigateToFolder(folderId: number | null) {
   mediaStore.fetchMedia(1, 48, folderId);
@@ -135,24 +129,15 @@ function isSvg(item: MediaItem): boolean {
   <div>
     <!-- Empty State -->
     <div v-if="!hasContent" class="text-center py-12">
-      <div
-        class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
-      >
+      <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
         <FontAwesomeIcon icon="image" size="2x" class="text-gray-400" />
       </div>
-      <p class="font-body text-gray-500">
-        Noch keine Medien oder Ordner vorhanden.
-      </p>
-      <p class="font-body text-sm text-gray-400 mt-1">
-        Nutze die Upload-Zone oder "Neuer Ordner", um Inhalte hinzuzufügen.
-      </p>
+      <p class="font-body text-gray-500">Noch keine Medien oder Ordner vorhanden.</p>
+      <p class="font-body text-sm text-gray-400 mt-1">Nutze die Upload-Zone oder "Neuer Ordner", um Inhalte hinzuzufügen.</p>
     </div>
 
     <!-- Gallery Grid -->
-    <div
-      v-else
-      class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"
-    >
+    <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
       <!-- Back to parent folder -->
       <div
         v-if="mediaStore.currentFolderId !== null"
@@ -170,17 +155,12 @@ function isSvg(item: MediaItem): boolean {
         @click="navigateToFolder(folder.id)"
       >
         <FontAwesomeIcon icon="folder" size="2x" class="text-vsg-blue-900" />
-        <span
-          class="mt-2 font-body text-sm text-vsg-blue-900 font-medium px-2 text-center truncate w-full"
-        >
+        <span class="mt-2 font-body text-sm text-vsg-blue-900 font-medium px-2 text-center truncate w-full">
           {{ folder.name }}
         </span>
 
         <!-- Folder Actions Overlay -->
-        <div
-          class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-          @click.stop
-        >
+        <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity" @click.stop>
           <button
             type="button"
             class="p-1.5 bg-white/80 rounded-md hover:bg-red-50 text-red-600 transition-colors"
@@ -199,38 +179,18 @@ function isSvg(item: MediaItem): boolean {
         class="group relative bg-white border border-gray-200 rounded-lg overflow-hidden aspect-square"
       >
         <!-- Thumbnail -->
-        <img
-          :src="mediaStore.getMediaUrl(item)"
-          :alt="item.originalName"
-          class="w-full h-full object-cover"
-          :class="{ 'p-2': isSvg(item) }"
-        />
+        <img :src="mediaStore.getMediaUrl(item)" :alt="item.originalName" class="w-full h-full object-cover" :class="{ 'p-2': isSvg(item) }" />
 
         <!-- Overlay with Actions -->
-        <div
-          class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2"
-        >
+        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
           <!-- Preview Button -->
-          <button
-            type="button"
-            class="p-2 bg-white rounded-lg hover:bg-gray-100 transition-colors"
-            title="Vorschau"
-            @click="openPreview(item)"
-          >
+          <button type="button" class="p-2 bg-white rounded-lg hover:bg-gray-100 transition-colors" title="Vorschau" @click="openPreview(item)">
             <FontAwesomeIcon icon="eye" class="text-gray-700" />
           </button>
 
           <!-- Move Button -->
-          <button
-            type="button"
-            class="p-2 bg-white rounded-lg hover:bg-gray-100 transition-colors"
-            title="Verschieben"
-            @click="openMoveModal(item)"
-          >
-            <FontAwesomeIcon
-              icon="arrow-right-arrow-left"
-              class="text-gray-700"
-            />
+          <button type="button" class="p-2 bg-white rounded-lg hover:bg-gray-100 transition-colors" title="Verschieben" @click="openMoveModal(item)">
+            <FontAwesomeIcon icon="arrow-right-arrow-left" class="text-gray-700" />
           </button>
 
           <!-- Copy URL Button -->
@@ -248,31 +208,13 @@ function isSvg(item: MediaItem): boolean {
             v-if="mediaStore.canHaveThumbnails(item)"
             type="button"
             class="p-2 bg-white rounded-lg hover:bg-gray-100 transition-colors"
-            :title="
-              regeneratedId === item.id
-                ? 'Regeneriert!'
-                : regeneratingId === item.id
-                  ? 'Regeneriere...'
-                  : 'Thumbnails regenerieren'
-            "
+            :title="regeneratedId === item.id ? 'Regeneriert!' : regeneratingId === item.id ? 'Regeneriere...' : 'Thumbnails regenerieren'"
             :disabled="regeneratingId === item.id"
             @click="regenerateThumbnails(item)"
           >
-            <FontAwesomeIcon
-              v-if="regeneratedId === item.id"
-              icon="check"
-              class="text-gray-700"
-            />
-            <FontAwesomeIcon
-              v-else-if="regeneratingId === item.id"
-              icon="spinner"
-              class="text-gray-700 animate-spin"
-            />
-            <FontAwesomeIcon
-              v-else
-              icon="arrows-rotate"
-              class="text-gray-700"
-            />
+            <FontAwesomeIcon v-if="regeneratedId === item.id" icon="check" class="text-gray-700" />
+            <FontAwesomeIcon v-else-if="regeneratingId === item.id" icon="spinner" class="text-gray-700 animate-spin" />
+            <FontAwesomeIcon v-else icon="arrows-rotate" class="text-gray-700" />
           </button>
 
           <!-- Delete Button -->
@@ -303,27 +245,15 @@ function isSvg(item: MediaItem): boolean {
 
     <!-- Preview Modal -->
     <Teleport to="body">
-      <div
-        v-if="previewItem"
-        class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
-        @click.self="closePreview"
-      >
+      <div v-if="previewItem" class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4" @click.self="closePreview">
         <div class="relative max-w-4xl max-h-full">
           <!-- Close Button -->
-          <button
-            type="button"
-            class="absolute -top-10 right-0 p-2 text-white hover:text-gray-300 transition-colors"
-            @click="closePreview"
-          >
+          <button type="button" class="absolute -top-10 right-0 p-2 text-white hover:text-gray-300 transition-colors" @click="closePreview">
             <FontAwesomeIcon icon="xmark" />
           </button>
 
           <!-- Image -->
-          <img
-            :src="mediaStore.getMediaUrl(previewItem)"
-            :alt="previewItem.originalName"
-            class="max-w-full max-h-[80vh] object-contain rounded-lg"
-          />
+          <img :src="mediaStore.getMediaUrl(previewItem)" :alt="previewItem.originalName" class="max-w-full max-h-[80vh] object-contain rounded-lg" />
 
           <!-- Info -->
           <div class="mt-4 text-center">
@@ -333,17 +263,11 @@ function isSvg(item: MediaItem): boolean {
             </p>
             <!-- Thumbnail info -->
             <div v-if="mediaStore.canHaveThumbnails(previewItem)" class="mt-2">
-              <span
-                v-if="mediaStore.hasThumbnails(previewItem)"
-                class="inline-flex items-center gap-1 px-2 py-1 bg-green-600/80 rounded text-white"
-              >
+              <span v-if="mediaStore.hasThumbnails(previewItem)" class="inline-flex items-center gap-1 px-2 py-1 bg-green-600/80 rounded text-white">
                 <FontAwesomeIcon icon="check" />
                 Thumbnails vorhanden
               </span>
-              <span
-                v-else
-                class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-600/80 rounded text-xs text-white"
-              >
+              <span v-else class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-600/80 rounded text-xs text-white">
                 <FontAwesomeIcon icon="triangle-exclamation" />
                 Keine Thumbnails
               </span>
@@ -355,28 +279,13 @@ function isSvg(item: MediaItem): boolean {
 
     <!-- Delete Confirmation Modal -->
     <Teleport to="body">
-      <div
-        v-if="showDeleteConfirm"
-        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-        @click.self="cancelDelete"
-      >
+      <div v-if="showDeleteConfirm" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" @click.self="cancelDelete">
         <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-xl">
-          <h3
-            class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4"
-          >
-            Medium löschen
-          </h3>
-          <p class="font-body text-gray-600 mb-6">
-            Möchtest du dieses Medium wirklich löschen? Diese Aktion kann nicht
-            rückgängig gemacht werden.
-          </p>
+          <h3 class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4">Medium löschen</h3>
+          <p class="font-body text-gray-600 mb-6">Möchtest du dieses Medium wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.</p>
 
           <div v-if="itemToDelete" class="flex items-center gap-4 mb-6">
-            <img
-              :src="mediaStore.getMediaUrl(itemToDelete)"
-              :alt="itemToDelete.originalName"
-              class="w-16 h-16 object-cover rounded-lg"
-            />
+            <img :src="mediaStore.getMediaUrl(itemToDelete)" :alt="itemToDelete.originalName" class="w-16 h-16 object-cover rounded-lg" />
             <div>
               <p class="font-body text-sm text-vsg-blue-900 font-medium">
                 {{ itemToDelete.originalName }}
@@ -415,16 +324,11 @@ function isSvg(item: MediaItem): boolean {
         @click.self="showFolderDeleteConfirm = false"
       >
         <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-xl">
-          <h3
-            class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4"
-          >
-            Ordner löschen
-          </h3>
+          <h3 class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4">Ordner löschen</h3>
           <p class="font-body text-gray-600 mb-6">
             Möchtest du den Ordner
-            <strong>{{ folderToDelete?.name }}</strong> wirklich löschen? Alle
-            Unterordner werden ebenfalls gelöscht. Medien in diesem Ordner
-            werden in das Hauptverzeichnis verschoben.
+            <strong>{{ folderToDelete?.name }}</strong> wirklich löschen? Alle Unterordner werden ebenfalls gelöscht. Medien in diesem Ordner werden
+            in das Hauptverzeichnis verschoben.
           </p>
 
           <div class="flex justify-end gap-3">
@@ -449,48 +353,32 @@ function isSvg(item: MediaItem): boolean {
 
     <!-- Move Media Modal -->
     <Teleport to="body">
-      <div
-        v-if="showMoveModal"
-        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
-        @click.self="showMoveModal = false"
-      >
+      <div v-if="showMoveModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" @click.self="showMoveModal = false">
         <div class="bg-white rounded-xl p-6 max-w-md w-full shadow-xl">
-          <h3
-            class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4"
-          >
-            MEDIUM VERSCHIEBEN
-          </h3>
+          <h3 class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4">MEDIUM VERSCHIEBEN</h3>
           <p class="font-body text-gray-600 mb-4">
             Wohin möchtest du
             <strong>{{ itemToMove?.originalName }}</strong> verschieben?
           </p>
 
-          <div
-            class="max-h-60 overflow-y-auto border border-gray-200 rounded-lg mb-6"
-          >
+          <div class="max-h-60 overflow-y-auto border border-gray-200 rounded-lg mb-6">
             <button
               type="button"
               class="w-full text-left px-4 py-3 hover:bg-vsg-blue-50 border-b border-gray-100 flex items-center gap-3 transition-colors"
               @click="executeMove(null)"
             >
               <FontAwesomeIcon icon="house" class="text-gray-400" />
-              <span class="font-body text-sm text-vsg-blue-900"
-                >Mediathek (Root)</span
-              >
+              <span class="font-body text-sm text-vsg-blue-900">Mediathek (Root)</span>
             </button>
             <button
-              v-for="folder in mediaStore.folders.filter(
-                (f) => f.id !== mediaStore.currentFolderId,
-              )"
+              v-for="folder in mediaStore.folders.filter((f) => f.id !== mediaStore.currentFolderId)"
               :key="'move-to-' + folder.id"
               type="button"
               class="w-full text-left px-4 py-3 hover:bg-vsg-blue-50 border-b border-gray-100 last:border-0 flex items-center gap-3 transition-colors"
               @click="executeMove(folder.id)"
             >
               <FontAwesomeIcon icon="folder" class="text-vsg-blue-400" />
-              <span class="font-body text-sm text-vsg-blue-900">{{
-                folder.name
-              }}</span>
+              <span class="font-body text-sm text-vsg-blue-900">{{ folder.name }}</span>
             </button>
           </div>
 

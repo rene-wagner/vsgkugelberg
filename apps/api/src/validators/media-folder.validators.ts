@@ -11,12 +11,7 @@ export const mediaFolderQueryValidator = [
 ];
 
 export const mediaFolderIdParamValidator = [
-  param('id')
-    .notEmpty()
-    .withMessage('ID is required')
-    .isInt({ min: 1 })
-    .withMessage('ID must be a positive integer')
-    .toInt(),
+  param('id').notEmpty().withMessage('ID is required').isInt({ min: 1 }).withMessage('ID must be a positive integer').toInt(),
 ];
 
 export const createMediaFolderValidator = [
@@ -28,20 +23,11 @@ export const createMediaFolderValidator = [
     .isLength({ min: 1, max: 255 })
     .withMessage('Folder name must be between 1 and 255 characters'),
 
-  body('parentId')
-    .optional({ checkFalsy: true })
-    .isInt({ min: 1 })
-    .withMessage('parentId must be a positive integer')
-    .toInt(),
+  body('parentId').optional({ checkFalsy: true }).isInt({ min: 1 }).withMessage('parentId must be a positive integer').toInt(),
 ];
 
 export const updateMediaFolderValidator = [
-  body('name')
-    .optional()
-    .isString()
-    .trim()
-    .isLength({ min: 1, max: 255 })
-    .withMessage('Folder name must be between 1 and 255 characters'),
+  body('name').optional().isString().trim().isLength({ min: 1, max: 255 }).withMessage('Folder name must be between 1 and 255 characters'),
 
   body('parentId')
     .optional({ checkFalsy: true })

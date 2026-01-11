@@ -14,12 +14,7 @@ export const contactFormValidator = [
     .isLength({ min: 2, max: 100 })
     .withMessage('Name must be between 2 and 100 characters'),
 
-  body('senderEmail')
-    .trim()
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Email must be a valid email address'),
+  body('senderEmail').trim().notEmpty().withMessage('Email is required').isEmail().withMessage('Email must be a valid email address'),
 
   body('subject')
     .trim()

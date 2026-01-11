@@ -34,13 +34,10 @@ describe('Department Stats API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/stats`)
-        .set('Cookie', cookies)
-        .send({
-          label: 'Aktive Spieler',
-          value: '45',
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/stats`).set('Cookie', cookies).send({
+        label: 'Aktive Spieler',
+        value: '45',
+      });
 
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({
@@ -55,14 +52,11 @@ describe('Department Stats API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/stats`)
-        .set('Cookie', cookies)
-        .send({
-          label: 'Mannschaften',
-          value: '3',
-          sort: 5,
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/stats`).set('Cookie', cookies).send({
+        label: 'Mannschaften',
+        value: '3',
+        sort: 5,
+      });
 
       expect(response.status).toBe(201);
       expect(response.body.sort).toBe(5);
@@ -71,12 +65,10 @@ describe('Department Stats API Integration Tests', () => {
     it('should return 401 without authentication', async () => {
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/stats`)
-        .send({
-          label: 'Test',
-          value: '10',
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/stats`).send({
+        label: 'Test',
+        value: '10',
+      });
 
       expect(response.status).toBe(401);
     });
@@ -84,13 +76,10 @@ describe('Department Stats API Integration Tests', () => {
     it('should return 404 for non-existent department', async () => {
       const cookies = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .post('/api/departments/non-existent/stats')
-        .set('Cookie', cookies)
-        .send({
-          label: 'Test',
-          value: '10',
-        });
+      const response = await request(app).post('/api/departments/non-existent/stats').set('Cookie', cookies).send({
+        label: 'Test',
+        value: '10',
+      });
 
       expect(response.status).toBe(404);
     });
@@ -99,12 +88,9 @@ describe('Department Stats API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/stats`)
-        .set('Cookie', cookies)
-        .send({
-          value: '10',
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/stats`).set('Cookie', cookies).send({
+        value: '10',
+      });
 
       expect(response.status).toBe(400);
     });
@@ -113,12 +99,9 @@ describe('Department Stats API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/stats`)
-        .set('Cookie', cookies)
-        .send({
-          label: 'Test',
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/stats`).set('Cookie', cookies).send({
+        label: 'Test',
+      });
 
       expect(response.status).toBe(400);
     });
@@ -127,14 +110,11 @@ describe('Department Stats API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .post(`/api/departments/${department.slug}/stats`)
-        .set('Cookie', cookies)
-        .send({
-          label: 'Test',
-          value: '10',
-          sort: -1,
-        });
+      const response = await request(app).post(`/api/departments/${department.slug}/stats`).set('Cookie', cookies).send({
+        label: 'Test',
+        value: '10',
+        sort: -1,
+      });
 
       expect(response.status).toBe(400);
     });
@@ -152,13 +132,10 @@ describe('Department Stats API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}/stats/${stat.id}`)
-        .set('Cookie', cookies)
-        .send({
-          label: 'Updated',
-          value: '20',
-        });
+      const response = await request(app).patch(`/api/departments/${department.slug}/stats/${stat.id}`).set('Cookie', cookies).send({
+        label: 'Updated',
+        value: '20',
+      });
 
       expect(response.status).toBe(200);
       expect(response.body.label).toBe('Updated');
@@ -176,12 +153,9 @@ describe('Department Stats API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}/stats/${stat.id}`)
-        .set('Cookie', cookies)
-        .send({
-          value: '99',
-        });
+      const response = await request(app).patch(`/api/departments/${department.slug}/stats/${stat.id}`).set('Cookie', cookies).send({
+        value: '99',
+      });
 
       expect(response.status).toBe(200);
       expect(response.body.label).toBe('Original');
@@ -200,12 +174,9 @@ describe('Department Stats API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/departments/${department2.slug}/stats/${stat.id}`)
-        .set('Cookie', cookies)
-        .send({
-          label: 'Updated',
-        });
+      const response = await request(app).patch(`/api/departments/${department2.slug}/stats/${stat.id}`).set('Cookie', cookies).send({
+        label: 'Updated',
+      });
 
       expect(response.status).toBe(404);
     });
@@ -220,11 +191,9 @@ describe('Department Stats API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}/stats/${stat.id}`)
-        .send({
-          label: 'Updated',
-        });
+      const response = await request(app).patch(`/api/departments/${department.slug}/stats/${stat.id}`).send({
+        label: 'Updated',
+      });
 
       expect(response.status).toBe(401);
     });
@@ -242,9 +211,7 @@ describe('Department Stats API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/departments/${department.slug}/stats/${stat.id}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/departments/${department.slug}/stats/${stat.id}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
 
@@ -266,9 +233,7 @@ describe('Department Stats API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/departments/${department2.slug}/stats/${stat.id}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/departments/${department2.slug}/stats/${stat.id}`).set('Cookie', cookies);
 
       expect(response.status).toBe(404);
     });
@@ -283,9 +248,7 @@ describe('Department Stats API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).delete(
-        `/api/departments/${department.slug}/stats/${stat.id}`,
-      );
+      const response = await request(app).delete(`/api/departments/${department.slug}/stats/${stat.id}`);
 
       expect(response.status).toBe(401);
     });
@@ -376,10 +339,7 @@ describe('Department Stats API Integration Tests', () => {
       const cookies = await createAuthenticatedUser();
       const department = await createTestDepartment();
 
-      const response = await request(app)
-        .patch(`/api/departments/${department.slug}/stats/reorder`)
-        .set('Cookie', cookies)
-        .send({ ids: [] });
+      const response = await request(app).patch(`/api/departments/${department.slug}/stats/reorder`).set('Cookie', cookies).send({ ids: [] });
 
       expect(response.status).toBe(400);
     });

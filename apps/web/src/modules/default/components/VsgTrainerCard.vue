@@ -14,9 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 function getLicenseBadgeClasses(variant: TrainerLicense['variant']): string {
-  return variant === 'gold'
-    ? 'bg-vsg-gold-100 text-vsg-gold-800'
-    : 'bg-vsg-blue-100 text-vsg-blue-800';
+  return variant === 'gold' ? 'bg-vsg-gold-100 text-vsg-gold-800' : 'bg-vsg-blue-100 text-vsg-blue-800';
 }
 
 function getContactLink(): string {
@@ -28,31 +26,17 @@ function getContactLink(): string {
 </script>
 
 <template>
-  <div
-    class="card-hover group overflow-hidden rounded-xl border border-gray-200 bg-gray-50"
-  >
+  <div class="card-hover group overflow-hidden rounded-xl border border-gray-200 bg-gray-50">
     <!-- Avatar Area -->
-    <div
-      :class="[
-        'aspect-square bg-linear-to-br relative overflow-hidden',
-        avatarGradient,
-      ]"
-    >
+    <div :class="['aspect-square bg-linear-to-br relative overflow-hidden', avatarGradient]">
       <!-- Avatar Image or Placeholder -->
-      <img
-        v-if="trainer.avatarUrl"
-        :src="trainer.avatarUrl"
-        :alt="trainer.name"
-        class="h-full w-full object-cover"
-      />
+      <img v-if="trainer.avatarUrl" :src="trainer.avatarUrl" :alt="trainer.name" class="h-full w-full object-cover" />
       <div v-else class="absolute inset-0 flex items-center justify-center">
         <FontAwesomeIcon icon="user" class="text-white/30" />
       </div>
 
       <!-- Contact Overlay on Hover -->
-      <div
-        class="absolute inset-0 flex items-center justify-center bg-vsg-blue-900/60 opacity-0 transition-opacity group-hover:opacity-100"
-      >
+      <div class="absolute inset-0 flex items-center justify-center bg-vsg-blue-900/60 opacity-0 transition-opacity group-hover:opacity-100">
         <RouterLink
           :to="getContactLink()"
           class="translate-y-4 transform bg-vsg-gold-400 px-6 py-2 font-display text-lg tracking-wider text-vsg-blue-900 transition-transform group-hover:translate-y-0"
@@ -77,10 +61,7 @@ function getContactLink(): string {
           <span
             v-for="license in trainer.licenses"
             :key="license.name"
-            :class="[
-              getLicenseBadgeClasses(license.variant),
-              'inline-block rounded px-2 py-1 font-body text-xs font-semibold',
-            ]"
+            :class="[getLicenseBadgeClasses(license.variant), 'inline-block rounded px-2 py-1 font-body text-xs font-semibold']"
           >
             {{ license.name }}
           </span>

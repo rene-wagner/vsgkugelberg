@@ -10,10 +10,8 @@ import { redisClient } from '@/config/redis.config';
  */
 
 // Check if we're in test mode
-const isTestMode =
-  process.env.NODE_ENV === 'test' || process.env.VITEST === 'true';
-const enableRateLimitInTests =
-  process.env.ENABLE_RATE_LIMIT_IN_TESTS === 'true';
+const isTestMode = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true';
+const enableRateLimitInTests = process.env.ENABLE_RATE_LIMIT_IN_TESTS === 'true';
 
 // Store instances for testing - allows reset between tests
 const stores: Map<string, MemoryStore> = new Map();
@@ -22,11 +20,7 @@ const stores: Map<string, MemoryStore> = new Map();
  * Creates a rate limiter with the specified configuration.
  * Uses Redis store for distributed rate limiting across multiple instances.
  */
-const createRateLimiter = (options: {
-  windowMs: number;
-  limit: number;
-  keyPrefix: string;
-}) => {
+const createRateLimiter = (options: { windowMs: number; limit: number; keyPrefix: string }) => {
   const { windowMs, limit, keyPrefix } = options;
 
   // In test mode, return a pass-through middleware unless explicitly enabled
@@ -128,10 +122,7 @@ export const logoutLimiter = createRateLimiter({
  * Rate limiter for contact form endpoint.
  * 5 requests per hour to prevent spam/abuse.
  */
-const contactFormLimit = parseInt(
-  process.env.CONTACT_FORM_RATE_LIMIT || '5',
-  10,
-);
+const contactFormLimit = parseInt(process.env.CONTACT_FORM_RATE_LIMIT || '5', 10);
 export const contactFormLimiter = createRateLimiter({
   windowMs: 60 * 60 * 1000, // 1 hour
   limit: contactFormLimit,

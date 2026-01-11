@@ -15,10 +15,7 @@ export const createDepartmentStatValidator = [
     .isLength({ min: 1, max: 50 })
     .withMessage('Value must be between 1 and 50 characters'),
 
-  body('sort')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Sort must be a non-negative integer'),
+  body('sort').optional().isInt({ min: 0 }).withMessage('Sort must be a non-negative integer'),
 ];
 
 export const updateDepartmentStatValidator = [
@@ -38,22 +35,15 @@ export const updateDepartmentStatValidator = [
     .isLength({ min: 1, max: 50 })
     .withMessage('Value must be between 1 and 50 characters'),
 
-  body('sort')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Sort must be a non-negative integer'),
+  body('sort').optional().isInt({ min: 0 }).withMessage('Sort must be a non-negative integer'),
 ];
 
-export const statIdParamValidator = [
-  param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer'),
-];
+export const statIdParamValidator = [param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer')];
 
 export const reorderDepartmentStatsValidator = [
   body('ids').isArray({ min: 1 }).withMessage('IDs must be a non-empty array'),
 
-  body('ids.*')
-    .isInt({ min: 1 })
-    .withMessage('Each ID must be a positive integer'),
+  body('ids.*').isInt({ min: 1 }).withMessage('Each ID must be a positive integer'),
 
   body('ids').custom((ids: number[]) => {
     const uniqueIds = new Set(ids);

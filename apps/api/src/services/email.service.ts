@@ -24,20 +24,14 @@ class ConsoleEmailService implements EmailService {
     console.log('----------------------------------------');
     console.log('Hallo,');
     console.log('');
-    console.log(
-      'Du hast eine Anfrage zum Zuruecksetzen deines Passworts gestellt.',
-    );
-    console.log(
-      'Klicke auf den folgenden Link, um ein neues Passwort zu setzen:',
-    );
+    console.log('Du hast eine Anfrage zum Zuruecksetzen deines Passworts gestellt.');
+    console.log('Klicke auf den folgenden Link, um ein neues Passwort zu setzen:');
     console.log('');
     console.log(`  ${resetUrl}`);
     console.log('');
     console.log('Dieser Link ist 60 Minuten gueltig.');
     console.log('');
-    console.log(
-      'Falls du diese Anfrage nicht gestellt hast, ignoriere diese E-Mail.',
-    );
+    console.log('Falls du diese Anfrage nicht gestellt hast, ignoriere diese E-Mail.');
     console.log('');
     console.log('Mit sportlichen Gruessen,');
     console.log('VSG Kugelberg');
@@ -162,9 +156,7 @@ export function createEmailService(): EmailService {
   }
 
   if (provider !== 'console') {
-    console.warn(
-      `Unknown EMAIL_PROVIDER "${provider}", falling back to console`,
-    );
+    console.warn(`Unknown EMAIL_PROVIDER "${provider}", falling back to console`);
   }
 
   return new ConsoleEmailService();

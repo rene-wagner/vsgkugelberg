@@ -1,13 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { NotFoundException } from '@/errors/http-errors';
-import {
-  CreateMediaDto,
-  Media,
-  PaginatedResponse,
-  RegenerateThumbnailsResult,
-  ThumbnailsMap,
-} from '@/types/media.types';
+import { CreateMediaDto, Media, PaginatedResponse, RegenerateThumbnailsResult, ThumbnailsMap } from '@/types/media.types';
 import { Prisma, prisma } from '@/lib/prisma.lib';
 import { UPLOAD_DIR } from '@/config/upload.config';
 import { ThumbnailService } from '@/services/thumbnail.service';
@@ -19,11 +13,7 @@ export class MediaService {
     this.thumbnailService = new ThumbnailService();
   }
 
-  async findAll(
-    page: number = 1,
-    limit: number = 24,
-    folderId: number | null | undefined = undefined,
-  ): Promise<PaginatedResponse<Media>> {
+  async findAll(page: number = 1, limit: number = 24, folderId: number | null | undefined = undefined): Promise<PaginatedResponse<Media>> {
     const skip = (page - 1) * limit;
 
     const where: Prisma.MediaWhereInput = {};
@@ -73,10 +63,7 @@ export class MediaService {
     if (this.thumbnailService.isSupportedMimetype(createMediaDto.mimetype)) {
       const inputPath = path.join(UPLOAD_DIR, createMediaDto.filename);
       try {
-        thumbnails = await this.thumbnailService.generateThumbnails(
-          inputPath,
-          createMediaDto.filename,
-        );
+        thumbnails = await this.thumbnailService.generateThumbnails(inputPath, createMediaDto.filename);
       } catch (error) {
         // Log but don't fail the upload
         console.warn('Thumbnail generation failed:', error);
@@ -125,9 +112,7 @@ export class MediaService {
       // Delete associated thumbnails
       if (existingMedia.thumbnails) {
         try {
-          await this.thumbnailService.deleteThumbnailsFromMap(
-            existingMedia.thumbnails as ThumbnailsMap,
-          );
+          await this.thumbnailService.deleteThumbnailsFromMap(existingMedia.thumbnails as ThumbnailsMap);
         } catch (thumbnailError) {
           console.warn('Failed to delete thumbnails:', thumbnailError);
         }
@@ -135,10 +120,7 @@ export class MediaService {
 
       return deletedMedia;
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2025') {
         throw new NotFoundException(`Media with ID ${id} not found`);
       }
       throw error;
@@ -161,17 +143,12 @@ export class MediaService {
 
     // Delete existing thumbnails
     if (media.thumbnails) {
-      await this.thumbnailService.deleteThumbnailsFromMap(
-        media.thumbnails as ThumbnailsMap,
-      );
+      await this.thumbnailService.deleteThumbnailsFromMap(media.thumbnails as ThumbnailsMap);
     }
 
     // Generate new thumbnails
     const inputPath = path.join(UPLOAD_DIR, media.filename);
-    const thumbnails = await this.thumbnailService.generateThumbnails(
-      inputPath,
-      media.filename,
-    );
+    const thumbnails = await this.thumbnailService.generateThumbnails(inputPath, media.filename);
 
     // Update database
     return prisma.media.update({
@@ -227,17 +204,12 @@ export class MediaService {
       try {
         // Delete existing thumbnails
         if (media.thumbnails) {
-          await this.thumbnailService.deleteThumbnailsFromMap(
-            media.thumbnails as ThumbnailsMap,
-          );
+          await this.thumbnailService.deleteThumbnailsFromMap(media.thumbnails as ThumbnailsMap);
         }
 
         // Generate new thumbnails
         const inputPath = path.join(UPLOAD_DIR, media.filename);
-        const thumbnails = await this.thumbnailService.generateThumbnails(
-          inputPath,
-          media.filename,
-        );
+        const thumbnails = await this.thumbnailService.generateThumbnails(inputPath, media.filename);
 
         if (thumbnails) {
           // Update database
@@ -250,10 +222,7 @@ export class MediaService {
           result.failed++;
         }
       } catch (error) {
-        console.warn(
-          `Failed to regenerate thumbnails for media ${media.id}:`,
-          error,
-        );
+        console.warn(`Failed to regenerate thumbnails for media ${media.id}:`, error);
         result.failed++;
       }
     }

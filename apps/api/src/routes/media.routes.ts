@@ -4,11 +4,7 @@ import { asyncHandlerMiddleware } from '@/middleware/async-handler.middleware';
 import { authGuardMiddleware } from '@/middleware/auth-guard.middleware';
 import { validationMiddleware } from '@/middleware/validation.middleware';
 import { jwtMiddleware } from '@/middleware/jwt.middleware';
-import {
-  mediaQueryValidator,
-  mediaIdParamValidator,
-  moveMediaValidator,
-} from '@/validators/media.validators';
+import { mediaQueryValidator, mediaIdParamValidator, moveMediaValidator } from '@/validators/media.validators';
 import { upload } from '@/config/upload.config';
 import { BadRequestException } from '@/errors/http-errors';
 
@@ -25,12 +21,7 @@ router.get(
   asyncHandlerMiddleware(async (req, res) => {
     const page = req.query.page ? Number(req.query.page) : 1;
     const limit = req.query.limit ? Number(req.query.limit) : 24;
-    const folderId =
-      req.query.folderId !== undefined
-        ? req.query.folderId === 'null'
-          ? null
-          : Number(req.query.folderId)
-        : undefined;
+    const folderId = req.query.folderId !== undefined ? (req.query.folderId === 'null' ? null : Number(req.query.folderId)) : undefined;
 
     const result = await mediaService.findAll(page, limit, folderId);
     res.json(result);
@@ -90,12 +81,7 @@ router.patch(
   asyncHandlerMiddleware(async (req, res) => {
     const id = Number(req.params.id);
     const body = req.body as { folderId: string | number | null };
-    const folderId =
-      body.folderId === 'null'
-        ? null
-        : body.folderId === null
-          ? null
-          : Number(body.folderId);
+    const folderId = body.folderId === 'null' ? null : body.folderId === null ? null : Number(body.folderId);
     const media = await mediaService.move(id, folderId);
     res.json(media);
   }),

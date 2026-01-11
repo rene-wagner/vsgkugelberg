@@ -10,11 +10,7 @@ describe('Contact Persons API Integration Tests', () => {
 
   // Helper to create authenticated request
   async function createAuthenticatedUser() {
-    const user = await createTestUserWithPassword(
-      testUsername,
-      testEmail,
-      testPassword,
-    );
+    const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
     // Login to get JWT token
     const loginResponse = await request(app).post('/api/auth/login').send({
@@ -117,9 +113,7 @@ describe('Contact Persons API Integration Tests', () => {
       }
 
       // Page 1
-      let response = await request(app).get(
-        '/api/contact-persons?page=1&limit=10',
-      );
+      let response = await request(app).get('/api/contact-persons?page=1&limit=10');
       expect(response.status).toBe(200);
       expect(response.body.data).toHaveLength(10);
       expect(response.body.meta).toMatchObject({
@@ -155,9 +149,7 @@ describe('Contact Persons API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        `/api/contact-persons/${contactPerson.id}`,
-      );
+      const response = await request(app).get(`/api/contact-persons/${contactPerson.id}`);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -199,10 +191,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 123 456789',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({
@@ -235,10 +224,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 987 654321',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(201);
       expect(response.body.email).toBe('anna.schmidt@example.com');
@@ -255,10 +241,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 123 456789',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(400);
     });
@@ -272,9 +255,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 123 456789',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').send(newContactPerson);
 
       expect(response.status).toBe(401);
     });
@@ -289,10 +270,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 123 456789',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(400);
     });
@@ -307,10 +285,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 123 456789',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(400);
     });
@@ -325,10 +300,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 123 456789',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(400);
     });
@@ -343,10 +315,7 @@ describe('Contact Persons API Integration Tests', () => {
         email: 'max@example.com',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(400);
     });
@@ -362,10 +331,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 123 456789',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(400);
     });
@@ -381,10 +347,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 123 456789',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(400);
     });
@@ -408,10 +371,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Maximilian',
       };
 
-      const response = await request(app)
-        .patch(`/api/contact-persons/${contactPerson.id}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/contact-persons/${contactPerson.id}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.firstName).toBe('Maximilian');
@@ -440,10 +400,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 999 888777',
       };
 
-      const response = await request(app)
-        .patch(`/api/contact-persons/${contactPerson.id}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/contact-persons/${contactPerson.id}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -471,9 +428,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Maximilian',
       };
 
-      const response = await request(app)
-        .patch(`/api/contact-persons/${contactPerson.id}`)
-        .send(update);
+      const response = await request(app).patch(`/api/contact-persons/${contactPerson.id}`).send(update);
 
       expect(response.status).toBe(401);
     });
@@ -485,10 +440,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'Maximilian',
       };
 
-      const response = await request(app)
-        .patch('/api/contact-persons/99999')
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch('/api/contact-persons/99999').set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('not found');
@@ -511,10 +463,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 999 888777',
       };
 
-      const response = await request(app)
-        .patch(`/api/contact-persons/${contactPerson.id}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/contact-persons/${contactPerson.id}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(200);
       expect(response.body.firstName).toBe('Max');
@@ -539,10 +488,7 @@ describe('Contact Persons API Integration Tests', () => {
         firstName: 'M', // Too short
       };
 
-      const response = await request(app)
-        .patch(`/api/contact-persons/${contactPerson.id}`)
-        .set('Cookie', cookies)
-        .send(update);
+      const response = await request(app).patch(`/api/contact-persons/${contactPerson.id}`).set('Cookie', cookies).send(update);
 
       expect(response.status).toBe(400);
     });
@@ -562,9 +508,7 @@ describe('Contact Persons API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/contact-persons/${contactPerson.id}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/contact-persons/${contactPerson.id}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -591,9 +535,7 @@ describe('Contact Persons API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).delete(
-        `/api/contact-persons/${contactPerson.id}`,
-      );
+      const response = await request(app).delete(`/api/contact-persons/${contactPerson.id}`);
 
       expect(response.status).toBe(401);
 
@@ -607,9 +549,7 @@ describe('Contact Persons API Integration Tests', () => {
     it('should return 404 for non-existent contact person', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/contact-persons/99999')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/contact-persons/99999').set('Cookie', cookies);
 
       expect(response.status).toBe(404);
       expect(response.body).toHaveProperty('statusCode', 404);
@@ -619,9 +559,7 @@ describe('Contact Persons API Integration Tests', () => {
     it('should return 400 for invalid ID format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/contact-persons/invalid')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/contact-persons/invalid').set('Cookie', cookies);
 
       expect(response.status).toBe(400);
     });
@@ -697,9 +635,7 @@ describe('Contact Persons API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        `/api/contact-persons/${contactPerson.id}`,
-      );
+      const response = await request(app).get(`/api/contact-persons/${contactPerson.id}`);
 
       expect(response.status).toBe(200);
       expect(response.body.profileImage).toMatchObject({
@@ -721,10 +657,7 @@ describe('Contact Persons API Integration Tests', () => {
         profileImageId: media.id,
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(201);
       expect(response.body.profileImageId).toBe(media.id);
@@ -746,10 +679,7 @@ describe('Contact Persons API Integration Tests', () => {
         profileImageId: 99999,
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(404);
       expect(response.body.message).toContain('Media');
@@ -768,10 +698,7 @@ describe('Contact Persons API Integration Tests', () => {
         profileImageId: media.id,
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(400);
       expect(response.body.message).toContain('JPEG, PNG, or WebP');
@@ -782,47 +709,38 @@ describe('Contact Persons API Integration Tests', () => {
 
       // Test JPEG
       const jpegMedia = await createImageMedia('image/jpeg');
-      const response1 = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send({
-          firstName: 'Test',
-          lastName: 'JPEG',
-          type: 'Tester',
-          email: 'test.jpeg@example.com',
-          phone: '+49 111 111111',
-          profileImageId: jpegMedia.id,
-        });
+      const response1 = await request(app).post('/api/contact-persons').set('Cookie', cookies).send({
+        firstName: 'Test',
+        lastName: 'JPEG',
+        type: 'Tester',
+        email: 'test.jpeg@example.com',
+        phone: '+49 111 111111',
+        profileImageId: jpegMedia.id,
+      });
       expect(response1.status).toBe(201);
 
       // Test PNG
       const pngMedia = await createImageMedia('image/png');
-      const response2 = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send({
-          firstName: 'Test',
-          lastName: 'PNG',
-          type: 'Tester',
-          email: 'test.png@example.com',
-          phone: '+49 222 222222',
-          profileImageId: pngMedia.id,
-        });
+      const response2 = await request(app).post('/api/contact-persons').set('Cookie', cookies).send({
+        firstName: 'Test',
+        lastName: 'PNG',
+        type: 'Tester',
+        email: 'test.png@example.com',
+        phone: '+49 222 222222',
+        profileImageId: pngMedia.id,
+      });
       expect(response2.status).toBe(201);
 
       // Test WebP
       const webpMedia = await createImageMedia('image/webp');
-      const response3 = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send({
-          firstName: 'Test',
-          lastName: 'WebP',
-          type: 'Tester',
-          email: 'test.webp@example.com',
-          phone: '+49 333 333333',
-          profileImageId: webpMedia.id,
-        });
+      const response3 = await request(app).post('/api/contact-persons').set('Cookie', cookies).send({
+        firstName: 'Test',
+        lastName: 'WebP',
+        type: 'Tester',
+        email: 'test.webp@example.com',
+        phone: '+49 333 333333',
+        profileImageId: webpMedia.id,
+      });
       expect(response3.status).toBe(201);
     });
 
@@ -840,10 +758,7 @@ describe('Contact Persons API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/contact-persons/${contactPerson.id}`)
-        .set('Cookie', cookies)
-        .send({ profileImageId: media.id });
+      const response = await request(app).patch(`/api/contact-persons/${contactPerson.id}`).set('Cookie', cookies).send({ profileImageId: media.id });
 
       expect(response.status).toBe(200);
       expect(response.body.profileImageId).toBe(media.id);
@@ -898,10 +813,7 @@ describe('Contact Persons API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/contact-persons/${contactPerson.id}`)
-        .set('Cookie', cookies)
-        .send({ profileImageId: null });
+      const response = await request(app).patch(`/api/contact-persons/${contactPerson.id}`).set('Cookie', cookies).send({ profileImageId: null });
 
       expect(response.status).toBe(200);
       expect(response.body.profileImageId).toBeNull();
@@ -929,9 +841,7 @@ describe('Contact Persons API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/contact-persons/${contactPerson.id}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/contact-persons/${contactPerson.id}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
 
@@ -982,10 +892,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 123 456789',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(201);
       expect(response.body.firstName).toBe('Müller');
@@ -1004,10 +911,7 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 123 456789',
       };
 
-      const response = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(newContactPerson);
+      const response = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(newContactPerson);
 
       expect(response.status).toBe(201);
       expect(response.body.firstName).toBe('Max');
@@ -1035,15 +939,9 @@ describe('Contact Persons API Integration Tests', () => {
         phone: '+49 987 654321',
       };
 
-      const response1 = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(contactPerson1);
+      const response1 = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(contactPerson1);
 
-      const response2 = await request(app)
-        .post('/api/contact-persons')
-        .set('Cookie', cookies)
-        .send(contactPerson2);
+      const response2 = await request(app).post('/api/contact-persons').set('Cookie', cookies).send(contactPerson2);
 
       expect(response1.status).toBe(201);
       expect(response2.status).toBe(201);

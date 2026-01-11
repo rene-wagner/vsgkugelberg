@@ -1,10 +1,6 @@
 import { prisma } from '@/lib/prisma.lib';
 import { NotFoundException } from '@/errors/http-errors';
-import {
-  MediaFolder,
-  CreateMediaFolderDto,
-  UpdateMediaFolderDto,
-} from '@/types/media.types';
+import { MediaFolder, CreateMediaFolderDto, UpdateMediaFolderDto } from '@/types/media.types';
 
 export class MediaFolderService {
   async findAll(parentId: number | null = null): Promise<MediaFolder[]> {

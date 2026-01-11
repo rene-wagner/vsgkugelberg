@@ -9,19 +9,9 @@ export const createTrainingGroupValidator = [
     .isLength({ min: 1, max: 100 })
     .withMessage('Name must be between 1 and 100 characters'),
 
-  body('ageRange')
-    .optional({ values: 'undefined' })
-    .isString()
-    .trim()
-    .isLength({ max: 50 })
-    .withMessage('Age range must be at most 50 characters'),
+  body('ageRange').optional({ values: 'undefined' }).isString().trim().isLength({ max: 50 }).withMessage('Age range must be at most 50 characters'),
 
-  body('icon')
-    .trim()
-    .notEmpty()
-    .withMessage('Icon is required')
-    .isIn(['youth', 'adults'])
-    .withMessage("Icon must be 'youth' or 'adults'"),
+  body('icon').trim().notEmpty().withMessage('Icon is required').isIn(['youth', 'adults']).withMessage("Icon must be 'youth' or 'adults'"),
 
   body('variant')
     .trim()
@@ -30,10 +20,7 @@ export const createTrainingGroupValidator = [
     .isIn(['primary', 'secondary'])
     .withMessage("Variant must be 'primary' or 'secondary'"),
 
-  body('sort')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Sort must be a non-negative integer'),
+  body('sort').optional().isInt({ min: 0 }).withMessage('Sort must be a non-negative integer'),
 ];
 
 export const updateTrainingGroupValidator = [
@@ -53,32 +40,16 @@ export const updateTrainingGroupValidator = [
       throw new Error('Age range must be at most 50 characters or null');
     }),
 
-  body('icon')
-    .optional()
-    .trim()
-    .isIn(['youth', 'adults'])
-    .withMessage("Icon must be 'youth' or 'adults'"),
+  body('icon').optional().trim().isIn(['youth', 'adults']).withMessage("Icon must be 'youth' or 'adults'"),
 
-  body('variant')
-    .optional()
-    .trim()
-    .isIn(['primary', 'secondary'])
-    .withMessage("Variant must be 'primary' or 'secondary'"),
+  body('variant').optional().trim().isIn(['primary', 'secondary']).withMessage("Variant must be 'primary' or 'secondary'"),
 
-  body('sort')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Sort must be a non-negative integer'),
+  body('sort').optional().isInt({ min: 0 }).withMessage('Sort must be a non-negative integer'),
 ];
 
 // Training Session Validators
 export const createTrainingSessionValidator = [
-  body('day')
-    .trim()
-    .notEmpty()
-    .withMessage('Day is required')
-    .isLength({ min: 1, max: 20 })
-    .withMessage('Day must be between 1 and 20 characters'),
+  body('day').trim().notEmpty().withMessage('Day is required').isLength({ min: 1, max: 20 }).withMessage('Day must be between 1 and 20 characters'),
 
   body('time')
     .trim()
@@ -87,15 +58,9 @@ export const createTrainingSessionValidator = [
     .isLength({ min: 1, max: 30 })
     .withMessage('Time must be between 1 and 30 characters'),
 
-  body('locationId')
-    .optional({ nullable: true })
-    .isInt({ min: 1 })
-    .withMessage('Location ID must be a positive integer or null'),
+  body('locationId').optional({ nullable: true }).isInt({ min: 1 }).withMessage('Location ID must be a positive integer or null'),
 
-  body('sort')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Sort must be a non-negative integer'),
+  body('sort').optional().isInt({ min: 0 }).withMessage('Sort must be a non-negative integer'),
 ];
 
 export const updateTrainingSessionValidator = [
@@ -115,33 +80,19 @@ export const updateTrainingSessionValidator = [
     .isLength({ min: 1, max: 30 })
     .withMessage('Time must be between 1 and 30 characters'),
 
-  body('locationId')
-    .optional({ nullable: true })
-    .isInt({ min: 1 })
-    .withMessage('Location ID must be a positive integer or null'),
+  body('locationId').optional({ nullable: true }).isInt({ min: 1 }).withMessage('Location ID must be a positive integer or null'),
 
-  body('sort')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Sort must be a non-negative integer'),
+  body('sort').optional().isInt({ min: 0 }).withMessage('Sort must be a non-negative integer'),
 ];
 
-export const groupIdParamValidator = [
-  param('groupId')
-    .isInt({ min: 1 })
-    .withMessage('Group ID must be a positive integer'),
-];
+export const groupIdParamValidator = [param('groupId').isInt({ min: 1 }).withMessage('Group ID must be a positive integer')];
 
-export const sessionIdParamValidator = [
-  param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer'),
-];
+export const sessionIdParamValidator = [param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer')];
 
 export const reorderTrainingGroupsValidator = [
   body('ids').isArray({ min: 1 }).withMessage('IDs must be a non-empty array'),
 
-  body('ids.*')
-    .isInt({ min: 1 })
-    .withMessage('Each ID must be a positive integer'),
+  body('ids.*').isInt({ min: 1 }).withMessage('Each ID must be a positive integer'),
 
   body('ids').custom((ids: number[]) => {
     const uniqueIds = new Set(ids);
@@ -155,9 +106,7 @@ export const reorderTrainingGroupsValidator = [
 export const reorderTrainingSessionsValidator = [
   body('ids').isArray({ min: 1 }).withMessage('IDs must be a non-empty array'),
 
-  body('ids.*')
-    .isInt({ min: 1 })
-    .withMessage('Each ID must be a positive integer'),
+  body('ids.*').isInt({ min: 1 }).withMessage('Each ID must be a positive integer'),
 
   body('ids').custom((ids: number[]) => {
     const uniqueIds = new Set(ids);

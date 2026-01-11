@@ -13,16 +13,12 @@ interface UseFormOptions<T> {
   onSubmit?: (values: T) => void | Promise<void>;
 }
 
-export function useForm<T extends Record<string, unknown>>(
-  options: UseFormOptions<T>,
-) {
+export function useForm<T extends Record<string, unknown>>(options: UseFormOptions<T>) {
   const fields = ref<Partial<Record<keyof T, FormField>>>({});
   const isSubmitting = ref(false);
 
   const isValid = computed(() => {
-    return Object.values(fields.value).every(
-      (field) => !field || (field as FormField).error === null,
-    );
+    return Object.values(fields.value).every((field) => !field || (field as FormField).error === null);
   });
 
   function initializeFields() {

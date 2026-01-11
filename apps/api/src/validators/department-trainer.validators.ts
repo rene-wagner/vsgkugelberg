@@ -8,12 +8,7 @@ const licensesValidator = (isRequired: boolean) =>
     .custom((licenses: unknown[]) => {
       if (!Array.isArray(licenses)) return true;
       for (const license of licenses) {
-        if (
-          typeof license !== 'object' ||
-          license === null ||
-          !('name' in license) ||
-          !('variant' in license)
-        ) {
+        if (typeof license !== 'object' || license === null || !('name' in license) || !('variant' in license)) {
           throw new Error('Each license must have name and variant properties');
         }
         const { name, variant } = license as {
@@ -46,10 +41,7 @@ export const createDepartmentTrainerValidator = [
 
   licensesValidator(true).notEmpty().withMessage('Licenses is required'),
 
-  body('sort')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Sort must be a non-negative integer'),
+  body('sort').optional().isInt({ min: 0 }).withMessage('Sort must be a non-negative integer'),
 ];
 
 export const updateDepartmentTrainerValidator = [
@@ -63,22 +55,15 @@ export const updateDepartmentTrainerValidator = [
 
   licensesValidator(false),
 
-  body('sort')
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage('Sort must be a non-negative integer'),
+  body('sort').optional().isInt({ min: 0 }).withMessage('Sort must be a non-negative integer'),
 ];
 
-export const trainerIdParamValidator = [
-  param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer'),
-];
+export const trainerIdParamValidator = [param('id').isInt({ min: 1 }).withMessage('ID must be a positive integer')];
 
 export const reorderDepartmentTrainersValidator = [
   body('ids').isArray({ min: 1 }).withMessage('IDs must be a non-empty array'),
 
-  body('ids.*')
-    .isInt({ min: 1 })
-    .withMessage('Each ID must be a positive integer'),
+  body('ids.*').isInt({ min: 1 }).withMessage('Each ID must be a positive integer'),
 
   body('ids').custom((ids: number[]) => {
     const uniqueIds = new Set(ids);

@@ -55,15 +55,11 @@ function goToPage(page: number | string) {
 }
 
 const startEntry = computed(() => (props.meta.page - 1) * props.meta.limit + 1);
-const endEntry = computed(() =>
-  Math.min(props.meta.page * props.meta.limit, props.meta.total),
-);
+const endEntry = computed(() => Math.min(props.meta.page * props.meta.limit, props.meta.total));
 </script>
 
 <template>
-  <div
-    class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
-  >
+  <div class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
     <div class="font-body font-normal text-sm text-gray-500">
       Zeige
       <span class="text-vsg-blue-900 font-medium">{{ startEntry }}</span>
@@ -86,19 +82,12 @@ const endEntry = computed(() =>
 
       <!-- Page Numbers -->
       <template v-for="(page, index) in displayedPages" :key="index">
-        <span
-          v-if="page === '...'"
-          class="px-3 py-1 text-gray-400 font-body text-sm"
-        >
-          ...
-        </span>
+        <span v-if="page === '...'" class="px-3 py-1 text-gray-400 font-body text-sm"> ... </span>
         <button
           v-else
           class="min-w-8 px-3 py-1 rounded-lg font-body text-sm transition-all"
           :class="[
-            page === meta.page
-              ? 'bg-vsg-blue-600 text-white font-medium shadow-sm'
-              : 'text-gray-600 hover:bg-vsg-blue-50 hover:text-vsg-blue-600',
+            page === meta.page ? 'bg-vsg-blue-600 text-white font-medium shadow-sm' : 'text-gray-600 hover:bg-vsg-blue-50 hover:text-vsg-blue-600',
           ]"
           @click="goToPage(page as number)"
         >

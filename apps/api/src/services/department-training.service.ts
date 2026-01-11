@@ -24,10 +24,7 @@ export class DepartmentTrainingService {
   }
 
   // Training Group Methods
-  async createGroup(
-    departmentSlug: string,
-    dto: CreateDepartmentTrainingGroupDto,
-  ): Promise<DepartmentTrainingGroupWithSessions> {
+  async createGroup(departmentSlug: string, dto: CreateDepartmentTrainingGroupDto): Promise<DepartmentTrainingGroupWithSessions> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     return prisma.departmentTrainingGroup.create({
@@ -43,11 +40,7 @@ export class DepartmentTrainingService {
     });
   }
 
-  async updateGroup(
-    departmentSlug: string,
-    id: number,
-    dto: UpdateDepartmentTrainingGroupDto,
-  ): Promise<DepartmentTrainingGroupWithSessions> {
+  async updateGroup(departmentSlug: string, id: number, dto: UpdateDepartmentTrainingGroupDto): Promise<DepartmentTrainingGroupWithSessions> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify group belongs to this department
@@ -56,9 +49,7 @@ export class DepartmentTrainingService {
     });
 
     if (!group) {
-      throw new NotFoundException(
-        `Training group with ID ${id} not found for this department`,
-      );
+      throw new NotFoundException(`Training group with ID ${id} not found for this department`);
     }
 
     return prisma.departmentTrainingGroup.update({
@@ -74,10 +65,7 @@ export class DepartmentTrainingService {
     });
   }
 
-  async removeGroup(
-    departmentSlug: string,
-    id: number,
-  ): Promise<DepartmentTrainingGroupWithSessions> {
+  async removeGroup(departmentSlug: string, id: number): Promise<DepartmentTrainingGroupWithSessions> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify group belongs to this department
@@ -86,9 +74,7 @@ export class DepartmentTrainingService {
     });
 
     if (!group) {
-      throw new NotFoundException(
-        `Training group with ID ${id} not found for this department`,
-      );
+      throw new NotFoundException(`Training group with ID ${id} not found for this department`);
     }
 
     return prisma.departmentTrainingGroup.delete({
@@ -98,11 +84,7 @@ export class DepartmentTrainingService {
   }
 
   // Training Session Methods
-  async createSession(
-    departmentSlug: string,
-    groupId: number,
-    dto: CreateDepartmentTrainingSessionDto,
-  ): Promise<DepartmentTrainingSession> {
+  async createSession(departmentSlug: string, groupId: number, dto: CreateDepartmentTrainingSessionDto): Promise<DepartmentTrainingSession> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify group belongs to this department
@@ -111,9 +93,7 @@ export class DepartmentTrainingService {
     });
 
     if (!group) {
-      throw new NotFoundException(
-        `Training group with ID ${groupId} not found for this department`,
-      );
+      throw new NotFoundException(`Training group with ID ${groupId} not found for this department`);
     }
 
     if (dto.locationId) {
@@ -121,9 +101,7 @@ export class DepartmentTrainingService {
         where: { id: dto.locationId, departmentId },
       });
       if (!location) {
-        throw new BadRequestException(
-          `Location with ID ${dto.locationId} not found for this department`,
-        );
+        throw new BadRequestException(`Location with ID ${dto.locationId} not found for this department`);
       }
     }
 
@@ -152,9 +130,7 @@ export class DepartmentTrainingService {
     });
 
     if (!group) {
-      throw new NotFoundException(
-        `Training group with ID ${groupId} not found for this department`,
-      );
+      throw new NotFoundException(`Training group with ID ${groupId} not found for this department`);
     }
 
     // Verify session belongs to this group
@@ -163,9 +139,7 @@ export class DepartmentTrainingService {
     });
 
     if (!session) {
-      throw new NotFoundException(
-        `Training session with ID ${id} not found for this training group`,
-      );
+      throw new NotFoundException(`Training session with ID ${id} not found for this training group`);
     }
 
     if (dto.locationId) {
@@ -173,9 +147,7 @@ export class DepartmentTrainingService {
         where: { id: dto.locationId, departmentId },
       });
       if (!location) {
-        throw new BadRequestException(
-          `Location with ID ${dto.locationId} not found for this department`,
-        );
+        throw new BadRequestException(`Location with ID ${dto.locationId} not found for this department`);
       }
     }
 
@@ -190,11 +162,7 @@ export class DepartmentTrainingService {
     });
   }
 
-  async removeSession(
-    departmentSlug: string,
-    groupId: number,
-    id: number,
-  ): Promise<DepartmentTrainingSession> {
+  async removeSession(departmentSlug: string, groupId: number, id: number): Promise<DepartmentTrainingSession> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify group belongs to this department
@@ -203,9 +171,7 @@ export class DepartmentTrainingService {
     });
 
     if (!group) {
-      throw new NotFoundException(
-        `Training group with ID ${groupId} not found for this department`,
-      );
+      throw new NotFoundException(`Training group with ID ${groupId} not found for this department`);
     }
 
     // Verify session belongs to this group
@@ -214,9 +180,7 @@ export class DepartmentTrainingService {
     });
 
     if (!session) {
-      throw new NotFoundException(
-        `Training session with ID ${id} not found for this training group`,
-      );
+      throw new NotFoundException(`Training session with ID ${id} not found for this training group`);
     }
 
     return prisma.departmentTrainingSession.delete({
@@ -224,10 +188,7 @@ export class DepartmentTrainingService {
     });
   }
 
-  async reorderGroups(
-    departmentSlug: string,
-    ids: number[],
-  ): Promise<DepartmentTrainingGroupWithSessions[]> {
+  async reorderGroups(departmentSlug: string, ids: number[]): Promise<DepartmentTrainingGroupWithSessions[]> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify all groups belong to this department
@@ -238,9 +199,7 @@ export class DepartmentTrainingService {
     const existingIds = new Set(groups.map((g) => g.id));
     for (const id of ids) {
       if (!existingIds.has(id)) {
-        throw new NotFoundException(
-          `Training group with ID ${id} not found for this department`,
-        );
+        throw new NotFoundException(`Training group with ID ${id} not found for this department`);
       }
     }
 
@@ -266,11 +225,7 @@ export class DepartmentTrainingService {
     });
   }
 
-  async reorderSessions(
-    departmentSlug: string,
-    groupId: number,
-    ids: number[],
-  ): Promise<DepartmentTrainingSession[]> {
+  async reorderSessions(departmentSlug: string, groupId: number, ids: number[]): Promise<DepartmentTrainingSession[]> {
     const departmentId = await this.getDepartmentIdBySlug(departmentSlug);
 
     // Verify group belongs to this department
@@ -279,9 +234,7 @@ export class DepartmentTrainingService {
     });
 
     if (!group) {
-      throw new NotFoundException(
-        `Training group with ID ${groupId} not found for this department`,
-      );
+      throw new NotFoundException(`Training group with ID ${groupId} not found for this department`);
     }
 
     // Verify all sessions belong to this group
@@ -292,9 +245,7 @@ export class DepartmentTrainingService {
     const existingIds = new Set(sessions.map((s) => s.id));
     for (const id of ids) {
       if (!existingIds.has(id)) {
-        throw new NotFoundException(
-          `Training session with ID ${id} not found for this training group`,
-        );
+        throw new NotFoundException(`Training session with ID ${id} not found for this training group`);
       }
     }
 

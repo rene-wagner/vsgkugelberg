@@ -97,17 +97,12 @@ export const useContactPersonsStore = defineStore('contactPersons', () => {
     }
   }
 
-  async function createContactPerson(
-    data: CreateContactPersonData,
-  ): Promise<ContactPerson | null> {
+  async function createContactPerson(data: CreateContactPersonData): Promise<ContactPerson | null> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const newContactPerson = await api.post<ContactPerson>(
-        '/api/contact-persons',
-        data,
-      );
+      const newContactPerson = await api.post<ContactPerson>('/api/contact-persons', data);
       contactPersons.value.push(newContactPerson);
       return newContactPerson;
     } catch (e) {
@@ -118,18 +113,12 @@ export const useContactPersonsStore = defineStore('contactPersons', () => {
     }
   }
 
-  async function updateContactPerson(
-    id: number,
-    data: UpdateContactPersonData,
-  ): Promise<ContactPerson | null> {
+  async function updateContactPerson(id: number, data: UpdateContactPersonData): Promise<ContactPerson | null> {
     isLoading.value = true;
     error.value = null;
 
     try {
-      const updatedContactPerson = await api.patch<ContactPerson>(
-        `/api/contact-persons/${id}`,
-        data,
-      );
+      const updatedContactPerson = await api.patch<ContactPerson>(`/api/contact-persons/${id}`, data);
       const index = contactPersons.value.findIndex((cp) => cp.id === id);
       if (index !== -1) {
         contactPersons.value[index] = updatedContactPerson;

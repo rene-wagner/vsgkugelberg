@@ -77,9 +77,7 @@ export const useAuthStore = defineStore('auth', () => {
    * Request a password reset email.
    * Always returns success to prevent user enumeration.
    */
-  async function requestPasswordReset(
-    email: string,
-  ): Promise<{ success: boolean; message?: string }> {
+  async function requestPasswordReset(email: string): Promise<{ success: boolean; message?: string }> {
     try {
       const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
         method: 'POST',
@@ -102,10 +100,7 @@ export const useAuthStore = defineStore('auth', () => {
   /**
    * Reset password with a valid token.
    */
-  async function resetPassword(
-    token: string,
-    password: string,
-  ): Promise<{ success: boolean; message?: string }> {
+  async function resetPassword(token: string, password: string): Promise<{ success: boolean; message?: string }> {
     try {
       const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
         method: 'POST',

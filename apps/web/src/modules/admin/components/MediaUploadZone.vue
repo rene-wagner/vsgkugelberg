@@ -59,9 +59,7 @@ async function processFiles(files: File[]) {
 
   if (validFiles.length < files.length) {
     const invalidCount = files.length - validFiles.length;
-    alert(
-      `${invalidCount} Datei(en) wurden ignoriert. Erlaubte Formate: JPG, PNG, WebP, SVG`,
-    );
+    alert(`${invalidCount} Datei(en) wurden ignoriert. Erlaubte Formate: JPG, PNG, WebP, SVG`);
   }
 
   if (validFiles.length > 0) {
@@ -76,77 +74,42 @@ async function processFiles(files: File[]) {
     <!-- Drop Zone -->
     <div
       class="relative border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors"
-      :class="[
-        isDragging
-          ? 'border-vsg-blue-500 bg-vsg-blue-50'
-          : 'border-gray-300 hover:border-vsg-blue-400 hover:bg-gray-50',
-      ]"
+      :class="[isDragging ? 'border-vsg-blue-500 bg-vsg-blue-50' : 'border-gray-300 hover:border-vsg-blue-400 hover:bg-gray-50']"
       @dragenter="handleDragEnter"
       @dragleave="handleDragLeave"
       @dragover="handleDragOver"
       @drop="handleDrop"
       @click="handleClick"
     >
-      <input
-        ref="fileInput"
-        type="file"
-        class="hidden"
-        accept="image/jpeg,image/png,image/webp,image/svg+xml"
-        multiple
-        @change="handleFileChange"
-      />
+      <input ref="fileInput" type="file" class="hidden" accept="image/jpeg,image/png,image/webp,image/svg+xml" multiple @change="handleFileChange" />
 
       <div class="flex flex-col items-center gap-3">
         <!-- Upload Icon -->
-        <div
-          class="w-12 h-12 rounded-full flex items-center justify-center"
-          :class="isDragging ? 'bg-vsg-blue-100' : 'bg-gray-100'"
-        >
-          <FontAwesomeIcon
-            icon="upload"
-            size="2x"
-            :class="isDragging ? 'text-vsg-blue-600' : 'text-gray-400'"
-          />
+        <div class="w-12 h-12 rounded-full flex items-center justify-center" :class="isDragging ? 'bg-vsg-blue-100' : 'bg-gray-100'">
+          <FontAwesomeIcon icon="upload" size="2x" :class="isDragging ? 'text-vsg-blue-600' : 'text-gray-400'" />
         </div>
 
         <!-- Text -->
         <div>
-          <p
-            class="font-body text-sm"
-            :class="isDragging ? 'text-vsg-blue-600' : 'text-gray-600'"
-          >
+          <p class="font-body text-sm" :class="isDragging ? 'text-vsg-blue-600' : 'text-gray-600'">
             <span v-if="isDragging">Dateien hier ablegen</span>
             <span v-else>
               Dateien hierher ziehen oder
               <span class="text-vsg-blue-600 font-medium">klicken</span>
             </span>
           </p>
-          <p class="font-body text-xs text-gray-400 mt-1">
-            JPG, PNG, WebP, SVG (max. 10MB)
-          </p>
+          <p class="font-body text-xs text-gray-400 mt-1">JPG, PNG, WebP, SVG (max. 10MB)</p>
         </div>
       </div>
     </div>
 
     <!-- Upload Progress List -->
     <div v-if="uploadItems.length > 0" class="space-y-2">
-      <div
-        v-for="item in uploadItems"
-        :key="item.filename"
-        class="bg-white border border-gray-200 rounded-lg p-3 flex items-center gap-3"
-      >
+      <div v-for="item in uploadItems" :key="item.filename" class="bg-white border border-gray-200 rounded-lg p-3 flex items-center gap-3">
         <!-- Status Icon -->
         <div class="shrink-0">
-          <FontAwesomeIcon
-            v-if="item.status === 'complete'"
-            icon="check"
-            class="text-green-500"
-          />
-          <FontAwesomeIcon
-            v-else-if="item.status === 'error'"
-            icon="xmark"
-            class="text-red-500"
-          />
+          <FontAwesomeIcon v-if="item.status === 'complete'" icon="check" class="text-green-500" />
+          <FontAwesomeIcon v-else-if="item.status === 'error'" icon="xmark" class="text-red-500" />
           <FontAwesomeIcon v-else icon="spinner" class="text-gray-500" />
         </div>
 
@@ -155,22 +118,14 @@ async function processFiles(files: File[]) {
           <p class="font-body text-sm text-vsg-blue-900 truncate">
             {{ item.filename }}
           </p>
-          <p
-            v-if="item.status === 'error'"
-            class="font-body text-xs text-red-500"
-          >
+          <p v-if="item.status === 'error'" class="font-body text-xs text-red-500">
             {{ item.error }}
           </p>
         </div>
 
         <!-- Progress -->
-        <div
-          v-if="item.status === 'uploading'"
-          class="shrink-0 w-16 text-right"
-        >
-          <span class="font-body text-xs text-gray-500"
-            >{{ item.progress }}%</span
-          >
+        <div v-if="item.status === 'uploading'" class="shrink-0 w-16 text-right">
+          <span class="font-body text-xs text-gray-500">{{ item.progress }}%</span>
         </div>
       </div>
     </div>

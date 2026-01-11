@@ -43,12 +43,7 @@ function handleClick(event: MouseEvent) {
     // Small timeout to allow href to update before navigation trigger
     setTimeout(() => {
       const target = event.target as HTMLAnchorElement;
-      if (
-        target &&
-        target.href &&
-        target.href !== '#' &&
-        !target.href.endsWith('#')
-      ) {
+      if (target && target.href && target.href !== '#' && !target.href.endsWith('#')) {
         window.location.href = target.href;
       }
     }, 50);
@@ -57,13 +52,7 @@ function handleClick(event: MouseEvent) {
 </script>
 
 <template>
-  <a
-    :href="currentHref"
-    class="cursor-pointer transition-colors duration-200"
-    @mouseover="decode"
-    @focus="decode"
-    @click="handleClick"
-  >
+  <a :href="currentHref" class="cursor-pointer transition-colors duration-200" @mouseover="decode" @focus="decode" @click="handleClick">
     <slot v-if="isDecoded" :value="decodedValue">
       {{ decodedValue }}
     </slot>

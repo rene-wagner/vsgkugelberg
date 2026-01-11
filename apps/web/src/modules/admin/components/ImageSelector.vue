@@ -94,13 +94,8 @@ async function handleFileSelect(event: Event) {
 <template>
   <div class="image-selector">
     <!-- Empty State -->
-    <div
-      v-if="!hasMedia"
-      class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"
-    >
-      <div
-        class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3"
-      >
+    <div v-if="!hasMedia" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+      <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
         <FontAwesomeIcon icon="image" class="text-gray-400" />
       </div>
       <p class="font-body text-sm text-gray-500 mb-4">
@@ -126,21 +121,11 @@ async function handleFileSelect(event: Event) {
     </div>
 
     <!-- Image Preview -->
-    <div
-      v-else
-      class="relative group bg-gray-100 rounded-lg overflow-hidden"
-      :class="aspectRatio"
-    >
-      <img
-        :src="mediaUrl"
-        :alt="media?.originalName || 'Bild'"
-        class="w-full h-full object-cover"
-      />
+    <div v-else class="relative group bg-gray-100 rounded-lg overflow-hidden" :class="aspectRatio">
+      <img :src="mediaUrl" :alt="media?.originalName || 'Bild'" class="w-full h-full object-cover" />
 
       <!-- Overlay with Actions -->
-      <div
-        class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3"
-      >
+      <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
         <button
           type="button"
           class="px-4 py-2 bg-white text-gray-700 font-body text-sm rounded-lg hover:bg-gray-100 transition-colors"
@@ -158,9 +143,7 @@ async function handleFileSelect(event: Event) {
       </div>
 
       <!-- File Info -->
-      <div
-        class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/60 to-transparent p-3"
-      >
+      <div class="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/60 to-transparent p-3">
         <p class="font-body text-xs text-white truncate">
           {{ media?.originalName }}
         </p>
@@ -168,19 +151,9 @@ async function handleFileSelect(event: Event) {
     </div>
 
     <!-- Hidden File Input -->
-    <input
-      ref="fileInputRef"
-      type="file"
-      accept="image/jpeg,image/png,image/webp,image/svg+xml"
-      class="hidden"
-      @change="handleFileSelect"
-    />
+    <input ref="fileInputRef" type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml" class="hidden" @change="handleFileSelect" />
 
     <!-- Media Selection Modal -->
-    <MediaSelectionModal
-      :is-open="isModalOpen"
-      @close="closeMediaLibrary"
-      @select="handleMediaSelect"
-    />
+    <MediaSelectionModal :is-open="isModalOpen" @close="closeMediaLibrary" @select="handleMediaSelect" />
   </div>
 </template>

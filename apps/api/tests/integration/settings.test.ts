@@ -10,11 +10,7 @@ describe('Settings API Integration Tests', () => {
 
   // Helper to create authenticated request
   async function createAuthenticatedUser() {
-    const user = await createTestUserWithPassword(
-      testUsername,
-      testEmail,
-      testPassword,
-    );
+    const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
     // Login to get JWT token
     const loginResponse = await request(app).post('/api/auth/login').send({
@@ -88,10 +84,7 @@ describe('Settings API Integration Tests', () => {
         contactPhone: '+49 30 123456',
       };
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send(updateData);
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send(updateData);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject(updateData);
@@ -110,9 +103,7 @@ describe('Settings API Integration Tests', () => {
         foundingDate: '1950-01-01T00:00:00.000Z',
       };
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .send(updateData);
+      const response = await request(app).patch('/api/settings').send(updateData);
 
       expect(response.status).toBe(401);
     });
@@ -132,10 +123,7 @@ describe('Settings API Integration Tests', () => {
       });
 
       // Update only the member count
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ memberCount: 750 });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ memberCount: 750 });
 
       expect(response.status).toBe(200);
       expect(response.body.memberCount).toBe(750);
@@ -157,10 +145,7 @@ describe('Settings API Integration Tests', () => {
       });
 
       // Set address to null
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ address: null });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ address: null });
 
       expect(response.status).toBe(200);
       expect(response.body.address).toBeNull();
@@ -172,10 +157,7 @@ describe('Settings API Integration Tests', () => {
     it('should reject invalid date format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ foundingDate: 'not-a-date' });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ foundingDate: 'not-a-date' });
 
       expect(response.status).toBe(400);
     });
@@ -185,10 +167,7 @@ describe('Settings API Integration Tests', () => {
       const futureDate = new Date();
       futureDate.setFullYear(futureDate.getFullYear() + 1);
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ foundingDate: futureDate.toISOString() });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ foundingDate: futureDate.toISOString() });
 
       expect(response.status).toBe(400);
     });
@@ -197,10 +176,7 @@ describe('Settings API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
       const validDate = '1920-01-01T00:00:00.000Z';
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ foundingDate: validDate });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ foundingDate: validDate });
 
       expect(response.status).toBe(200);
       expect(response.body.foundingDate).toBe(validDate);
@@ -209,10 +185,7 @@ describe('Settings API Integration Tests', () => {
     it('should reject invalid email format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ contactEmail: 'not-an-email' });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ contactEmail: 'not-an-email' });
 
       expect(response.status).toBe(400);
     });
@@ -220,10 +193,7 @@ describe('Settings API Integration Tests', () => {
     it('should accept valid email format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ contactEmail: 'valid@example.com' });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ contactEmail: 'valid@example.com' });
 
       expect(response.status).toBe(200);
       expect(response.body.contactEmail).toBe('valid@example.com');
@@ -232,10 +202,7 @@ describe('Settings API Integration Tests', () => {
     it('should reject member count below 1', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ memberCount: 0 });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ memberCount: 0 });
 
       expect(response.status).toBe(400);
     });
@@ -243,10 +210,7 @@ describe('Settings API Integration Tests', () => {
     it('should reject member count above 100000', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ memberCount: 100001 });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ memberCount: 100001 });
 
       expect(response.status).toBe(400);
     });
@@ -255,19 +219,13 @@ describe('Settings API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
 
       // Test minimum boundary
-      let response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ memberCount: 1 });
+      let response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ memberCount: 1 });
 
       expect(response.status).toBe(200);
       expect(response.body.memberCount).toBe(1);
 
       // Test maximum boundary
-      response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ memberCount: 100000 });
+      response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ memberCount: 100000 });
 
       expect(response.status).toBe(200);
       expect(response.body.memberCount).toBe(100000);
@@ -277,10 +235,7 @@ describe('Settings API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
       const longAddress = 'a'.repeat(501);
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ address: longAddress });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ address: longAddress });
 
       expect(response.status).toBe(400);
     });
@@ -289,10 +244,7 @@ describe('Settings API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
       const maxAddress = 'a'.repeat(500);
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ address: maxAddress });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ address: maxAddress });
 
       expect(response.status).toBe(200);
       expect(response.body.address).toBe(maxAddress);
@@ -302,10 +254,7 @@ describe('Settings API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
       const longPhone = '1'.repeat(31);
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ contactPhone: longPhone });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ contactPhone: longPhone });
 
       expect(response.status).toBe(400);
     });
@@ -314,10 +263,7 @@ describe('Settings API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
       const maxPhone = '+49 30 1234567890123456789';
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ contactPhone: maxPhone });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ contactPhone: maxPhone });
 
       expect(response.status).toBe(200);
       expect(response.body.contactPhone).toBe(maxPhone);
@@ -337,10 +283,7 @@ describe('Settings API Integration Tests', () => {
         contactPhone: '+49 30 9876543',
       };
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send(fullUpdate);
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send(fullUpdate);
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject(fullUpdate);
@@ -349,14 +292,11 @@ describe('Settings API Integration Tests', () => {
     it('should trim whitespace from string fields', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({
-          address: '  Trimmed Address  ',
-          contactEmail: '  email@test.com  ',
-          contactPhone: '  +49 123  ',
-        });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({
+        address: '  Trimmed Address  ',
+        contactEmail: '  email@test.com  ',
+        contactPhone: '  +49 123  ',
+      });
 
       expect(response.status).toBe(200);
       expect(response.body.address).toBe('Trimmed Address');
@@ -371,10 +311,7 @@ describe('Settings API Integration Tests', () => {
       // Ensure no settings exist
       await prisma.clubSettings.deleteMany();
 
-      const response = await request(app)
-        .patch('/api/settings')
-        .set('Cookie', cookies)
-        .send({ foundingDate });
+      const response = await request(app).patch('/api/settings').set('Cookie', cookies).send({ foundingDate });
 
       expect(response.status).toBe(200);
       expect(response.body.foundingDate).toBe(foundingDate);

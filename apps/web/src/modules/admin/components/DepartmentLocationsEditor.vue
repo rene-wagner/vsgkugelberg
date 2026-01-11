@@ -93,12 +93,7 @@ const displayLocations = computed({
 });
 
 const isDirty = computed(() => {
-  return (
-    pendingCreates.value.size > 0 ||
-    pendingUpdates.value.size > 0 ||
-    pendingDeletes.value.size > 0 ||
-    orderChanged.value
-  );
+  return pendingCreates.value.size > 0 || pendingUpdates.value.size > 0 || pendingDeletes.value.size > 0 || orderChanged.value;
 });
 
 defineExpose({ isDirty });
@@ -178,10 +173,7 @@ async function handleSave() {
   try {
     // 1. Delete locations
     for (const id of pendingDeletes.value) {
-      const success = await locationsStore.deleteLocation(
-        props.departmentSlug,
-        id,
-      );
+      const success = await locationsStore.deleteLocation(props.departmentSlug, id);
       if (!success) throw new Error('Fehler beim Löschen eines Standorts');
     }
 
@@ -200,10 +192,7 @@ async function handleSave() {
         imageId: location.imageId,
       };
 
-      const result = await locationsStore.createLocation(
-        props.departmentSlug,
-        createDto,
-      );
+      const result = await locationsStore.createLocation(props.departmentSlug, createDto);
       if (!result) throw new Error('Fehler beim Erstellen eines Standorts');
 
       // Update sortableIds with the real ID
@@ -226,11 +215,7 @@ async function handleSave() {
         imageId: data.imageId,
       };
 
-      const result = await locationsStore.updateLocation(
-        props.departmentSlug,
-        id,
-        updateDto,
-      );
+      const result = await locationsStore.updateLocation(props.departmentSlug, id, updateDto);
       if (!result) throw new Error('Fehler beim Aktualisieren eines Standorts');
     }
 
@@ -239,10 +224,7 @@ async function handleSave() {
       const existingIds = sortableIds.value.filter((id) => id > 0);
 
       if (existingIds.length > 0) {
-        const result = await locationsStore.reorder(
-          props.departmentSlug,
-          existingIds,
-        );
+        const result = await locationsStore.reorder(props.departmentSlug, existingIds);
         if (!result) throw new Error('Fehler beim Sortieren der Standorte');
       }
     }
@@ -257,8 +239,7 @@ async function handleSave() {
     localLocations.value = [...locationsStore.locations];
     sortableIds.value = localLocations.value.map((l) => l.id);
   } catch (e) {
-    saveError.value =
-      e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
+    saveError.value = e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
   } finally {
     isSaving.value = false;
   }
@@ -268,27 +249,15 @@ async function handleSave() {
 <template>
   <div class="space-y-4">
     <!-- Error Message -->
-    <div
-      v-if="saveError"
-      class="bg-red-50 border border-red-200 rounded-xl p-4"
-    >
+    <div v-if="saveError" class="bg-red-50 border border-red-200 rounded-xl p-4">
       <p class="text-sm text-red-600 font-body">{{ saveError }}</p>
     </div>
 
     <!-- Empty State -->
-    <div
-      v-if="displayLocations.length === 0"
-      class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300"
-    >
-      <FontAwesomeIcon
-        icon="location-dot"
-        size="2x"
-        class="mb-4 text-gray-400"
-      />
+    <div v-if="displayLocations.length === 0" class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+      <FontAwesomeIcon icon="location-dot" size="2x" class="mb-4 text-gray-400" />
 
-      <p class="text-gray-500 font-body mb-4">
-        Noch keine Standorte vorhanden.
-      </p>
+      <p class="text-gray-500 font-body mb-4">Noch keine Standorte vorhanden.</p>
       <button
         type="button"
         class="px-4 py-2 bg-vsg-blue-600 text-white font-body text-sm rounded-lg hover:bg-vsg-blue-700 transition-colors"
@@ -313,17 +282,8 @@ async function handleSave() {
           :key="location.id"
           :location="location"
           :is-new="!!location._isNew"
-          @update="
-            (data) =>
-              handleUpdate(
-                location._tempId || location.id,
-                data,
-                !!location._isNew,
-              )
-          "
-          @delete="
-            handleDelete(location._tempId || location.id, !!location._isNew)
-          "
+          @update="(data) => handleUpdate(location._tempId || location.id, data, !!location._isNew)"
+          @delete="handleDelete(location._tempId || location.id, !!location._isNew)"
         />
       </VueDraggable>
 

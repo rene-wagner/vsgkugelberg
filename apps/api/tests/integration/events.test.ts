@@ -10,11 +10,7 @@ describe('Events API Integration Tests', () => {
 
   // Helper to create authenticated request
   async function createAuthenticatedUser() {
-    const user = await createTestUserWithPassword(
-      testUsername,
-      testEmail,
-      testPassword,
-    );
+    const user = await createTestUserWithPassword(testUsername, testEmail, testPassword);
 
     // Login to get JWT token
     const loginResponse = await request(app).post('/api/auth/login').send({
@@ -47,9 +43,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/events?start=2024-01-01&end=2024-01-31',
-      );
+      const response = await request(app).get('/api/events?start=2024-01-01&end=2024-01-31');
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveLength(1);
@@ -75,9 +69,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/events?start=2024-01-01&end=2024-01-31&category=Sport',
-      );
+      const response = await request(app).get('/api/events?start=2024-01-01&end=2024-01-31&category=Sport');
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveLength(1);
@@ -96,9 +88,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/events?start=2024-01-01&end=2024-01-31',
-      );
+      const response = await request(app).get('/api/events?start=2024-01-01&end=2024-01-31');
 
       expect(response.status).toBe(200);
       // Should have multiple instances (Mondays in January 2024: 1, 8, 15, 22, 29)
@@ -117,9 +107,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/events?start=2024-01-01&end=2024-01-31',
-      );
+      const response = await request(app).get('/api/events?start=2024-01-01&end=2024-01-31');
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveLength(0);
@@ -138,17 +126,13 @@ describe('Events API Integration Tests', () => {
     });
 
     it('should return 400 for invalid date format', async () => {
-      const response = await request(app).get(
-        '/api/events?start=invalid&end=2024-01-31',
-      );
+      const response = await request(app).get('/api/events?start=invalid&end=2024-01-31');
 
       expect(response.status).toBe(400);
     });
 
     it('should return 400 for invalid category', async () => {
-      const response = await request(app).get(
-        '/api/events?start=2024-01-01&end=2024-01-31&category=InvalidCategory',
-      );
+      const response = await request(app).get('/api/events?start=2024-01-01&end=2024-01-31&category=InvalidCategory');
 
       expect(response.status).toBe(400);
     });
@@ -172,9 +156,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/events?start=2024-01-01&end=2024-01-31',
-      );
+      const response = await request(app).get('/api/events?start=2024-01-01&end=2024-01-31');
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveLength(2);
@@ -235,10 +217,7 @@ describe('Events API Integration Tests', () => {
         category: 'Meeting',
       };
 
-      const response = await request(app)
-        .post('/api/events')
-        .set('Cookie', cookies)
-        .send(newEvent);
+      const response = await request(app).post('/api/events').set('Cookie', cookies).send(newEvent);
 
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({
@@ -262,10 +241,7 @@ describe('Events API Integration Tests', () => {
         recurrence: 'FREQ=WEEKLY;BYDAY=TU,TH',
       };
 
-      const response = await request(app)
-        .post('/api/events')
-        .set('Cookie', cookies)
-        .send(newEvent);
+      const response = await request(app).post('/api/events').set('Cookie', cookies).send(newEvent);
 
       expect(response.status).toBe(201);
       expect(response.body.recurrence).toBe('FREQ=WEEKLY;BYDAY=TU,TH');
@@ -282,10 +258,7 @@ describe('Events API Integration Tests', () => {
         isFullDay: true,
       };
 
-      const response = await request(app)
-        .post('/api/events')
-        .set('Cookie', cookies)
-        .send(newEvent);
+      const response = await request(app).post('/api/events').set('Cookie', cookies).send(newEvent);
 
       expect(response.status).toBe(201);
       expect(response.body.isFullDay).toBe(true);
@@ -313,10 +286,7 @@ describe('Events API Integration Tests', () => {
         category: 'Meeting',
       };
 
-      const response = await request(app)
-        .post('/api/events')
-        .set('Cookie', cookies)
-        .send(newEvent);
+      const response = await request(app).post('/api/events').set('Cookie', cookies).send(newEvent);
 
       expect(response.status).toBe(400);
     });
@@ -330,10 +300,7 @@ describe('Events API Integration Tests', () => {
         category: 'Meeting',
       };
 
-      const response = await request(app)
-        .post('/api/events')
-        .set('Cookie', cookies)
-        .send(newEvent);
+      const response = await request(app).post('/api/events').set('Cookie', cookies).send(newEvent);
 
       expect(response.status).toBe(400);
     });
@@ -347,10 +314,7 @@ describe('Events API Integration Tests', () => {
         endDate: '2024-01-15T12:00:00Z',
       };
 
-      const response = await request(app)
-        .post('/api/events')
-        .set('Cookie', cookies)
-        .send(newEvent);
+      const response = await request(app).post('/api/events').set('Cookie', cookies).send(newEvent);
 
       expect(response.status).toBe(400);
     });
@@ -365,10 +329,7 @@ describe('Events API Integration Tests', () => {
         category: 'InvalidCategory',
       };
 
-      const response = await request(app)
-        .post('/api/events')
-        .set('Cookie', cookies)
-        .send(newEvent);
+      const response = await request(app).post('/api/events').set('Cookie', cookies).send(newEvent);
 
       expect(response.status).toBe(400);
     });
@@ -384,10 +345,7 @@ describe('Events API Integration Tests', () => {
         recurrence: 'INVALID_RRULE',
       };
 
-      const response = await request(app)
-        .post('/api/events')
-        .set('Cookie', cookies)
-        .send(newEvent);
+      const response = await request(app).post('/api/events').set('Cookie', cookies).send(newEvent);
 
       expect(response.status).toBe(400);
     });
@@ -404,10 +362,7 @@ describe('Events API Integration Tests', () => {
           category,
         };
 
-        const response = await request(app)
-          .post('/api/events')
-          .set('Cookie', cookies)
-          .send(newEvent);
+        const response = await request(app).post('/api/events').set('Cookie', cookies).send(newEvent);
 
         expect(response.status).toBe(201);
         expect(response.body.category).toBe(category);
@@ -428,10 +383,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/events/${event.id}`)
-        .set('Cookie', cookies)
-        .send({ title: 'Updated Title' });
+      const response = await request(app).patch(`/api/events/${event.id}`).set('Cookie', cookies).send({ title: 'Updated Title' });
 
       expect(response.status).toBe(200);
       expect(response.body.title).toBe('Updated Title');
@@ -449,15 +401,12 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/events/${event.id}`)
-        .set('Cookie', cookies)
-        .send({
-          title: 'Updated Event',
-          description: 'New description',
-          location: 'New Location',
-          category: 'Sport',
-        });
+      const response = await request(app).patch(`/api/events/${event.id}`).set('Cookie', cookies).send({
+        title: 'Updated Event',
+        description: 'New description',
+        location: 'New Location',
+        category: 'Sport',
+      });
 
       expect(response.status).toBe(200);
       expect(response.body).toMatchObject({
@@ -481,10 +430,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/events/${event.id}`)
-        .set('Cookie', cookies)
-        .send({ recurrence: 'FREQ=WEEKLY;BYDAY=MO,WE,FR' });
+      const response = await request(app).patch(`/api/events/${event.id}`).set('Cookie', cookies).send({ recurrence: 'FREQ=WEEKLY;BYDAY=MO,WE,FR' });
 
       expect(response.status).toBe(200);
       expect(response.body.recurrence).toBe('FREQ=WEEKLY;BYDAY=MO,WE,FR');
@@ -500,9 +446,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/events/${event.id}`)
-        .send({ title: 'Updated Title' });
+      const response = await request(app).patch(`/api/events/${event.id}`).send({ title: 'Updated Title' });
 
       expect(response.status).toBe(401);
     });
@@ -510,10 +454,7 @@ describe('Events API Integration Tests', () => {
     it('should return 404 for non-existent event', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .patch('/api/events/9999')
-        .set('Cookie', cookies)
-        .send({ title: 'Updated Title' });
+      const response = await request(app).patch('/api/events/9999').set('Cookie', cookies).send({ title: 'Updated Title' });
 
       expect(response.status).toBe(404);
     });
@@ -530,10 +471,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .patch(`/api/events/${event.id}`)
-        .set('Cookie', cookies)
-        .send({ category: 'InvalidCategory' });
+      const response = await request(app).patch(`/api/events/${event.id}`).set('Cookie', cookies).send({ category: 'InvalidCategory' });
 
       expect(response.status).toBe(400);
     });
@@ -552,9 +490,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app)
-        .delete(`/api/events/${event.id}`)
-        .set('Cookie', cookies);
+      const response = await request(app).delete(`/api/events/${event.id}`).set('Cookie', cookies);
 
       expect(response.status).toBe(200);
       expect(response.body.id).toBe(event.id);
@@ -590,9 +526,7 @@ describe('Events API Integration Tests', () => {
     it('should return 404 for non-existent event', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/events/9999')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/events/9999').set('Cookie', cookies);
 
       expect(response.status).toBe(404);
     });
@@ -600,9 +534,7 @@ describe('Events API Integration Tests', () => {
     it('should return 400 for invalid ID format', async () => {
       const { cookies } = await createAuthenticatedUser();
 
-      const response = await request(app)
-        .delete('/api/events/invalid')
-        .set('Cookie', cookies);
+      const response = await request(app).delete('/api/events/invalid').set('Cookie', cookies);
 
       expect(response.status).toBe(400);
     });
@@ -620,20 +552,16 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/events?start=2024-01-01&end=2024-01-07',
-      );
+      const response = await request(app).get('/api/events?start=2024-01-01&end=2024-01-07');
 
       expect(response.status).toBe(200);
       // Should have multiple instances (6-7 days depending on inclusive boundaries)
       expect(response.body.length).toBeGreaterThanOrEqual(6);
       expect(response.body.length).toBeLessThanOrEqual(7);
-      response.body.forEach(
-        (event: { isRecurrenceInstance: boolean; title: string }) => {
-          expect(event.isRecurrenceInstance).toBe(true);
-          expect(event.title).toBe('Daily Standup');
-        },
-      );
+      response.body.forEach((event: { isRecurrenceInstance: boolean; title: string }) => {
+        expect(event.isRecurrenceInstance).toBe(true);
+        expect(event.title).toBe('Daily Standup');
+      });
     });
 
     it('should expand monthly recurring event', async () => {
@@ -647,9 +575,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/events?start=2024-01-01&end=2024-06-30',
-      );
+      const response = await request(app).get('/api/events?start=2024-01-01&end=2024-06-30');
 
       expect(response.status).toBe(200);
       expect(response.body.length).toBe(6); // 6 months
@@ -666,9 +592,7 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/events?start=2024-01-01&end=2024-01-03',
-      );
+      const response = await request(app).get('/api/events?start=2024-01-01&end=2024-01-03');
 
       expect(response.status).toBe(200);
       response.body.forEach((event: { startDate: string; endDate: string }) => {
@@ -699,18 +623,12 @@ describe('Events API Integration Tests', () => {
         },
       });
 
-      const response = await request(app).get(
-        '/api/events?start=2024-01-01&end=2024-01-31',
-      );
+      const response = await request(app).get('/api/events?start=2024-01-01&end=2024-01-31');
 
       expect(response.status).toBe(200);
 
-      const oneTimeEvent = response.body.find(
-        (e: { title: string }) => e.title === 'One-time Event',
-      );
-      const recurringEvents = response.body.filter(
-        (e: { title: string }) => e.title === 'Recurring Event',
-      );
+      const oneTimeEvent = response.body.find((e: { title: string }) => e.title === 'One-time Event');
+      const recurringEvents = response.body.filter((e: { title: string }) => e.title === 'Recurring Event');
 
       expect(oneTimeEvent.isRecurrenceInstance).toBe(false);
       expect(recurringEvents.length).toBeGreaterThan(1);

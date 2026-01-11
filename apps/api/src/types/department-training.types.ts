@@ -39,7 +39,6 @@ export interface UpdateDepartmentTrainingSessionDto {
 export type DepartmentTrainingGroup = PrismaDepartmentTrainingGroup;
 export type DepartmentTrainingSession = PrismaDepartmentTrainingSession;
 
-export type DepartmentTrainingGroupWithSessions =
-  Prisma.DepartmentTrainingGroupGetPayload<{
-    include: { sessions: true };
-  }>;
+export type DepartmentTrainingGroupWithSessions = Prisma.DepartmentTrainingGroupGetPayload<{
+  include: { sessions: true };
+}>;

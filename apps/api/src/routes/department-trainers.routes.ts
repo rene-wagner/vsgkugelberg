@@ -10,10 +10,7 @@ import {
   trainerIdParamValidator,
   reorderDepartmentTrainersValidator,
 } from '@/validators/department-trainer.validators';
-import {
-  CreateDepartmentTrainerDto,
-  UpdateDepartmentTrainerDto,
-} from '@/types/department-trainer.types';
+import { CreateDepartmentTrainerDto, UpdateDepartmentTrainerDto } from '@/types/department-trainer.types';
 
 // Router with mergeParams to access :slug from parent router
 const router = Router({ mergeParams: true });
