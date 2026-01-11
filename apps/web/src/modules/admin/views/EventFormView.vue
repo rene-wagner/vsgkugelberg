@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useEventsStore, type EventItem } from '../stores/eventsStore';
 import EventForm from '../components/EventForm.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const route = useRoute();
 const eventsStore = useEventsStore();
@@ -46,19 +47,7 @@ onMounted(async () => {
         >
           Veranstaltungen
         </router-link>
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
+        <FontAwesomeIcon icon="chevron-right" />
         <span class="text-vsg-blue-600">{{ breadcrumbAction }}</span>
       </div>
       <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">

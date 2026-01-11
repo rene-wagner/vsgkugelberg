@@ -46,15 +46,7 @@ function getContactLink(): string {
         class="h-full w-full object-cover"
       />
       <div v-else class="absolute inset-0 flex items-center justify-center">
-        <svg
-          class="h-32 w-32 text-white/30"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
-          />
-        </svg>
+        <FontAwesomeIcon icon="user" class="text-white/30" />
       </div>
 
       <!-- Contact Overlay on Hover -->
@@ -65,7 +57,7 @@ function getContactLink(): string {
           :to="getContactLink()"
           class="translate-y-4 transform bg-vsg-gold-400 px-6 py-2 font-display text-lg tracking-wider text-vsg-blue-900 transition-transform group-hover:translate-y-0"
         >
-          KONTAKT
+          Kontakt
         </RouterLink>
       </div>
     </div>

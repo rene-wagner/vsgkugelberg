@@ -6,6 +6,7 @@ import {
 } from '../stores/contactPersonsStore';
 import ContactForm from '../components/ContactForm.vue';
 import VsgSecureContact from '../components/VsgSecureContact.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const contactPersonsStore = useDefaultContactPersonsStore();
 const selectedContactPersonId = ref<number | null>(null);
@@ -64,7 +65,7 @@ function encodeBase64(value: string): string {
     <section class="bg-vsg-blue-900 pb-20 pt-40">
       <div class="mx-auto max-w-4xl px-6 text-center">
         <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">
-          KONTAKT
+          Kontakt
         </h1>
         <p class="mt-4 font-body text-lg text-vsg-blue-200">
           Finden Sie den richtigen Ansprechpartner
@@ -110,7 +111,7 @@ function encodeBase64(value: string): string {
               for="contact-person-select"
               class="block font-body font-normal text-sm tracking-wider text-vsg-blue-600 uppercase mb-3"
             >
-              Ansprechpartner wahlen
+              Ansprechpartner wählen
             </label>
             <select
               id="contact-person-select"
@@ -123,7 +124,7 @@ function encodeBase64(value: string): string {
                 padding-right: 2.5rem;
               "
             >
-              <option :value="null">Bitte wahlen...</option>
+              <option :value="null">Bitte wählen...</option>
               <option
                 v-for="cp in contactPersonsStore.contactPersons"
                 :key="cp.id"
@@ -192,19 +193,7 @@ function encodeBase64(value: string): string {
                   <div
                     class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
                   >
-                    <svg
-                      class="w-5 h-5 text-vsg-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon="phone" class="text-vsg-blue-600" />
                   </div>
                   <div>
                     <span
@@ -224,19 +213,10 @@ function encodeBase64(value: string): string {
                   <div
                     class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
                   >
-                    <svg
-                      class="w-5 h-5 text-vsg-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
+                    <FontAwesomeIcon
+                      icon="envelope"
+                      class="text-vsg-blue-600"
+                    />
                   </div>
                   <div>
                     <span
@@ -258,25 +238,10 @@ function encodeBase64(value: string): string {
                   <div
                     class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center"
                   >
-                    <svg
-                      class="w-5 h-5 text-vsg-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
+                    <FontAwesomeIcon
+                      icon="location-dot"
+                      class="text-vsg-blue-600"
+                    />
                   </div>
                   <div>
                     <span
@@ -315,21 +280,9 @@ function encodeBase64(value: string): string {
             v-if="!selectedContactPerson"
             class="text-center py-12 bg-gray-50 rounded-2xl border border-gray-100"
           >
-            <svg
-              class="w-16 h-16 mx-auto text-vsg-blue-200"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
+            <FontAwesomeIcon icon="users" class="mx-auto text-vsg-blue-200" />
             <p class="mt-4 font-body text-vsg-blue-500">
-              Wahlen Sie einen Ansprechpartner aus der Liste, um die
+              Wählen Sie einen Ansprechpartner aus der Liste, um die
               Kontaktdaten anzuzeigen.
             </p>
           </div>

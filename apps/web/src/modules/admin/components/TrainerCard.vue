@@ -5,6 +5,7 @@ import type {
   DepartmentTrainer,
   TrainerLicense,
 } from '../types/department-extended.types';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
   trainer: DepartmentTrainer & { _isNew?: boolean };
@@ -108,21 +109,9 @@ function handleRemoveLicense(index: number) {
     >
       <!-- Drag Handle -->
       <div
-        class="cursor-grab text-gray-400 hover:text-gray-600 trainer-drag-handle flex-shrink-0"
+        class="cursor-grab text-gray-400 hover:text-gray-600 trainer-drag-handle shrink-0"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 8h16M4 16h16"
-          />
-        </svg>
+        <FontAwesomeIcon icon="grip" />
       </div>
 
       <!-- Expand/Collapse Toggle -->
@@ -131,20 +120,11 @@ function handleRemoveLicense(index: number) {
         class="p-1 hover:bg-gray-200 rounded transition-colors"
         @click="isExpanded = !isExpanded"
       >
-        <svg
-          class="w-5 h-5 text-gray-500 transition-transform"
+        <FontAwesomeIcon
+          icon="chevron-down"
+          class="text-gray-500 transition-transform"
           :class="{ 'rotate-180': !isExpanded }"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+        />
       </button>
 
       <!-- Trainer Avatar -->
@@ -152,25 +132,13 @@ function handleRemoveLicense(index: number) {
         v-if="profileImageUrl"
         :src="profileImageUrl"
         :alt="trainerName"
-        class="w-10 h-10 rounded-full object-cover flex-shrink-0"
+        class="w-10 h-10 rounded-full object-cover shrink-0"
       />
       <div
         v-else
-        class="w-10 h-10 rounded-full bg-vsg-blue-100 flex items-center justify-center text-vsg-blue-600 text-sm font-medium flex-shrink-0"
+        class="w-10 h-10 rounded-full bg-vsg-blue-100 flex items-center justify-center text-vsg-blue-600 text-sm font-medium shrink-0"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-          />
-        </svg>
+        <FontAwesomeIcon icon="user" />
       </div>
 
       <!-- Trainer Name & Role -->
@@ -197,19 +165,7 @@ function handleRemoveLicense(index: number) {
         title="Trainer löschen"
         @click="handleDelete"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-          />
-        </svg>
+        <FontAwesomeIcon icon="trash" />
       </button>
     </div>
 
@@ -272,19 +228,7 @@ function handleRemoveLicense(index: number) {
               class="p-0.5 hover:bg-white/30 rounded-full"
               @click="handleRemoveLicense(index)"
             >
-              <svg
-                class="w-3 h-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <FontAwesomeIcon icon="xmark" />
             </button>
           </div>
         </div>

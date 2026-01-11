@@ -7,6 +7,7 @@ import type {
   DepartmentTrainingSession,
   DepartmentLocation,
 } from '../types/department-extended.types';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 interface LocalSession extends DepartmentTrainingSession {
   _isNew?: boolean;
@@ -110,21 +111,9 @@ function handleSessionsDragEnd() {
     >
       <!-- Drag Handle -->
       <div
-        class="cursor-grab text-gray-400 hover:text-gray-600 group-drag-handle flex-shrink-0"
+        class="cursor-grab text-gray-400 hover:text-gray-600 group-drag-handle shrink-0"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 8h16M4 16h16"
-          />
-        </svg>
+        <FontAwesomeIcon icon="grip" />
       </div>
 
       <!-- Expand/Collapse Toggle -->
@@ -133,20 +122,11 @@ function handleSessionsDragEnd() {
         class="p-1 hover:bg-gray-200 rounded transition-colors"
         @click="isExpanded = !isExpanded"
       >
-        <svg
-          class="w-5 h-5 text-gray-500 transition-transform"
+        <FontAwesomeIcon
+          icon="chevron-down"
+          class="text-gray-500 transition-transform"
           :class="{ 'rotate-180': !isExpanded }"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+        />
       </button>
 
       <!-- Group Title -->
@@ -173,19 +153,7 @@ function handleSessionsDragEnd() {
         title="Trainingsgruppe löschen"
         @click="handleDelete"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-          />
-        </svg>
+        <FontAwesomeIcon icon="trash" />
       </button>
     </div>
 
@@ -299,19 +267,7 @@ function handleSessionsDragEnd() {
           class="w-full py-2 border border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-vsg-blue-400 hover:text-vsg-blue-600 transition-colors font-body text-sm flex items-center justify-center gap-2"
           @click="handleAddSession"
         >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
+          <FontAwesomeIcon icon="plus" />
           Trainingszeit hinzufügen
         </button>
       </div>

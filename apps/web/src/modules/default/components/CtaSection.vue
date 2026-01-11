@@ -15,9 +15,9 @@ withDefaults(defineProps<Props>(), {
   title: 'WERDE TEIL DER<br />VSG FAMILIE',
   description:
     'Egal ob aktiver Sportler, Unterstützer oder Förderer – bei uns findet jeder seinen Platz. Gemeinsam sind wir stärker.',
-  primaryButtonText: 'MITGLIED WERDEN',
+  primaryButtonText: 'Mitglied werden',
   primaryButtonLink: '/verein/mitgliedschaft',
-  secondaryButtonText: 'KONTAKT',
+  secondaryButtonText: 'Kontakt',
   secondaryButtonLink: '/kontakt',
   theme: 'gold',
 });
@@ -34,6 +34,7 @@ withDefaults(defineProps<Props>(), {
     />
 
     <div class="relative z-10 mx-auto max-w-4xl">
+      <!-- eslint-disable vue/no-v-html -->
       <h3
         class="font-display leading-tight tracking-wider text-vsg-blue-900 uppercase mb-8"
         :class="
@@ -43,6 +44,7 @@ withDefaults(defineProps<Props>(), {
         "
         v-html="title"
       ></h3>
+      <!-- eslint-enable vue/no-v-html -->
       <p
         v-if="description"
         class="mx-auto mt-6 max-w-2xl font-body text-xl font-normal text-vsg-blue-800"
@@ -67,7 +69,7 @@ withDefaults(defineProps<Props>(), {
           size="lg"
           is-router
           :to="secondaryButtonLink"
-          class="!border-vsg-blue-900 !text-vsg-blue-900 hover:!bg-vsg-blue-900/10"
+          class="border-vsg-blue-900! text-vsg-blue-900! hover:bg-vsg-blue-900/10!"
         >
           {{ secondaryButtonText }}
         </VsgButton>

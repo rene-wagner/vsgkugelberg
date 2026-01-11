@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import type { ChartData } from '../types/history.types';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
   modelValue: ChartData;
@@ -65,7 +66,7 @@ function emitUpdate() {
             <th
               v-for="(label, index) in localData.labels"
               :key="index"
-              class="p-2 border-b border-gray-200 min-w-[80px]"
+              class="p-2 border-b border-gray-200 min-w-20"
             >
               <div class="flex flex-col gap-1">
                 <input
@@ -128,19 +129,7 @@ function emitUpdate() {
       class="py-2 px-4 border border-vsg-blue-600 text-vsg-blue-600 rounded-lg hover:bg-vsg-blue-50 transition-colors font-body text-xs flex items-center justify-center gap-2"
       @click="addColumn"
     >
-      <svg
-        class="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 4v16m8-8H4"
-        />
-      </svg>
+      <FontAwesomeIcon icon="plus" />
       Datenpunkt hinzufügen
     </button>
   </div>

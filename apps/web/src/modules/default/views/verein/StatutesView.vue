@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 // Static statutes page - placeholder for PDF download
 </script>
 
@@ -48,19 +50,7 @@
               <div
                 class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-vsg-gold-400"
               >
-                <svg
-                  class="h-8 w-8 text-vsg-blue-900"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
+                <FontAwesomeIcon icon="file-arrow-down" class="text-white" />
               </div>
               <h3
                 class="mt-4 font-display text-xl tracking-wider text-vsg-blue-900"
@@ -68,25 +58,13 @@
                 Satzung als PDF
               </h3>
               <p class="mt-2 font-body text-vsg-blue-600">
-                Die vollstandige Vereinssatzung steht hier zum Download bereit.
+                Die vollständige Vereinssatzung steht hier zum Download bereit.
               </p>
               <button
                 class="mt-6 inline-flex items-center gap-2 rounded-lg bg-vsg-gold-400 px-6 py-3 font-display text-lg tracking-wider text-vsg-blue-900 transition-all hover:bg-vsg-gold-500"
                 disabled
               >
-                <svg
-                  class="h-5 w-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                  />
-                </svg>
+                <FontAwesomeIcon icon="download" />
                 PDF herunterladen
               </button>
               <p class="mt-4 font-body text-sm text-vsg-blue-500 italic">

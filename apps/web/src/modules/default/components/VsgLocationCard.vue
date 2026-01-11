@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import type { DepartmentLocation } from '../types/department-detail.types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -65,25 +66,10 @@ function getMediaUrl(filename: string): string {
       <div class="mb-6 space-y-3">
         <!-- Address -->
         <div class="flex items-start gap-3">
-          <svg
-            class="mt-0.5 h-5 w-5 shrink-0 text-vsg-blue-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-            />
-          </svg>
+          <FontAwesomeIcon
+            icon="location-dot"
+            class="mt-0.5 text-vsg-blue-600"
+          />
           <div>
             <p class="font-body font-semibold text-vsg-blue-800">
               {{ location.street }}
@@ -98,19 +84,10 @@ function getMediaUrl(filename: string): string {
           class="flex items-start gap-3"
         >
           <!-- Info Icon -->
-          <svg
-            class="mt-0.5 h-5 w-5 shrink-0 text-vsg-blue-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+          <FontAwesomeIcon
+            icon="info-circle"
+            class="mt-0.5 text-vsg-blue-600"
+          />
           <p class="font-body text-gray-600">
             {{ location.amenities.map((a) => a.text).join(', ') }}
           </p>
@@ -126,19 +103,7 @@ function getMediaUrl(filename: string): string {
         class="inline-flex items-center gap-2 font-body text-sm font-bold uppercase tracking-wider text-vsg-blue-600 transition-colors hover:text-vsg-blue-800"
       >
         Route planen
-        <svg
-          class="h-4 w-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-          />
-        </svg>
+        <FontAwesomeIcon icon="arrow-up-right-from-square" />
       </a>
     </div>
   </div>

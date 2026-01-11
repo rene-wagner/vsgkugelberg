@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { useAuthStore } from '../stores/authStore';
 import VsgPasswordInput from '@shared/components/VsgPasswordInput.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
   token: string;
@@ -52,19 +53,7 @@ async function handleSubmit() {
     <div
       class="w-16 h-16 mx-auto mb-4 bg-vsg-gold-400/20 rounded-full flex items-center justify-center"
     >
-      <svg
-        class="w-8 h-8 text-vsg-gold-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5 13l4 4L19 7"
-        />
-      </svg>
+      <FontAwesomeIcon icon="check" class="text-vsg-gold-400" />
     </div>
     <p class="font-body font-normal text-vsg-blue-100 mb-6">
       {{ successMessage }}
@@ -74,19 +63,7 @@ async function handleSubmit() {
       class="inline-flex items-center gap-2 font-body font-normal text-vsg-gold-400 hover:text-vsg-gold-300 transition-colors"
     >
       Zum Login
-      <svg
-        class="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M17 8l4 4m0 0l-4 4m4-4H3"
-        />
-      </svg>
+      <FontAwesomeIcon icon="arrow-right" />
     </RouterLink>
   </div>
 
@@ -133,7 +110,7 @@ async function handleSubmit() {
         :disabled="isLoading"
         class="btn-primary w-full bg-vsg-gold-400 text-vsg-blue-900 px-6 py-4 font-display text-xl tracking-wider rounded-lg gold-glow disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
       >
-        {{ isLoading ? 'WIRD GESPEICHERT...' : 'PASSWORT SPEICHERN' }}
+        {{ isLoading ? 'Wird gespeichert...' : 'Passwort speichern' }}
       </button>
     </div>
   </form>

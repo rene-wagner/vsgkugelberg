@@ -8,6 +8,7 @@ import type {
   CreateDepartmentStatDto,
   UpdateDepartmentStatDto,
 } from '../types/department-extended.types';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
   departmentSlug: string;
@@ -253,19 +254,11 @@ async function handleSave() {
       v-if="displayItems.length === 0"
       class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300"
     >
-      <svg
-        class="w-12 h-12 text-gray-400 mx-auto mb-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-        />
-      </svg>
+      <FontAwesomeIcon
+        icon="chart-simple"
+        size="2x"
+        class="mb-4 text-gray-400"
+      />
       <p class="text-gray-500 font-body mb-4">
         Noch keine Statistiken vorhanden.
       </p>
@@ -304,19 +297,7 @@ async function handleSave() {
         class="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-vsg-blue-400 hover:text-vsg-blue-600 transition-colors font-body text-sm flex items-center justify-center gap-2"
         @click="handleAdd"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <FontAwesomeIcon icon="plus" />
         Statistik hinzufügen
       </button>
     </template>
@@ -329,7 +310,7 @@ async function handleSave() {
         :disabled="isSaving"
         @click="handleSave"
       >
-        {{ isSaving ? 'SPEICHERN...' : 'SPEICHERN' }}
+        {{ isSaving ? 'Speichern...' : 'Speichern' }}
       </button>
     </div>
   </div>

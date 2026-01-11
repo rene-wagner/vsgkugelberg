@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useMediaStore } from '../stores/mediaStore';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const emit = defineEmits<{
   (e: 'upload-complete'): void;
@@ -101,20 +102,11 @@ async function processFiles(files: File[]) {
           class="w-12 h-12 rounded-full flex items-center justify-center"
           :class="isDragging ? 'bg-vsg-blue-100' : 'bg-gray-100'"
         >
-          <svg
-            class="w-6 h-6"
+          <FontAwesomeIcon
+            icon="upload"
+            size="2x"
             :class="isDragging ? 'text-vsg-blue-600' : 'text-gray-400'"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-            />
-          </svg>
+          />
         </div>
 
         <!-- Text -->
@@ -144,39 +136,18 @@ async function processFiles(files: File[]) {
         class="bg-white border border-gray-200 rounded-lg p-3 flex items-center gap-3"
       >
         <!-- Status Icon -->
-        <div class="flex-shrink-0">
-          <svg
+        <div class="shrink-0">
+          <FontAwesomeIcon
             v-if="item.status === 'complete'"
-            class="w-5 h-5 text-green-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-          <svg
+            icon="check"
+            class="text-green-500"
+          />
+          <FontAwesomeIcon
             v-else-if="item.status === 'error'"
-            class="w-5 h-5 text-red-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-          <div
-            v-else
-            class="w-5 h-5 border-2 border-vsg-blue-500 border-t-transparent rounded-full animate-spin"
-          ></div>
+            icon="xmark"
+            class="text-red-500"
+          />
+          <FontAwesomeIcon v-else icon="spinner" class="text-gray-500" />
         </div>
 
         <!-- File Info -->
@@ -195,7 +166,7 @@ async function processFiles(files: File[]) {
         <!-- Progress -->
         <div
           v-if="item.status === 'uploading'"
-          class="flex-shrink-0 w-16 text-right"
+          class="shrink-0 w-16 text-right"
         >
           <span class="font-body text-xs text-gray-500"
             >{{ item.progress }}%</span

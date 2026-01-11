@@ -10,6 +10,7 @@ import {
 } from '@/shared/components';
 import CtaSection from '../../components/CtaSection.vue';
 import { useHistoryStore } from '../../stores/historyStore';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const historyStore = useHistoryStore();
 
@@ -125,7 +126,7 @@ onMounted(async () => {
       >
         <!-- Background gradient overlay -->
         <div
-          class="absolute inset-0 bg-gradient-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"
+          class="absolute inset-0 bg-linear-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"
         ></div>
 
         <!-- Decorative elements -->
@@ -160,19 +161,7 @@ onMounted(async () => {
         <div
           class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20"
         >
-          <svg
-            class="w-8 h-8 text-vsg-gold-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 14l-7 7m0 0l-7-7m7 7V3"
-            ></path>
-          </svg>
+          <FontAwesomeIcon icon="arrow-down" class="text-vsg-gold-400" />
         </div>
       </header>
 
@@ -262,7 +251,7 @@ onMounted(async () => {
                 >
               </div>
             </div>
-            <div class="h-[400px] w-full">
+            <div class="h-100 w-full">
               <VsgChart :data="membershipChartData" />
             </div>
           </div>

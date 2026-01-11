@@ -18,7 +18,7 @@ export function required(
 }
 
 export function email(
-  message = 'Bitte eine gultige E-Mail-Adresse eingeben',
+  message = 'Bitte eine gültige E-Mail-Adresse eingeben',
 ): ValidationRule {
   return {
     validate: (value) => {
@@ -87,7 +87,7 @@ export function length(
       }
       return null;
     },
-    message: message || 'Ungultige Lange',
+    message: message || 'Ungültige Länge',
   };
 }
 

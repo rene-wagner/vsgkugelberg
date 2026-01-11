@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 interface Props {
   isLoading?: boolean;
   error?: string | null;
@@ -17,65 +19,21 @@ withDefaults(defineProps<Props>(), {
 <template>
   <div class="vsg-api-state">
     <div v-if="isLoading" class="flex items-center justify-center py-8">
-      <svg
-        class="animate-spin h-8 w-8 text-vsg-gold-400"
-        fill="none"
-        viewBox="0 0 24 24"
-      >
-        <circle
-          class="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          stroke-width="4"
-        />
-        <path
-          class="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-        />
-      </svg>
+      <FontAwesomeIcon icon="spinner" class="animate-spin text-vsg-gold-400" />
       <span class="ml-3 text-vsg-blue-900 font-display tracking-wider"
         >Laden...</span
       >
     </div>
 
     <div v-else-if="error" class="flex items-center justify-center py-8">
-      <svg
-        class="h-8 w-8 text-red-500"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
+      <FontAwesomeIcon icon="triangle-exclamation" class="text-red-500" />
       <span class="ml-3 text-red-600 font-display tracking-wider">{{
         error
       }}</span>
     </div>
 
     <div v-else-if="empty" class="flex items-center justify-center py-8">
-      <svg
-        class="h-8 w-8 text-vsg-blue-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-        />
-      </svg>
+      <FontAwesomeIcon icon="inbox" class="text-vsg-blue-400" />
       <span class="ml-3 text-vsg-blue-400 font-display tracking-wider">{{
         emptyMessage
       }}</span>

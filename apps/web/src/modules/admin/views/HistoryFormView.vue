@@ -16,11 +16,11 @@ const historyStore = useHistoryStore();
 const activeTab = ref('hero');
 
 const tabs = computed<TabDefinition[]>(() => [
-  { id: 'hero', label: 'HERO' },
-  { id: 'founding', label: 'GRÜNDUNG' },
-  { id: 'development', label: 'ENTWICKLUNG' },
-  { id: 'festivals', label: 'VERANSTALTUNGEN' },
-  { id: 'achievements', label: 'ERFOLGE' },
+  { id: 'hero', label: 'Hero' },
+  { id: 'founding', label: 'Gründung' },
+  { id: 'development', label: 'Entwicklung' },
+  { id: 'festivals', label: 'Veranstaltungen' },
+  { id: 'achievements', label: 'Erfolge' },
   { id: 'cta', label: 'CTA' },
 ]);
 
@@ -39,7 +39,7 @@ onMounted(async () => {
         <span class="text-vsg-blue-600">Historie</span>
       </div>
       <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
-        VEREINSHISTORIE VERWALTEN
+        Vereinshistorie verwalten
       </h1>
       <p class="font-body font-normal text-vsg-blue-600 mt-1">
         Pfleget die Inhalte der Chronik und Meilensteine
@@ -58,19 +58,7 @@ onMounted(async () => {
         class="text-green-600 hover:text-green-800"
         @click="historyStore.clearMessages"
       >
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <FontAwesomeIcon icon="xmark" />
       </button>
     </div>
 
@@ -83,19 +71,7 @@ onMounted(async () => {
         class="text-red-600 hover:text-red-800"
         @click="historyStore.clearMessages"
       >
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <FontAwesomeIcon icon="xmark" />
       </button>
     </div>
 

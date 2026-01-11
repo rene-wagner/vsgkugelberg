@@ -5,6 +5,7 @@ import {
   type MediaItem,
   type MediaFolder,
 } from '../stores/mediaStore';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const mediaStore = useMediaStore();
 
@@ -137,25 +138,13 @@ function isSvg(item: MediaItem): boolean {
       <div
         class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
       >
-        <svg
-          class="w-8 h-8 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
+        <FontAwesomeIcon icon="image" size="2x" class="text-gray-400" />
       </div>
       <p class="font-body text-gray-500">
         Noch keine Medien oder Ordner vorhanden.
       </p>
       <p class="font-body text-sm text-gray-400 mt-1">
-        Nutze die Upload-Zone oder "Neuer Ordner", um Inhalte hinzuzufugen.
+        Nutze die Upload-Zone oder "Neuer Ordner", um Inhalte hinzuzufügen.
       </p>
     </div>
 
@@ -170,22 +159,7 @@ function isSvg(item: MediaItem): boolean {
         class="group relative bg-gray-50 border border-gray-200 rounded-lg overflow-hidden aspect-square flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors"
         @click="navigateUp"
       >
-        <svg
-          class="w-12 h-12 text-gray-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-          />
-        </svg>
-        <span class="mt-2 font-body text-sm text-gray-600 font-medium">
-          ..
-        </span>
+        <FontAwesomeIcon icon="arrow-left" size="2x" class="text-gray-400" />
       </div>
 
       <!-- Folders -->
@@ -195,15 +169,7 @@ function isSvg(item: MediaItem): boolean {
         class="group relative bg-vsg-blue-50 border border-vsg-blue-100 rounded-lg overflow-hidden aspect-square flex flex-col items-center justify-center cursor-pointer hover:bg-vsg-blue-100 transition-colors"
         @click="navigateToFolder(folder.id)"
       >
-        <svg
-          class="w-12 h-12 text-vsg-blue-400"
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path
-            d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-          />
-        </svg>
+        <FontAwesomeIcon icon="folder" size="2x" class="text-vsg-blue-900" />
         <span
           class="mt-2 font-body text-sm text-vsg-blue-900 font-medium px-2 text-center truncate w-full"
         >
@@ -218,22 +184,10 @@ function isSvg(item: MediaItem): boolean {
           <button
             type="button"
             class="p-1.5 bg-white/80 rounded-md hover:bg-red-50 text-red-600 transition-colors"
-            title="Ordner loschen"
+            title="Ordner löschen"
             @click="confirmDeleteFolder(folder)"
           >
-            <svg
-              class="w-3.5 h-3.5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-              />
-            </svg>
+            <FontAwesomeIcon icon="trash" />
           </button>
         </div>
       </div>
@@ -263,25 +217,7 @@ function isSvg(item: MediaItem): boolean {
             title="Vorschau"
             @click="openPreview(item)"
           >
-            <svg
-              class="w-4 h-4 text-gray-700"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
-            </svg>
+            <FontAwesomeIcon icon="eye" class="text-gray-700" />
           </button>
 
           <!-- Move Button -->
@@ -291,19 +227,10 @@ function isSvg(item: MediaItem): boolean {
             title="Verschieben"
             @click="openMoveModal(item)"
           >
-            <svg
-              class="w-4 h-4 text-gray-700"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
-              />
-            </svg>
+            <FontAwesomeIcon
+              icon="arrow-right-arrow-left"
+              class="text-gray-700"
+            />
           </button>
 
           <!-- Copy URL Button -->
@@ -313,41 +240,14 @@ function isSvg(item: MediaItem): boolean {
             :title="copiedId === item.id ? 'Kopiert!' : 'URL kopieren'"
             @click="copyUrl(item)"
           >
-            <svg
-              v-if="copiedId === item.id"
-              class="w-4 h-4 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <svg
-              v-else
-              class="w-4 h-4 text-gray-700"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-              />
-            </svg>
+            <FontAwesomeIcon icon="copy" class="text-gray-700" />
           </button>
 
           <!-- Regenerate Thumbnails Button (only for non-SVG) -->
           <button
             v-if="mediaStore.canHaveThumbnails(item)"
             type="button"
-            class="p-2 bg-white rounded-lg hover:bg-blue-50 transition-colors"
+            class="p-2 bg-white rounded-lg hover:bg-gray-100 transition-colors"
             :title="
               regeneratedId === item.id
                 ? 'Regeneriert!'
@@ -358,79 +258,31 @@ function isSvg(item: MediaItem): boolean {
             :disabled="regeneratingId === item.id"
             @click="regenerateThumbnails(item)"
           >
-            <!-- Success icon -->
-            <svg
+            <FontAwesomeIcon
               v-if="regeneratedId === item.id"
-              class="w-4 h-4 text-green-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            <!-- Loading spinner -->
-            <svg
+              icon="check"
+              class="text-gray-700"
+            />
+            <FontAwesomeIcon
               v-else-if="regeneratingId === item.id"
-              class="w-4 h-4 text-vsg-blue-600 animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
-            <!-- Default refresh icon -->
-            <svg
+              icon="spinner"
+              class="text-gray-700 animate-spin"
+            />
+            <FontAwesomeIcon
               v-else
-              class="w-4 h-4 text-vsg-blue-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
+              icon="arrows-rotate"
+              class="text-gray-700"
+            />
           </button>
 
           <!-- Delete Button -->
           <button
             type="button"
-            class="p-2 bg-white rounded-lg hover:bg-red-50 transition-colors"
-            title="Loschen"
+            class="p-2 bg-white rounded-lg text-gray-700 hover:text-red-600 hover:bg-red-100 transition-colors"
+            title="Löschen"
             @click="confirmDelete(item)"
           >
-            <svg
-              class="w-4 h-4 text-red-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-              />
-            </svg>
+            <FontAwesomeIcon icon="trash" />
           </button>
         </div>
 
@@ -463,19 +315,7 @@ function isSvg(item: MediaItem): boolean {
             class="absolute -top-10 right-0 p-2 text-white hover:text-gray-300 transition-colors"
             @click="closePreview"
           >
-            <svg
-              class="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <FontAwesomeIcon icon="xmark" />
           </button>
 
           <!-- Image -->
@@ -495,40 +335,16 @@ function isSvg(item: MediaItem): boolean {
             <div v-if="mediaStore.canHaveThumbnails(previewItem)" class="mt-2">
               <span
                 v-if="mediaStore.hasThumbnails(previewItem)"
-                class="inline-flex items-center gap-1 px-2 py-1 bg-green-600/80 rounded text-xs text-white"
+                class="inline-flex items-center gap-1 px-2 py-1 bg-green-600/80 rounded text-white"
               >
-                <svg
-                  class="w-3 h-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <FontAwesomeIcon icon="check" />
                 Thumbnails vorhanden
               </span>
               <span
                 v-else
                 class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-600/80 rounded text-xs text-white"
               >
-                <svg
-                  class="w-3 h-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                  />
-                </svg>
+                <FontAwesomeIcon icon="triangle-exclamation" />
                 Keine Thumbnails
               </span>
             </div>
@@ -548,11 +364,11 @@ function isSvg(item: MediaItem): boolean {
           <h3
             class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4"
           >
-            MEDIUM LOSCHEN
+            Medium löschen
           </h3>
           <p class="font-body text-gray-600 mb-6">
-            Mochtest du dieses Medium wirklich loschen? Diese Aktion kann nicht
-            ruckgangig gemacht werden.
+            Möchtest du dieses Medium wirklich löschen? Diese Aktion kann nicht
+            rückgängig gemacht werden.
           </p>
 
           <div v-if="itemToDelete" class="flex items-center gap-4 mb-6">
@@ -584,7 +400,7 @@ function isSvg(item: MediaItem): boolean {
               class="px-4 py-2 bg-red-600 text-white font-body text-sm rounded-lg hover:bg-red-700 transition-colors"
               @click="executeDelete"
             >
-              Loschen
+              Löschen
             </button>
           </div>
         </div>
@@ -602,12 +418,12 @@ function isSvg(item: MediaItem): boolean {
           <h3
             class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4"
           >
-            ORDNER LOSCHEN
+            Ordner löschen
           </h3>
           <p class="font-body text-gray-600 mb-6">
-            Mochtest du den Ordner
-            <strong>{{ folderToDelete?.name }}</strong> wirklich loschen? Alle
-            Unterordner werden ebenfalls geloscht. Medien in diesem Ordner
+            Möchtest du den Ordner
+            <strong>{{ folderToDelete?.name }}</strong> wirklich löschen? Alle
+            Unterordner werden ebenfalls gelöscht. Medien in diesem Ordner
             werden in das Hauptverzeichnis verschoben.
           </p>
 
@@ -624,7 +440,7 @@ function isSvg(item: MediaItem): boolean {
               class="px-4 py-2 bg-red-600 text-white font-body text-sm rounded-lg hover:bg-red-700 transition-colors"
               @click="executeDeleteFolder"
             >
-              Loschen
+              Löschen
             </button>
           </div>
         </div>
@@ -645,7 +461,7 @@ function isSvg(item: MediaItem): boolean {
             MEDIUM VERSCHIEBEN
           </h3>
           <p class="font-body text-gray-600 mb-4">
-            Wohin mochtest du
+            Wohin möchtest du
             <strong>{{ itemToMove?.originalName }}</strong> verschieben?
           </p>
 
@@ -657,19 +473,7 @@ function isSvg(item: MediaItem): boolean {
               class="w-full text-left px-4 py-3 hover:bg-vsg-blue-50 border-b border-gray-100 flex items-center gap-3 transition-colors"
               @click="executeMove(null)"
             >
-              <svg
-                class="w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                />
-              </svg>
+              <FontAwesomeIcon icon="house" class="text-gray-400" />
               <span class="font-body text-sm text-vsg-blue-900"
                 >Mediathek (Root)</span
               >
@@ -683,15 +487,7 @@ function isSvg(item: MediaItem): boolean {
               class="w-full text-left px-4 py-3 hover:bg-vsg-blue-50 border-b border-gray-100 last:border-0 flex items-center gap-3 transition-colors"
               @click="executeMove(folder.id)"
             >
-              <svg
-                class="w-5 h-5 text-vsg-blue-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                />
-              </svg>
+              <FontAwesomeIcon icon="folder" class="text-vsg-blue-400" />
               <span class="font-body text-sm text-vsg-blue-900">{{
                 folder.name
               }}</span>

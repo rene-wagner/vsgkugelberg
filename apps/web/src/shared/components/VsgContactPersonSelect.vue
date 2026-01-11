@@ -4,6 +4,7 @@ import {
   useContactPersonsStore,
   type ContactPerson,
 } from '@/modules/admin/stores/contactPersonsStore';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
   modelValue: number | null;
@@ -116,7 +117,7 @@ watch(isOpen, (open) => {
           {{ selectedPerson.firstName }} {{ selectedPerson.lastName }}
         </span>
       </div>
-      <span v-else class="text-gray-400">Ansprechpartner auswahlen...</span>
+      <span v-else class="text-gray-400">Ansprechpartner auswählen...</span>
 
       <div class="flex items-center gap-2">
         <button
@@ -125,34 +126,13 @@ watch(isOpen, (open) => {
           class="text-gray-400 hover:text-gray-600"
           @click.stop="clearSelection"
         >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <FontAwesomeIcon icon="xmark" />
         </button>
-        <svg
-          class="w-5 h-5 text-gray-400 transition-transform"
+        <FontAwesomeIcon
+          icon="chevron-down"
+          class="text-gray-400 transition-transform"
           :class="{ 'rotate-180': isOpen }"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+        />
       </div>
     </div>
 

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { ref } from 'vue';
 
 interface AccordionItem {
@@ -40,20 +41,11 @@ const toggle = (id: string | number) => {
         <span class="font-display text-xl text-vsg-gold-600">{{
           item.title
         }}</span>
-        <svg
-          class="w-6 h-6 accordion-icon transition-transform duration-300 text-vsg-blue-900"
+        <FontAwesomeIcon
+          icon="chevron-down"
+          class="accordion-icon transition-transform duration-300 text-vsg-blue-900"
           :class="{ 'rotate-180': activeId === item.id }"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          ></path>
-        </svg>
+        />
       </button>
       <div
         class="accordion-content transition-all duration-300 ease-out overflow-hidden"

@@ -21,7 +21,7 @@ async function handleSubmit() {
     if (success) {
       router.push('/admin');
     } else {
-      error.value = 'Ungultiger Benutzername oder Passwort';
+      error.value = 'Ungültiger Benutzername oder Passwort';
     }
   } catch {
     error.value = 'Ein Fehler ist aufgetreten. Bitte versuche es erneut.';

@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import { useContactPersonsStore } from '../stores/contactPersonsStore';
 import VsgPagination from '@/shared/components/VsgPagination.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const contactPersonsStore = useContactPersonsStore();
 
@@ -15,7 +16,7 @@ async function handlePageChange(page: number) {
 
 async function handleDelete(id: number, firstName: string, lastName: string) {
   const confirmed = window.confirm(
-    `Mochtest du den Ansprechpartner "${firstName} ${lastName}" wirklich loschen?`,
+    `Möchtest du den Ansprechpartner "${firstName} ${lastName}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -39,7 +40,7 @@ async function handleDelete(id: number, firstName: string, lastName: string) {
         to="/admin/kontakt/new"
         class="px-6 py-2.5 bg-vsg-gold-400 text-vsg-blue-900 font-display text-sm tracking-wider rounded-lg hover:bg-vsg-gold-300 transition-colors"
       >
-        ANSPRECHPARTNER HINZUFUGEN
+        Ansprechpartner hinzufügen
       </router-link>
     </div>
 
@@ -124,23 +125,11 @@ async function handleDelete(id: number, firstName: string, lastName: string) {
                     class="p-2 text-gray-400 hover:text-vsg-blue-600 transition-colors"
                     title="Bearbeiten"
                   >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon="pen-to-square" />
                   </router-link>
                   <button
                     class="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                    title="Loschen"
+                    title="Löschen"
                     @click="
                       handleDelete(
                         contactPerson.id,
@@ -149,19 +138,7 @@ async function handleDelete(id: number, firstName: string, lastName: string) {
                       )
                     "
                   >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon="trash" />
                   </button>
                 </div>
               </td>

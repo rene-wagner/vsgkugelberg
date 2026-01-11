@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 interface Fact {
   label: string;
   value: string;
@@ -21,19 +23,7 @@ defineProps<{
       class="font-display text-2xl text-vsg-gold-600 mb-6 flex items-center gap-3"
     >
       <slot name="icon">
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-          ></path>
-        </svg>
+        <FontAwesomeIcon icon="check" class="text-vsg-gold-600" />
       </slot>
       {{ title }}
     </h3>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useDepartmentLocationsStore } from '../stores/departmentLocationsStore';
 import LocationCard from './LocationCard.vue';
 import type {
@@ -279,25 +280,12 @@ async function handleSave() {
       v-if="displayLocations.length === 0"
       class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300"
     >
-      <svg
-        class="w-12 h-12 text-gray-400 mx-auto mb-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-        />
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-        />
-      </svg>
+      <FontAwesomeIcon
+        icon="location-dot"
+        size="2x"
+        class="mb-4 text-gray-400"
+      />
+
       <p class="text-gray-500 font-body mb-4">
         Noch keine Standorte vorhanden.
       </p>
@@ -345,19 +333,7 @@ async function handleSave() {
         class="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-vsg-blue-400 hover:text-vsg-blue-600 transition-colors font-body text-sm flex items-center justify-center gap-2"
         @click="handleAdd"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <FontAwesomeIcon icon="plus" />
         Standort hinzufügen
       </button>
     </template>
@@ -370,7 +346,7 @@ async function handleSave() {
         :disabled="isSaving"
         @click="handleSave"
       >
-        {{ isSaving ? 'SPEICHERN...' : 'SPEICHERN' }}
+        {{ isSaving ? 'Speichern...' : 'Speichern' }}
       </button>
     </div>
   </div>

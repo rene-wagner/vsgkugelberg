@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { ref, computed, onMounted } from 'vue';
 
 const props = defineProps<{
@@ -194,19 +195,10 @@ const clearSuccess = () => {
         aria-live="polite"
       >
         <div class="flex items-start gap-3">
-          <svg
-            class="w-5 h-5 text-green-600 mt-0.5 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+          <FontAwesomeIcon
+            icon="check"
+            class="text-green-600 mt-0.5 shrink-0"
+          />
           <div class="flex-1">
             <p class="font-body text-green-800">
               Ihre Nachricht wurde erfolgreich gesendet. Vielen Dank fuer Ihre
@@ -239,19 +231,10 @@ const clearSuccess = () => {
         aria-live="polite"
       >
         <div class="flex items-start gap-3">
-          <svg
-            class="w-5 h-5 text-red-600 mt-0.5 shrink-0"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
+          <FontAwesomeIcon
+            icon="exclamation-triangle"
+            class="text-red-600 mt-0.5 shrink-0"
+          />
           <p class="font-body text-red-800">{{ submitError }}</p>
         </div>
       </div>
@@ -259,7 +242,6 @@ const clearSuccess = () => {
 
     <!-- Form -->
     <form v-if="!submitSuccess" class="space-y-5" @submit.prevent="submitForm">
-      <!-- Honeypot field - hidden from users -->
       <div
         class="absolute"
         style="left: -9999px; position: absolute"
@@ -410,26 +392,7 @@ const clearSuccess = () => {
             v-if="isSubmitting"
             class="flex items-center justify-center gap-2"
           >
-            <svg
-              class="animate-spin h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                class="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                stroke-width="4"
-              ></circle>
-              <path
-                class="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-              ></path>
-            </svg>
+            <FontAwesomeIcon icon="spinner" spin />
             Wird gesendet...
           </span>
           <span v-else>Nachricht senden</span>

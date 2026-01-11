@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VsgButton from '@shared/components/VsgButton.vue';
 </script>
 
@@ -53,28 +54,16 @@ import VsgButton from '@shared/components/VsgButton.vue';
         class="animate-slide-up mt-12 flex flex-col items-center justify-center gap-6 delay-500 sm:flex-row"
       >
         <VsgButton variant="primary" size="lg" :glow="true">
-          JETZT BEITRETEN
+          Jetzt beitreten
         </VsgButton>
-        <VsgButton variant="outline" size="lg"> MEHR ERFAHREN </VsgButton>
+        <VsgButton variant="outline" size="lg"> Mehr erfahren </VsgButton>
       </div>
 
       <!-- Scroll indicator -->
       <div
         class="absolute bottom-1 left-1/2 -translate-x-1/2 animate-bounce delay-700"
       >
-        <svg
-          class="h-8 w-8 text-vsg-gold-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"
-          />
-        </svg>
+        <FontAwesomeIcon icon="arrow-down" class="text-vsg-gold-400" />
       </div>
     </div>
   </section>

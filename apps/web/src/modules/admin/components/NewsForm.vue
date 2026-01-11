@@ -133,7 +133,7 @@ async function handleDelete() {
   if (!props.newsItem) return;
 
   const confirmed = window.confirm(
-    `Mochtest du den Artikel "${props.newsItem.title}" wirklich löschen?`,
+    `Möchtest du den Artikel "${props.newsItem.title}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -260,7 +260,7 @@ function updateThumbnail(media: MediaItem | null) {
             for="published"
             class="font-body font-normal text-sm text-vsg-blue-900"
           >
-            Artikel veroffentlichen
+            Artikel veröffentlichen
           </label>
         </div>
       </div>
@@ -269,7 +269,7 @@ function updateThumbnail(media: MediaItem | null) {
     <!-- Categories Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        KATEGORIEN
+        Kategorien
       </h2>
 
       <div
@@ -334,7 +334,7 @@ function updateThumbnail(media: MediaItem | null) {
           class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           :disabled="!canSubmit || isSubmitting"
         >
-          {{ isSubmitting ? 'SPEICHERN...' : 'SPEICHERN' }}
+          {{ isSubmitting ? 'Speichern...' : 'Speichern' }}
         </button>
       </div>
     </div>

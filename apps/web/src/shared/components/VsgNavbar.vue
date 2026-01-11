@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import VsgButton from './VsgButton.vue';
 import { useDefaultDepartmentsStore } from '@modules/default/stores/departmentsStore';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 interface MenuItem {
   label: string;
@@ -94,19 +95,10 @@ function toggleAbteilungen() {
               class="flex items-center gap-1 font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             >
               Verein
-              <svg
-                class="h-4 w-4 transition-transform group-hover:rotate-180"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+              <FontAwesomeIcon
+                icon="chevron-down"
+                class="transition-transform group-hover:rotate-180"
+              />
             </button>
             <div
               class="invisible absolute left-0 top-full mt-2 w-48 translate-y-2 transform rounded-lg border border-vsg-gold-400/20 bg-vsg-blue-900 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
@@ -130,19 +122,10 @@ function toggleAbteilungen() {
               class="flex items-center gap-1 font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             >
               Abteilungen
-              <svg
-                class="h-4 w-4 transition-transform group-hover:rotate-180"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+              <FontAwesomeIcon
+                icon="chevron-down"
+                class="transition-transform group-hover:rotate-180"
+              />
             </button>
             <div
               class="invisible absolute left-0 top-full mt-2 w-48 translate-y-2 transform rounded-lg border border-vsg-gold-400/20 bg-vsg-blue-900 opacity-0 shadow-xl transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100"
@@ -186,13 +169,13 @@ function toggleAbteilungen() {
             class="font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             >Kontakt</RouterLink
           >
-          <VsgButton variant="primary" size="md">MITGLIED WERDEN</VsgButton>
+          <VsgButton variant="primary" size="md">Mitglied werden</VsgButton>
         </div>
 
         <!-- Mobile Burger Button -->
         <button
           class="group flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
-          :aria-label="isMenuOpen ? 'Menu schliessen' : 'Menu offnen'"
+          :aria-label="isMenuOpen ? 'Menü schließen' : 'Menü öffnen'"
           @click="toggleMenu"
         >
           <span
@@ -228,21 +211,12 @@ function toggleAbteilungen() {
           class="flex w-full items-center justify-between font-display text-4xl tracking-wider text-white transition-colors hover:text-vsg-gold-400"
           @click="toggleVerein"
         >
-          <span>VEREIN</span>
-          <svg
-            class="h-6 w-6 shrink-0 transition-transform duration-300"
+          <span>Verein</span>
+          <FontAwesomeIcon
+            icon="chevron-down"
+            class="shrink-0 transition-transform duration-300"
             :class="{ 'rotate-180': isVereinOpen }"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+          />
         </button>
         <div
           class="mt-4 flex flex-col gap-3 overflow-hidden pl-4 transition-all duration-300"
@@ -266,21 +240,12 @@ function toggleAbteilungen() {
           class="flex w-full items-center justify-between font-display text-4xl tracking-wider text-white transition-colors hover:text-vsg-gold-400"
           @click="toggleAbteilungen"
         >
-          <span>ABTEILUNGEN</span>
-          <svg
-            class="h-6 w-6 shrink-0 transition-transform duration-300"
+          <span>Abteilungen</span>
+          <FontAwesomeIcon
+            icon="chevron-down"
+            class="shrink-0 transition-transform duration-300"
             :class="{ 'rotate-180': isAbteilungenOpen }"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
+          />
         </button>
         <div
           class="mt-4 flex flex-col gap-3 overflow-hidden pl-4 transition-all duration-300"
@@ -316,7 +281,7 @@ function toggleAbteilungen() {
           href="#"
           class="block font-display text-4xl tracking-wider text-white transition-colors hover:text-vsg-gold-400"
           @click="closeMenu"
-          >TERMINE</a
+          >Termine</a
         >
       </div>
       <div class="mb-4 w-full max-w-xs">
@@ -324,14 +289,14 @@ function toggleAbteilungen() {
           to="/kontakt"
           class="block font-display text-4xl tracking-wider text-white transition-colors hover:text-vsg-gold-400"
           @click="closeMenu"
-          >KONTAKT</RouterLink
+          >Kontakt</RouterLink
         >
       </div>
       <button
         class="mt-8 bg-vsg-gold-400 px-8 py-4 font-display text-2xl tracking-wider text-vsg-blue-900"
         @click="closeMenu"
       >
-        MITGLIED WERDEN
+        Mitglied werden
       </button>
     </div>
   </div>

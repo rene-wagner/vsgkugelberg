@@ -6,6 +6,7 @@ import type {
   ContactPersonMedia,
 } from '../types/department-extended.types';
 import ImageSelector from './ImageSelector.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
   location: DepartmentLocation & { _isNew?: boolean };
@@ -131,21 +132,9 @@ function handleRemoveAmenity(index: number) {
     >
       <!-- Drag Handle -->
       <div
-        class="cursor-grab text-gray-400 hover:text-gray-600 location-drag-handle flex-shrink-0"
+        class="cursor-grab text-gray-400 hover:text-gray-600 location-drag-handle shrink-0"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 8h16M4 16h16"
-          />
-        </svg>
+        <FontAwesomeIcon icon="grip" />
       </div>
 
       <!-- Expand/Collapse Toggle -->
@@ -154,42 +143,15 @@ function handleRemoveAmenity(index: number) {
         class="p-1 hover:bg-gray-200 rounded transition-colors"
         @click="isExpanded = !isExpanded"
       >
-        <svg
-          class="w-5 h-5 text-gray-500 transition-transform"
+        <FontAwesomeIcon
+          icon="chevron-down"
+          class="text-gray-500 transition-transform"
           :class="{ 'rotate-180': !isExpanded }"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
+        />
       </button>
 
       <!-- Location Icon -->
-      <svg
-        class="w-5 h-5 text-vsg-blue-600 flex-shrink-0"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-        />
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-        />
-      </svg>
+      <FontAwesomeIcon icon="location-dot" class="text-vsg-blue-600" />
 
       <!-- Location Name -->
       <div class="flex-1 min-w-0">
@@ -216,19 +178,7 @@ function handleRemoveAmenity(index: number) {
         title="Standort löschen"
         @click="handleDelete"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-          />
-        </svg>
+        <FontAwesomeIcon icon="trash" />
       </button>
     </div>
 
@@ -345,19 +295,7 @@ function handleRemoveAmenity(index: number) {
               class="p-0.5 text-gray-400 hover:text-red-500 rounded-full"
               @click="handleRemoveAmenity(index)"
             >
-              <svg
-                class="w-3 h-3"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <FontAwesomeIcon icon="xmark" />
             </button>
           </div>
         </div>

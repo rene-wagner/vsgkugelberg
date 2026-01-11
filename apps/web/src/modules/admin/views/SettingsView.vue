@@ -28,23 +28,11 @@ onMounted(async () => {
         >
           Dashboard
         </router-link>
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
+        <FontAwesomeIcon icon="chevron-right" />
         <span class="text-vsg-blue-600">Einstellungen</span>
       </div>
       <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
-        VEREINSEINSTELLUNGEN
+        Vereinseinstellungen
       </h1>
       <p class="font-body font-normal text-vsg-blue-600 mt-1">
         Verwalte die globalen Vereinsdaten

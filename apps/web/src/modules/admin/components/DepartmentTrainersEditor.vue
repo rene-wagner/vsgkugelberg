@@ -9,6 +9,7 @@ import type {
   CreateDepartmentTrainerDto,
   UpdateDepartmentTrainerDto,
 } from '../types/department-extended.types';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 interface LocalTrainer extends DepartmentTrainer {
   _isNew?: boolean;
@@ -279,19 +280,11 @@ async function handleSave() {
       v-if="displayTrainers.length === 0"
       class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300"
     >
-      <svg
-        class="w-12 h-12 text-gray-400 mx-auto mb-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-        />
-      </svg>
+      <FontAwesomeIcon
+        icon="people-group"
+        size="2x"
+        class="mb-4 text-gray-400"
+      />
       <p class="text-gray-500 font-body mb-4">Noch keine Trainer vorhanden.</p>
       <button
         type="button"
@@ -338,19 +331,7 @@ async function handleSave() {
         class="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-vsg-blue-400 hover:text-vsg-blue-600 transition-colors font-body text-sm flex items-center justify-center gap-2"
         @click="handleAdd"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <FontAwesomeIcon icon="plus" />
         Trainer hinzufügen
       </button>
     </template>
@@ -363,7 +344,7 @@ async function handleSave() {
         :disabled="isSaving"
         @click="handleSave"
       >
-        {{ isSaving ? 'SPEICHERN...' : 'SPEICHERN' }}
+        {{ isSaving ? 'Speichern...' : 'Speichern' }}
       </button>
     </div>
   </div>

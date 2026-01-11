@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import type { TrainingSession } from '../types/department-detail.types';
 
 interface Props {
@@ -42,20 +43,10 @@ defineProps<Props>();
         </td>
         <td class="block md:table-cell md:py-4 font-body text-gray-600">
           <div class="flex items-center gap-1.5">
-            <!-- Mobile Clock Icon -->
-            <svg
-              class="w-3.5 h-3.5 text-vsg-blue-400 md:hidden flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <FontAwesomeIcon
+              icon="clock"
+              class="text-vsg-blue-400 md:hidden! shrink-0"
+            />
             <span>{{ session.time }}</span>
           </div>
         </td>
@@ -63,26 +54,10 @@ defineProps<Props>();
           class="block md:table-cell md:py-4 font-body text-gray-500 md:text-gray-600 mt-1 md:mt-0"
         >
           <div class="flex items-center gap-1.5">
-            <!-- Mobile Map Pin Icon -->
-            <svg
-              class="w-3.5 h-3.5 text-vsg-blue-400 md:hidden flex-shrink-0"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
+            <FontAwesomeIcon
+              icon="location-dot"
+              class="text-vsg-blue-400 md:hidden! shrink-0"
+            />
             <span class="text-sm md:text-base">
               {{ session.locationName || '-' }}
             </span>

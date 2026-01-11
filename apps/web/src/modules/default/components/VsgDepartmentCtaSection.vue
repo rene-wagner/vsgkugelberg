@@ -31,10 +31,12 @@ const isSecondaryExternal = computed(() => {
 
     <div class="relative z-10 mx-auto max-w-4xl px-6 text-center">
       <!-- Title with line breaks preserved -->
+      <!-- eslint-disable vue/no-v-html -->
       <h3
         class="font-display text-5xl leading-tight tracking-wider text-vsg-blue-900 md:text-7xl lg:text-8xl"
         v-html="title"
       />
+      <!-- eslint-enable vue/no-v-html -->
 
       <p
         class="mx-auto mt-6 max-w-2xl font-body text-xl font-normal text-vsg-blue-800"

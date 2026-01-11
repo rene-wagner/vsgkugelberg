@@ -78,7 +78,7 @@ onMounted(() => {
           <h5
             class="mb-6 font-display text-xl tracking-wider text-vsg-gold-400"
           >
-            VEREIN
+            Verein
           </h5>
           <ul class="space-y-3">
             <li v-for="link in vereinLinks" :key="link.label">

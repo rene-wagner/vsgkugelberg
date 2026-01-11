@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { useCategoriesStore, type Category } from '../stores/categoriesStore';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const categoriesStore = useCategoriesStore();
 
@@ -54,7 +55,7 @@ onMounted(() => {
 
 async function handleDelete(slug: string, name: string) {
   const confirmed = window.confirm(
-    `Mochtest du die Kategorie "${name}" wirklich löschen?`,
+    `Möchtest du die Kategorie "${name}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -63,7 +64,7 @@ async function handleDelete(slug: string, name: string) {
 
 async function handleRecalculateSlugs() {
   const confirmed = window.confirm(
-    'Mochtest du wirklich alle Slug-Neuberechnungen durchfuhren?',
+    'Möchtest du wirklich alle Slug-Neuberechnungen durchführen?',
   );
   if (!confirmed) return;
 
@@ -80,7 +81,7 @@ async function handleRecalculateSlugs() {
     <div class="mb-8 flex items-start justify-between">
       <div>
         <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
-          KATEGORIEN
+          Kategorien
         </h1>
         <p class="font-body font-normal text-vsg-blue-600 mt-1">
           Verwalte alle Kategorien
@@ -102,7 +103,7 @@ async function handleRecalculateSlugs() {
           to="/admin/kategorien/new"
           class="px-6 py-2.5 bg-vsg-gold-400 text-vsg-blue-900 font-display text-sm tracking-wider rounded-lg hover:bg-vsg-gold-300 transition-colors"
         >
-          KATEGORIE HINZUFUGEN
+          Kategorie hinzufügen
         </router-link>
       </div>
     </div>
@@ -135,19 +136,7 @@ async function handleRecalculateSlugs() {
         class="text-green-600 hover:text-green-700"
         @click="categoriesStore.successMessage = null"
       >
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
+        <FontAwesomeIcon icon="xmark" />
       </button>
     </div>
 
@@ -215,38 +204,14 @@ async function handleRecalculateSlugs() {
                     class="p-2 text-gray-400 hover:text-vsg-blue-600 transition-colors"
                     title="Bearbeiten"
                   >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon="pen-to-square" />
                   </router-link>
                   <button
                     class="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                    title="löschen"
+                    title="Löschen"
                     @click="handleDelete(category.slug, category.name)"
                   >
-                    <svg
-                      class="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon="trash" />
                   </button>
                 </div>
               </td>

@@ -4,6 +4,7 @@ import { useMediaStore } from '../stores/mediaStore';
 import type { RegenerateThumbnailsResult } from '../stores/mediaStore';
 import MediaUploadZone from '../components/MediaUploadZone.vue';
 import MediaGallery from '../components/MediaGallery.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const mediaStore = useMediaStore();
 
@@ -138,19 +139,7 @@ async function executeRegenerateAll() {
           class="px-4 py-2 border border-gray-300 text-gray-600 font-body text-sm rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
           @click="navigateUp"
         >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
+          <FontAwesomeIcon icon="arrow-left" />
           Ebene nach oben
         </button>
         <button
@@ -158,19 +147,7 @@ async function executeRegenerateAll() {
           class="px-4 py-2 border border-vsg-blue-200 text-vsg-blue-700 font-body text-sm rounded-lg hover:bg-vsg-blue-50 transition-colors flex items-center gap-2"
           @click="showNewFolderModal = true"
         >
-          <svg
-            class="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
-            />
-          </svg>
+          <FontAwesomeIcon icon="folder-plus" />
           Neuer Ordner
         </button>
       </div>
@@ -222,19 +199,7 @@ async function executeRegenerateAll() {
             }"
             @click="openRegenerateConfirm"
           >
-            <svg
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
+            <FontAwesomeIcon icon="arrows-rotate" />
             Alle Thumbnails regenerieren
           </button>
         </div>
@@ -260,12 +225,12 @@ async function executeRegenerateAll() {
           <!-- Confirmation State -->
           <div v-if="!mediaStore.isRegenerating && !regenerateResult">
             <p class="font-body text-gray-600 mb-6">
-              Mochtest du die Thumbnails fur alle {{ totalCount }} Medien neu
+              Möchtest du die Thumbnails für alle {{ totalCount }} Medien neu
               generieren? Dieser Vorgang kann einige Zeit dauern.
             </p>
             <p class="font-body text-sm text-gray-500 mb-6">
-              SVG-Dateien werden ubersprungen, da sie keine Thumbnails
-              benotigen.
+              SVG-Dateien werden übersprungen, da sie keine Thumbnails
+              benötigen.
             </p>
 
             <div class="flex justify-end gap-3">
@@ -305,19 +270,7 @@ async function executeRegenerateAll() {
               class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6"
             >
               <div class="flex items-center gap-2 mb-2">
-                <svg
-                  class="w-5 h-5 text-green-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
+                <FontAwesomeIcon icon="check" class="text-green-600" />
                 <span class="font-body font-medium text-green-800">
                   Regenerierung abgeschlossen
                 </span>

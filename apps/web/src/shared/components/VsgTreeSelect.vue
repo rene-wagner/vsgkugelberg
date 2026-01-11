@@ -115,20 +115,11 @@ onUnmounted(() => {
       <span :class="selectedLabel ? 'text-vsg-blue-900' : 'text-gray-400'">
         {{ selectedLabel || placeholder }}
       </span>
-      <svg
+      <FontAwesomeIcon
+        icon="chevron-down"
         class="w-4 h-4 text-gray-400 transition-transform"
         :class="{ 'rotate-180': isOpen }"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M19 9l-7 7-7-7"
-        />
-      </svg>
+      />
     </button>
 
     <!-- Dropdown -->

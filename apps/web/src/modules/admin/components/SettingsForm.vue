@@ -82,7 +82,7 @@ async function handleSubmit() {
     <!-- Club Information Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        VEREINSDATEN
+        Vereinsdaten
       </h2>
 
       <div class="space-y-6">
@@ -144,7 +144,7 @@ async function handleSubmit() {
     <!-- Contact Information Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        KONTAKTDATEN
+        Kontaktdaten
       </h2>
 
       <div class="space-y-6">
@@ -192,7 +192,7 @@ async function handleSubmit() {
         class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         :disabled="settingsStore.isSaving"
       >
-        {{ settingsStore.isSaving ? 'SPEICHERN...' : 'SPEICHERN' }}
+        {{ settingsStore.isSaving ? 'Speichern...' : 'Speichern' }}
       </button>
     </div>
   </form>

@@ -12,6 +12,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   lazy: true,
+  width: 0,
+  height: 0,
   className: '',
 });
 

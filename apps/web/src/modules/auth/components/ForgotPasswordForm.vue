@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useAuthStore } from '../stores/authStore';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const email = ref('');
 const error = ref('');
@@ -40,19 +41,7 @@ async function handleSubmit() {
     <div
       class="w-16 h-16 mx-auto mb-4 bg-vsg-gold-400/20 rounded-full flex items-center justify-center"
     >
-      <svg
-        class="w-8 h-8 text-vsg-gold-400"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M5 13l4 4L19 7"
-        />
-      </svg>
+      <FontAwesomeIcon icon="check" class="text-vsg-gold-400" />
     </div>
     <p class="font-body font-normal text-vsg-blue-100">
       {{ successMessage }}

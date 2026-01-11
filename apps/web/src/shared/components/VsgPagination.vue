@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { computed } from 'vue';
 
 interface PaginationMeta {
@@ -80,19 +81,7 @@ const endEntry = computed(() =>
         :disabled="meta.page === 1"
         @click="goToPage(meta.page - 1)"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 19l-7-7 7-7"
-          />
-        </svg>
+        <FontAwesomeIcon icon="chevron-left" />
       </button>
 
       <!-- Page Numbers -->
@@ -105,7 +94,7 @@ const endEntry = computed(() =>
         </span>
         <button
           v-else
-          class="min-w-[32px] px-3 py-1 rounded-lg font-body text-sm transition-all"
+          class="min-w-8 px-3 py-1 rounded-lg font-body text-sm transition-all"
           :class="[
             page === meta.page
               ? 'bg-vsg-blue-600 text-white font-medium shadow-sm'
@@ -123,19 +112,7 @@ const endEntry = computed(() =>
         :disabled="meta.page === meta.totalPages"
         @click="goToPage(meta.page + 1)"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
+        <FontAwesomeIcon icon="chevron-right" />
       </button>
     </div>
   </div>

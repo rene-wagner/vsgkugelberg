@@ -112,7 +112,7 @@ async function handleDelete() {
   if (!props.department) return;
 
   const confirmed = window.confirm(
-    `Mochtest du die Abteilung "${props.department.name}" wirklich löschen?`,
+    `Möchtest du die Abteilung "${props.department.name}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -125,7 +125,7 @@ async function handleDelete() {
   if (success) {
     router.push('/admin/departments');
   } else {
-    error.value = departmentsStore.error || 'Fehler beim löschen der Abteilung';
+    error.value = departmentsStore.error || 'Fehler beim Löschen der Abteilung';
   }
 }
 
@@ -147,7 +147,7 @@ function handleCancel() {
     <!-- Department Data Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
-        ABTEILUNGSDATEN
+        Abteilungsdaten
       </h2>
 
       <div class="space-y-6">
@@ -232,7 +232,7 @@ function handleCancel() {
           class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           :disabled="!canSubmit || isSubmitting"
         >
-          {{ isSubmitting ? 'SPEICHERN...' : 'SPEICHERN' }}
+          {{ isSubmitting ? 'Speichern...' : 'Speichern' }}
         </button>
       </div>
     </div>

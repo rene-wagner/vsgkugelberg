@@ -10,6 +10,7 @@ import type {
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 import HistoryFactRow from './HistoryFactRow.vue';
 import HistoryMilestoneRow from './HistoryMilestoneRow.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
   history: HistoryContent;
@@ -160,19 +161,7 @@ async function handleSubmit() {
           class="w-full py-3 border-2 border-dashed border-gray-200 rounded-lg text-gray-400 hover:border-vsg-blue-400 hover:text-vsg-blue-600 transition-all font-body text-sm flex items-center justify-center gap-2"
           @click="addFact"
         >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
+          <FontAwesomeIcon icon="plus" />
           Eckdatum hinzufügen
         </button>
       </div>
@@ -220,19 +209,7 @@ async function handleSubmit() {
           class="w-full py-3 border-2 border-dashed border-gray-200 rounded-lg text-gray-400 hover:border-vsg-blue-400 hover:text-vsg-blue-600 transition-all font-body text-sm flex items-center justify-center gap-2"
           @click="addMilestone"
         >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
+          <FontAwesomeIcon icon="plus" />
           Meilenstein hinzufügen
         </button>
       </div>
@@ -244,7 +221,7 @@ async function handleSubmit() {
         class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         :disabled="historyStore.isSaving"
       >
-        {{ historyStore.isSaving ? 'SPEICHERN...' : 'SPEICHERN' }}
+        {{ historyStore.isSaving ? 'Speichern...' : 'Speichern' }}
       </button>
     </div>
   </form>

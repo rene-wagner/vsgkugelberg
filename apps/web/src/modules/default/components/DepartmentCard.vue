@@ -18,13 +18,7 @@ withDefaults(defineProps<Props>(), {
       class="mb-6 flex h-16 w-16 items-center justify-center rounded-lg bg-vsg-blue-600/10 transition-colors group-hover:bg-vsg-blue-600/20"
     >
       <slot name="icon">
-        <svg
-          class="h-8 w-8 text-vsg-blue-600"
-          fill="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <circle cx="12" cy="12" r="10" />
-        </svg>
+        <FontAwesomeIcon icon="circle" class="text-vsg-blue-600" />
       </slot>
     </div>
     <h4 class="mb-3 font-display text-3xl tracking-wider text-vsg-blue-900">

@@ -4,6 +4,7 @@ import type {
   DepartmentTrainingSession,
   DepartmentLocation,
 } from '../types/department-extended.types';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
   session: DepartmentTrainingSession;
@@ -64,21 +65,9 @@ function handleDelete() {
   >
     <!-- Drag Handle -->
     <div
-      class="cursor-grab text-gray-400 hover:text-gray-600 session-drag-handle flex-shrink-0"
+      class="cursor-grab text-gray-400 hover:text-gray-600 session-drag-handle shrink-0"
     >
-      <svg
-        class="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M4 8h16M4 16h16"
-        />
-      </svg>
+      <FontAwesomeIcon icon="grip" />
     </div>
 
     <!-- Day Select -->
@@ -112,23 +101,11 @@ function handleDelete() {
     <!-- Delete Button -->
     <button
       type="button"
-      class="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors flex-shrink-0"
+      class="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors shrink-0"
       title="Trainingszeit löschen"
       @click="handleDelete"
     >
-      <svg
-        class="w-4 h-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M6 18L18 6M6 6l12 12"
-        />
-      </svg>
+      <FontAwesomeIcon icon="trash" />
     </button>
   </div>
 </template>

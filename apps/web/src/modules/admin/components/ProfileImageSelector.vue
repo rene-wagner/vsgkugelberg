@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { useMediaStore, type MediaItem } from '../stores/mediaStore';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
   modelValue: number | null;
@@ -131,27 +132,14 @@ async function handleFileUpload(event: Event) {
           :alt="previewImage.originalName"
           class="w-full h-full object-cover"
         />
-        <svg
-          v-else
-          class="w-12 h-12 text-gray-300"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-          />
-        </svg>
+        <FontAwesomeIcon v-else icon="user" class="text-gray-400" />
       </div>
 
       <!-- Actions -->
       <div class="flex-1 space-y-2">
         <p class="font-body text-sm text-gray-600">
           {{
-            previewImage ? previewImage.originalName : 'Kein Bild ausgewahlt'
+            previewImage ? previewImage.originalName : 'Kein Bild ausgewählt'
           }}
         </p>
 
@@ -161,7 +149,7 @@ async function handleFileUpload(event: Event) {
             class="px-3 py-1.5 text-xs font-body text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             @click="openGallery"
           >
-            Aus Mediathek wahlen
+            Aus Mediathek wählen
           </button>
 
           <button
@@ -213,26 +201,14 @@ async function handleFileUpload(event: Event) {
             class="flex items-center justify-between px-6 py-4 border-b border-gray-200"
           >
             <h3 class="font-display text-lg tracking-wider text-vsg-blue-900">
-              PROFILBILD WAHLEN
+              Profilbild wählen
             </h3>
             <button
               type="button"
               class="p-1 text-gray-400 hover:text-gray-600 transition-colors"
               @click="closeGallery"
             >
-              <svg
-                class="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
+              <FontAwesomeIcon icon="xmark" />
             </button>
           </div>
 
@@ -245,19 +221,7 @@ async function handleFileUpload(event: Event) {
                 class="flex items-center gap-2 text-sm font-body text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors"
                 @click="navigateUp"
               >
-                <svg
-                  class="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                  />
-                </svg>
+                <FontAwesomeIcon icon="arrow-left" />
                 Eine Ebene nach oben
               </button>
             </div>
@@ -267,19 +231,7 @@ async function handleFileUpload(event: Event) {
               <div
                 class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4"
               >
-                <svg
-                  class="w-8 h-8 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
+                <FontAwesomeIcon icon="image" class="w-8 h-8 text-gray-400" />
               </div>
               <p class="font-body text-gray-500">
                 Keine passenden Bilder in der Mediathek.
@@ -305,24 +257,7 @@ async function handleFileUpload(event: Event) {
                 class="aspect-square bg-gray-50 border border-gray-200 rounded-lg flex flex-col items-center justify-center hover:bg-gray-100 transition-colors"
                 @click="navigateUp"
               >
-                <svg
-                  class="w-8 h-8 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-                  />
-                </svg>
-                <span
-                  class="mt-1 font-body text-[10px] text-gray-600 font-medium"
-                >
-                  ..
-                </span>
+                <FontAwesomeIcon icon="arrow-left" class="text-gray-400" />
               </button>
 
               <!-- Folders -->
@@ -333,15 +268,7 @@ async function handleFileUpload(event: Event) {
                 class="aspect-square bg-vsg-blue-50 border border-vsg-blue-100 rounded-lg flex flex-col items-center justify-center hover:bg-vsg-blue-100 transition-colors"
                 @click="loadFolder(folder.id)"
               >
-                <svg
-                  class="w-8 h-8 text-vsg-blue-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                  />
-                </svg>
+                <FontAwesomeIcon icon="folder" class="text-vsg-blue-400" />
                 <span
                   class="mt-1 font-body text-[10px] text-vsg-blue-900 font-medium px-1 text-center truncate w-full"
                 >

@@ -6,6 +6,7 @@ import {
   type ContactPerson,
 } from '../stores/contactPersonsStore';
 import ContactPersonForm from '../components/ContactPersonForm.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const route = useRoute();
 const contactPersonsStore = useContactPersonsStore();
@@ -49,19 +50,7 @@ onMounted(async () => {
         >
           Ansprechpartner
         </router-link>
-        <svg
-          class="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M9 5l7 7-7 7"
-          />
-        </svg>
+        <FontAwesomeIcon icon="chevron-right" />
         <span class="text-vsg-blue-600">{{ breadcrumbAction }}</span>
       </div>
       <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">

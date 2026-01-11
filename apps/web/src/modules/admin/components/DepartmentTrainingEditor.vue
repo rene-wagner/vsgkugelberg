@@ -12,6 +12,7 @@ import type {
   CreateDepartmentTrainingSessionDto,
   UpdateDepartmentTrainingSessionDto,
 } from '../types/department-extended.types';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 interface LocalGroup extends DepartmentTrainingGroup {
   _isNew?: boolean;
@@ -583,19 +584,7 @@ async function handleSave() {
       v-if="displayGroups.length === 0"
       class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300"
     >
-      <svg
-        class="w-12 h-12 text-gray-400 mx-auto mb-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1.5"
-          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
+      <FontAwesomeIcon icon="clock" size="2x" class="mb-4 text-gray-400" />
       <p class="text-gray-500 font-body mb-4">
         Noch keine Trainingsgruppen vorhanden.
       </p>
@@ -663,19 +652,7 @@ async function handleSave() {
         class="w-full py-4 border-2 border-dashed border-gray-300 rounded-xl text-gray-500 hover:border-vsg-blue-400 hover:text-vsg-blue-600 transition-colors font-body text-sm flex items-center justify-center gap-2"
         @click="handleAddGroup"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
+        <FontAwesomeIcon icon="plus" />
         Trainingsgruppe hinzufügen
       </button>
     </template>
@@ -688,7 +665,7 @@ async function handleSave() {
         :disabled="isSaving"
         @click="handleSave"
       >
-        {{ isSaving ? 'SPEICHERN...' : 'SPEICHERN' }}
+        {{ isSaving ? 'Speichern...' : 'Speichern' }}
       </button>
     </div>
   </div>

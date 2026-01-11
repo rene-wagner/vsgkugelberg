@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 // Static board members page - placeholder for future integration with Contact Persons
 </script>
 
@@ -53,19 +55,7 @@
                   <div
                     class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-gold-400"
                   >
-                    <svg
-                      class="h-8 w-8 text-vsg-blue-900"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon="user" class="text-vsg-blue-900" />
                   </div>
                   <div>
                     <span
@@ -88,19 +78,7 @@
                   <div
                     class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-blue-200"
                   >
-                    <svg
-                      class="h-8 w-8 text-vsg-blue-900"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon="user" class="text-vsg-blue-900" />
                   </div>
                   <div>
                     <span
@@ -123,19 +101,7 @@
                   <div
                     class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-blue-200"
                   >
-                    <svg
-                      class="h-8 w-8 text-vsg-blue-900"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon="user" class="text-vsg-blue-900" />
                   </div>
                   <div>
                     <span
@@ -158,19 +124,7 @@
                   <div
                     class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-blue-200"
                   >
-                    <svg
-                      class="h-8 w-8 text-vsg-blue-900"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
+                    <FontAwesomeIcon icon="user" class="text-vsg-blue-900" />
                   </div>
                   <div>
                     <span
@@ -194,7 +148,7 @@
             >
               <p class="font-body text-lg text-vsg-blue-700">
                 <strong class="text-vsg-blue-900">Hinweis:</strong>
-                Fur Anfragen an den Vorstand nutzen Sie bitte unsere
+                Für Anfragen an den Vorstand nutzen Sie bitte unsere
                 <a
                   href="/kontakt"
                   class="text-vsg-gold-600 hover:text-vsg-gold-700 underline"

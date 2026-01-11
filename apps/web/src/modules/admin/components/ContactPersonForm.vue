@@ -118,7 +118,7 @@ async function handleDelete() {
   if (!props.contactPerson) return;
 
   const confirmed = window.confirm(
-    `Mochtest du den Ansprechpartner "${props.contactPerson.firstName} ${props.contactPerson.lastName}" wirklich loschen?`,
+    `Möchtest du den Ansprechpartner "${props.contactPerson.firstName} ${props.contactPerson.lastName}" wirklich löschen?`,
   );
   if (!confirmed) return;
 
@@ -132,7 +132,7 @@ async function handleDelete() {
     router.push('/admin/contact-persons');
   } else {
     error.value =
-      contactPersonsStore.error || 'Fehler beim loschen des Ansprechpartners';
+      contactPersonsStore.error || 'Fehler beim Löschen des Ansprechpartners';
   }
 }
 
@@ -307,14 +307,14 @@ function handleCancel() {
           :disabled="isSubmitting"
           @click="handleDelete"
         >
-          Ansprechpartner loschen
+          Ansprechpartner löschen
         </button>
         <button
           type="submit"
           class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           :disabled="!canSubmit || isSubmitting"
         >
-          {{ isSubmitting ? 'SPEICHERN...' : 'SPEICHERN' }}
+          {{ isSubmitting ? 'Speichern...' : 'Speichern' }}
         </button>
       </div>
     </div>

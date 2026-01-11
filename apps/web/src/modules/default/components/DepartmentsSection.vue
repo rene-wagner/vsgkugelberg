@@ -76,14 +76,7 @@ onMounted(() => {
                   hue-rotate(200deg) brightness(89%) contrast(91%);
               "
             />
-            <svg
-              v-else
-              class="h-8 w-8 text-vsg-blue-600"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="12" cy="12" r="10" />
-            </svg>
+            <FontAwesomeIcon v-else icon="circle" class="text-vsg-blue-600" />
           </template>
         </DepartmentCard>
       </div>
