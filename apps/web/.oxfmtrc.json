@@ -7,5 +7,6 @@
   "useTabs": false,
   "tabWidth": 2,
   "trailingComma": "all",
-  "singleAttributePerLine": true
+  "singleAttributePerLine": true,
+  "ignorePatterns": ["dist/**"]
 }

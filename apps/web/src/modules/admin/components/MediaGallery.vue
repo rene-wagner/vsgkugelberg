@@ -165,8 +165,7 @@ async function handleMove(targetFolderId: number | null) {
       :media-url="itemToDelete ? mediaStore.getMediaUrl(itemToDelete) : ''"
       @confirm="
         () => {
-          const item = itemToDelete;
-          if (item) handleDelete(item);
+          if (itemToDelete) handleDelete(itemToDelete);
         }
       "
       @cancel="() => (itemToDelete = null)"
@@ -179,41 +178,23 @@ async function handleMove(targetFolderId: number | null) {
           ? `Möchtest du den Ordner ${folderToDelete.name} wirklich löschen? Alle Unterordner werden ebenfalls gelöscht. Medien in diesem Ordner werden in das Hauptverzeichnis verschoben.`
           : ''
       "
-      :item="folderToDelete"
+      :item="folderToDelete ? { id: folderToDelete.id, originalName: folderToDelete.name, filename: '', size: 0, mimetype: '' } : null"
       :media-url="''"
       @confirm="
         () => {
-          const folder = folderToDelete;
-          if (folder) handleDeleteFolder(folder);
+          if (folderToDelete) handleDeleteFolder(folderToDelete);
         }
       "
       @cancel="() => (folderToDelete = null)"
     />
 
-    <DeleteConfirmModal
-      title="Ordner löschen"
-      :message="
-        folderToDelete?.value
-          ? `Möchtest du den Ordner ${folderToDelete.value?.name} wirklich löschen? Alle Unterordner werden ebenfalls gelöscht. Medien in diesem Ordner werden in das Hauptverzeichnis verschoben.`
-          : ''
-      "
-      :item="folderToDelete?.value || null"
-      :media-url="''"
-      @confirm="
-        () => {
-          const folder = folderToDelete?.value;
-          if (folder) handleDeleteFolder(folder);
-        }
-      "
-      @cancel="() => (folderToDelete.value = null)"
-    />
-
     <MoveMediaModal
+      v-if="itemToMove"
       :item="itemToMove"
       :folders="mediaStore.folders"
       :current-folder-id="mediaStore.currentFolderId"
       @confirm="handleMove"
-      @cancel="() => (itemToMove.value = null)"
+      @cancel="() => (itemToMove = null)"
     />
   </div>
 </template>

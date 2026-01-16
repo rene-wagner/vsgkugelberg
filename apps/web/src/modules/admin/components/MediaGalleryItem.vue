@@ -1,14 +1,9 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import type { MediaItem } from '../stores/mediaStore';
 
-const props = defineProps<{
-  item: {
-    id: number;
-    originalName: string;
-    filename: string;
-    size: number;
-    mimetype: string;
-  };
+defineProps<{
+  item: MediaItem;
   mediaUrl: string;
   hasThumbnails: boolean;
   canHaveThumbnails: boolean;
@@ -18,14 +13,14 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  preview: [item: typeof props.item];
-  move: [item: typeof props.item];
-  copyUrl: [item: typeof props.item];
-  regenerate: [item: typeof props.item];
-  delete: [item: typeof props.item];
+  preview: [item: MediaItem];
+  move: [item: MediaItem];
+  copyUrl: [item: MediaItem];
+  regenerate: [item: MediaItem];
+  delete: [item: MediaItem];
 }>();
 
-function isSvg(item: typeof props.item): boolean {
+function isSvg(item: MediaItem): boolean {
   return item.mimetype === 'image/svg+xml';
 }
 

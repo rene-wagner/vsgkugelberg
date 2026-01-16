@@ -1,22 +1,12 @@
 <script setup lang="ts">
+import type { MediaItem } from '../stores/mediaStore';
+
 const emit = defineEmits<{
   close: [];
 }>();
 
 defineProps<{
-  item: {
-    id: number;
-    originalName: string;
-    filename: string;
-    size: number;
-    mimetype: string;
-    thumbnails?: {
-      thumb?: string;
-      small?: string;
-      medium?: string;
-      large?: string;
-    };
-  } | null;
+  item: MediaItem | null;
   mediaUrl: string;
   hasThumbnails: boolean;
   canHaveThumbnails: boolean;
