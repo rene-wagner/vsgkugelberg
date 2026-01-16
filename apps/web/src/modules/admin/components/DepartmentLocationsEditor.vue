@@ -249,13 +249,23 @@ async function handleSave() {
 <template>
   <div class="space-y-4">
     <!-- Error Message -->
-    <div v-if="saveError" class="bg-red-50 border border-red-200 rounded-xl p-4">
+    <div
+      v-if="saveError"
+      class="bg-red-50 border border-red-200 rounded-xl p-4"
+    >
       <p class="text-sm text-red-600 font-body">{{ saveError }}</p>
     </div>
 
     <!-- Empty State -->
-    <div v-if="displayLocations.length === 0" class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-      <FontAwesomeIcon icon="location-dot" size="2x" class="mb-4 text-gray-400" />
+    <div
+      v-if="displayLocations.length === 0"
+      class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300"
+    >
+      <FontAwesomeIcon
+        icon="location-dot"
+        size="2x"
+        class="mb-4 text-gray-400"
+      />
 
       <p class="text-gray-500 font-body mb-4">Noch keine Standorte vorhanden.</p>
       <button
@@ -299,7 +309,10 @@ async function handleSave() {
     </template>
 
     <!-- Save Button -->
-    <div v-if="isDirty" class="flex justify-end pt-4 border-t border-gray-200">
+    <div
+      v-if="isDirty"
+      class="flex justify-end pt-4 border-t border-gray-200"
+    >
       <button
         type="button"
         class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

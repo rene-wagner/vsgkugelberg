@@ -32,14 +32,25 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <form class="space-y-6" @submit.prevent="handleSubmit">
-    <div v-if="error" class="rounded-lg bg-red-500/20 border border-red-500/30 p-4">
+  <form
+    class="space-y-6"
+    @submit.prevent="handleSubmit"
+  >
+    <div
+      v-if="error"
+      class="rounded-lg bg-red-500/20 border border-red-500/30 p-4"
+    >
       <p class="text-sm text-red-300">{{ error }}</p>
     </div>
 
     <!-- Username Input -->
     <div class="animate-slide-up delay-300">
-      <label for="username" class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"> Benutzername </label>
+      <label
+        for="username"
+        class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
+      >
+        Benutzername
+      </label>
       <input
         id="username"
         v-model="username"
@@ -52,9 +63,18 @@ async function handleSubmit() {
 
     <!-- Password Input -->
     <div class="animate-slide-up delay-400">
-      <VsgPasswordInput id="password" v-model="password" label="Passwort" required variant="auth" />
+      <VsgPasswordInput
+        id="password"
+        v-model="password"
+        label="Passwort"
+        required
+        variant="auth"
+      />
       <div class="mt-2 text-right">
-        <RouterLink to="/forgot-password" class="text-sm text-vsg-gold-400/70 hover:text-vsg-gold-400 transition-colors">
+        <RouterLink
+          to="/forgot-password"
+          class="text-sm text-vsg-gold-400/70 hover:text-vsg-gold-400 transition-colors"
+        >
           Passwort vergessen?
         </RouterLink>
       </div>

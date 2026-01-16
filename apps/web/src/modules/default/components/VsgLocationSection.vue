@@ -23,7 +23,10 @@ defineProps<Props>();
         <h2 class="mt-4 font-display text-5xl tracking-wider text-vsg-blue-900 md:text-7xl">
           {{ title }}
         </h2>
-        <p v-if="description" class="mx-auto mt-4 max-w-2xl font-body text-lg font-normal text-gray-600">
+        <p
+          v-if="description"
+          class="mx-auto mt-4 max-w-2xl font-body text-lg font-normal text-gray-600"
+        >
           {{ description }}
         </p>
       </div>

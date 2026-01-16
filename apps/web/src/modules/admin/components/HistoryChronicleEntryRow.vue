@@ -46,7 +46,11 @@ function handleInput(field: 'year' | 'description', value: string) {
       </div>
     </div>
 
-    <button type="button" class="text-gray-400 hover:text-red-600 transition-colors mt-2" @click="emit('delete')">
+    <button
+      type="button"
+      class="text-gray-400 hover:text-red-600 transition-colors mt-2"
+      @click="emit('delete')"
+    >
       <FontAwesomeIcon icon="trash" />
     </button>
   </div>

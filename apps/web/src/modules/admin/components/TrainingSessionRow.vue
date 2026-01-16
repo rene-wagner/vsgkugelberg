@@ -45,7 +45,10 @@ function handleDelete() {
 </script>
 
 <template>
-  <div class="flex items-center gap-2 p-2 bg-white rounded border border-gray-200 group" :class="{ 'border-vsg-lime-400 bg-vsg-lime-50': isNew }">
+  <div
+    class="flex items-center gap-2 p-2 bg-white rounded border border-gray-200 group"
+    :class="{ 'border-vsg-lime-400 bg-vsg-lime-50': isNew }"
+  >
     <!-- Drag Handle -->
     <div class="cursor-grab text-gray-400 hover:text-gray-600 session-drag-handle shrink-0">
       <FontAwesomeIcon icon="grip" />
@@ -56,8 +59,19 @@ function handleDelete() {
       v-model="day"
       class="flex-1 px-2 py-1.5 bg-white border border-gray-300 rounded text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
     >
-      <option value="" disabled>Tag wählen</option>
-      <option v-for="d in dayOptions" :key="d" :value="d">{{ d }}</option>
+      <option
+        value=""
+        disabled
+      >
+        Tag wählen
+      </option>
+      <option
+        v-for="d in dayOptions"
+        :key="d"
+        :value="d"
+      >
+        {{ d }}
+      </option>
     </select>
 
     <!-- Time Input -->
@@ -74,7 +88,11 @@ function handleDelete() {
       class="flex-1 px-2 py-1.5 bg-white border border-gray-300 rounded text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
     >
       <option :value="null">Kein Standort</option>
-      <option v-for="loc in locations" :key="loc.id" :value="loc.id">
+      <option
+        v-for="loc in locations"
+        :key="loc.id"
+        :value="loc.id"
+      >
         {{ loc.name }}
       </option>
     </select>

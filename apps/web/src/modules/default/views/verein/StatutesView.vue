@@ -33,7 +33,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
             <div class="mt-8 rounded-xl border-2 border-dashed border-vsg-blue-200 bg-vsg-blue-50 p-8 text-center">
               <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-vsg-gold-400">
-                <FontAwesomeIcon icon="file-arrow-down" class="text-white" />
+                <FontAwesomeIcon
+                  icon="file-arrow-down"
+                  class="text-white"
+                />
               </div>
               <h3 class="mt-4 font-display text-xl tracking-wider text-vsg-blue-900">Satzung als PDF</h3>
               <p class="mt-2 font-body text-vsg-blue-600">Die vollständige Vereinssatzung steht hier zum Download bereit.</p>
@@ -81,7 +84,11 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
               <p class="font-body text-lg text-vsg-blue-700">
                 <strong class="text-vsg-blue-900">Fragen zur Satzung?</strong>
                 Wenden Sie sich gerne an unseren Vorstand uber die
-                <a href="/kontakt" class="text-vsg-gold-600 underline hover:text-vsg-gold-700">Kontaktseite</a>.
+                <a
+                  href="/kontakt"
+                  class="text-vsg-gold-600 underline hover:text-vsg-gold-700"
+                  >Kontaktseite</a
+                >.
               </p>
             </div>
           </div>

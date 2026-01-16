@@ -23,8 +23,14 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <section class="relative overflow-hidden py-32 text-center px-6" :class="theme === 'white' ? 'bg-white' : ''">
-    <div v-if="theme === 'gold'" class="absolute inset-0 bg-linear-to-r from-vsg-gold-600 via-vsg-gold-400 to-vsg-gold-300" />
+  <section
+    class="relative overflow-hidden py-32 text-center px-6"
+    :class="theme === 'white' ? 'bg-white' : ''"
+  >
+    <div
+      v-if="theme === 'gold'"
+      class="absolute inset-0 bg-linear-to-r from-vsg-gold-600 via-vsg-gold-400 to-vsg-gold-300"
+    />
 
     <div class="relative z-10 mx-auto max-w-4xl">
       <!-- eslint-disable vue/no-v-html -->
@@ -34,11 +40,20 @@ withDefaults(defineProps<Props>(), {
         v-html="title"
       ></h3>
       <!-- eslint-enable vue/no-v-html -->
-      <p v-if="description" class="mx-auto mt-6 max-w-2xl font-body text-xl font-normal text-vsg-blue-800">
+      <p
+        v-if="description"
+        class="mx-auto mt-6 max-w-2xl font-body text-xl font-normal text-vsg-blue-800"
+      >
         {{ description }}
       </p>
       <div class="mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row">
-        <VsgButton variant="secondary" size="lg" :glow="true" is-router :to="primaryButtonLink">
+        <VsgButton
+          variant="secondary"
+          size="lg"
+          :glow="true"
+          is-router
+          :to="primaryButtonLink"
+        >
           {{ primaryButtonText }}
         </VsgButton>
         <VsgButton

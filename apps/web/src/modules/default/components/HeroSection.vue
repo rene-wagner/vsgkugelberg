@@ -37,13 +37,27 @@ import VsgButton from '@shared/components/VsgButton.vue';
       </p>
 
       <div class="animate-slide-up mt-12 flex flex-col items-center justify-center gap-6 delay-500 sm:flex-row">
-        <VsgButton variant="primary" size="lg" :glow="true"> Jetzt beitreten </VsgButton>
-        <VsgButton variant="outline" size="lg"> Mehr erfahren </VsgButton>
+        <VsgButton
+          variant="primary"
+          size="lg"
+          :glow="true"
+        >
+          Jetzt beitreten
+        </VsgButton>
+        <VsgButton
+          variant="outline"
+          size="lg"
+        >
+          Mehr erfahren
+        </VsgButton>
       </div>
 
       <!-- Scroll indicator -->
       <div class="absolute bottom-1 left-1/2 -translate-x-1/2 animate-bounce delay-700">
-        <FontAwesomeIcon icon="arrow-down" class="text-vsg-gold-400" />
+        <FontAwesomeIcon
+          icon="arrow-down"
+          class="text-vsg-gold-400"
+        />
       </div>
     </div>
   </section>

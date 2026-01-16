@@ -86,9 +86,15 @@ async function handleFileSelect(event: Event) {
 <template>
   <div class="thumbnail-selector">
     <!-- Empty State -->
-    <div v-if="!hasThumbnail" class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+    <div
+      v-if="!hasThumbnail"
+      class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center"
+    >
       <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-        <FontAwesomeIcon icon="image" class="text-gray-400" />
+        <FontAwesomeIcon
+          icon="image"
+          class="text-gray-400"
+        />
       </div>
       <p class="font-body text-sm text-gray-500 mb-4">Kein Beitragsbild ausgewählt</p>
       <div class="flex items-center justify-center gap-3">
@@ -111,8 +117,15 @@ async function handleFileSelect(event: Event) {
     </div>
 
     <!-- Thumbnail Preview -->
-    <div v-else class="relative group bg-gray-100 rounded-lg overflow-hidden aspect-video">
-      <img :src="thumbnailUrl" :alt="thumbnail?.originalName || 'Beitragsbild'" class="w-full h-full object-cover" />
+    <div
+      v-else
+      class="relative group bg-gray-100 rounded-lg overflow-hidden aspect-video"
+    >
+      <img
+        :src="thumbnailUrl"
+        :alt="thumbnail?.originalName || 'Beitragsbild'"
+        class="w-full h-full object-cover"
+      />
 
       <!-- Overlay with Actions -->
       <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
@@ -141,9 +154,19 @@ async function handleFileSelect(event: Event) {
     </div>
 
     <!-- Hidden File Input -->
-    <input ref="fileInputRef" type="file" accept="image/jpeg,image/png,image/webp,image/svg+xml" class="hidden" @change="handleFileSelect" />
+    <input
+      ref="fileInputRef"
+      type="file"
+      accept="image/jpeg,image/png,image/webp,image/svg+xml"
+      class="hidden"
+      @change="handleFileSelect"
+    />
 
     <!-- Media Selection Modal -->
-    <MediaSelectionModal :is-open="isModalOpen" @close="closeMediaLibrary" @select="handleMediaSelect" />
+    <MediaSelectionModal
+      :is-open="isModalOpen"
+      @close="closeMediaLibrary"
+      @select="handleMediaSelect"
+    />
   </div>
 </template>

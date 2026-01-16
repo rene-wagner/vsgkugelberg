@@ -57,17 +57,26 @@ async function handleDelete(userId: number, username: string) {
     </div>
 
     <!-- Loading State -->
-    <div v-if="usersStore.isLoading" class="flex items-center justify-center py-12">
+    <div
+      v-if="usersStore.isLoading"
+      class="flex items-center justify-center py-12"
+    >
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="usersStore.error" class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+    <div
+      v-else-if="usersStore.error"
+      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ usersStore.error }}</p>
     </div>
 
     <!-- Table -->
-    <div v-else class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+    <div
+      v-else
+      class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+    >
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
@@ -79,7 +88,11 @@ async function handleDelete(userId: number, username: string) {
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr v-for="user in usersStore.users" :key="user.id" class="hover:bg-gray-50 transition-colors">
+            <tr
+              v-for="user in usersStore.users"
+              :key="user.id"
+              class="hover:bg-gray-50 transition-colors"
+            >
               <td class="px-6 py-4">
                 <div class="flex items-center gap-3">
                   <div class="w-8 h-8 bg-vsg-blue-600 rounded-full flex items-center justify-center text-white font-display text-sm">
@@ -118,15 +131,25 @@ async function handleDelete(userId: number, username: string) {
       </div>
 
       <!-- Empty State -->
-      <div v-if="usersStore.users.length === 0" class="px-6 py-12 text-center">
+      <div
+        v-if="usersStore.users.length === 0"
+        class="px-6 py-12 text-center"
+      >
         <p class="font-body text-gray-500">Keine Benutzer vorhanden.</p>
-        <router-link to="/admin/benutzer/new" class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm">
+        <router-link
+          to="/admin/benutzer/new"
+          class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm"
+        >
           Ersten Benutzer erstellen
         </router-link>
       </div>
 
       <!-- Pagination -->
-      <VsgPagination v-if="usersStore.users.length > 0" :meta="usersStore.meta" @page-change="handlePageChange" />
+      <VsgPagination
+        v-if="usersStore.users.length > 0"
+        :meta="usersStore.meta"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
 </template>

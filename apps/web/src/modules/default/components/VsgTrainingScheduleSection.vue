@@ -44,7 +44,10 @@ function getNoteClasses(variant: TrainingGroup['variant']): string {
         <h2 class="mt-4 font-display text-5xl tracking-wider text-vsg-blue-900 md:text-7xl">
           {{ title }}
         </h2>
-        <p v-if="description" class="mx-auto mt-4 max-w-2xl font-body text-lg font-normal text-gray-600">
+        <p
+          v-if="description"
+          class="mx-auto mt-4 max-w-2xl font-body text-lg font-normal text-gray-600"
+        >
           {{ description }}
         </p>
       </div>
@@ -61,9 +64,17 @@ function getNoteClasses(variant: TrainingGroup['variant']): string {
             <div class="flex items-center gap-4">
               <div :class="[getIconBgClasses(group.variant), 'flex h-14 w-14 items-center justify-center rounded-lg']">
                 <!-- Youth Icon -->
-                <FontAwesomeIcon v-if="group.icon === 'youth'" icon="child" :class="[getIconClasses(group.variant)]" />
+                <FontAwesomeIcon
+                  v-if="group.icon === 'youth'"
+                  icon="child"
+                  :class="[getIconClasses(group.variant)]"
+                />
                 <!-- Adults Icon -->
-                <FontAwesomeIcon v-else-if="group.icon === 'adults'" icon="person" :class="[getIconClasses(group.variant)]" />
+                <FontAwesomeIcon
+                  v-else-if="group.icon === 'adults'"
+                  icon="person"
+                  :class="[getIconClasses(group.variant)]"
+                />
               </div>
               <div>
                 <h3 class="font-display text-3xl tracking-wider text-white">
@@ -81,9 +92,15 @@ function getNoteClasses(variant: TrainingGroup['variant']): string {
             <VsgTrainingTable :sessions="group.sessions" />
 
             <!-- Optional Note -->
-            <div v-if="group.note" :class="[getNoteClasses(group.variant), 'mt-6 rounded-lg border p-4']">
+            <div
+              v-if="group.note"
+              :class="[getNoteClasses(group.variant), 'mt-6 rounded-lg border p-4']"
+            >
               <!-- eslint-disable-next-line vue/no-v-html -->
-              <p class="font-body text-sm" v-html="group.note" />
+              <p
+                class="font-body text-sm"
+                v-html="group.note"
+              />
             </div>
           </div>
         </div>

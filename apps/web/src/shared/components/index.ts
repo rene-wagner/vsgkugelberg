@@ -1,4 +1,5 @@
 export { default as VsgAccordion } from './VsgAccordion.vue';
+export { default as AdminSidebar } from './AdminSidebar.vue';
 export { default as VsgApiState } from './VsgApiState.vue';
 export { default as VsgButton } from './VsgButton.vue';
 export { default as VsgChart } from './VsgChart.vue';

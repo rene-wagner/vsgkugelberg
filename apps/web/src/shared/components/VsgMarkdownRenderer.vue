@@ -22,7 +22,11 @@ const renderedHtml = computed(() => {
 
 <template>
   <!-- eslint-disable-next-line vue/no-v-html -->
-  <div v-if="renderedHtml" class="markdown-content" v-html="renderedHtml"></div>
+  <div
+    v-if="renderedHtml"
+    class="markdown-content"
+    v-html="renderedHtml"
+  ></div>
 </template>
 
 <style scoped>

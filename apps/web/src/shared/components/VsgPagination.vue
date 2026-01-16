@@ -70,7 +70,10 @@ const endEntry = computed(() => Math.min(props.meta.page * props.meta.limit, pro
       Einträgen
     </div>
 
-    <div v-if="meta.totalPages > 1" class="flex items-center gap-1">
+    <div
+      v-if="meta.totalPages > 1"
+      class="flex items-center gap-1"
+    >
       <!-- Previous -->
       <button
         class="p-2 text-gray-400 hover:text-vsg-blue-600 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
@@ -81,8 +84,16 @@ const endEntry = computed(() => Math.min(props.meta.page * props.meta.limit, pro
       </button>
 
       <!-- Page Numbers -->
-      <template v-for="(page, index) in displayedPages" :key="index">
-        <span v-if="page === '...'" class="px-3 py-1 text-gray-400 font-body text-sm"> ... </span>
+      <template
+        v-for="(page, index) in displayedPages"
+        :key="index"
+      >
+        <span
+          v-if="page === '...'"
+          class="px-3 py-1 text-gray-400 font-body text-sm"
+        >
+          ...
+        </span>
         <button
           v-else
           class="min-w-8 px-3 py-1 rounded-lg font-body text-sm transition-all"

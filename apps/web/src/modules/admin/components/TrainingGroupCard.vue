@@ -88,7 +88,10 @@ function handleSessionsDragEnd() {
 </script>
 
 <template>
-  <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm" :class="{ 'border-vsg-lime-500': isNew }">
+  <div
+    class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+    :class="{ 'border-vsg-lime-500': isNew }"
+  >
     <!-- Card Header -->
     <div class="flex items-center gap-3 p-4 bg-gray-50 border-b border-gray-200">
       <!-- Drag Handle -->
@@ -97,8 +100,16 @@ function handleSessionsDragEnd() {
       </div>
 
       <!-- Expand/Collapse Toggle -->
-      <button type="button" class="p-1 hover:bg-gray-200 rounded transition-colors" @click="isExpanded = !isExpanded">
-        <FontAwesomeIcon icon="chevron-down" class="text-gray-500 transition-transform" :class="{ 'rotate-180': !isExpanded }" />
+      <button
+        type="button"
+        class="p-1 hover:bg-gray-200 rounded transition-colors"
+        @click="isExpanded = !isExpanded"
+      >
+        <FontAwesomeIcon
+          icon="chevron-down"
+          class="text-gray-500 transition-transform"
+          :class="{ 'rotate-180': !isExpanded }"
+        />
       </button>
 
       <!-- Group Title -->
@@ -128,7 +139,10 @@ function handleSessionsDragEnd() {
     </div>
 
     <!-- Card Body (Collapsible) -->
-    <div v-show="isExpanded" class="p-4 space-y-4">
+    <div
+      v-show="isExpanded"
+      class="p-4 space-y-4"
+    >
       <!-- Group Details Row -->
       <div class="grid grid-cols-3 gap-3">
         <!-- Age Range -->
@@ -172,7 +186,10 @@ function handleSessionsDragEnd() {
         <h4 class="font-body text-xs text-gray-500 uppercase tracking-wider mb-2">Trainingszeiten</h4>
 
         <!-- Sessions List -->
-        <div v-if="localSessions.length > 0" class="space-y-2 mb-3">
+        <div
+          v-if="localSessions.length > 0"
+          class="space-y-2 mb-3"
+        >
           <VueDraggable
             v-model="localSessions"
             :animation="150"
@@ -194,7 +211,10 @@ function handleSessionsDragEnd() {
         </div>
 
         <!-- Empty State for Sessions -->
-        <div v-else class="text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 mb-3">
+        <div
+          v-else
+          class="text-center py-4 bg-gray-50 rounded-lg border border-dashed border-gray-300 mb-3"
+        >
           <p class="text-gray-500 font-body text-sm">Noch keine Trainingszeiten.</p>
         </div>
 

@@ -34,7 +34,10 @@ const glowClass = props.glow ? (props.variant === 'primary' ? 'gold-glow' : 'blu
 </script>
 
 <template>
-  <button :class="[baseClasses, variantClasses[variant], sizeClasses[size], glowClass]" :aria-label="ariaLabel">
+  <button
+    :class="[baseClasses, variantClasses[variant], sizeClasses[size], glowClass]"
+    :aria-label="ariaLabel"
+  >
     <slot />
   </button>
 </template>

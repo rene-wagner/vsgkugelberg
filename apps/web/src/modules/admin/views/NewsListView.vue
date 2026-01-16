@@ -65,17 +65,26 @@ async function handleDelete(item: NewsItem) {
     </div>
 
     <!-- Loading State -->
-    <div v-if="newsStore.isLoading" class="flex items-center justify-center py-12">
+    <div
+      v-if="newsStore.isLoading"
+      class="flex items-center justify-center py-12"
+    >
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="newsStore.error" class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+    <div
+      v-else-if="newsStore.error"
+      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ newsStore.error }}</p>
     </div>
 
     <!-- Table -->
-    <div v-else class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+    <div
+      v-else
+      class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+    >
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
@@ -88,7 +97,11 @@ async function handleDelete(item: NewsItem) {
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr v-for="item in newsStore.news" :key="item.id" class="hover:bg-gray-50 transition-colors">
+            <tr
+              v-for="item in newsStore.news"
+              :key="item.id"
+              class="hover:bg-gray-50 transition-colors"
+            >
               <td class="px-6 py-4">
                 <span class="font-body text-sm text-vsg-blue-900 font-medium">{{ item.title }}</span>
               </td>
@@ -101,7 +114,10 @@ async function handleDelete(item: NewsItem) {
                 </div>
               </td>
               <td class="px-6 py-4">
-                <span class="inline-block px-2 py-1 font-body text-xs rounded font-medium" :class="getStatusBadgeClass(item.published)">
+                <span
+                  class="inline-block px-2 py-1 font-body text-xs rounded font-medium"
+                  :class="getStatusBadgeClass(item.published)"
+                >
                   {{ getStatusLabel(item.published) }}
                 </span>
               </td>
@@ -117,7 +133,11 @@ async function handleDelete(item: NewsItem) {
                   >
                     <FontAwesomeIcon icon="pen-to-square" />
                   </router-link>
-                  <button class="p-2 text-gray-400 hover:text-red-500 transition-colors" title="Löschen" @click="handleDelete(item)">
+                  <button
+                    class="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                    title="Löschen"
+                    @click="handleDelete(item)"
+                  >
                     <FontAwesomeIcon icon="trash" />
                   </button>
                 </div>
@@ -128,15 +148,25 @@ async function handleDelete(item: NewsItem) {
       </div>
 
       <!-- Empty State -->
-      <div v-if="newsStore.news.length === 0" class="px-6 py-12 text-center">
+      <div
+        v-if="newsStore.news.length === 0"
+        class="px-6 py-12 text-center"
+      >
         <p class="font-body text-gray-500">Keine Artikel vorhanden.</p>
-        <router-link to="/admin/beitraege/new" class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm">
+        <router-link
+          to="/admin/beitraege/new"
+          class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm"
+        >
           Ersten Artikel erstellen
         </router-link>
       </div>
 
       <!-- Pagination -->
-      <VsgPagination v-if="newsStore.news.length > 0" :meta="newsStore.meta" @page-change="handlePageChange" />
+      <VsgPagination
+        v-if="newsStore.news.length > 0"
+        :meta="newsStore.meta"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
 </template>

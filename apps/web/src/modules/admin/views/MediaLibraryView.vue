@@ -102,7 +102,10 @@ async function executeRegenerateAll() {
     <!-- Breadcrumbs & Actions -->
     <div class="flex items-center justify-between mb-6">
       <nav class="flex items-center gap-2 text-sm font-body">
-        <template v-for="(crumb, index) in breadcrumbs" :key="index">
+        <template
+          v-for="(crumb, index) in breadcrumbs"
+          :key="index"
+        >
           <button
             type="button"
             class="hover:text-vsg-blue-900 transition-colors"
@@ -111,7 +114,11 @@ async function executeRegenerateAll() {
           >
             {{ crumb.name }}
           </button>
-          <span v-if="index < breadcrumbs.length - 1" class="text-vsg-blue-300">/</span>
+          <span
+            v-if="index < breadcrumbs.length - 1"
+            class="text-vsg-blue-300"
+            >/</span
+          >
         </template>
       </nav>
 
@@ -137,18 +144,33 @@ async function executeRegenerateAll() {
     </div>
 
     <!-- Loading State -->
-    <div v-if="mediaStore.isLoading && mediaStore.media.length === 0" class="flex items-center justify-center py-12">
+    <div
+      v-if="mediaStore.isLoading && mediaStore.media.length === 0"
+      class="flex items-center justify-center py-12"
+    >
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="mediaStore.error" class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+    <div
+      v-else-if="mediaStore.error"
+      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ mediaStore.error }}</p>
-      <button type="button" class="mt-3 text-sm text-red-700 underline hover:no-underline" @click="mediaStore.clearError()">Schliessen</button>
+      <button
+        type="button"
+        class="mt-3 text-sm text-red-700 underline hover:no-underline"
+        @click="mediaStore.clearError()"
+      >
+        Schliessen
+      </button>
     </div>
 
     <!-- Gallery Section -->
-    <div v-else class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+    <div
+      v-else
+      class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm"
+    >
       <div class="flex items-center justify-between mb-6">
         <h2 class="font-display text-xl tracking-wider text-vsg-blue-900">GALERIE</h2>
         <div class="flex items-center gap-4">
@@ -207,7 +229,10 @@ async function executeRegenerateAll() {
           </div>
 
           <!-- Loading State -->
-          <div v-else-if="mediaStore.isRegenerating" class="text-center py-8">
+          <div
+            v-else-if="mediaStore.isRegenerating"
+            class="text-center py-8"
+          >
             <div class="w-12 h-12 border-4 border-vsg-blue-200 border-t-vsg-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
             <p class="font-body text-gray-600">Thumbnails werden regeneriert...</p>
             <p class="font-body text-sm text-gray-500 mt-2">Bitte warten, dies kann einige Zeit dauern.</p>
@@ -217,13 +242,21 @@ async function executeRegenerateAll() {
           <div v-else-if="regenerateResult">
             <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
               <div class="flex items-center gap-2 mb-2">
-                <FontAwesomeIcon icon="check" class="text-green-600" />
+                <FontAwesomeIcon
+                  icon="check"
+                  class="text-green-600"
+                />
                 <span class="font-body font-medium text-green-800"> Regenerierung abgeschlossen </span>
               </div>
               <div class="font-body text-sm text-green-700 space-y-1">
                 <p>Verarbeitet: {{ regenerateResult.processed }}</p>
                 <p>Erfolgreich: {{ regenerateResult.succeeded }}</p>
-                <p v-if="regenerateResult.failed > 0" class="text-red-600">Fehlgeschlagen: {{ regenerateResult.failed }}</p>
+                <p
+                  v-if="regenerateResult.failed > 0"
+                  class="text-red-600"
+                >
+                  Fehlgeschlagen: {{ regenerateResult.failed }}
+                </p>
                 <p v-if="regenerateResult.skipped > 0">Ubersprungen (SVG): {{ regenerateResult.skipped }}</p>
               </div>
             </div>

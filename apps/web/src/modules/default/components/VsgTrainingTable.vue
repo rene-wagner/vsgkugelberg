@@ -29,13 +29,19 @@ defineProps<Props>();
         </td>
         <td class="block md:table-cell md:py-4 font-body text-gray-600">
           <div class="flex items-center gap-1.5">
-            <FontAwesomeIcon icon="clock" class="text-vsg-blue-400 md:hidden! shrink-0" />
+            <FontAwesomeIcon
+              icon="clock"
+              class="text-vsg-blue-400 md:hidden! shrink-0"
+            />
             <span>{{ session.time }}</span>
           </div>
         </td>
         <td class="block md:table-cell md:py-4 font-body text-gray-500 md:text-gray-600 mt-1 md:mt-0">
           <div class="flex items-center gap-1.5">
-            <FontAwesomeIcon icon="location-dot" class="text-vsg-blue-400 md:hidden! shrink-0" />
+            <FontAwesomeIcon
+              icon="location-dot"
+              class="text-vsg-blue-400 md:hidden! shrink-0"
+            />
             <span class="text-sm md:text-base">
               {{ session.locationName || '-' }}
             </span>

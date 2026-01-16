@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useCategoriesStore, type Category, type CreateCategoryData, type UpdateCategoryData } from '../stores/categoriesStore';
 import VsgTreeSelect from '@/shared/components/VsgTreeSelect.vue';
@@ -13,18 +13,27 @@ const props = defineProps<{
 const router = useRouter();
 const categoriesStore = useCategoriesStore();
 
-const name = ref('');
-const description = ref('');
-const selectedParentId = ref<number | null>(null);
+interface CategoryFormData {
+  name: string;
+  description: string;
+  parentId: number | null;
+}
+
+const formData = ref<CategoryFormData>({
+  name: '',
+  description: '',
+  parentId: null,
+});
+
 const error = ref('');
 const isSubmitting = ref(false);
 
-// Fetch categories on mount for parent selection
 onMounted(async () => {
   await categoriesStore.fetchCategories();
 });
 
-// Helper to collect all descendant IDs of a category
+const canSubmit = computed(() => formData.value.name.trim() !== '');
+
 function getDescendantIds(category: Category): number[] {
   const ids: number[] = [category.id];
   if (category.children) {
@@ -35,7 +44,6 @@ function getDescendantIds(category: Category): number[] {
   return ids;
 }
 
-// Filter out current category and its descendants to prevent circular references
 function filterCategories(categories: Category[], excludeIds: Set<number>): Category[] {
   return categories
     .filter((cat) => !excludeIds.has(cat.id))
@@ -45,7 +53,6 @@ function filterCategories(categories: Category[], excludeIds: Set<number>): Cate
     }));
 }
 
-// Computed available parent categories (excludes self and descendants in edit mode)
 const availableParentCategories = computed(() => {
   if (!props.isEditMode || !props.category) {
     return categoriesStore.categories;
@@ -55,22 +62,17 @@ const availableParentCategories = computed(() => {
   return filterCategories(categoriesStore.categories, excludeIds);
 });
 
-// Watch for category prop changes to populate form
 watch(
   () => props.category,
   (newCategory) => {
     if (newCategory) {
-      name.value = newCategory.name;
-      description.value = newCategory.description || '';
-      selectedParentId.value = newCategory.parentId;
+      formData.value.name = newCategory.name;
+      formData.value.description = newCategory.description || '';
+      formData.value.parentId = newCategory.parentId;
     }
   },
   { immediate: true },
 );
-
-const canSubmit = computed(() => {
-  return name.value.trim() !== '';
-});
 
 async function handleSubmit() {
   if (!canSubmit.value) return;
@@ -80,11 +82,10 @@ async function handleSubmit() {
 
   try {
     if (props.isEditMode && props.category) {
-      // Update existing category
       const updateData: UpdateCategoryData = {
-        name: name.value,
-        description: description.value || undefined,
-        parentId: selectedParentId.value,
+        name: formData.value.name,
+        description: formData.value.description || undefined,
+        parentId: formData.value.parentId,
       };
 
       const result = await categoriesStore.updateCategory(props.category.slug, updateData);
@@ -94,11 +95,10 @@ async function handleSubmit() {
         error.value = categoriesStore.error || 'Fehler beim Aktualisieren der Kategorie';
       }
     } else {
-      // Create new category
       const createData: CreateCategoryData = {
-        name: name.value,
-        description: description.value || undefined,
-        parentId: selectedParentId.value || undefined,
+        name: formData.value.name,
+        description: formData.value.description || undefined,
+        parentId: formData.value.parentId || undefined,
       };
 
       const result = await categoriesStore.createCategory(createData);
@@ -138,25 +138,31 @@ function handleCancel() {
 </script>
 
 <template>
-  <form class="max-w-3xl" @submit.prevent="handleSubmit">
-    <!-- Error Message -->
-    <div v-if="error" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+  <form
+    class="max-w-3xl"
+    @submit.prevent="handleSubmit"
+  >
+    <div
+      v-if="error"
+      class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ error }}</p>
     </div>
 
-    <!-- Category Data Section -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">KATEGORIEDATEN</h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">Kategoriedaten</h2>
 
       <div class="space-y-6">
-        <!-- Name -->
         <div>
-          <label for="name" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="name"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Name <span class="text-red-500">*</span>
           </label>
           <input
             id="name"
-            v-model="name"
+            v-model="formData.name"
             type="text"
             required
             class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
@@ -164,17 +170,19 @@ function handleCancel() {
           />
         </div>
 
-        <!-- Description -->
         <div>
-          <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Beschreibung </label>
-          <VsgMarkdownEditor v-model="description" placeholder="Optionale Beschreibung der Kategorie..." min-height="200px" />
+          <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">Beschreibung</label>
+          <VsgMarkdownEditor
+            v-model="formData.description"
+            placeholder="Optionale Beschreibung der Kategorie..."
+            min-height="200px"
+          />
         </div>
 
-        <!-- Parent Category -->
         <div>
-          <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Übergeordnete Kategorie </label>
+          <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">Übergeordnete Kategorie</label>
           <VsgTreeSelect
-            v-model="selectedParentId"
+            v-model="formData.parentId"
             :options="availableParentCategories"
             placeholder="Keine übergeordnete Kategorie"
             :disabled="categoriesStore.isLoading"
@@ -184,7 +192,6 @@ function handleCancel() {
       </div>
     </div>
 
-    <!-- Form Actions -->
     <div class="flex items-center justify-between border-t border-gray-200 pt-6">
       <button
         type="button"

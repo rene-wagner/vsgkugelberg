@@ -73,14 +73,20 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <form class="space-y-6 pb-12" @submit.prevent="handleSubmit">
+  <form
+    class="space-y-6 pb-12"
+    @submit.prevent="handleSubmit"
+  >
     <!-- Founding Basics -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">GRÜNDUNGSDATEN</h2>
 
       <div class="space-y-6">
         <div>
-          <label for="foundingHeadline" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="foundingHeadline"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Abschnitts-Überschrift
           </label>
           <input
@@ -93,10 +99,17 @@ async function handleSubmit() {
         </div>
 
         <div>
-          <label for="foundingDescription" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="foundingDescription"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Beschreibung (Markdown)
           </label>
-          <VsgMarkdownEditor v-model="foundingDescription" placeholder="Die Geschichte der Gründung..." min-height="200px" />
+          <VsgMarkdownEditor
+            v-model="foundingDescription"
+            placeholder="Die Geschichte der Gründung..."
+            min-height="200px"
+          />
         </div>
       </div>
     </div>
@@ -106,7 +119,10 @@ async function handleSubmit() {
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">DIE ECKDATEN (FACT CARD)</h2>
 
       <div class="mb-6">
-        <label for="foundingFactCardHeadline" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+        <label
+          for="foundingFactCardHeadline"
+          class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+        >
           Karten-Überschrift
         </label>
         <input
@@ -118,7 +134,12 @@ async function handleSubmit() {
       </div>
 
       <div class="space-y-4">
-        <VueDraggable v-model="localFacts" handle=".drag-handle" :animation="200" class="space-y-2">
+        <VueDraggable
+          v-model="localFacts"
+          handle=".drag-handle"
+          :animation="200"
+          class="space-y-2"
+        >
           <HistoryFactRow
             v-for="(fact, index) in localFacts"
             :key="index"
@@ -144,7 +165,10 @@ async function handleSubmit() {
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">MEILENSTEINE & FUSIONEN</h2>
 
       <div class="mb-6">
-        <label for="foundingMilestonesHeadline" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+        <label
+          for="foundingMilestonesHeadline"
+          class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+        >
           Zeitstrahl-Überschrift
         </label>
         <input
@@ -156,7 +180,12 @@ async function handleSubmit() {
       </div>
 
       <div class="space-y-4">
-        <VueDraggable v-model="localMilestones" handle=".drag-handle" :animation="200" class="space-y-2">
+        <VueDraggable
+          v-model="localMilestones"
+          handle=".drag-handle"
+          :animation="200"
+          class="space-y-2"
+        >
           <HistoryMilestoneRow
             v-for="(milestone, index) in localMilestones"
             :key="index"

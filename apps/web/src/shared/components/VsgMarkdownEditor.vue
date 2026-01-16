@@ -116,7 +116,10 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div ref="containerRef" class="vsg-markdown-editor">
+  <div
+    ref="containerRef"
+    class="vsg-markdown-editor"
+  >
     <textarea ref="textareaRef"></textarea>
   </div>
 </template>

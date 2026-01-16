@@ -127,9 +127,15 @@ function handleCancel() {
 </script>
 
 <template>
-  <form class="max-w-3xl" @submit.prevent="handleSubmit">
+  <form
+    class="max-w-3xl"
+    @submit.prevent="handleSubmit"
+  >
     <!-- Error Message -->
-    <div v-if="error" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+    <div
+      v-if="error"
+      class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ error }}</p>
     </div>
 
@@ -141,7 +147,10 @@ function handleCancel() {
         <!-- First Name -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label for="firstName" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+            <label
+              for="firstName"
+              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            >
               Vorname <span class="text-red-500">*</span>
             </label>
             <input
@@ -156,7 +165,10 @@ function handleCancel() {
 
           <!-- Last Name -->
           <div>
-            <label for="lastName" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+            <label
+              for="lastName"
+              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            >
               Nachname <span class="text-red-500">*</span>
             </label>
             <input
@@ -172,7 +184,10 @@ function handleCancel() {
 
         <!-- Type -->
         <div>
-          <label for="type" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="type"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Funktion / Rolle <span class="text-red-500">*</span>
           </label>
           <input
@@ -187,7 +202,10 @@ function handleCancel() {
 
         <!-- Phone -->
         <div>
-          <label for="phone" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="phone"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Telefon <span class="text-red-500">*</span>
           </label>
           <input
@@ -202,7 +220,12 @@ function handleCancel() {
 
         <!-- Email -->
         <div>
-          <label for="email" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> E-Mail </label>
+          <label
+            for="email"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
+            E-Mail
+          </label>
           <input
             id="email"
             v-model="email"
@@ -214,7 +237,12 @@ function handleCancel() {
 
         <!-- Address -->
         <div>
-          <label for="address" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Adresse </label>
+          <label
+            for="address"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
+            Adresse
+          </label>
           <textarea
             id="address"
             v-model="address"
@@ -232,7 +260,10 @@ function handleCancel() {
 
       <div>
         <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Profilbild </label>
-        <ProfileImageSelector v-model="profileImageId" :current-image="contactPerson?.profileImage ?? null" />
+        <ProfileImageSelector
+          v-model="profileImageId"
+          :current-image="contactPerson?.profileImage ?? null"
+        />
       </div>
     </div>
 

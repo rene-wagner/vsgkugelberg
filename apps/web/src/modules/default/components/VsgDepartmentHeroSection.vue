@@ -35,8 +35,15 @@ function handleAnchorClick(e: MouseEvent, anchor: string) {
     <div class="absolute bottom-1/4 left-0 h-80 w-80 rounded-full bg-vsg-blue-500/20 blur-3xl" />
 
     <!-- Optional background icon -->
-    <div v-if="iconUrl" class="absolute right-10 top-1/2 -translate-y-1/2 opacity-7">
-      <img :src="iconUrl" alt="" class="h-125 w-125 object-contain" />
+    <div
+      v-if="iconUrl"
+      class="absolute right-10 top-1/2 -translate-y-1/2 opacity-7"
+    >
+      <img
+        :src="iconUrl"
+        alt=""
+        class="h-125 w-125 object-contain"
+      />
     </div>
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 py-20 text-center">
@@ -53,7 +60,10 @@ function handleAnchorClick(e: MouseEvent, anchor: string) {
         class="animate-slide-up mx-auto mt-8 max-w-2xl font-body text-lg font-normal leading-relaxed text-vsg-blue-200 delay-300 md:text-xl"
       >
         {{ description }}
-        <span v-if="subtitle" class="mt-2 block text-vsg-gold-400">
+        <span
+          v-if="subtitle"
+          class="mt-2 block text-vsg-gold-400"
+        >
           {{ subtitle }}
         </span>
       </p>

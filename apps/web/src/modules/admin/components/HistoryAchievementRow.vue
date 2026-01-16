@@ -56,7 +56,11 @@ function handleInput(field: keyof AchievementItem, value: string) {
           class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-vsg-blue-900 focus:border-vsg-blue-600 outline-none"
           @change="handleInput('category', ($event.target as HTMLSelectElement).value)"
         >
-          <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+          <option
+            v-for="cat in categories"
+            :key="cat.id"
+            :value="cat.id"
+          >
             {{ cat.label }}
           </option>
         </select>
@@ -81,7 +85,11 @@ function handleInput(field: keyof AchievementItem, value: string) {
       </div>
     </div>
 
-    <button type="button" class="text-gray-400 hover:text-red-600 transition-colors mt-2" @click="emit('delete')">
+    <button
+      type="button"
+      class="text-gray-400 hover:text-red-600 transition-colors mt-2"
+      @click="emit('delete')"
+    >
       <FontAwesomeIcon icon="trash" />
     </button>
   </div>

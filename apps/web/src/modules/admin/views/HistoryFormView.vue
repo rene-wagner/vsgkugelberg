@@ -39,31 +39,49 @@ onMounted(async () => {
     </div>
 
     <!-- Success/Error Messages -->
-    <div v-if="historyStore.successMessage" class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex justify-between items-center">
+    <div
+      v-if="historyStore.successMessage"
+      class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex justify-between items-center"
+    >
       <p class="text-sm text-green-600 font-body">
         {{ historyStore.successMessage }}
       </p>
-      <button class="text-green-600 hover:text-green-800" @click="historyStore.clearMessages">
+      <button
+        class="text-green-600 hover:text-green-800"
+        @click="historyStore.clearMessages"
+      >
         <FontAwesomeIcon icon="xmark" />
       </button>
     </div>
 
-    <div v-if="historyStore.error" class="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex justify-between items-center">
+    <div
+      v-if="historyStore.error"
+      class="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex justify-between items-center"
+    >
       <p class="text-sm text-red-600 font-body">{{ historyStore.error }}</p>
-      <button class="text-red-600 hover:text-red-800" @click="historyStore.clearMessages">
+      <button
+        class="text-red-600 hover:text-red-800"
+        @click="historyStore.clearMessages"
+      >
         <FontAwesomeIcon icon="xmark" />
       </button>
     </div>
 
     <!-- Loading State -->
-    <div v-if="historyStore.isLoading && !historyStore.history" class="flex items-center justify-center py-12">
+    <div
+      v-if="historyStore.isLoading && !historyStore.history"
+      class="flex items-center justify-center py-12"
+    >
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Content with Tabs -->
     <div v-else-if="historyStore.history">
       <!-- Tab Navigation -->
-      <VsgTabNav v-model:active-tab="activeTab" :tabs="tabs" />
+      <VsgTabNav
+        v-model:active-tab="activeTab"
+        :tabs="tabs"
+      />
 
       <!-- Tab Content -->
       <div class="max-w-4xl">

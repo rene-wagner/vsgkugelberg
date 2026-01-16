@@ -93,17 +93,26 @@ onMounted(() => {
     </div>
 
     <!-- Loading State -->
-    <div v-if="eventsStore.isLoading" class="flex items-center justify-center py-12">
+    <div
+      v-if="eventsStore.isLoading"
+      class="flex items-center justify-center py-12"
+    >
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="eventsStore.error" class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+    <div
+      v-else-if="eventsStore.error"
+      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ eventsStore.error }}</p>
     </div>
 
     <!-- Table -->
-    <div v-else class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+    <div
+      v-else
+      class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+    >
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
@@ -117,11 +126,18 @@ onMounted(() => {
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr v-for="event in baseEvents" :key="event.id" class="hover:bg-gray-50 transition-colors">
+            <tr
+              v-for="event in baseEvents"
+              :key="event.id"
+              class="hover:bg-gray-50 transition-colors"
+            >
               <td class="px-6 py-4">
                 <div>
                   <span class="font-body text-sm text-vsg-blue-900 font-medium">{{ event.title }}</span>
-                  <p v-if="event.location" class="text-xs text-gray-500 mt-0.5">
+                  <p
+                    v-if="event.location"
+                    class="text-xs text-gray-500 mt-0.5"
+                  >
                     {{ event.location }}
                   </p>
                 </div>
@@ -130,8 +146,16 @@ onMounted(() => {
                 <span class="font-body text-sm text-gray-600">{{ formatDate(event.startDate) }}</span>
               </td>
               <td class="px-6 py-4">
-                <span v-if="event.isFullDay" class="font-body text-sm text-gray-500"> Ganztags </span>
-                <span v-else class="font-body text-sm text-gray-600">
+                <span
+                  v-if="event.isFullDay"
+                  class="font-body text-sm text-gray-500"
+                >
+                  Ganztags
+                </span>
+                <span
+                  v-else
+                  class="font-body text-sm text-gray-600"
+                >
                   {{ formatTime(event.startDate) }} -
                   {{ formatTime(event.endDate) }}
                 </span>
@@ -147,10 +171,17 @@ onMounted(() => {
                 </span>
               </td>
               <td class="px-6 py-4">
-                <span v-if="event.recurrence" class="text-green-600">
+                <span
+                  v-if="event.recurrence"
+                  class="text-green-600"
+                >
                   <font-awesome-icon icon="arrows-rotate" />
                 </span>
-                <span v-else class="text-gray-300">-</span>
+                <span
+                  v-else
+                  class="text-gray-300"
+                  >-</span
+                >
               </td>
               <td class="px-6 py-4">
                 <div class="flex items-center justify-end gap-2">
@@ -161,7 +192,11 @@ onMounted(() => {
                   >
                     <FontAwesomeIcon icon="pen-to-square" />
                   </router-link>
-                  <button class="p-2 text-gray-400 hover:text-red-500 transition-colors" title="Löschen" @click="handleDelete(event)">
+                  <button
+                    class="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                    title="Löschen"
+                    @click="handleDelete(event)"
+                  >
                     <FontAwesomeIcon icon="trash" />
                   </button>
                 </div>
@@ -172,15 +207,24 @@ onMounted(() => {
       </div>
 
       <!-- Empty State -->
-      <div v-if="baseEvents.length === 0" class="px-6 py-12 text-center">
+      <div
+        v-if="baseEvents.length === 0"
+        class="px-6 py-12 text-center"
+      >
         <p class="font-body text-gray-500">Keine Veranstaltungen vorhanden.</p>
-        <router-link to="/admin/termine/new" class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm">
+        <router-link
+          to="/admin/termine/new"
+          class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm"
+        >
           Erste Veranstaltung erstellen
         </router-link>
       </div>
 
       <!-- Pagination -->
-      <div v-if="baseEvents.length > 0" class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
+      <div
+        v-if="baseEvents.length > 0"
+        class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
+      >
         <div class="font-body font-normal text-sm text-gray-500">
           Zeige
           <span class="text-vsg-blue-900 font-medium">{{ baseEvents.length }}</span>

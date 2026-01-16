@@ -117,9 +117,15 @@ function handleCancel() {
 </script>
 
 <template>
-  <form class="max-w-3xl" @submit.prevent="handleSubmit">
+  <form
+    class="max-w-3xl"
+    @submit.prevent="handleSubmit"
+  >
     <!-- Error Message -->
-    <div v-if="error" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+    <div
+      v-if="error"
+      class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ error }}</p>
     </div>
 
@@ -130,7 +136,10 @@ function handleCancel() {
       <div class="space-y-6">
         <!-- Name -->
         <div>
-          <label for="name" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="name"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Name <span class="text-red-500">*</span>
           </label>
           <input
@@ -145,10 +154,17 @@ function handleCancel() {
 
         <!-- Short Description -->
         <div>
-          <label for="shortDescription" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="shortDescription"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Beschreibung <span class="text-red-500">*</span>
           </label>
-          <VsgMarkdownEditor v-model="shortDescription" placeholder="Beschreibung der Abteilung..." min-height="250px" />
+          <VsgMarkdownEditor
+            v-model="shortDescription"
+            placeholder="Beschreibung der Abteilung..."
+            min-height="250px"
+          />
         </div>
       </div>
     </div>
@@ -159,7 +175,10 @@ function handleCancel() {
 
       <div>
         <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Abteilungs-Icon (SVG) </label>
-        <SvgIconSelector v-model="iconId" :current-icon="department?.icon ?? null" />
+        <SvgIconSelector
+          v-model="iconId"
+          :current-icon="department?.icon ?? null"
+        />
       </div>
     </div>
 

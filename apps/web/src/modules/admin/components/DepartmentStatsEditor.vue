@@ -214,13 +214,23 @@ async function handleSave() {
 <template>
   <div class="space-y-4">
     <!-- Error Message -->
-    <div v-if="saveError" class="bg-red-50 border border-red-200 rounded-xl p-4">
+    <div
+      v-if="saveError"
+      class="bg-red-50 border border-red-200 rounded-xl p-4"
+    >
       <p class="text-sm text-red-600 font-body">{{ saveError }}</p>
     </div>
 
     <!-- Empty State -->
-    <div v-if="displayItems.length === 0" class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-      <FontAwesomeIcon icon="chart-simple" size="2x" class="mb-4 text-gray-400" />
+    <div
+      v-if="displayItems.length === 0"
+      class="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300"
+    >
+      <FontAwesomeIcon
+        icon="chart-simple"
+        size="2x"
+        class="mb-4 text-gray-400"
+      />
       <p class="text-gray-500 font-body mb-4">Noch keine Statistiken vorhanden.</p>
       <button
         type="button"
@@ -233,7 +243,14 @@ async function handleSave() {
 
     <!-- Stats List with Drag & Drop -->
     <template v-else>
-      <VueDraggable v-model="displayItems" :animation="200" handle=".drag-handle" ghost-class="opacity-50" class="space-y-2" @end="handleDragEnd">
+      <VueDraggable
+        v-model="displayItems"
+        :animation="200"
+        handle=".drag-handle"
+        ghost-class="opacity-50"
+        class="space-y-2"
+        @end="handleDragEnd"
+      >
         <DepartmentStatRow
           v-for="item in displayItems"
           :key="item.id"
@@ -256,7 +273,10 @@ async function handleSave() {
     </template>
 
     <!-- Save Button -->
-    <div v-if="isDirty" class="flex justify-end pt-4 border-t border-gray-200">
+    <div
+      v-if="isDirty"
+      class="flex justify-end pt-4 border-t border-gray-200"
+    >
       <button
         type="button"
         class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"

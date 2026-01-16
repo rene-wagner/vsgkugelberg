@@ -11,7 +11,10 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <a :href="href" class="card-hover group block border-l-4 border-vsg-blue-600 bg-gray-50 p-6">
+  <a
+    :href="href"
+    class="card-hover group block border-l-4 border-vsg-blue-600 bg-gray-50 p-6"
+  >
     <span class="font-body text-sm font-normal text-vsg-blue-500">
       {{ date }}
     </span>

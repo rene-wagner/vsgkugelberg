@@ -80,37 +80,62 @@ watch(isOpen, (open) => {
 </script>
 
 <template>
-  <div ref="containerRef" class="relative">
+  <div
+    ref="containerRef"
+    class="relative"
+  >
     <!-- Selected Value / Trigger -->
     <div
       class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm cursor-pointer flex items-center justify-between"
       :class="{ 'border-vsg-blue-600': isOpen }"
       @click="isOpen = !isOpen"
     >
-      <div v-if="selectedPerson" class="flex items-center gap-3">
+      <div
+        v-if="selectedPerson"
+        class="flex items-center gap-3"
+      >
         <img
           v-if="getProfileImageUrl(selectedPerson)"
           :src="getProfileImageUrl(selectedPerson)!"
           :alt="`${selectedPerson.firstName} ${selectedPerson.lastName}`"
           class="w-8 h-8 rounded-full object-cover"
         />
-        <div v-else class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-medium">
+        <div
+          v-else
+          class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-medium"
+        >
           {{ selectedPerson.firstName[0] }}{{ selectedPerson.lastName[0] }}
         </div>
         <span class="text-vsg-blue-900"> {{ selectedPerson.firstName }} {{ selectedPerson.lastName }} </span>
       </div>
-      <span v-else class="text-gray-400">Ansprechpartner auswählen...</span>
+      <span
+        v-else
+        class="text-gray-400"
+        >Ansprechpartner auswählen...</span
+      >
 
       <div class="flex items-center gap-2">
-        <button v-if="selectedPerson" type="button" class="text-gray-400 hover:text-gray-600" @click.stop="clearSelection">
+        <button
+          v-if="selectedPerson"
+          type="button"
+          class="text-gray-400 hover:text-gray-600"
+          @click.stop="clearSelection"
+        >
           <FontAwesomeIcon icon="xmark" />
         </button>
-        <FontAwesomeIcon icon="chevron-down" class="text-gray-400 transition-transform" :class="{ 'rotate-180': isOpen }" />
+        <FontAwesomeIcon
+          icon="chevron-down"
+          class="text-gray-400 transition-transform"
+          :class="{ 'rotate-180': isOpen }"
+        />
       </div>
     </div>
 
     <!-- Dropdown -->
-    <div v-if="isOpen" class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-hidden">
+    <div
+      v-if="isOpen"
+      class="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-hidden"
+    >
       <!-- Search Input -->
       <div class="p-2 border-b border-gray-200">
         <input
@@ -124,7 +149,12 @@ watch(isOpen, (open) => {
 
       <!-- Options List -->
       <div class="overflow-y-auto max-h-48">
-        <div v-if="filteredContactPersons.length === 0" class="px-4 py-3 text-sm text-gray-500 text-center">Keine Ansprechpartner gefunden</div>
+        <div
+          v-if="filteredContactPersons.length === 0"
+          class="px-4 py-3 text-sm text-gray-500 text-center"
+        >
+          Keine Ansprechpartner gefunden
+        </div>
         <button
           v-for="person in filteredContactPersons"
           :key="person.id"
@@ -139,7 +169,10 @@ watch(isOpen, (open) => {
             :alt="`${person.firstName} ${person.lastName}`"
             class="w-8 h-8 rounded-full object-cover"
           />
-          <div v-else class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-medium">
+          <div
+            v-else
+            class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-xs font-medium"
+          >
             {{ person.firstName[0] }}{{ person.lastName[0] }}
           </div>
           <div>

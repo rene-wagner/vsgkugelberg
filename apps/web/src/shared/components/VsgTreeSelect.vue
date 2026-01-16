@@ -1,8 +1,13 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { useClickOutside, useKeyboardNav } from '@shared/composables';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-// Using `any` to allow generic tree structures without requiring index signatures
-type TreeOption = Record<string, any>;
+interface TreeOption<T = string | number> {
+  id: T;
+  name: string;
+  children?: TreeOption<T>[];
+}
 
 interface FlattenedOption {
   value: number | string;
@@ -10,22 +15,16 @@ interface FlattenedOption {
   depth: number;
 }
 
-interface Props {
-  modelValue: number | string | null | undefined;
-  options: TreeOption[];
+interface Props<T extends string | number> {
+  modelValue: T | null;
+  options: TreeOption<T>[];
   placeholder?: string;
   disabled?: boolean;
-  labelKey?: string;
-  valueKey?: string;
-  childrenKey?: string;
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props<string | number>>(), {
   placeholder: 'Bitte auswählen',
   disabled: false,
-  labelKey: 'name',
-  valueKey: 'id',
-  childrenKey: 'children',
 });
 
 const emit = defineEmits<{
@@ -34,21 +33,25 @@ const emit = defineEmits<{
 
 const isOpen = ref(false);
 const containerRef = ref<HTMLElement | null>(null);
+const highlightedIndex = ref(-1);
 
-// Flatten tree structure for rendering with depth information
-function flattenOptions(options: TreeOption[], depth: number = 0): FlattenedOption[] {
+useClickOutside(containerRef, () => {
+  isOpen.value = false;
+  highlightedIndex.value = -1;
+});
+
+function flattenOptions<T extends string | number>(options: TreeOption<T>[], depth: number = 0): FlattenedOption[] {
   const result: FlattenedOption[] = [];
 
   for (const option of options) {
     result.push({
-      value: option[props.valueKey] as number | string,
-      label: String(option[props.labelKey]),
+      value: option.id,
+      label: option.name,
       depth,
     });
 
-    const children = option[props.childrenKey] as TreeOption[] | undefined;
-    if (children && children.length > 0) {
-      result.push(...flattenOptions(children, depth + 1));
+    if (option.children && option.children.length > 0) {
+      result.push(...flattenOptions(option.children, depth + 1));
     }
   }
 
@@ -65,36 +68,68 @@ const selectedLabel = computed(() => {
 function toggleDropdown() {
   if (props.disabled) return;
   isOpen.value = !isOpen.value;
+  highlightedIndex.value = isOpen.value ? 0 : -1;
 }
 
 function selectOption(value: number | string | null) {
   emit('update:modelValue', value);
   isOpen.value = false;
-}
-
-function handleClickOutside(event: MouseEvent) {
-  if (containerRef.value && !containerRef.value.contains(event.target as Node)) {
-    isOpen.value = false;
-  }
+  highlightedIndex.value = -1;
 }
 
 function getPaddingLeft(depth: number): string {
   return `${1 + depth * 1.25}rem`;
 }
 
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside);
+const keyboardNav = useKeyboardNav({
+  onEscape: () => {
+    isOpen.value = false;
+    highlightedIndex.value = -1;
+  },
+  onArrowDown: () => {
+    if (!isOpen.value) {
+      isOpen.value = true;
+      highlightedIndex.value = 0;
+    } else {
+      highlightedIndex.value = Math.min(highlightedIndex.value + 1, flattenedOptions.value.length - 1);
+    }
+  },
+  onArrowUp: () => {
+    if (isOpen.value) {
+      highlightedIndex.value = Math.max(highlightedIndex.value - 1, 0);
+    }
+  },
+  onEnter: () => {
+    if (isOpen.value && highlightedIndex.value >= 0) {
+      selectOption(flattenedOptions.value[highlightedIndex.value].value);
+    }
+  },
+  onHome: () => {
+    if (isOpen.value) {
+      highlightedIndex.value = 0;
+    }
+  },
+  onEnd: () => {
+    if (isOpen.value) {
+      highlightedIndex.value = flattenedOptions.value.length - 1;
+    }
+  },
 });
 
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
+onMounted(() => {
+  if (containerRef.value) {
+    keyboardNav.attachToElement(containerRef.value);
+  }
 });
 </script>
 
 <template>
-  <div ref="containerRef" class="relative">
-    <!-- Trigger Button -->
+  <div
+    ref="containerRef"
+    class="relative"
+  >
     <button
+      ref="triggerRef"
       type="button"
       class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-sm text-left focus:outline-none focus:border-vsg-blue-600 transition-colors flex items-center justify-between"
       :class="{
@@ -102,17 +137,25 @@ onUnmounted(() => {
         'border-vsg-blue-600': isOpen,
       }"
       :disabled="disabled"
+      aria-haspopup="listbox"
+      :aria-expanded="isOpen"
       @click="toggleDropdown"
     >
       <span :class="selectedLabel ? 'text-vsg-blue-900' : 'text-gray-400'">
         {{ selectedLabel || placeholder }}
       </span>
-      <FontAwesomeIcon icon="chevron-down" class="w-4 h-4 text-gray-400 transition-transform" :class="{ 'rotate-180': isOpen }" />
+      <FontAwesomeIcon
+        icon="chevron-down"
+        class="w-4 h-4 text-gray-400 transition-transform"
+        :class="{ 'rotate-180': isOpen }"
+      />
     </button>
 
-    <!-- Dropdown -->
-    <div v-if="isOpen" class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto">
-      <!-- Clear/None option -->
+    <div
+      v-if="isOpen"
+      class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-auto"
+      role="listbox"
+    >
       <button
         type="button"
         class="w-full px-4 py-2 text-sm text-left text-gray-500 hover:bg-gray-50 transition-colors"
@@ -124,17 +167,25 @@ onUnmounted(() => {
         {{ placeholder }}
       </button>
 
-      <!-- Tree Options (flattened with depth) -->
       <button
-        v-for="option in flattenedOptions"
+        v-for="(option, index) in flattenedOptions"
         :key="option.value"
         type="button"
         class="w-full py-2 pr-4 text-sm text-left hover:bg-gray-50 transition-colors flex items-center"
-        :class="modelValue === option.value ? 'bg-vsg-blue-50 text-vsg-blue-600' : 'text-vsg-blue-900'"
+        :class="[
+          modelValue === option.value ? 'bg-vsg-blue-50 text-vsg-blue-600' : 'text-vsg-blue-900',
+          highlightedIndex === index ? 'bg-vsg-blue-100' : '',
+        ]"
         :style="{ paddingLeft: getPaddingLeft(option.depth) }"
+        role="option"
+        :aria-selected="modelValue === option.value"
         @click="selectOption(option.value)"
       >
-        <span v-if="option.depth > 0" class="text-gray-300 mr-2">└</span>
+        <span
+          v-if="option.depth > 0"
+          class="text-gray-300 mr-2"
+          >└</span
+        >
         <span>{{ option.label }}</span>
       </button>
     </div>

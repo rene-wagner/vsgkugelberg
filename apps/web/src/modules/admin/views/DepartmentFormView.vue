@@ -129,7 +129,12 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
     <!-- Page Header -->
     <div class="mb-8">
       <div class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2">
-        <router-link to="/admin/abteilungen" class="hover:text-vsg-blue-600 transition-colors"> Abteilungen </router-link>
+        <router-link
+          to="/admin/abteilungen"
+          class="hover:text-vsg-blue-600 transition-colors"
+        >
+          Abteilungen
+        </router-link>
         <FontAwesomeIcon icon="chevron-right" />
         <span class="text-vsg-blue-600">{{ breadcrumbAction }}</span>
       </div>
@@ -142,27 +147,41 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
     </div>
 
     <!-- Loading State -->
-    <div v-if="isLoading" class="flex items-center justify-center py-12">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center py-12"
+    >
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Content with Tabs -->
     <div v-else>
       <!-- Tab Navigation -->
-      <VsgTabNav v-model:active-tab="activeTab" :tabs="tabs" />
+      <VsgTabNav
+        v-model:active-tab="activeTab"
+        :tabs="tabs"
+      />
 
       <!-- Tab Content -->
       <div class="max-w-4xl">
         <!-- Tab 1: Grunddaten (Basic Data) -->
         <div v-show="activeTab === 'grunddaten'">
-          <DepartmentForm :department="department" :is-edit-mode="isEditMode" @saved="handleDepartmentSaved" />
+          <DepartmentForm
+            :department="department"
+            :is-edit-mode="isEditMode"
+            @saved="handleDepartmentSaved"
+          />
         </div>
 
         <!-- Tab 2: Statistiken (Stats) -->
         <div v-show="activeTab === 'statistiken'">
           <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">STATISTIKEN</h2>
-            <DepartmentStatsEditor v-if="department" :department-slug="department.slug" :initial-stats="department.stats || []" />
+            <DepartmentStatsEditor
+              v-if="department"
+              :department-slug="department.slug"
+              :initial-stats="department.stats || []"
+            />
           </div>
         </div>
 
@@ -170,7 +189,11 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
         <div v-show="activeTab === 'standorte'">
           <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">STANDORTE</h2>
-            <DepartmentLocationsEditor v-if="department" :department-slug="department.slug" :initial-locations="department.locations || []" />
+            <DepartmentLocationsEditor
+              v-if="department"
+              :department-slug="department.slug"
+              :initial-locations="department.locations || []"
+            />
           </div>
         </div>
 
@@ -178,7 +201,11 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
         <div v-show="activeTab === 'training'">
           <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">TRAININGSGRUPPEN</h2>
-            <DepartmentTrainingEditor v-if="department" :department-slug="department.slug" :initial-groups="department.trainingGroups || []" />
+            <DepartmentTrainingEditor
+              v-if="department"
+              :department-slug="department.slug"
+              :initial-groups="department.trainingGroups || []"
+            />
           </div>
         </div>
 
@@ -186,7 +213,11 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
         <div v-show="activeTab === 'trainer'">
           <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
             <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">TRAINER</h2>
-            <DepartmentTrainersEditor v-if="department" :department-slug="department.slug" :initial-trainers="department.trainers || []" />
+            <DepartmentTrainersEditor
+              v-if="department"
+              :department-slug="department.slug"
+              :initial-trainers="department.trainers || []"
+            />
           </div>
         </div>
       </div>

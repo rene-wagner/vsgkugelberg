@@ -55,14 +55,20 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <form class="space-y-6 pb-12" @submit.prevent="handleSubmit">
+  <form
+    class="space-y-6 pb-12"
+    @submit.prevent="handleSubmit"
+  >
     <!-- Development Basics -->
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">ENTWICKLUNGSDATEN</h2>
 
       <div class="space-y-6">
         <div>
-          <label for="developmentHeadline" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="developmentHeadline"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Abschnitts-Überschrift
           </label>
           <input
@@ -75,10 +81,17 @@ async function handleSubmit() {
         </div>
 
         <div>
-          <label for="developmentDescription" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="developmentDescription"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Beschreibung (Markdown)
           </label>
-          <VsgMarkdownEditor v-model="developmentDescription" placeholder="Die Geschichte der Entwicklung..." min-height="200px" />
+          <VsgMarkdownEditor
+            v-model="developmentDescription"
+            placeholder="Die Geschichte der Entwicklung..."
+            min-height="200px"
+          />
         </div>
       </div>
     </div>
@@ -95,7 +108,12 @@ async function handleSubmit() {
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6 uppercase">Chronik der Ereignisse</h2>
 
       <div class="space-y-6">
-        <VueDraggable v-model="localChronicleGroups" handle=".drag-handle" :animation="200" class="space-y-6">
+        <VueDraggable
+          v-model="localChronicleGroups"
+          handle=".drag-handle"
+          :animation="200"
+          class="space-y-6"
+        >
           <HistoryChronicleGroupEditor
             v-for="(group, index) in localChronicleGroups"
             :key="index"

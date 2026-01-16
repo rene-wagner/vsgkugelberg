@@ -139,14 +139,23 @@ const departmentCta = computed<DepartmentCta>(() => {
 <template>
   <div>
     <!-- Loading State -->
-    <div v-if="currentDepartmentLoading" class="flex min-h-[60vh] items-center justify-center bg-vsg-blue-900">
+    <div
+      v-if="currentDepartmentLoading"
+      class="flex min-h-[60vh] items-center justify-center bg-vsg-blue-900"
+    >
       <div class="h-12 w-12 animate-spin rounded-full border-4 border-vsg-blue-200 border-t-vsg-gold-400"></div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="currentDepartmentError" class="flex min-h-[60vh] flex-col items-center justify-center bg-white px-6">
+    <div
+      v-else-if="currentDepartmentError"
+      class="flex min-h-[60vh] flex-col items-center justify-center bg-white px-6"
+    >
       <div class="max-w-md text-center">
-        <FontAwesomeIcon icon="triangle-exclamation" class="mx-auto mb-6 text-red-400" />
+        <FontAwesomeIcon
+          icon="triangle-exclamation"
+          class="mx-auto mb-6 text-red-400"
+        />
         <h1 class="mb-4 font-display text-2xl text-vsg-blue-900">Fehler beim Laden</h1>
         <p class="mb-6 text-vsg-blue-700">{{ currentDepartmentError }}</p>
         <button
@@ -159,7 +168,10 @@ const departmentCta = computed<DepartmentCta>(() => {
     </div>
 
     <!-- Not Found State -->
-    <div v-else-if="currentDepartmentNotFound" class="flex min-h-[60vh] flex-col items-center justify-center bg-white px-6">
+    <div
+      v-else-if="currentDepartmentNotFound"
+      class="flex min-h-[60vh] flex-col items-center justify-center bg-white px-6"
+    >
       <div class="max-w-md text-center">
         <div class="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-vsg-blue-100">
           <span class="font-display text-4xl text-vsg-blue-600">404</span>
@@ -189,7 +201,10 @@ const departmentCta = computed<DepartmentCta>(() => {
       />
 
       <!-- Stats Section -->
-      <StatsSection v-if="departmentStats.length > 0" :stats="departmentStats" />
+      <StatsSection
+        v-if="departmentStats.length > 0"
+        :stats="departmentStats"
+      />
 
       <!-- Training Schedule Section -->
       <VsgTrainingScheduleSection

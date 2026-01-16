@@ -63,7 +63,11 @@ const toggleClasses = computed(() => {
 
 <template>
   <div>
-    <label v-if="label" :for="id" :class="labelClasses">
+    <label
+      v-if="label"
+      :for="id"
+      :class="labelClasses"
+    >
       {{ label }}
       <slot name="label-suffix" />
     </label>
@@ -78,9 +82,20 @@ const toggleClasses = computed(() => {
         :class="inputClasses"
         @input="handleInput"
       />
-      <button type="button" :class="toggleClasses" :aria-label="ariaLabel" @click="toggleVisibility">
-        <FontAwesomeIcon v-if="isVisible" icon="eye" />
-        <FontAwesomeIcon v-else icon="eye-slash" />
+      <button
+        type="button"
+        :class="toggleClasses"
+        :aria-label="ariaLabel"
+        @click="toggleVisibility"
+      >
+        <FontAwesomeIcon
+          v-if="isVisible"
+          icon="eye"
+        />
+        <FontAwesomeIcon
+          v-else
+          icon="eye-slash"
+        />
       </button>
     </div>
   </div>

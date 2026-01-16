@@ -92,27 +92,42 @@ async function handleRecalculateSlugs() {
     </div>
 
     <!-- Loading State -->
-    <div v-if="categoriesStore.isLoading" class="flex items-center justify-center py-12">
+    <div
+      v-if="categoriesStore.isLoading"
+      class="flex items-center justify-center py-12"
+    >
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="categoriesStore.error" class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+    <div
+      v-else-if="categoriesStore.error"
+      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ categoriesStore.error }}</p>
     </div>
 
     <!-- Success State -->
-    <div v-if="categoriesStore.successMessage" class="bg-green-50 border border-green-200 rounded-xl p-6 mb-6 flex items-center justify-between">
+    <div
+      v-if="categoriesStore.successMessage"
+      class="bg-green-50 border border-green-200 rounded-xl p-6 mb-6 flex items-center justify-between"
+    >
       <p class="text-sm text-green-600 font-body">
         {{ categoriesStore.successMessage }}
       </p>
-      <button class="text-green-600 hover:text-green-700" @click="categoriesStore.successMessage = null">
+      <button
+        class="text-green-600 hover:text-green-700"
+        @click="categoriesStore.successMessage = null"
+      >
         <FontAwesomeIcon icon="xmark" />
       </button>
     </div>
 
     <!-- Table -->
-    <div v-else class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+    <div
+      v-else
+      class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+    >
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
@@ -124,13 +139,21 @@ async function handleRecalculateSlugs() {
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr v-for="category in flattenedCategories" :key="category.id" class="hover:bg-gray-50 transition-colors">
+            <tr
+              v-for="category in flattenedCategories"
+              :key="category.id"
+              class="hover:bg-gray-50 transition-colors"
+            >
               <td class="px-6 py-4">
                 <span
                   class="font-body text-sm text-vsg-blue-900 font-medium inline-flex items-center"
                   :style="{ paddingLeft: getPaddingLeft(category.depth) }"
                 >
-                  <span v-if="category.depth > 0" class="text-gray-300 mr-2">└</span>
+                  <span
+                    v-if="category.depth > 0"
+                    class="text-gray-300 mr-2"
+                    >└</span
+                  >
                   {{ category.name }}
                 </span>
               </td>
@@ -164,15 +187,24 @@ async function handleRecalculateSlugs() {
       </div>
 
       <!-- Empty State -->
-      <div v-if="flattenedCategories.length === 0" class="px-6 py-12 text-center">
+      <div
+        v-if="flattenedCategories.length === 0"
+        class="px-6 py-12 text-center"
+      >
         <p class="font-body text-gray-500">Keine Kategorien vorhanden.</p>
-        <router-link to="/admin/kategorien/new" class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm">
+        <router-link
+          to="/admin/kategorien/new"
+          class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm"
+        >
           Erste Kategorie erstellen
         </router-link>
       </div>
 
       <!-- Pagination -->
-      <div v-if="flattenedCategories.length > 0" class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50">
+      <div
+        v-if="flattenedCategories.length > 0"
+        class="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-gray-50"
+      >
         <div class="font-body font-normal text-sm text-gray-500">
           Zeige
           <span class="text-vsg-blue-900 font-medium">{{ flattenedCategories.length }}</span>

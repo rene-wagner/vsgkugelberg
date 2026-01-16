@@ -36,7 +36,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
               <div class="rounded-xl border border-vsg-blue-100 bg-vsg-blue-50 p-6">
                 <div class="flex items-start gap-4">
                   <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-gold-400">
-                    <FontAwesomeIcon icon="user" class="text-vsg-blue-900" />
+                    <FontAwesomeIcon
+                      icon="user"
+                      class="text-vsg-blue-900"
+                    />
                   </div>
                   <div>
                     <span class="inline-block rounded-full bg-vsg-gold-400 px-3 py-1 text-sm font-body text-vsg-blue-900">
@@ -51,7 +54,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
               <div class="rounded-xl border border-vsg-blue-100 bg-vsg-blue-50 p-6">
                 <div class="flex items-start gap-4">
                   <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-blue-200">
-                    <FontAwesomeIcon icon="user" class="text-vsg-blue-900" />
+                    <FontAwesomeIcon
+                      icon="user"
+                      class="text-vsg-blue-900"
+                    />
                   </div>
                   <div>
                     <span class="inline-block rounded-full bg-vsg-blue-200 px-3 py-1 text-sm font-body text-vsg-blue-900">
@@ -66,7 +72,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
               <div class="rounded-xl border border-vsg-blue-100 bg-vsg-blue-50 p-6">
                 <div class="flex items-start gap-4">
                   <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-blue-200">
-                    <FontAwesomeIcon icon="user" class="text-vsg-blue-900" />
+                    <FontAwesomeIcon
+                      icon="user"
+                      class="text-vsg-blue-900"
+                    />
                   </div>
                   <div>
                     <span class="inline-block rounded-full bg-vsg-blue-200 px-3 py-1 text-sm font-body text-vsg-blue-900"> Schatzmeister </span>
@@ -79,7 +88,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
               <div class="rounded-xl border border-vsg-blue-100 bg-vsg-blue-50 p-6">
                 <div class="flex items-start gap-4">
                   <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-vsg-blue-200">
-                    <FontAwesomeIcon icon="user" class="text-vsg-blue-900" />
+                    <FontAwesomeIcon
+                      icon="user"
+                      class="text-vsg-blue-900"
+                    />
                   </div>
                   <div>
                     <span class="inline-block rounded-full bg-vsg-blue-200 px-3 py-1 text-sm font-body text-vsg-blue-900"> Schriftfuhrer </span>
@@ -96,7 +108,11 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
               <p class="font-body text-lg text-vsg-blue-700">
                 <strong class="text-vsg-blue-900">Hinweis:</strong>
                 Für Anfragen an den Vorstand nutzen Sie bitte unsere
-                <a href="/kontakt" class="text-vsg-gold-600 hover:text-vsg-gold-700 underline">Kontaktseite</a>.
+                <a
+                  href="/kontakt"
+                  class="text-vsg-gold-600 hover:text-vsg-gold-700 underline"
+                  >Kontaktseite</a
+                >.
               </p>
             </div>
           </div>

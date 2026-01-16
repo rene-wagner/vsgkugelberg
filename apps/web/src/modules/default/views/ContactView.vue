@@ -66,26 +66,38 @@ function encodeBase64(value: string): string {
     <section class="py-16">
       <div class="mx-auto max-w-2xl px-6">
         <!-- Loading State -->
-        <div v-if="contactPersonsStore.isLoading" class="flex items-center justify-center py-12">
+        <div
+          v-if="contactPersonsStore.isLoading"
+          class="flex items-center justify-center py-12"
+        >
           <div class="text-vsg-blue-600 font-body">Laden...</div>
         </div>
 
         <!-- Error State -->
-        <div v-else-if="contactPersonsStore.error" class="bg-red-50 border border-red-200 rounded-xl p-6 text-center">
+        <div
+          v-else-if="contactPersonsStore.error"
+          class="bg-red-50 border border-red-200 rounded-xl p-6 text-center"
+        >
           <p class="text-sm text-red-600 font-body">
             {{ contactPersonsStore.error }}
           </p>
         </div>
 
         <!-- Empty State -->
-        <div v-else-if="contactPersonsStore.contactPersons.length === 0" class="text-center py-12">
+        <div
+          v-else-if="contactPersonsStore.contactPersons.length === 0"
+          class="text-center py-12"
+        >
           <p class="font-body text-vsg-blue-600">Derzeit sind keine Ansprechpartner verfugbar.</p>
         </div>
 
         <!-- Contact Person Selector -->
         <div v-else>
           <div class="mb-8">
-            <label for="contact-person-select" class="block font-body font-normal text-sm tracking-wider text-vsg-blue-600 uppercase mb-3">
+            <label
+              for="contact-person-select"
+              class="block font-body font-normal text-sm tracking-wider text-vsg-blue-600 uppercase mb-3"
+            >
               Ansprechpartner wählen
             </label>
             <select
@@ -100,7 +112,11 @@ function encodeBase64(value: string): string {
               "
             >
               <option :value="null">Bitte wählen...</option>
-              <option v-for="cp in contactPersonsStore.contactPersons" :key="cp.id" :value="cp.id">
+              <option
+                v-for="cp in contactPersonsStore.contactPersons"
+                :key="cp.id"
+                :value="cp.id"
+              >
                 {{ formatOptionLabel(cp) }}
               </option>
             </select>
@@ -115,7 +131,10 @@ function encodeBase64(value: string): string {
             leave-from-class="opacity-100 translate-y-0"
             leave-to-class="opacity-0 translate-y-4"
           >
-            <div v-if="selectedContactPerson" class="bg-vsg-blue-50 border border-vsg-blue-100 rounded-2xl p-8">
+            <div
+              v-if="selectedContactPerson"
+              class="bg-vsg-blue-50 border border-vsg-blue-100 rounded-2xl p-8"
+            >
               <!-- Profile Image and Name/Role Header -->
               <div class="mb-6 pb-6 border-b border-vsg-blue-200">
                 <div class="flex items-center gap-6">
@@ -128,7 +147,10 @@ function encodeBase64(value: string): string {
                       class="w-full h-full object-cover"
                       loading="lazy"
                     />
-                    <span v-else class="text-3xl font-display text-vsg-blue-400">
+                    <span
+                      v-else
+                      class="text-3xl font-display text-vsg-blue-400"
+                    >
                       {{ getInitials(selectedContactPerson) }}
                     </span>
                   </div>
@@ -150,7 +172,10 @@ function encodeBase64(value: string): string {
                 <!-- Phone -->
                 <div class="flex items-start gap-4">
                   <div class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center">
-                    <FontAwesomeIcon icon="phone" class="text-vsg-blue-600" />
+                    <FontAwesomeIcon
+                      icon="phone"
+                      class="text-vsg-blue-600"
+                    />
                   </div>
                   <div>
                     <span class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider">Telefon</span>
@@ -165,7 +190,10 @@ function encodeBase64(value: string): string {
                 <!-- Email -->
                 <div class="flex items-start gap-4">
                   <div class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center">
-                    <FontAwesomeIcon icon="envelope" class="text-vsg-blue-600" />
+                    <FontAwesomeIcon
+                      icon="envelope"
+                      class="text-vsg-blue-600"
+                    />
                   </div>
                   <div>
                     <span class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider">E-Mail</span>
@@ -177,9 +205,15 @@ function encodeBase64(value: string): string {
                 </div>
 
                 <!-- Address (if available) -->
-                <div v-if="selectedContactPerson.address" class="flex items-start gap-4">
+                <div
+                  v-if="selectedContactPerson.address"
+                  class="flex items-start gap-4"
+                >
                   <div class="shrink-0 w-10 h-10 bg-vsg-blue-100 rounded-lg flex items-center justify-center">
-                    <FontAwesomeIcon icon="location-dot" class="text-vsg-blue-600" />
+                    <FontAwesomeIcon
+                      icon="location-dot"
+                      class="text-vsg-blue-600"
+                    />
                   </div>
                   <div>
                     <span class="block text-sm font-body text-vsg-blue-500 uppercase tracking-wider">Adresse</span>
@@ -209,8 +243,14 @@ function encodeBase64(value: string): string {
           </Transition>
 
           <!-- Default Message when no selection -->
-          <div v-if="!selectedContactPerson" class="text-center py-12 bg-gray-50 rounded-2xl border border-gray-100">
-            <FontAwesomeIcon icon="users" class="mx-auto text-vsg-blue-200" />
+          <div
+            v-if="!selectedContactPerson"
+            class="text-center py-12 bg-gray-50 rounded-2xl border border-gray-100"
+          >
+            <FontAwesomeIcon
+              icon="users"
+              class="mx-auto text-vsg-blue-200"
+            />
             <p class="mt-4 font-body text-vsg-blue-500">Wählen Sie einen Ansprechpartner aus der Liste, um die Kontaktdaten anzuzeigen.</p>
           </div>
         </div>

@@ -34,7 +34,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
             <div class="mt-8 grid gap-6 md:grid-cols-2">
               <div class="flex gap-4 rounded-xl border border-vsg-blue-100 bg-white p-6">
                 <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400">
-                  <FontAwesomeIcon icon="users" class="text-vsg-blue-900" />
+                  <FontAwesomeIcon
+                    icon="users"
+                    class="text-vsg-blue-900"
+                  />
                 </div>
                 <div>
                   <h3 class="font-display text-lg tracking-wider text-vsg-blue-900">Gemeinschaft</h3>
@@ -44,7 +47,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
               <div class="flex gap-4 rounded-xl border border-vsg-blue-100 bg-white p-6">
                 <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400">
-                  <FontAwesomeIcon icon="bolt" class="text-vsg-blue-900" />
+                  <FontAwesomeIcon
+                    icon="bolt"
+                    class="text-vsg-blue-900"
+                  />
                 </div>
                 <div>
                   <h3 class="font-display text-lg tracking-wider text-vsg-blue-900">Training</h3>
@@ -54,7 +60,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
               <div class="flex gap-4 rounded-xl border border-vsg-blue-100 bg-white p-6">
                 <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400">
-                  <FontAwesomeIcon icon="check" class="text-vsg-blue-900" />
+                  <FontAwesomeIcon
+                    icon="check"
+                    class="text-vsg-blue-900"
+                  />
                 </div>
                 <div>
                   <h3 class="font-display text-lg tracking-wider text-vsg-blue-900">Wettkampfe</h3>
@@ -64,7 +73,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
               <div class="flex gap-4 rounded-xl border border-vsg-blue-100 bg-white p-6">
                 <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-vsg-gold-400">
-                  <FontAwesomeIcon icon="calendar" class="text-vsg-blue-900" />
+                  <FontAwesomeIcon
+                    icon="calendar"
+                    class="text-vsg-blue-900"
+                  />
                 </div>
                 <div>
                   <h3 class="font-display text-lg tracking-wider text-vsg-blue-900">Veranstaltungen</h3>

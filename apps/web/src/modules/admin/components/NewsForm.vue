@@ -159,9 +159,15 @@ function updateThumbnail(media: MediaItem | null) {
 </script>
 
 <template>
-  <form class="max-w-3xl" @submit.prevent="handleSubmit">
+  <form
+    class="max-w-3xl"
+    @submit.prevent="handleSubmit"
+  >
     <!-- Error Message -->
-    <div v-if="error" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+    <div
+      v-if="error"
+      class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ error }}</p>
     </div>
 
@@ -172,7 +178,10 @@ function updateThumbnail(media: MediaItem | null) {
       <div class="space-y-6">
         <!-- Title -->
         <div>
-          <label for="title" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="title"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Titel <span class="text-red-500">*</span>
           </label>
           <input
@@ -188,7 +197,11 @@ function updateThumbnail(media: MediaItem | null) {
         <!-- Content -->
         <div>
           <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Inhalt </label>
-          <VsgMarkdownEditor v-model="content" placeholder="Artikelinhalt..." min-height="300px" />
+          <VsgMarkdownEditor
+            v-model="content"
+            placeholder="Artikelinhalt..."
+            min-height="300px"
+          />
         </div>
 
         <!-- Author (read-only display) -->
@@ -218,7 +231,12 @@ function updateThumbnail(media: MediaItem | null) {
             type="checkbox"
             class="w-5 h-5 rounded border-gray-300 text-vsg-blue-600 focus:ring-vsg-blue-500"
           />
-          <label for="published" class="font-body font-normal text-sm text-vsg-blue-900"> Artikel veröffentlichen </label>
+          <label
+            for="published"
+            class="font-body font-normal text-sm text-vsg-blue-900"
+          >
+            Artikel veröffentlichen
+          </label>
         </div>
       </div>
     </div>
@@ -227,10 +245,27 @@ function updateThumbnail(media: MediaItem | null) {
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">Kategorien</h2>
 
-      <div v-if="categoriesStore.isLoading" class="text-vsg-blue-600 font-body text-sm">Laden...</div>
-      <div v-else-if="categoriesStore.categories.length === 0" class="text-gray-500 font-body text-sm">Keine Kategorien vorhanden</div>
-      <div v-else class="space-y-3">
-        <div v-for="category in categoriesStore.categories" :key="category.id" class="flex items-center gap-3">
+      <div
+        v-if="categoriesStore.isLoading"
+        class="text-vsg-blue-600 font-body text-sm"
+      >
+        Laden...
+      </div>
+      <div
+        v-else-if="categoriesStore.categories.length === 0"
+        class="text-gray-500 font-body text-sm"
+      >
+        Keine Kategorien vorhanden
+      </div>
+      <div
+        v-else
+        class="space-y-3"
+      >
+        <div
+          v-for="category in categoriesStore.categories"
+          :key="category.id"
+          class="flex items-center gap-3"
+        >
           <input
             :id="`category-${category.id}`"
             type="checkbox"
@@ -238,7 +273,10 @@ function updateThumbnail(media: MediaItem | null) {
             class="w-5 h-5 rounded border-gray-300 text-vsg-blue-600 focus:ring-vsg-blue-500"
             @change="toggleCategory(category.id)"
           />
-          <label :for="`category-${category.id}`" class="font-body font-normal text-sm text-vsg-blue-900 cursor-pointer">
+          <label
+            :for="`category-${category.id}`"
+            class="font-body font-normal text-sm text-vsg-blue-900 cursor-pointer"
+          >
             {{ category.name }}
           </label>
         </div>

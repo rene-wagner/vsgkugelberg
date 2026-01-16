@@ -31,7 +31,12 @@ onMounted(async () => {
     <!-- Page Header -->
     <div class="mb-8">
       <div class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2">
-        <router-link to="/admin/termine" class="hover:text-vsg-blue-600 transition-colors"> Veranstaltungen </router-link>
+        <router-link
+          to="/admin/termine"
+          class="hover:text-vsg-blue-600 transition-colors"
+        >
+          Veranstaltungen
+        </router-link>
         <FontAwesomeIcon icon="chevron-right" />
         <span class="text-vsg-blue-600">{{ breadcrumbAction }}</span>
       </div>
@@ -44,11 +49,18 @@ onMounted(async () => {
     </div>
 
     <!-- Loading State -->
-    <div v-if="isLoading" class="flex items-center justify-center py-12">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center py-12"
+    >
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Form -->
-    <EventForm v-else :event="event" :is-edit-mode="isEditMode" />
+    <EventForm
+      v-else
+      :event="event"
+      :is-edit-mode="isEditMode"
+    />
   </div>
 </template>

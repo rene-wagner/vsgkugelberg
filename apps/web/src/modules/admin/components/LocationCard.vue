@@ -107,7 +107,10 @@ function handleRemoveAmenity(index: number) {
 </script>
 
 <template>
-  <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm" :class="{ 'border-vsg-lime-500': isNew }">
+  <div
+    class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+    :class="{ 'border-vsg-lime-500': isNew }"
+  >
     <!-- Card Header -->
     <div class="flex items-center gap-3 p-4 bg-gray-50 border-b border-gray-200">
       <!-- Drag Handle -->
@@ -116,12 +119,23 @@ function handleRemoveAmenity(index: number) {
       </div>
 
       <!-- Expand/Collapse Toggle -->
-      <button type="button" class="p-1 hover:bg-gray-200 rounded transition-colors" @click="isExpanded = !isExpanded">
-        <FontAwesomeIcon icon="chevron-down" class="text-gray-500 transition-transform" :class="{ 'rotate-180': !isExpanded }" />
+      <button
+        type="button"
+        class="p-1 hover:bg-gray-200 rounded transition-colors"
+        @click="isExpanded = !isExpanded"
+      >
+        <FontAwesomeIcon
+          icon="chevron-down"
+          class="text-gray-500 transition-transform"
+          :class="{ 'rotate-180': !isExpanded }"
+        />
       </button>
 
       <!-- Location Icon -->
-      <FontAwesomeIcon icon="location-dot" class="text-vsg-blue-600" />
+      <FontAwesomeIcon
+        icon="location-dot"
+        class="text-vsg-blue-600"
+      />
 
       <!-- Location Name -->
       <div class="flex-1 min-w-0">
@@ -151,11 +165,18 @@ function handleRemoveAmenity(index: number) {
     </div>
 
     <!-- Card Body (Collapsible) -->
-    <div v-show="isExpanded" class="p-4 space-y-4">
+    <div
+      v-show="isExpanded"
+      class="p-4 space-y-4"
+    >
       <!-- Image Selection -->
       <div>
         <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-2"> Standortfoto </label>
-        <ImageSelector v-model:media-id="imageId" v-model:media="image" label="Foto auswählen oder hochladen" />
+        <ImageSelector
+          v-model:media-id="imageId"
+          v-model:media="image"
+          label="Foto auswählen oder hochladen"
+        />
       </div>
 
       <!-- Badge Row -->
@@ -219,14 +240,21 @@ function handleRemoveAmenity(index: number) {
         <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-2"> Ausstattung </label>
 
         <!-- Amenities List -->
-        <div v-if="amenities.length > 0" class="flex flex-wrap gap-2 mb-3">
+        <div
+          v-if="amenities.length > 0"
+          class="flex flex-wrap gap-2 mb-3"
+        >
           <div
             v-for="(amenity, index) in amenities"
             :key="index"
             class="flex items-center gap-1 px-2 py-1 bg-gray-100 rounded-full text-sm text-vsg-blue-900"
           >
             <span>{{ amenity.text }}</span>
-            <button type="button" class="p-0.5 text-gray-400 hover:text-red-500 rounded-full" @click="handleRemoveAmenity(index)">
+            <button
+              type="button"
+              class="p-0.5 text-gray-400 hover:text-red-500 rounded-full"
+              @click="handleRemoveAmenity(index)"
+            >
               <FontAwesomeIcon icon="xmark" />
             </button>
           </div>

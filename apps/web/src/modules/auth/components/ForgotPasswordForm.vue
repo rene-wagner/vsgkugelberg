@@ -33,9 +33,15 @@ async function handleSubmit() {
 
 <template>
   <!-- Success State -->
-  <div v-if="isSubmitted" class="text-center animate-slide-up">
+  <div
+    v-if="isSubmitted"
+    class="text-center animate-slide-up"
+  >
     <div class="w-16 h-16 mx-auto mb-4 bg-vsg-gold-400/20 rounded-full flex items-center justify-center">
-      <FontAwesomeIcon icon="check" class="text-vsg-gold-400" />
+      <FontAwesomeIcon
+        icon="check"
+        class="text-vsg-gold-400"
+      />
     </div>
     <p class="font-body font-normal text-vsg-blue-100">
       {{ successMessage }}
@@ -43,14 +49,26 @@ async function handleSubmit() {
   </div>
 
   <!-- Form -->
-  <form v-else class="space-y-6" @submit.prevent="handleSubmit">
-    <div v-if="error" class="rounded-lg bg-red-500/20 border border-red-500/30 p-4">
+  <form
+    v-else
+    class="space-y-6"
+    @submit.prevent="handleSubmit"
+  >
+    <div
+      v-if="error"
+      class="rounded-lg bg-red-500/20 border border-red-500/30 p-4"
+    >
       <p class="text-sm text-red-300">{{ error }}</p>
     </div>
 
     <!-- Email Input -->
     <div class="animate-slide-up delay-300">
-      <label for="email" class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"> E-Mail Adresse </label>
+      <label
+        for="email"
+        class="block font-body font-normal text-sm tracking-wider text-vsg-gold-400 uppercase mb-2"
+      >
+        E-Mail Adresse
+      </label>
       <input
         id="email"
         v-model="email"

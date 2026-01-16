@@ -19,7 +19,10 @@ const hasValidToken = computed(() => token.value.length === 64);
     <div class="relative z-10 w-full max-w-md mx-auto px-6 py-12">
       <!-- Logo and Brand -->
       <div class="text-center mb-10 animate-slide-up">
-        <RouterLink to="/" class="inline-flex items-center gap-4 mb-6">
+        <RouterLink
+          to="/"
+          class="inline-flex items-center gap-4 mb-6"
+        >
           <div class="w-14 h-14 bg-vsg-gold-400 rounded-lg flex items-center justify-center animate-pulse-gold">
             <span class="font-display text-vsg-blue-900 text-3xl tracking-tight">VK</span>
           </div>
@@ -33,9 +36,15 @@ const hasValidToken = computed(() => token.value.length === 64);
       <!-- Reset Password Card -->
       <div class="bg-vsg-blue-900/80 backdrop-blur-md border border-vsg-gold-400/20 rounded-2xl p-8 animate-scale-in delay-200">
         <!-- Invalid Token State -->
-        <div v-if="!hasValidToken" class="text-center">
+        <div
+          v-if="!hasValidToken"
+          class="text-center"
+        >
           <div class="w-16 h-16 mx-auto mb-4 bg-red-500/20 rounded-full flex items-center justify-center">
-            <FontAwesomeIcon icon="triangle-exclamation" class="text-red-400" />
+            <FontAwesomeIcon
+              icon="triangle-exclamation"
+              class="text-red-400"
+            />
           </div>
           <h1 class="font-display text-2xl tracking-wider text-white text-glow mb-4">UNGÜLTIGER LINK</h1>
           <p class="font-body font-normal text-vsg-blue-200 mb-6">Di^eser Link ist ungültig oder abgelaufen. Bitte fordere einen neuen an.</p>

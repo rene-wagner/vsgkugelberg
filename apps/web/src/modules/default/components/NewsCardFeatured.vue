@@ -13,7 +13,10 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <a :href="href" class="card-hover group overflow-hidden bg-vsg-blue-600">
+  <a
+    :href="href"
+    class="card-hover group overflow-hidden bg-vsg-blue-600"
+  >
     <div class="relative aspect-video overflow-hidden bg-vsg-blue-700">
       <div class="absolute inset-0 bg-linear-to-t from-vsg-blue-600 to-transparent" />
       <div class="absolute bottom-4 left-4">

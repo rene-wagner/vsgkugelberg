@@ -220,9 +220,15 @@ function toggleWeekDay(day: string) {
 </script>
 
 <template>
-  <form class="max-w-3xl" @submit.prevent="handleSubmit">
+  <form
+    class="max-w-3xl"
+    @submit.prevent="handleSubmit"
+  >
     <!-- Error Message -->
-    <div v-if="error" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+    <div
+      v-if="error"
+      class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ error }}</p>
     </div>
 
@@ -233,7 +239,10 @@ function toggleWeekDay(day: string) {
       <div class="space-y-6">
         <!-- Title -->
         <div>
-          <label for="title" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="title"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Titel <span class="text-red-500">*</span>
           </label>
           <input
@@ -248,13 +257,21 @@ function toggleWeekDay(day: string) {
 
         <!-- Description -->
         <div>
-          <label for="description" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Beschreibung </label>
+          <label
+            for="description"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
+            Beschreibung
+          </label>
           <VsgMarkdownEditor v-model="description" />
         </div>
 
         <!-- Category -->
         <div>
-          <label for="category" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="category"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Kategorie <span class="text-red-500">*</span>
           </label>
           <select
@@ -262,7 +279,11 @@ function toggleWeekDay(day: string) {
             v-model="category"
             class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
           >
-            <option v-for="cat in categories" :key="cat.value" :value="cat.value">
+            <option
+              v-for="cat in categories"
+              :key="cat.value"
+              :value="cat.value"
+            >
               {{ cat.label }}
             </option>
           </select>
@@ -270,7 +291,12 @@ function toggleWeekDay(day: string) {
 
         <!-- Location -->
         <div>
-          <label for="location" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Ort </label>
+          <label
+            for="location"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
+            Ort
+          </label>
           <input
             id="location"
             v-model="location"
@@ -295,13 +321,21 @@ function toggleWeekDay(day: string) {
             type="checkbox"
             class="w-4 h-4 text-vsg-blue-600 border-gray-300 rounded focus:ring-vsg-blue-500"
           />
-          <label for="isFullDay" class="font-body text-sm text-vsg-blue-900"> Ganztags </label>
+          <label
+            for="isFullDay"
+            class="font-body text-sm text-vsg-blue-900"
+          >
+            Ganztags
+          </label>
         </div>
 
         <!-- Start Date/Time -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="startDate" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+            <label
+              for="startDate"
+              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            >
               Startdatum <span class="text-red-500">*</span>
             </label>
             <input
@@ -313,7 +347,10 @@ function toggleWeekDay(day: string) {
             />
           </div>
           <div v-if="!isFullDay">
-            <label for="startTime" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+            <label
+              for="startTime"
+              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            >
               Startzeit <span class="text-red-500">*</span>
             </label>
             <input
@@ -329,7 +366,10 @@ function toggleWeekDay(day: string) {
         <!-- End Date/Time -->
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="endDate" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+            <label
+              for="endDate"
+              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            >
               Enddatum <span class="text-red-500">*</span>
             </label>
             <input
@@ -341,7 +381,10 @@ function toggleWeekDay(day: string) {
             />
           </div>
           <div v-if="!isFullDay">
-            <label for="endTime" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+            <label
+              for="endTime"
+              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+            >
               Endzeit <span class="text-red-500">*</span>
             </label>
             <input
@@ -363,7 +406,10 @@ function toggleWeekDay(day: string) {
       <div class="space-y-6">
         <!-- Recurrence Type -->
         <div>
-          <label for="recurrenceType" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="recurrenceType"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Wiederholungsmuster
           </label>
           <select

@@ -124,9 +124,15 @@ function handleCancel() {
 </script>
 
 <template>
-  <form class="max-w-3xl" @submit.prevent="handleSubmit">
+  <form
+    class="max-w-3xl"
+    @submit.prevent="handleSubmit"
+  >
     <!-- Error Message -->
-    <div v-if="error" class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+    <div
+      v-if="error"
+      class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ error }}</p>
     </div>
 
@@ -137,7 +143,10 @@ function handleCancel() {
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Username -->
         <div>
-          <label for="username" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="username"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             Benutzername <span class="text-red-500">*</span>
           </label>
           <input
@@ -152,7 +161,10 @@ function handleCancel() {
 
         <!-- Email -->
         <div>
-          <label for="email" class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
+          <label
+            for="email"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
             E-Mail Adresse <span class="text-red-500">*</span>
           </label>
           <input
@@ -172,7 +184,12 @@ function handleCancel() {
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">
         {{ isEditMode ? 'PASSWORT ANDERN' : 'PASSWORT' }}
       </h2>
-      <p v-if="isEditMode" class="font-body font-normal text-sm text-gray-500 mb-6">Lasse die Felder leer, um das Passwort nicht zu andern.</p>
+      <p
+        v-if="isEditMode"
+        class="font-body font-normal text-sm text-gray-500 mb-6"
+      >
+        Lasse die Felder leer, um das Passwort nicht zu andern.
+      </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Password -->
@@ -183,21 +200,36 @@ function handleCancel() {
           :required="!isEditMode"
           variant="admin"
         >
-          <template v-if="!isEditMode" #label-suffix>
+          <template
+            v-if="!isEditMode"
+            #label-suffix
+          >
             <span class="text-red-500">*</span>
           </template>
         </VsgPasswordInput>
 
         <!-- Confirm Password -->
-        <VsgPasswordInput id="confirmPassword" v-model="confirmPassword" label="Passwort bestatigen" :required="!isEditMode" variant="admin">
-          <template v-if="!isEditMode" #label-suffix>
+        <VsgPasswordInput
+          id="confirmPassword"
+          v-model="confirmPassword"
+          label="Passwort bestatigen"
+          :required="!isEditMode"
+          variant="admin"
+        >
+          <template
+            v-if="!isEditMode"
+            #label-suffix
+          >
             <span class="text-red-500">*</span>
           </template>
         </VsgPasswordInput>
       </div>
 
       <!-- Password Error -->
-      <p v-if="passwordError" class="mt-3 text-sm text-red-600 font-body">
+      <p
+        v-if="passwordError"
+        class="mt-3 text-sm text-red-600 font-body"
+      >
         {{ passwordError }}
       </p>
     </div>

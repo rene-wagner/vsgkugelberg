@@ -57,12 +57,20 @@ function handleOverlayClick(event: MouseEvent) {
 
 <template>
   <Teleport to="body">
-    <div v-if="isOpen" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" @click="handleOverlayClick">
+    <div
+      v-if="isOpen"
+      class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+      @click="handleOverlayClick"
+    >
       <div class="bg-white rounded-xl w-full max-w-4xl max-h-[80vh] flex flex-col shadow-xl">
         <!-- Header -->
         <div class="flex items-center justify-between p-6 border-b border-gray-200">
           <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 uppercase">Mediathek</h2>
-          <button type="button" class="p-2 text-gray-400 hover:text-gray-600 transition-colors" @click="handleClose">
+          <button
+            type="button"
+            class="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+            @click="handleClose"
+          >
             <FontAwesomeIcon icon="xmark" />
           </button>
         </div>
@@ -70,7 +78,10 @@ function handleOverlayClick(event: MouseEvent) {
         <!-- Content -->
         <div class="flex-1 overflow-y-auto p-6">
           <!-- Back button if in folder -->
-          <div v-if="mediaStore.currentFolderId !== null" class="mb-4">
+          <div
+            v-if="mediaStore.currentFolderId !== null"
+            class="mb-4"
+          >
             <button
               type="button"
               class="flex items-center gap-2 text-sm font-body text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors"
@@ -82,25 +93,40 @@ function handleOverlayClick(event: MouseEvent) {
           </div>
 
           <!-- Loading State -->
-          <div v-if="mediaStore.isLoading" class="flex items-center justify-center py-12">
+          <div
+            v-if="mediaStore.isLoading"
+            class="flex items-center justify-center py-12"
+          >
             <div class="text-vsg-blue-600 font-body">Laden...</div>
           </div>
 
           <!-- Error State -->
-          <div v-else-if="mediaStore.error" class="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div
+            v-else-if="mediaStore.error"
+            class="bg-red-50 border border-red-200 rounded-lg p-4"
+          >
             <p class="text-sm text-red-600 font-body">{{ mediaStore.error }}</p>
           </div>
 
           <!-- Empty State -->
-          <div v-else-if="!hasContent" class="text-center py-12">
+          <div
+            v-else-if="!hasContent"
+            class="text-center py-12"
+          >
             <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <FontAwesomeIcon icon="image" class="text-gray-400" />
+              <FontAwesomeIcon
+                icon="image"
+                class="text-gray-400"
+              />
             </div>
             <p class="font-body text-gray-500">Noch keine Medien oder Ordner vorhanden.</p>
           </div>
 
           <!-- Grid -->
-          <div v-else class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+          <div
+            v-else
+            class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3"
+          >
             <!-- Back to parent -->
             <button
               v-if="mediaStore.currentFolderId !== null"
@@ -108,7 +134,10 @@ function handleOverlayClick(event: MouseEvent) {
               class="aspect-square bg-gray-50 border border-gray-200 rounded-lg flex flex-col items-center justify-center hover:bg-gray-100 transition-colors"
               @click="navigateUp"
             >
-              <FontAwesomeIcon icon="arrow-left" class="text-gray-400" />
+              <FontAwesomeIcon
+                icon="arrow-left"
+                class="text-gray-400"
+              />
               <span class="mt-1 font-body text-[10px] text-gray-600 font-medium"> .. </span>
             </button>
 
@@ -120,7 +149,10 @@ function handleOverlayClick(event: MouseEvent) {
               class="aspect-square bg-vsg-blue-50 border border-vsg-blue-100 rounded-lg flex flex-col items-center justify-center hover:bg-vsg-blue-100 transition-colors"
               @click="loadFolder(folder.id)"
             >
-              <FontAwesomeIcon icon="folder" class="text-vsg-blue-400" />
+              <FontAwesomeIcon
+                icon="folder"
+                class="text-vsg-blue-400"
+              />
               <span class="mt-1 font-body text-[10px] text-vsg-blue-900 font-medium px-1 text-center truncate w-full">
                 {{ folder.name }}
               </span>
@@ -135,7 +167,11 @@ function handleOverlayClick(event: MouseEvent) {
               :class="[selectedItem?.id === item.id ? 'border-vsg-blue-600 ring-2 ring-vsg-blue-200' : 'border-transparent']"
               @click="selectMedia(item)"
             >
-              <img :src="mediaStore.getMediaUrl(item)" :alt="item.originalName" class="w-full h-full object-cover" />
+              <img
+                :src="mediaStore.getMediaUrl(item)"
+                :alt="item.originalName"
+                class="w-full h-full object-cover"
+              />
             </button>
           </div>
         </div>

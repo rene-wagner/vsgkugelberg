@@ -41,17 +41,26 @@ async function handleDelete(slug: string, name: string) {
     </div>
 
     <!-- Loading State -->
-    <div v-if="departmentsStore.isLoading" class="flex items-center justify-center py-12">
+    <div
+      v-if="departmentsStore.isLoading"
+      class="flex items-center justify-center py-12"
+    >
       <div class="text-vsg-blue-600 font-body">Laden...</div>
     </div>
 
     <!-- Error State -->
-    <div v-else-if="departmentsStore.error" class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6">
+    <div
+      v-else-if="departmentsStore.error"
+      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
+    >
       <p class="text-sm text-red-600 font-body">{{ departmentsStore.error }}</p>
     </div>
 
     <!-- Table -->
-    <div v-else class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+    <div
+      v-else
+      class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm"
+    >
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead>
@@ -63,11 +72,24 @@ async function handleDelete(slug: string, name: string) {
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            <tr v-for="department in departmentsStore.departments" :key="department.id" class="hover:bg-gray-50 transition-colors">
+            <tr
+              v-for="department in departmentsStore.departments"
+              :key="department.id"
+              class="hover:bg-gray-50 transition-colors"
+            >
               <td class="px-6 py-4">
                 <div class="w-8 h-8 flex items-center justify-center">
-                  <img v-if="department.icon" :src="mediaStore.getMediaUrl(department.icon)" :alt="department.name" class="w-6 h-6 object-contain" />
-                  <span v-else class="text-gray-300">-</span>
+                  <img
+                    v-if="department.icon"
+                    :src="mediaStore.getMediaUrl(department.icon)"
+                    :alt="department.name"
+                    class="w-6 h-6 object-contain"
+                  />
+                  <span
+                    v-else
+                    class="text-gray-300"
+                    >-</span
+                  >
                 </div>
               </td>
               <td class="px-6 py-4">
@@ -100,15 +122,25 @@ async function handleDelete(slug: string, name: string) {
       </div>
 
       <!-- Empty State -->
-      <div v-if="departmentsStore.departments.length === 0" class="px-6 py-12 text-center">
+      <div
+        v-if="departmentsStore.departments.length === 0"
+        class="px-6 py-12 text-center"
+      >
         <p class="font-body text-gray-500">Keine Abteilungen vorhanden.</p>
-        <router-link to="/admin/abteilungen/new" class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm">
+        <router-link
+          to="/admin/abteilungen/new"
+          class="inline-block mt-4 text-vsg-blue-600 hover:text-vsg-blue-700 font-body text-sm"
+        >
           Erste Abteilung erstellen
         </router-link>
       </div>
 
       <!-- Pagination -->
-      <VsgPagination v-if="departmentsStore.departments.length > 0" :meta="departmentsStore.meta" @page-change="handlePageChange" />
+      <VsgPagination
+        v-if="departmentsStore.departments.length > 0"
+        :meta="departmentsStore.meta"
+        @page-change="handlePageChange"
+      />
     </div>
   </div>
 </template>

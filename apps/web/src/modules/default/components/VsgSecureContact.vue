@@ -52,11 +52,23 @@ function handleClick(event: MouseEvent) {
 </script>
 
 <template>
-  <a :href="currentHref" class="cursor-pointer transition-colors duration-200" @mouseover="decode" @focus="decode" @click="handleClick">
-    <slot v-if="isDecoded" :value="decodedValue">
+  <a
+    :href="currentHref"
+    class="cursor-pointer transition-colors duration-200"
+    @mouseover="decode"
+    @focus="decode"
+    @click="handleClick"
+  >
+    <slot
+      v-if="isDecoded"
+      :value="decodedValue"
+    >
       {{ decodedValue }}
     </slot>
-    <slot v-else name="placeholder">
+    <slot
+      v-else
+      name="placeholder"
+    >
       {{ placeholder }}
     </slot>
   </a>

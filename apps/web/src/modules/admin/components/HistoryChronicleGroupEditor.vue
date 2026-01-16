@@ -54,7 +54,11 @@ function deleteEntry(index: number) {
         @input="handleHeadlineUpdate(($event.target as HTMLInputElement).value)"
       />
 
-      <button type="button" class="text-gray-400 hover:text-red-600 transition-colors" @click="emit('delete')">
+      <button
+        type="button"
+        class="text-gray-400 hover:text-red-600 transition-colors"
+        @click="emit('delete')"
+      >
         <FontAwesomeIcon icon="trash" />
       </button>
     </div>
@@ -62,7 +66,13 @@ function deleteEntry(index: number) {
     <div class="pl-9 space-y-3">
       <div class="text-xs font-body font-normal text-vsg-blue-600 uppercase tracking-widest mb-2">Ereignisse</div>
 
-      <VueDraggable :model-value="group.content" handle=".drag-handle" :animation="200" class="space-y-2" @update:model-value="handleEntriesUpdate">
+      <VueDraggable
+        :model-value="group.content"
+        handle=".drag-handle"
+        :animation="200"
+        class="space-y-2"
+        @update:model-value="handleEntriesUpdate"
+      >
         <HistoryChronicleEntryRow
           v-for="(entry, index) in group.content"
           :key="index"

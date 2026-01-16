@@ -119,8 +119,17 @@ async function handleFileUpload(event: Event) {
         class="w-32 h-32 border-2 border-dashed border-gray-300 rounded-full flex items-center justify-center bg-gray-50 overflow-hidden"
         :class="{ 'border-solid border-vsg-blue-300': previewImage }"
       >
-        <img v-if="previewImage" :src="mediaStore.getMediaUrl(previewImage)" :alt="previewImage.originalName" class="w-full h-full object-cover" />
-        <FontAwesomeIcon v-else icon="user" class="text-gray-400" />
+        <img
+          v-if="previewImage"
+          :src="mediaStore.getMediaUrl(previewImage)"
+          :alt="previewImage.originalName"
+          class="w-full h-full object-cover"
+        />
+        <FontAwesomeIcon
+          v-else
+          icon="user"
+          class="text-gray-400"
+        />
       </div>
 
       <!-- Actions -->
@@ -162,16 +171,30 @@ async function handleFileUpload(event: Event) {
     </div>
 
     <!-- Hidden File Input -->
-    <input ref="fileInput" type="file" class="hidden" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" @change="handleFileUpload" />
+    <input
+      ref="fileInput"
+      type="file"
+      class="hidden"
+      accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+      @change="handleFileUpload"
+    />
 
     <!-- Gallery Modal -->
     <Teleport to="body">
-      <div v-if="showGallery" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" @click.self="closeGallery">
+      <div
+        v-if="showGallery"
+        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+        @click.self="closeGallery"
+      >
         <div class="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[80vh] flex flex-col">
           <!-- Header -->
           <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
             <h3 class="font-display text-lg tracking-wider text-vsg-blue-900">Profilbild wählen</h3>
-            <button type="button" class="p-1 text-gray-400 hover:text-gray-600 transition-colors" @click="closeGallery">
+            <button
+              type="button"
+              class="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+              @click="closeGallery"
+            >
               <FontAwesomeIcon icon="xmark" />
             </button>
           </div>
@@ -179,7 +202,10 @@ async function handleFileUpload(event: Event) {
           <!-- Content -->
           <div class="flex-1 overflow-y-auto p-6">
             <!-- Back button if in folder -->
-            <div v-if="mediaStore.currentFolderId !== null" class="mb-4">
+            <div
+              v-if="mediaStore.currentFolderId !== null"
+              class="mb-4"
+            >
               <button
                 type="button"
                 class="flex items-center gap-2 text-sm font-body text-vsg-blue-600 hover:text-vsg-blue-800 transition-colors"
@@ -191,9 +217,15 @@ async function handleFileUpload(event: Event) {
             </div>
 
             <!-- Empty State -->
-            <div v-if="!hasContent" class="text-center py-12">
+            <div
+              v-if="!hasContent"
+              class="text-center py-12"
+            >
               <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FontAwesomeIcon icon="image" class="w-8 h-8 text-gray-400" />
+                <FontAwesomeIcon
+                  icon="image"
+                  class="w-8 h-8 text-gray-400"
+                />
               </div>
               <p class="font-body text-gray-500">Keine passenden Bilder in der Mediathek.</p>
               <button
@@ -206,7 +238,10 @@ async function handleFileUpload(event: Event) {
             </div>
 
             <!-- Image Grid -->
-            <div v-else class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+            <div
+              v-else
+              class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"
+            >
               <!-- Back to parent -->
               <button
                 v-if="mediaStore.currentFolderId !== null"
@@ -214,7 +249,10 @@ async function handleFileUpload(event: Event) {
                 class="aspect-square bg-gray-50 border border-gray-200 rounded-lg flex flex-col items-center justify-center hover:bg-gray-100 transition-colors"
                 @click="navigateUp"
               >
-                <FontAwesomeIcon icon="arrow-left" class="text-gray-400" />
+                <FontAwesomeIcon
+                  icon="arrow-left"
+                  class="text-gray-400"
+                />
               </button>
 
               <!-- Folders -->
@@ -225,7 +263,10 @@ async function handleFileUpload(event: Event) {
                 class="aspect-square bg-vsg-blue-50 border border-vsg-blue-100 rounded-lg flex flex-col items-center justify-center hover:bg-vsg-blue-100 transition-colors"
                 @click="loadFolder(folder.id)"
               >
-                <FontAwesomeIcon icon="folder" class="text-vsg-blue-400" />
+                <FontAwesomeIcon
+                  icon="folder"
+                  class="text-vsg-blue-400"
+                />
                 <span class="mt-1 font-body text-[10px] text-vsg-blue-900 font-medium px-1 text-center truncate w-full">
                   {{ folder.name }}
                 </span>
@@ -241,7 +282,11 @@ async function handleFileUpload(event: Event) {
                 :title="item.originalName"
                 @click="selectImage(item)"
               >
-                <img :src="mediaStore.getMediaUrl(item)" :alt="item.originalName" class="w-full h-full object-cover" />
+                <img
+                  :src="mediaStore.getMediaUrl(item)"
+                  :alt="item.originalName"
+                  class="w-full h-full object-cover"
+                />
               </button>
             </div>
           </div>

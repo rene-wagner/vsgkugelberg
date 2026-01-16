@@ -30,9 +30,20 @@ function getContactLink(): string {
     <!-- Avatar Area -->
     <div :class="['aspect-square bg-linear-to-br relative overflow-hidden', avatarGradient]">
       <!-- Avatar Image or Placeholder -->
-      <img v-if="trainer.avatarUrl" :src="trainer.avatarUrl" :alt="trainer.name" class="h-full w-full object-cover" />
-      <div v-else class="absolute inset-0 flex items-center justify-center">
-        <FontAwesomeIcon icon="user" class="text-white/30" />
+      <img
+        v-if="trainer.avatarUrl"
+        :src="trainer.avatarUrl"
+        :alt="trainer.name"
+        class="h-full w-full object-cover"
+      />
+      <div
+        v-else
+        class="absolute inset-0 flex items-center justify-center"
+      >
+        <FontAwesomeIcon
+          icon="user"
+          class="text-white/30"
+        />
       </div>
 
       <!-- Contact Overlay on Hover -->

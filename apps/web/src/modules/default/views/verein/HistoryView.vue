@@ -70,7 +70,10 @@ onMounted(async () => {
 <template>
   <div class="min-h-screen text-white overflow-x-hidden selection:bg-vsg-gold-500 selection:text-vsg-blue-900">
     <!-- Loading State -->
-    <div v-if="historyStore.isLoading && !historyStore.history" class="fixed inset-0 z-50 flex items-center justify-center bg-vsg-blue-900">
+    <div
+      v-if="historyStore.isLoading && !historyStore.history"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-vsg-blue-900"
+    >
       <div class="text-center">
         <div class="w-16 h-16 border-4 border-vsg-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
         <p class="font-display tracking-widest text-vsg-gold-400">LADEN...</p>
@@ -78,7 +81,10 @@ onMounted(async () => {
     </div>
 
     <!-- Error State -->
-    <div v-else-if="historyStore.error" class="min-h-screen flex items-center justify-center pt-20">
+    <div
+      v-else-if="historyStore.error"
+      class="min-h-screen flex items-center justify-center pt-20"
+    >
       <div class="text-center p-8 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md">
         <h2 class="font-display text-3xl text-vsg-gold-400 mb-4">FEHLER BEIM LADEN</h2>
         <p class="font-body text-vsg-blue-200 mb-8">{{ historyStore.error }}</p>
@@ -115,12 +121,18 @@ onMounted(async () => {
 
         <!-- Scroll indicator -->
         <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20">
-          <FontAwesomeIcon icon="arrow-down" class="text-vsg-gold-400" />
+          <FontAwesomeIcon
+            icon="arrow-down"
+            class="text-vsg-gold-400"
+          />
         </div>
       </header>
 
       <!-- Section: Founding (White Background) -->
-      <section id="founding" class="py-24 bg-white">
+      <section
+        id="founding"
+        class="py-24 bg-white"
+      >
         <div class="max-w-7xl mx-auto px-6">
           <div class="grid lg:grid-cols-2 gap-16 items-start">
             <!-- Narrative Text -->
@@ -163,7 +175,10 @@ onMounted(async () => {
       </section>
 
       <!-- Section: Development (Chart & Chronicle) (Light Gray Background) -->
-      <section id="development" class="py-24 bg-gray-50">
+      <section
+        id="development"
+        class="py-24 bg-gray-50"
+      >
         <div class="max-w-7xl mx-auto px-6">
           <div class="text-center mb-16">
             <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 mb-4 uppercase">
@@ -175,7 +190,10 @@ onMounted(async () => {
           </div>
 
           <!-- Chart -->
-          <div v-if="membershipChartData" class="bg-white p-8 rounded-xl border border-gray-200 mb-20 shadow-sm">
+          <div
+            v-if="membershipChartData"
+            class="bg-white p-8 rounded-xl border border-gray-200 mb-20 shadow-sm"
+          >
             <div class="flex justify-between items-center mb-8">
               <h3 class="font-display text-2xl text-vsg-gold-600 uppercase tracking-widest">Mitgliederstatistik</h3>
               <div class="flex items-center gap-4 text-xs uppercase tracking-tighter text-vsg-blue-600">
@@ -191,7 +209,10 @@ onMounted(async () => {
           </div>
 
           <!-- Chronicle Accordion -->
-          <div v-if="chronicleGroups.length > 0" class="max-w-4xl mx-auto space-y-4">
+          <div
+            v-if="chronicleGroups.length > 0"
+            class="max-w-4xl mx-auto space-y-4"
+          >
             <h3 class="font-display text-3xl text-vsg-blue-900 mb-8 text-center uppercase tracking-widest">Chronik der Ereignisse</h3>
             <VsgAccordion :items="chronicleGroups" />
           </div>
@@ -199,7 +220,10 @@ onMounted(async () => {
       </section>
 
       <!-- Section: Festivals (White Background) -->
-      <section id="festivals" class="py-24 bg-white">
+      <section
+        id="festivals"
+        class="py-24 bg-white"
+      >
         <div class="max-w-7xl mx-auto px-6">
           <div class="text-center mb-16">
             <span class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase">Vereinsleben</span>
@@ -229,7 +253,10 @@ onMounted(async () => {
       </section>
 
       <!-- Section: Achievements (Hall of Fame) (Light Gray Background) -->
-      <section id="achievements" class="py-24 bg-gray-50">
+      <section
+        id="achievements"
+        class="py-24 bg-gray-50"
+      >
         <div class="max-w-7xl mx-auto px-6">
           <div class="text-center mb-16">
             <span class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase">Unser Stolz</span>
@@ -238,7 +265,10 @@ onMounted(async () => {
             </h2>
           </div>
 
-          <VsgSuccessList :items="achievementItems" :categories="achievementCategories" />
+          <VsgSuccessList
+            :items="achievementItems"
+            :categories="achievementCategories"
+          />
         </div>
       </section>
 

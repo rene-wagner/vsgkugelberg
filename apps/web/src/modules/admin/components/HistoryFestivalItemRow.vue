@@ -43,7 +43,11 @@ function handleInput(field: 'headline' | 'text', value: string) {
       ></textarea>
     </div>
 
-    <button type="button" class="text-gray-400 hover:text-red-600 transition-colors mt-2" @click="emit('delete')">
+    <button
+      type="button"
+      class="text-gray-400 hover:text-red-600 transition-colors mt-2"
+      @click="emit('delete')"
+    >
       <FontAwesomeIcon icon="trash" />
     </button>
   </div>

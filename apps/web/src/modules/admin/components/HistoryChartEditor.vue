@@ -59,7 +59,11 @@ function emitUpdate() {
         <thead>
           <tr>
             <th class="p-2 text-xs font-display tracking-widest text-vsg-blue-600 uppercase border-b border-gray-200 w-32">Datensatz</th>
-            <th v-for="(label, index) in localData.labels" :key="index" class="p-2 border-b border-gray-200 min-w-20">
+            <th
+              v-for="(label, index) in localData.labels"
+              :key="index"
+              class="p-2 border-b border-gray-200 min-w-20"
+            >
               <div class="flex flex-col gap-1">
                 <input
                   :value="label"
@@ -68,7 +72,11 @@ function emitUpdate() {
                   class="w-full px-2 py-1 text-xs text-vsg-blue-900 text-center border border-gray-300 rounded focus:border-vsg-blue-600 outline-none font-bold"
                   @input="updateLabel(index, ($event.target as HTMLInputElement).value)"
                 />
-                <button type="button" class="text-[10px] text-red-400 hover:text-red-600 uppercase font-bold" @click="removeColumn(index)">
+                <button
+                  type="button"
+                  class="text-[10px] text-red-400 hover:text-red-600 uppercase font-bold"
+                  @click="removeColumn(index)"
+                >
                   Löschen
                 </button>
               </div>
@@ -77,11 +85,18 @@ function emitUpdate() {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(ds, dsIndex) in localData.datasets" :key="dsIndex">
+          <tr
+            v-for="(ds, dsIndex) in localData.datasets"
+            :key="dsIndex"
+          >
             <td class="p-2 border-b border-gray-100 text-sm font-body text-vsg-blue-900">
               {{ ds.label }}
             </td>
-            <td v-for="(val, dataIndex) in ds.data" :key="dataIndex" class="p-2 border-b border-gray-100">
+            <td
+              v-for="(val, dataIndex) in ds.data"
+              :key="dataIndex"
+              class="p-2 border-b border-gray-100"
+            >
               <input
                 :value="val"
                 type="number"
