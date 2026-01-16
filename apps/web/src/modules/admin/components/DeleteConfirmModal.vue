@@ -8,6 +8,11 @@ const props = defineProps<{
   mediaUrl?: string;
 }>();
 
+const emit = defineEmits<{
+  confirm: [];
+  cancel: [];
+}>();
+
 const isOpen = ref(false);
 
 watch(
