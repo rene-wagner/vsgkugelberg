@@ -20,12 +20,17 @@ export const mediaIdParamValidator = [
 
 export const moveMediaValidator = [
   body('folderId')
-    .exists()
-    .withMessage('folderId is required')
+    .optional({ nullable: true })
     .custom((value) => {
       if (value === null) return true;
-      return !isNaN(Number(value)) && Number(value) > 0;
+      if (typeof value === 'number') {
+        return Number.isInteger(value) && value > 0;
+      }
+      if (typeof value === 'string') {
+        const num = Number(value);
+        return !isNaN(num) && Number.isInteger(num) && num > 0;
+      }
+      return false;
     })
-    .withMessage('folderId must be null or a positive integer')
-    .toInt(),
+    .withMessage('folderId must be null or a positive integer'),
 ];

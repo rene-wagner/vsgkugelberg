@@ -687,4 +687,168 @@ describe('Media API Integration Tests', () => {
       });
     });
   });
+
+  describe('PATCH /api/media/:id/move', () => {
+    it('should move media to root directory (folderId = null)', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Create a folder
+      const folder = await prisma.mediaFolder.create({
+        data: { name: 'Test Folder' },
+      });
+
+      // Create media in a folder
+      const media = await prisma.media.create({
+        data: {
+          filename: 'in-folder.jpg',
+          originalName: 'image-in-folder.jpg',
+          path: 'in-folder.jpg',
+          mimetype: 'image/jpeg',
+          size: 1024,
+          type: 'IMAGE',
+          folderId: folder.id,
+        },
+      });
+
+      // Move to root (folderId = null)
+      const response = await request(app).patch(`/api/media/${media.id}/move`).set('Cookie', cookies).send({ folderId: null });
+
+      expect(response.status).toBe(200);
+      expect(response.body.folderId).toBeNull();
+
+      // Verify media was moved to root in database
+      const updatedMedia = await prisma.media.findUnique({ where: { id: media.id } });
+      expect(updatedMedia?.folderId).toBeNull();
+    });
+
+    it('should move media to folder', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Create two folders
+      const folder1 = await prisma.mediaFolder.create({
+        data: { name: 'Folder 1' },
+      });
+      const folder2 = await prisma.mediaFolder.create({
+        data: { name: 'Folder 2' },
+      });
+
+      // Create media in folder 1
+      const media = await prisma.media.create({
+        data: {
+          filename: 'move-to-folder.jpg',
+          originalName: 'move-test.jpg',
+          path: 'move-to-folder.jpg',
+          mimetype: 'image/jpeg',
+          size: 1024,
+          type: 'IMAGE',
+          folderId: folder1.id,
+        },
+      });
+
+      // Move to folder 2
+      const response = await request(app).patch(`/api/media/${media.id}/move`).set('Cookie', cookies).send({ folderId: folder2.id });
+
+      expect(response.status).toBe(200);
+      expect(response.body.folderId).toBe(folder2.id);
+
+      // Verify media was moved in database
+      const updatedMedia = await prisma.media.findUnique({ where: { id: media.id } });
+      expect(updatedMedia?.folderId).toBe(folder2.id);
+    });
+
+    it('should return 404 for non-existent folder', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Create media
+      const media = await prisma.media.create({
+        data: {
+          filename: 'move-invalid-folder.jpg',
+          originalName: 'invalid-folder-test.jpg',
+          path: 'move-invalid-folder.jpg',
+          mimetype: 'image/jpeg',
+          size: 1024,
+          type: 'IMAGE',
+        },
+      });
+
+      // Try to move to non-existent folder
+      const response = await request(app).patch(`/api/media/${media.id}/move`).set('Cookie', cookies).send({ folderId: 99999 });
+
+      expect(response.status).toBe(404);
+      expect(response.body.message).toContain('not found');
+    });
+
+    it('should return 400 for invalid folderId (negative number)', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Create media
+      const media = await prisma.media.create({
+        data: {
+          filename: 'negative-folder.jpg',
+          originalName: 'negative-test.jpg',
+          path: 'negative-folder.jpg',
+          mimetype: 'image/jpeg',
+          size: 1024,
+          type: 'IMAGE',
+        },
+      });
+
+      // Try to move with negative folderId
+      const response = await request(app).patch(`/api/media/${media.id}/move`).set('Cookie', cookies).send({ folderId: -1 });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toContain('folderId must be null or a positive integer');
+    });
+
+    it('should return 400 for invalid folderId (zero)', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Create media
+      const media = await prisma.media.create({
+        data: {
+          filename: 'zero-folder.jpg',
+          originalName: 'zero-test.jpg',
+          path: 'zero-folder.jpg',
+          mimetype: 'image/jpeg',
+          size: 1024,
+          type: 'IMAGE',
+        },
+      });
+
+      // Try to move with zero folderId
+      const response = await request(app).patch(`/api/media/${media.id}/move`).set('Cookie', cookies).send({ folderId: 0 });
+
+      expect(response.status).toBe(400);
+      expect(response.body.message).toContain('folderId must be null or a positive integer');
+    });
+
+    it('should return 404 for non-existent media', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      // Create a folder to try to move to
+      const folder = await prisma.mediaFolder.create({
+        data: { name: 'Test Folder' },
+      });
+
+      // Try to move non-existent media
+      const response = await request(app).patch('/api/media/99999/move').set('Cookie', cookies).send({ folderId: folder.id });
+
+      expect(response.status).toBe(404);
+      expect(response.body.message).toContain('not found');
+    });
+
+    it('should return 401 without authentication', async () => {
+      const response = await request(app).patch('/api/media/1/move').send({ folderId: null });
+
+      expect(response.status).toBe(401);
+    });
+
+    it('should return 400 for invalid ID format', async () => {
+      const { cookies } = await createAuthenticatedUser();
+
+      const response = await request(app).patch('/api/media/invalid/move').set('Cookie', cookies).send({ folderId: null });
+
+      expect(response.status).toBe(400);
+    });
+  });
 });
