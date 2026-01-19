@@ -3,6 +3,10 @@
 // Run with: pnpm --filter migrate-mysql-to-postgres migrate
 
 import 'dotenv/config';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { parse } from 'fast-csv';
 import mysql from 'mysql2/promise';
 import pg from 'pg';
 import slugify from 'slugify';
@@ -164,6 +168,29 @@ interface DbConfig {
   password: string;
   database: string;
 }
+
+interface ContactPersonCsvRow {
+  firstName: string;
+  lastName: string;
+  type: string;
+  email: string;
+  address: string;
+  phone: string;
+}
+
+interface ContactPersonSeedRow {
+  firstName: string;
+  lastName: string;
+  type: string;
+  email: string;
+  address: string | null;
+  phone: string;
+  rowNumber: number;
+}
+
+const CONTACT_PERSON_HEADERS = ['firstName', 'lastName', 'type', 'email', 'address', 'phone'] as const;
+const CSV_FILE_NAME = 'ContactPersons.csv';
+const PLACEHOLDER_EMAIL_DOMAIN = 'vsg-kugelberg.de';
 
 // Configuration
 const getDbConfig = (prefix: 'MYSQL' | 'POSTGRES'): DbConfig => {
@@ -742,6 +769,122 @@ const SEED_HISTORY: SeedHistory = {
     'Schließe dich unserer Gemeinschaft an und schreibe das nächste Kapitel mit uns.',
 };
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..', '..', '..');
+
+const getCsvFilePath = (fileName: string): string => path.join(projectRoot, 'data', fileName);
+
+const ensureCsvHeaders = (headers: string[]): string[] => {
+  const missingHeaders = CONTACT_PERSON_HEADERS.filter((header) => !headers.includes(header));
+
+  if (missingHeaders.length > 0) {
+    throw new Error(`Missing required CSV headers: ${missingHeaders.join(', ')}`);
+  }
+
+  return headers;
+};
+
+const normalizeCsvValue = (value: string | undefined): string => (value ?? '').trim();
+
+const parseContactPersonsCsv = async (filePath: string): Promise<ContactPersonSeedRow[]> => new Promise((resolve, reject) => {
+  const rows: ContactPersonSeedRow[] = [];
+  let rowNumber = 0;
+
+  fs.createReadStream(filePath)
+    .pipe(parse({
+      headers: (headers) => ensureCsvHeaders(headers.map((header) => header.trim())),
+      ignoreEmpty: true,
+      trim: true,
+    }))
+    .on('error', (error) => reject(error))
+    .on('data', (row: ContactPersonCsvRow) => {
+      rowNumber += 1;
+      const firstName = normalizeCsvValue(row.firstName);
+      const lastName = normalizeCsvValue(row.lastName);
+      const type = normalizeCsvValue(row.type);
+      const emailValue = normalizeCsvValue(row.email);
+      const addressValue = normalizeCsvValue(row.address);
+      const phone = normalizeCsvValue(row.phone);
+
+      rows.push({
+        firstName,
+        lastName,
+        type,
+        email: emailValue || `missing-${rowNumber}@${PLACEHOLDER_EMAIL_DOMAIN}`,
+        address: addressValue.length > 0 ? addressValue : null,
+        phone,
+        rowNumber,
+      });
+    })
+    .on('end', () => resolve(rows));
+});
+
+const validateContactPersonRows = (rows: ContactPersonSeedRow[]): void => {
+  const errors: string[] = [];
+
+  rows.forEach((row) => {
+    const rowErrors: string[] = [];
+
+    if (!row.firstName) {
+      rowErrors.push('firstName is required');
+    }
+    if (!row.lastName) {
+      rowErrors.push('lastName is required');
+    }
+    if (!row.type) {
+      rowErrors.push('type is required');
+    }
+    if (!row.phone) {
+      rowErrors.push('phone is required');
+    }
+
+    if (rowErrors.length > 0) {
+      errors.push(`Row ${row.rowNumber}: ${rowErrors.join(', ')}`);
+    }
+  });
+
+  if (errors.length > 0) {
+    throw new Error(`Contact person CSV validation failed:\n${errors.join('\n')}`);
+  }
+};
+
+const seedContactPersons = async (pgClient: pg.Client): Promise<number> => {
+  console.log('\n--- Seeding Contact Persons ---');
+
+  const filePath = getCsvFilePath(CSV_FILE_NAME);
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`Missing required CSV file: ${filePath}`);
+  }
+
+  const rows = await parseContactPersonsCsv(filePath);
+
+  if (rows.length === 0) {
+    console.log('  No contact persons found in CSV file.');
+    return 0;
+  }
+
+  validateContactPersonRows(rows);
+
+  let seededCount = 0;
+
+  for (const row of rows) {
+    const result = await pgClient.query(
+      `INSERT INTO "ContactPerson" ("firstName", "lastName", "type", "email", "address", "phone", "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())
+       RETURNING id`,
+      [row.firstName, row.lastName, row.type, row.email, row.address, row.phone],
+    );
+
+    if (result.rows.length > 0) {
+      seededCount++;
+    }
+  }
+
+  console.log(`Seeded ${seededCount} contact persons`);
+  return seededCount;
+};
+
 // Seeding functions
 const seedUsers = async (pgClient: pg.Client): Promise<number> => {
   console.log('\n--- Seeding Users ---');
@@ -1251,6 +1394,7 @@ const main = async (): Promise<void> => {
 
     // Seed users and departments first
     const usersSeeded = await seedUsers(pgClient);
+    const contactPersonsSeeded = await seedContactPersons(pgClient);
     const departmentMap = await seedDepartments(pgClient);
     const statsSeeded = await seedDepartmentStats(pgClient, departmentMap);
     const locationMap = await seedDepartmentLocations(pgClient, departmentMap);
@@ -1273,6 +1417,7 @@ const main = async (): Promise<void> => {
     // Summary
     console.log('\n=== Migration Complete ===');
     console.log(`Users seeded: ${usersSeeded}`);
+    console.log(`Contact persons seeded: ${contactPersonsSeeded}`);
     console.log(`Departments seeded: ${departmentMap.size}`);
     console.log(`Department stats seeded: ${statsSeeded}`);
     console.log(`Department locations seeded: ${locationMap.size === 0 ? 0 : Array.from(locationMap.values()).reduce((sum, map) => sum + map.size, 0)}`);
