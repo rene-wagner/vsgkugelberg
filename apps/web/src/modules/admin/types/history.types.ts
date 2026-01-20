@@ -56,6 +56,7 @@ export interface HistoryContent {
   foundingHeadline: string;
   foundingDescription: string;
   foundingFactCardHeadline: string;
+  foundingDate: string | null;
   foundingFacts: HistoryFact[];
   foundingMilestonesHeadline: string;
   foundingMilestones: HistoryMilestone[];

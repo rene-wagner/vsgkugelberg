@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
-import { useSettingsStore } from '@/modules/admin/stores/settingsStore';
+import { useHistoryStore } from '@/modules/admin/stores/historyStore';
 
-const settingsStore = useSettingsStore();
+const historyStore = useHistoryStore();
 
 const vereinLinks = [
   { label: 'Geschichte', href: '/verein/geschichte', isRouter: true },
@@ -13,11 +13,11 @@ const vereinLinks = [
 ];
 
 const age = computed(() => {
-  if (!settingsStore.settings?.foundingDate) {
+  if (!historyStore.history?.foundingDate) {
     return 100; // Fallback
   }
 
-  const foundingDate = new Date(settingsStore.settings.foundingDate);
+  const foundingDate = new Date(historyStore.history.foundingDate);
   const today = new Date();
   let years = today.getFullYear() - foundingDate.getFullYear();
   const monthDiff = today.getMonth() - foundingDate.getMonth();
@@ -30,8 +30,8 @@ const age = computed(() => {
 });
 
 onMounted(() => {
-  if (!settingsStore.settings) {
-    settingsStore.fetchSettings();
+  if (!historyStore.history) {
+    historyStore.fetchHistory();
   }
 });
 </script>

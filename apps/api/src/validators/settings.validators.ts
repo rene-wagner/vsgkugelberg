@@ -1,17 +1,6 @@
 import { body } from 'express-validator';
 
 export const updateSettingsValidator = [
-  body('foundingDate')
-    .optional({ values: 'null' })
-    .isISO8601()
-    .withMessage('Founding date must be a valid ISO8601 date string')
-    .custom((value: unknown) => {
-      if (value && typeof value === 'string' && new Date(value) > new Date()) {
-        throw new Error('Founding date cannot be in the future');
-      }
-      return true;
-    }),
-
   body('address')
     .optional({ values: 'null' })
     .trim()

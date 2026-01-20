@@ -168,7 +168,6 @@ model DepartmentTrainer {
 
 model ClubSettings {
   id           Int      @id @default(1)
-  foundingDate DateTime?
   address      String?
   memberCount  Int?
   contactEmail String?
@@ -254,6 +253,7 @@ model HistoryContent {
   foundingHeadline           String
   foundingDescription        String
   foundingFactCardHeadline   String
+  foundingDate               DateTime?
   foundingFacts              HistoryFact[]
   foundingMilestonesHeadline String
   foundingMilestones         HistoryMilestone[]

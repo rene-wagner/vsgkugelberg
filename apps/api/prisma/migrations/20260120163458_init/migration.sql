@@ -143,7 +143,6 @@ CREATE TABLE "DepartmentTrainer" (
 -- CreateTable
 CREATE TABLE "ClubSettings" (
     "id" INTEGER NOT NULL DEFAULT 1,
-    "foundingDate" TIMESTAMP(3),
     "address" TEXT,
     "memberCount" INTEGER,
     "contactEmail" TEXT,
@@ -222,6 +221,7 @@ CREATE TABLE "HistoryContent" (
     "foundingHeadline" TEXT NOT NULL,
     "foundingDescription" TEXT NOT NULL,
     "foundingFactCardHeadline" TEXT NOT NULL,
+    "foundingDate" TIMESTAMP(3),
     "foundingMilestonesHeadline" TEXT NOT NULL,
     "developmentHeadline" TEXT NOT NULL,
     "developmentDescription" TEXT NOT NULL,

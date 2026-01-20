@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useEventsStore, type EventItem, type CreateEventData, type UpdateEventData, type EventCategory } from '../stores/eventsStore';
+import { useEventsStore, type EventItem, type CreateEventData, type UpdateEventData, type EventCategory } from '@modules/admin';
 import VsgMarkdownEditor from '@shared/components/VsgMarkdownEditor.vue';
 
 const props = defineProps<{

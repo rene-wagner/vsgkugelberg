@@ -45,6 +45,7 @@ describe('History API Integration Tests', () => {
         foundingHeadline: 'Founding',
         foundingDescription: 'Description',
         foundingFactCardHeadline: 'Facts',
+        foundingDate: new Date('1920-01-01T00:00:00.000Z'),
         foundingMilestonesHeadline: 'Milestones',
         developmentHeadline: 'Dev',
         developmentDescription: 'Dev Description',
@@ -64,6 +65,7 @@ describe('History API Integration Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('heroHeadline', 'ORIGINAL HEADLINE');
       expect(response.body).toHaveProperty('foundingDescription', 'Description');
+      expect(response.body).toHaveProperty('foundingDate', '1920-01-01T00:00:00.000Z');
     });
 
     it('should be publicly accessible', async () => {
@@ -79,6 +81,7 @@ describe('History API Integration Tests', () => {
       const updateData = {
         heroHeadline: 'NEW HEADLINE',
         foundingDescription: 'NEW DESCRIPTION',
+        foundingDate: '1930-01-01T00:00:00.000Z',
       };
 
       const response = await request(app).patch('/api/history/admin').set('Cookie', cookies).send(updateData);
@@ -86,6 +89,7 @@ describe('History API Integration Tests', () => {
       expect(response.status).toBe(200);
       expect(response.body.heroHeadline).toBe('NEW HEADLINE');
       expect(response.body.foundingDescription).toBe('NEW DESCRIPTION');
+      expect(response.body.foundingDate).toBe('1930-01-01T00:00:00.000Z');
 
       // Verify in db
       const updated = await prisma.historyContent.findUnique({
@@ -93,12 +97,33 @@ describe('History API Integration Tests', () => {
       });
       expect(updated?.heroHeadline).toBe('NEW HEADLINE');
       expect(updated?.foundingDescription).toBe('NEW DESCRIPTION');
+      expect(updated?.foundingDate?.toISOString()).toBe('1930-01-01T00:00:00.000Z');
     });
 
     it('should return 401 without authentication', async () => {
       const response = await request(app).patch('/api/history/admin').send({ heroHeadline: 'UNAUTHORIZED' });
 
       expect(response.status).toBe(401);
+    });
+
+    it('should reject founding date in the future', async () => {
+      const { cookies } = await createAuthenticatedUser();
+      const futureDate = new Date();
+      futureDate.setFullYear(futureDate.getFullYear() + 1);
+
+      const response = await request(app).patch('/api/history/admin').set('Cookie', cookies).send({ foundingDate: futureDate.toISOString() });
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should accept valid founding date', async () => {
+      const { cookies } = await createAuthenticatedUser();
+      const validDate = '1920-01-01T00:00:00.000Z';
+
+      const response = await request(app).patch('/api/history/admin').set('Cookie', cookies).send({ foundingDate: validDate });
+
+      expect(response.status).toBe(200);
+      expect(response.body.foundingDate).toBe(validDate);
     });
 
     it('should validate achievement categories', async () => {

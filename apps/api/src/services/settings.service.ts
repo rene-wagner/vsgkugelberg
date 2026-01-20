@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma.lib';
-import { UpdateSettingsDto, ClubSettings } from '@/types/settings.types';
+import { ClubSettings, UpdateSettingsDto } from '@/types/settings.types';
 
 const SETTINGS_ID = 1;
 
@@ -30,17 +30,14 @@ export class SettingsService {
     // Ensure record exists
     await this.get();
 
-    const settings = await prisma.clubSettings.update({
+    return prisma.clubSettings.update({
       where: { id: SETTINGS_ID },
       data: {
-        foundingDate: updateSettingsDto.foundingDate,
         address: updateSettingsDto.address,
         memberCount: updateSettingsDto.memberCount,
         contactEmail: updateSettingsDto.contactEmail,
         contactPhone: updateSettingsDto.contactPhone,
       },
     });
-
-    return settings;
   }
 }

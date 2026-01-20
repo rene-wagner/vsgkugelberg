@@ -8,6 +8,16 @@ export const updateHistoryValidator = [
   body('foundingHeadline').optional().isString().trim().notEmpty(),
   body('foundingDescription').optional().isString().trim(),
   body('foundingFactCardHeadline').optional().isString().trim(),
+  body('foundingDate')
+    .optional({ values: 'null' })
+    .isISO8601()
+    .withMessage('Founding date must be a valid ISO8601 date string')
+    .custom((value: unknown) => {
+      if (value && typeof value === 'string' && new Date(value) > new Date()) {
+        throw new Error('Founding date cannot be in the future');
+      }
+      return true;
+    }),
   body('foundingFacts').optional().isArray(),
   body('foundingFacts.*.year').isString().trim().notEmpty(),
   body('foundingFacts.*.headline').isString().trim().notEmpty(),

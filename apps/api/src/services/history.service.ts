@@ -35,6 +35,7 @@ export class HistoryService {
     // Transform back to original JSON structure for the API
     return {
       ...content,
+      foundingDate: content.foundingDate ? content.foundingDate.toISOString() : null,
       foundingFacts: content.foundingFacts.map((f) => ({
         year: f.year,
         headline: f.headline,
@@ -78,6 +79,8 @@ export class HistoryService {
    * Uses a transaction to clear existing relations and recreate them.
    */
   async update(data: UpdateHistoryDto) {
+    const foundingDateValue = data.foundingDate === undefined ? undefined : data.foundingDate ? new Date(data.foundingDate) : null;
+
     return prisma.$transaction(async (tx) => {
       // 1. Update scalar fields
       await tx.historyContent.upsert({
@@ -88,6 +91,7 @@ export class HistoryService {
           foundingHeadline: data.foundingHeadline,
           foundingDescription: data.foundingDescription,
           foundingFactCardHeadline: data.foundingFactCardHeadline,
+          foundingDate: foundingDateValue,
           foundingMilestonesHeadline: data.foundingMilestonesHeadline,
           developmentHeadline: data.developmentHeadline,
           developmentDescription: data.developmentDescription,
@@ -104,6 +108,7 @@ export class HistoryService {
           foundingHeadline: data.foundingHeadline ?? '',
           foundingDescription: data.foundingDescription ?? '',
           foundingFactCardHeadline: data.foundingFactCardHeadline ?? '',
+          foundingDate: foundingDateValue ?? null,
           foundingMilestonesHeadline: data.foundingMilestonesHeadline ?? '',
           developmentHeadline: data.developmentHeadline ?? '',
           developmentDescription: data.developmentDescription ?? '',

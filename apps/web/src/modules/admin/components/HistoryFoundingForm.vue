@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import { useHistoryStore } from '../stores/historyStore';
+import { useHistoryStore } from '@modules/admin';
 import type { HistoryContent, HistoryFact, HistoryMilestone } from '../types/history.types';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 import HistoryFactRow from './HistoryFactRow.vue';
@@ -17,6 +17,7 @@ const historyStore = useHistoryStore();
 const foundingHeadline = ref('');
 const foundingDescription = ref('');
 const foundingFactCardHeadline = ref('');
+const foundingDate = ref('');
 const foundingMilestonesHeadline = ref('');
 const localFacts = ref<HistoryFact[]>([]);
 const localMilestones = ref<HistoryMilestone[]>([]);
@@ -28,6 +29,7 @@ watch(
       foundingHeadline.value = newHistory.foundingHeadline;
       foundingDescription.value = newHistory.foundingDescription;
       foundingFactCardHeadline.value = newHistory.foundingFactCardHeadline;
+      foundingDate.value = newHistory.foundingDate ? newHistory.foundingDate.split('T')[0] : '';
       foundingMilestonesHeadline.value = newHistory.foundingMilestonesHeadline;
       localFacts.value = JSON.parse(JSON.stringify(newHistory.foundingFacts));
       localMilestones.value = JSON.parse(JSON.stringify(newHistory.foundingMilestones));
@@ -65,6 +67,7 @@ async function handleSubmit() {
     foundingHeadline: foundingHeadline.value,
     foundingDescription: foundingDescription.value,
     foundingFactCardHeadline: foundingFactCardHeadline.value,
+    foundingDate: foundingDate.value ? new Date(foundingDate.value).toISOString() : null,
     foundingMilestonesHeadline: foundingMilestonesHeadline.value,
     foundingFacts: localFacts.value,
     foundingMilestones: localMilestones.value,
@@ -109,6 +112,21 @@ async function handleSubmit() {
             v-model="foundingDescription"
             placeholder="Die Geschichte der Gründung..."
             min-height="200px"
+          />
+        </div>
+
+        <div>
+          <label
+            for="foundingDate"
+            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
+          >
+            Gründungsdatum
+          </label>
+          <input
+            id="foundingDate"
+            v-model="foundingDate"
+            type="date"
+            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
           />
         </div>
       </div>

@@ -1,34 +1,22 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { useSettingsStore, type ClubSettings, type UpdateSettingsData } from '../stores/settingsStore';
+import { useSettingsStore, type ClubSettings, type UpdateSettingsData } from '@modules/admin';
 
 const props = defineProps<{
   settings: ClubSettings | null;
 }>();
 
 const settingsStore = useSettingsStore();
-const foundingDate = ref<string>('');
 const address = ref<string>('');
 const memberCount = ref<number | null>(null);
 const contactEmail = ref<string>('');
 const contactPhone = ref<string>('');
-
-// Helper to format ISO date to YYYY-MM-DD for date input
-const formatDateForInput = (dateStr: string | null) => {
-  if (!dateStr) return '';
-  try {
-    return new Date(dateStr).toISOString().split('T')[0];
-  } catch (_e) {
-    return '';
-  }
-};
 
 // Watch for settings prop changes to populate form
 watch(
   () => props.settings,
   (newSettings) => {
     if (newSettings) {
-      foundingDate.value = formatDateForInput(newSettings.foundingDate);
       address.value = newSettings.address || '';
       memberCount.value = newSettings.memberCount;
       contactEmail.value = newSettings.contactEmail || '';
@@ -42,7 +30,6 @@ async function handleSubmit() {
   settingsStore.clearMessages();
 
   const updateData: UpdateSettingsData = {
-    foundingDate: foundingDate.value ? new Date(foundingDate.value).toISOString() : null,
     address: address.value.trim() || null,
     memberCount: memberCount.value || null,
     contactEmail: contactEmail.value.trim() || null,
@@ -81,22 +68,6 @@ async function handleSubmit() {
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">Vereinsdaten</h2>
 
       <div class="space-y-6">
-        <!-- Founding Date -->
-        <div>
-          <label
-            for="foundingDate"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Gründungsdatum
-          </label>
-          <input
-            id="foundingDate"
-            v-model="foundingDate"
-            type="date"
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-          />
-        </div>
-
         <!-- Member Count -->
         <div>
           <label
