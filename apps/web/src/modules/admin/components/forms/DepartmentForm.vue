@@ -105,14 +105,14 @@ async function handleDelete() {
   isSubmitting.value = false;
 
   if (success) {
-    router.push('/admin/departments');
+    router.push('/admin/abteilungen');
   } else {
     error.value = departmentsStore.error || 'Fehler beim Löschen der Abteilung';
   }
 }
 
 function handleCancel() {
-  router.push('/admin/departments');
+  router.push('/admin/abteilungen');
 }
 </script>
 

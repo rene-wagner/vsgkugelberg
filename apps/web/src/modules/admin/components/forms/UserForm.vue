@@ -75,7 +75,7 @@ async function handleSubmit() {
 
       const result = await usersStore.updateUser(props.user.id, updateData);
       if (result) {
-        router.push('/admin/users');
+        router.push('/admin/benutzer');
       } else {
         error.value = usersStore.error || 'Fehler beim Aktualisieren des Benutzers';
       }
@@ -89,7 +89,7 @@ async function handleSubmit() {
 
       const result = await usersStore.createUser(createData);
       if (result) {
-        router.push('/admin/users');
+        router.push('/admin/benutzer');
       } else {
         error.value = usersStore.error || 'Fehler beim Erstellen des Benutzers';
       }
@@ -112,14 +112,14 @@ async function handleDelete() {
   isSubmitting.value = false;
 
   if (success) {
-    router.push('/admin/users');
+    router.push('/admin/benutzer');
   } else {
     error.value = usersStore.error || 'Fehler beim löschen des Benutzers';
   }
 }
 
 function handleCancel() {
-  router.push('/admin/users');
+  router.push('/admin/benutzer');
 }
 </script>
 

@@ -69,7 +69,7 @@ async function handleSubmit() {
 
       const result = await contactPersonsStore.updateContactPerson(props.contactPerson.id, updateData);
       if (result) {
-        router.push('/admin/contact-persons');
+        router.push('/admin/kontakt');
       } else {
         error.value = contactPersonsStore.error || 'Fehler beim Aktualisieren des Ansprechpartners';
       }
@@ -90,7 +90,7 @@ async function handleSubmit() {
 
       const result = await contactPersonsStore.createContactPerson(createData);
       if (result) {
-        router.push('/admin/contact-persons');
+        router.push('/admin/kontakt');
       } else {
         error.value = contactPersonsStore.error || 'Fehler beim Erstellen des Ansprechpartners';
       }
@@ -115,14 +115,14 @@ async function handleDelete() {
   isSubmitting.value = false;
 
   if (success) {
-    router.push('/admin/contact-persons');
+    router.push('/admin/kontakt');
   } else {
     error.value = contactPersonsStore.error || 'Fehler beim Löschen des Ansprechpartners';
   }
 }
 
 function handleCancel() {
-  router.push('/admin/contact-persons');
+  router.push('/admin/kontakt');
 }
 </script>
 

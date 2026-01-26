@@ -90,7 +90,7 @@ async function handleSubmit() {
 
       const result = await categoriesStore.updateCategory(props.category.slug, updateData);
       if (result) {
-        router.push('/admin/categories');
+        router.push('/admin/kategorien');
       } else {
         error.value = categoriesStore.error || 'Fehler beim Aktualisieren der Kategorie';
       }
@@ -103,7 +103,7 @@ async function handleSubmit() {
 
       const result = await categoriesStore.createCategory(createData);
       if (result) {
-        router.push('/admin/categories');
+        router.push('/admin/kategorien');
       } else {
         error.value = categoriesStore.error || 'Fehler beim Erstellen der Kategorie';
       }
@@ -126,14 +126,14 @@ async function handleDelete() {
   isSubmitting.value = false;
 
   if (success) {
-    router.push('/admin/categories');
+    router.push('/admin/kategorien');
   } else {
     error.value = categoriesStore.error || 'Fehler beim löschen der Kategorie';
   }
 }
 
 function handleCancel() {
-  router.push('/admin/categories');
+  router.push('/admin/kategorien');
 }
 </script>
 
