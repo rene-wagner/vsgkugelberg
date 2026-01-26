@@ -1,5 +1,5 @@
 {
-  "name": "migrate-mysql-to-postgres",
+  "name": "migrate",
   "version": "1.0.0",
   "description": "MySQL to PostgreSQL data migration tool",
   "type": "module",

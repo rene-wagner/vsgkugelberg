@@ -1,6 +1,6 @@
 // MySQL to PostgreSQL Migration Tool
 // This tool migrates data from a MySQL database to a PostgreSQL database
-// Run with: pnpm --filter migrate-mysql-to-postgres migrate
+// Run with: pnpm --filter migrate migrate
 
 import 'dotenv/config';
 import fs from 'fs';

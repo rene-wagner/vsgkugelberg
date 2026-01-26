@@ -18,7 +18,7 @@ vsgkugelberg/
 │   ├── web/          # Vue 3 frontend application
 │   └── api/          # Express.js backend API
 ├── tools/
-│   └── migrate-mysql-to-postgres/  # Database migration utility
+│   └── migrate/  # Database migration utility
 ├── data/             # Data files
 ├── .github/          # GitHub workflows and CI/CD
 ├── .husky/           # Git hooks
@@ -416,7 +416,7 @@ pnpm --filter api test:coverage
 6. **Drag-and-Drop Ordering**: Visual sorting for training groups, locations, etc.
 7. **Contact Form**: Public contact form with email notifications
 
-## Migration Tool (tools/migrate-mysql-to-postgres)
+## Migration Tool (tools/migrate)
 
 A utility for migrating data from MySQL to PostgreSQL. Used during the database migration phase.
 

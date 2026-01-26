@@ -263,7 +263,7 @@ importers:
         specifier: ^2.2.10
         version: 2.2.12(typescript@5.9.3)
 
-  tools/migrate-mysql-to-postgres:
+  tools/migrate:
     dependencies:
       dotenv:
         specifier: ^17.2.3
