@@ -53,6 +53,7 @@ import {
   faUpload,
   faUser,
   faUsers,
+  faWrench,
   faXmark,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -97,6 +98,7 @@ library.add(
   faUpload,
   faUser,
   faUsers,
+  faWrench,
   faXmark,
   // Sidebar icons
   faGauge, // Dashboard

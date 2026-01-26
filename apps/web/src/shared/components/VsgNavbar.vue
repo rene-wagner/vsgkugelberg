@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import VsgButton from './VsgButton.vue';
 import { useDefaultDepartmentsStore } from '@modules/default/stores/departmentsStore';
+import { useAuthStore } from '@/modules/auth/stores/authStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 interface MenuItem {
@@ -17,6 +18,9 @@ const isAbteilungenOpen = ref(false);
 
 const departmentsStore = useDefaultDepartmentsStore();
 const { departments, isLoading: departmentsLoading } = storeToRefs(departmentsStore);
+
+const authStore = useAuthStore();
+const { isAuthenticated } = storeToRefs(authStore);
 
 const vereinItems: MenuItem[] = [
   { label: 'Geschichte', to: '/verein/geschichte' },
@@ -162,6 +166,18 @@ function toggleAbteilungen() {
             class="font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
             >Kontakt</RouterLink
           >
+          <RouterLink
+            v-if="isAuthenticated"
+            to="/admin"
+            class="text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
+            aria-label="Admin-Bereich"
+            title="Admin-Bereich"
+          >
+            <FontAwesomeIcon
+              icon="wrench"
+              class="text-lg"
+            />
+          </RouterLink>
           <VsgButton
             variant="primary"
             size="md"
@@ -291,6 +307,18 @@ function toggleAbteilungen() {
           @click="closeMenu"
           >Kontakt</RouterLink
         >
+      </div>
+      <div
+        v-if="isAuthenticated"
+        class="mb-4 w-full max-w-xs"
+      >
+        <RouterLink
+          to="/admin"
+          class="block font-display text-4xl tracking-wider text-white transition-colors hover:text-vsg-gold-400"
+          @click="closeMenu"
+        >
+          Admin
+        </RouterLink>
       </div>
       <button
         class="mt-8 bg-vsg-gold-400 px-8 py-4 font-display text-2xl tracking-wider text-vsg-blue-900"
