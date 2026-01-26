@@ -19,11 +19,11 @@ export async function seedHistory(pgClient: Client): Promise<void> {
     await pgClient.query(
       `INSERT INTO "HistoryContent" (
         "id", "heroHeadline", "heroSubHeadline", "foundingHeadline", "foundingDescription",
-        "foundingFactCardHeadline", "foundingMilestonesHeadline", "developmentHeadline",
+        "foundingFactCardHeadline", "foundingDate", "foundingMilestonesHeadline", "developmentHeadline",
         "developmentDescription", "festivalsHeadline", "festivalsDescription",
         "achievementsHeadline", "ctaHeadline", "ctaDescription", "updatedAt"
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, NOW()
       )`,
       [
         1,
@@ -32,6 +32,7 @@ export async function seedHistory(pgClient: Client): Promise<void> {
         history.foundingHeadline,
         history.foundingDescription,
         history.foundingFactCardHeadline,
+        history.foundingDate ? new Date(history.foundingDate) : null,
         history.foundingMilestonesHeadline,
         history.developmentHeadline,
         history.developmentDescription,

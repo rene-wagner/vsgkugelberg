@@ -106,6 +106,7 @@ export interface SeedHistory {
   foundingHeadline: string;
   foundingDescription: string;
   foundingFactCardHeadline: string;
+  foundingDate?: string;
   foundingFacts: HistoryFact[];
   foundingMilestonesHeadline: string;
   foundingMilestones: HistoryMilestone[];
