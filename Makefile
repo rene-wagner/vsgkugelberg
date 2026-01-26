@@ -14,14 +14,3 @@ clean-migrations:
 	DATABASE_URL="postgresql://user:secret@localhost:5432/vsgkugelberg_test?schema=public" pnpm --filter api exec prisma migrate reset
 	DATABASE_URL="postgresql://user:secret@localhost:5432/vsgkugelberg_test?schema=public" pnpm --filter api prisma:migrate
 	pnpm --filter migrate-mysql-to-postgres migrate
-
-setup:
-	pnpm install
-	pnpm --filter api prisma:generate
-	pnpm --filter api prisma:migrate
-
-bla:
-	make clean
-	pnpm install
-	make clean-migrations
-	pnpm --filter api prisma:seed
