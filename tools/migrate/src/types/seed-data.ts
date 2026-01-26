@@ -130,3 +130,7 @@ export interface SeedContactPerson {
   address: string | null;
   phone: string;
 }
+
+// Media migration types
+export type MediaFolderMap = Map<string, number>; // folderName → folderId
+export type MediaFileMap = Map<string, number>;   // originalFilename → mediaId

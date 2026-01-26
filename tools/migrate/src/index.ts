@@ -3,7 +3,17 @@ import ora from 'ora';
 import chalk from 'chalk';
 import Table from 'cli-table3';
 import { connectMySQL, connectPostgres } from './database';
-import { seedUsers, seedContactPersons, seedDepartmentsComplete, seedHistory } from './seeders';
+import {
+  seedUsers,
+  seedContactPersons,
+  seedDepartmentsComplete,
+  seedHistory,
+  seedMediaFolders,
+  seedMediaFiles,
+  linkContactPersonImages,
+  linkDepartmentIcons,
+  linkLocationImages,
+} from './seeders';
 import { migrateCategories, migratePosts } from './migrators';
 import { Timer } from './utils';
 
@@ -13,6 +23,11 @@ interface MigrationResults {
   departments: number;
   categories: number;
   posts: number;
+  mediaFolders: number;
+  mediaFiles: number;
+  linkedContactPersonImages: number;
+  linkedDepartmentIcons: number;
+  linkedLocationImages: number;
 }
 
 function printHeader(): void {
@@ -32,9 +47,18 @@ function printSummary(results: MigrationResults, timer: Timer): void {
   });
 
   table.push(
+    ['Media Folders', results.mediaFolders.toString(), chalk.green('✓ Complete')],
+    ['Media Files', results.mediaFiles.toString(), chalk.green('✓ Complete')],
     ['Users', results.users.toString(), chalk.green('✓ Complete')],
     ['Contact Persons', results.contactPersons.toString(), chalk.green('✓ Complete')],
+    [
+      'Contact Person Images',
+      results.linkedContactPersonImages.toString(),
+      chalk.green('✓ Linked'),
+    ],
     ['Departments', results.departments.toString(), chalk.green('✓ Complete')],
+    ['Department Icons', results.linkedDepartmentIcons.toString(), chalk.green('✓ Linked')],
+    ['Location Images', results.linkedLocationImages.toString(), chalk.green('✓ Linked')],
     ['Categories', results.categories.toString(), chalk.green('✓ Complete')],
     ['Posts', results.posts.toString(), chalk.green('✓ Complete')],
   );
@@ -62,16 +86,49 @@ async function main(): Promise<void> {
       departments: 0,
       categories: 0,
       posts: 0,
+      mediaFolders: 0,
+      mediaFiles: 0,
+      linkedContactPersonImages: 0,
+      linkedDepartmentIcons: 0,
+      linkedLocationImages: 0,
     };
 
-    // Run seeders
+    // 1. Seed media folders and files (BEFORE other seeders)
+    const folderMap = await seedMediaFolders(pgClient);
+    results.mediaFolders = folderMap.size;
+
+    const mediaMap = await seedMediaFiles(pgClient, folderMap);
+    results.mediaFiles = mediaMap.size;
+
+    // 2. Seed users
     results.users = await seedUsers(pgClient);
+
+    // 3. Seed contact persons
     results.contactPersons = await seedContactPersons(pgClient);
+
+    // 4. Link contact person images
+    results.linkedContactPersonImages = await linkContactPersonImages(pgClient, mediaMap);
+
+    // 5. Seed departments
     const departmentResults = await seedDepartmentsComplete(pgClient);
     results.departments = departmentResults.departments;
+
+    // 6. Link department icons and location images
+    results.linkedDepartmentIcons = await linkDepartmentIcons(
+      pgClient,
+      departmentResults.departmentMap,
+      mediaMap,
+    );
+    results.linkedLocationImages = await linkLocationImages(
+      pgClient,
+      departmentResults.locationMap,
+      mediaMap,
+    );
+
+    // 7. Seed history
     await seedHistory(pgClient);
 
-    // Run migrators
+    // 8. Run migrators (categories and posts)
     const categoryMap = await migrateCategories(mysqlConn, pgClient);
     results.categories = categoryMap.size;
     results.posts = await migratePosts(mysqlConn, pgClient, categoryMap);

@@ -1,7 +1,25 @@
 import ora from 'ora';
 import type { Client } from 'pg';
 import { loadDepartmentSeedData, logger } from '../utils';
-import type { DepartmentMap, LocationMap, TrainingGroupMap } from '../types';
+import type { DepartmentMap, LocationMap, TrainingGroupMap, MediaFileMap } from '../types';
+
+// Department slug to icon filename mapping (without extension)
+const DEPARTMENT_ICON_MAPPING: Record<string, string> = {
+  'badminton': 'badminton',
+  'gymnastik': 'gymnastics',
+  'tischtennis': 'tabletennis',
+  'volleyball': 'volleyball',
+};
+
+// Location name to filename mapping (without extension)
+const LOCATION_IMAGE_MAPPING: Record<string, string> = {
+  'Sporthalle Albert-Einstein-Schule': 'alberteinsteinschule',
+  'Sporthalle Beuditzschule': 'beuditzschule',
+  'Sporthalle Goethegymnasium': 'goethegymnasium',
+  'Sporthalle Ökowegschule': 'oekowegschule',
+  'Schlossgartenturnhalle': 'schlossgartenturnhalle',
+  'Stadthalle': 'stadthalle',
+};
 
 async function seedDepartments(pgClient: Client): Promise<DepartmentMap> {
   const departments = await loadDepartmentSeedData();
@@ -201,6 +219,8 @@ export async function seedDepartmentsComplete(pgClient: Client): Promise<{
   locations: number;
   groups: number;
   sessions: number;
+  departmentMap: DepartmentMap;
+  locationMap: LocationMap;
 }> {
   const spinner = ora('Seeding departments...').start();
 
@@ -230,9 +250,97 @@ export async function seedDepartmentsComplete(pgClient: Client): Promise<{
       locations: locationCount,
       groups: groupCount,
       sessions,
+      departmentMap,
+      locationMap,
     };
   } catch (error) {
     spinner.fail('Failed to seed departments');
+    throw error;
+  }
+}
+
+/**
+ * Link department icons
+ */
+export async function linkDepartmentIcons(
+  pgClient: Client,
+  departmentMap: DepartmentMap,
+  mediaMap: MediaFileMap,
+): Promise<number> {
+  const spinner = ora('Linking department icons...').start();
+
+  try {
+    let linkedCount = 0;
+
+    for (const [slug, departmentId] of departmentMap.entries()) {
+      // Get the mapped icon filename
+      const iconFilenameBase = DEPARTMENT_ICON_MAPPING[slug];
+      
+      if (iconFilenameBase) {
+        const iconFilename = `${iconFilenameBase}.svg`;
+
+        if (mediaMap.has(iconFilename)) {
+          const mediaId = mediaMap.get(iconFilename);
+
+          // Update department with icon
+          await pgClient.query(
+            `UPDATE "Department" SET "iconId" = $1, "updatedAt" = NOW() WHERE id = $2`,
+            [mediaId, departmentId],
+          );
+          linkedCount++;
+        }
+      }
+    }
+
+    spinner.succeed(`Linked ${linkedCount} department icons`);
+    return linkedCount;
+  } catch (error) {
+    spinner.fail('Failed to link department icons');
+    throw error;
+  }
+}
+
+/**
+ * Link location images
+ */
+export async function linkLocationImages(
+  pgClient: Client,
+  locationMap: LocationMap,
+  mediaMap: MediaFileMap,
+): Promise<number> {
+  const spinner = ora('Linking location images...').start();
+
+  try {
+    let linkedCount = 0;
+
+    // Iterate over all locations in the map
+    for (const deptLocationMap of locationMap.values()) {
+      for (const [locationName, locationId] of deptLocationMap.entries()) {
+        // Find matching filename from mapping
+        const imageFilenameBase = LOCATION_IMAGE_MAPPING[locationName];
+
+        if (imageFilenameBase) {
+          // Look for image with .jpg extension
+          const imageFilename = `${imageFilenameBase}.jpg`;
+
+          if (mediaMap.has(imageFilename)) {
+            const mediaId = mediaMap.get(imageFilename);
+
+            // Update location with image
+            await pgClient.query(
+              `UPDATE "DepartmentLocation" SET "imageId" = $1, "updatedAt" = NOW() WHERE id = $2`,
+              [mediaId, locationId],
+            );
+            linkedCount++;
+          }
+        }
+      }
+    }
+
+    spinner.succeed(`Linked ${linkedCount} location images`);
+    return linkedCount;
+  } catch (error) {
+    spinner.fail('Failed to link location images');
     throw error;
   }
 }
