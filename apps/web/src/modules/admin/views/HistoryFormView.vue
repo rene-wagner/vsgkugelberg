@@ -2,12 +2,12 @@
 import { ref, computed, onMounted } from 'vue';
 import { useHistoryStore } from '../stores/historyStore';
 import VsgTabNav, { type TabDefinition } from '@/shared/components/VsgTabNav.vue';
-import HistoryHeroForm from '../components/HistoryHeroForm.vue';
-import HistoryFoundingForm from '../components/HistoryFoundingForm.vue';
-import HistoryDevelopmentForm from '../components/HistoryDevelopmentForm.vue';
-import HistoryFestivalsForm from '../components/HistoryFestivalsForm.vue';
-import HistoryAchievementsForm from '../components/HistoryAchievementsForm.vue';
-import HistoryCtaForm from '../components/HistoryCtaForm.vue';
+import HistoryHeroForm from '../components/forms/HistoryHeroForm.vue';
+import HistoryFoundingForm from '../components/forms/HistoryFoundingForm.vue';
+import HistoryDevelopmentForm from '../components/forms/HistoryDevelopmentForm.vue';
+import HistoryFestivalsForm from '../components/forms/HistoryFestivalsForm.vue';
+import HistoryAchievementsForm from '../components/forms/HistoryAchievementsForm.vue';
+import HistoryCtaForm from '../components/forms/HistoryCtaForm.vue';
 
 const historyStore = useHistoryStore();
 

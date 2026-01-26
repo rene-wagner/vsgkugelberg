@@ -2,10 +2,10 @@
 import { ref, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useHistoryStore } from '@modules/admin';
-import type { HistoryContent, HistoryFact, HistoryMilestone } from '../types/history.types';
+import type { HistoryContent, HistoryFact, HistoryMilestone } from '../../types/history.types';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
-import HistoryFactRow from './HistoryFactRow.vue';
-import HistoryMilestoneRow from './HistoryMilestoneRow.vue';
+import HistoryFactRow from '../HistoryFactRow.vue';
+import HistoryMilestoneRow from '../HistoryMilestoneRow.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{

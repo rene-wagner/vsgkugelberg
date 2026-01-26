@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUsersStore, type User, type CreateUserData, type UpdateUserData } from '../stores/usersStore';
+import { useUsersStore, type User, type CreateUserData, type UpdateUserData } from '../../stores/usersStore';
 import VsgPasswordInput from '@shared/components/VsgPasswordInput.vue';
 
 const props = defineProps<{

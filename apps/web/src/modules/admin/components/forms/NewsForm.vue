@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useNewsStore, type NewsItem, type CreateNewsData, type UpdateNewsData, type Thumbnail } from '../stores/newsStore';
-import { useCategoriesStore } from '../stores/categoriesStore';
+import { useNewsStore, type NewsItem, type CreateNewsData, type UpdateNewsData, type Thumbnail } from '../../stores/newsStore';
+import { useCategoriesStore } from '../../stores/categoriesStore';
 import { useAuthStore } from '@/modules/auth/stores/authStore';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
-import ThumbnailSelector from './ThumbnailSelector.vue';
-import type { MediaItem } from '../stores/mediaStore';
+import ThumbnailSelector from '../ThumbnailSelector.vue';
+import type { MediaItem } from '../../stores/mediaStore';
 
 const props = defineProps<{
   newsItem: NewsItem | null;
@@ -85,7 +85,7 @@ async function handleSubmit() {
 
       const result = await newsStore.updateNews(props.newsItem.slug, updateData);
       if (result) {
-        router.push('/admin/news');
+        router.push('/admin/beitraege');
       } else {
         error.value = newsStore.error || 'Fehler beim Aktualisieren des Artikels';
       }
@@ -107,7 +107,7 @@ async function handleSubmit() {
 
       const result = await newsStore.createNews(createData);
       if (result) {
-        router.push('/admin/news');
+        router.push('/admin/beitraege');
       } else {
         error.value = newsStore.error || 'Fehler beim Erstellen des Artikels';
       }
@@ -130,14 +130,14 @@ async function handleDelete() {
   isSubmitting.value = false;
 
   if (success) {
-    router.push('/admin/news');
+    router.push('/admin/beitraege');
   } else {
     error.value = newsStore.error || 'Fehler beim löschen des Artikels';
   }
 }
 
 function handleCancel() {
-  router.push('/admin/news');
+  router.push('/admin/beitraege');
 }
 
 function toggleCategory(categoryId: number) {

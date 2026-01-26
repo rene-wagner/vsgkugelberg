@@ -6,7 +6,7 @@ import { useDepartmentStatsStore } from '../stores/departmentStatsStore';
 import { useDepartmentTrainingStore } from '../stores/departmentTrainingStore';
 import { useDepartmentLocationsStore } from '../stores/departmentLocationsStore';
 import { useDepartmentTrainersStore } from '../stores/departmentTrainersStore';
-import DepartmentForm from '../components/DepartmentForm.vue';
+import DepartmentForm from '../components/forms/DepartmentForm.vue';
 import VsgTabNav, { type TabDefinition } from '@/shared/components/VsgTabNav.vue';
 import DepartmentStatsEditor from '../components/DepartmentStatsEditor.vue';
 import DepartmentTrainingEditor from '../components/DepartmentTrainingEditor.vue';

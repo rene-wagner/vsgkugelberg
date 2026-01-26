@@ -6,8 +6,8 @@ import {
   type ContactPerson,
   type CreateContactPersonData,
   type UpdateContactPersonData,
-} from '../stores/contactPersonsStore';
-import ProfileImageSelector from './ProfileImageSelector.vue';
+} from '../../stores/contactPersonsStore';
+import ProfileImageSelector from '../ProfileImageSelector.vue';
 
 const props = defineProps<{
   contactPerson: ContactPerson | null;

@@ -155,7 +155,7 @@ async function handleSubmit() {
 
       const result = await eventsStore.updateEvent(props.event.id, updateData);
       if (result) {
-        router.push('/admin/events');
+        router.push('/admin/termine');
       } else {
         error.value = eventsStore.error || 'Fehler beim Aktualisieren der Veranstaltung';
       }
@@ -174,7 +174,7 @@ async function handleSubmit() {
 
       const result = await eventsStore.createEvent(createData);
       if (result) {
-        router.push('/admin/events');
+        router.push('/admin/termine');
       } else {
         error.value = eventsStore.error || 'Fehler beim Erstellen der Veranstaltung';
       }
@@ -199,14 +199,14 @@ async function handleDelete() {
   isSubmitting.value = false;
 
   if (success) {
-    router.push('/admin/events');
+    router.push('/admin/termine');
   } else {
     error.value = eventsStore.error || 'Fehler beim Löschen der Veranstaltung';
   }
 }
 
 function handleCancel() {
-  router.push('/admin/events');
+  router.push('/admin/termine');
 }
 
 function toggleWeekDay(day: string) {

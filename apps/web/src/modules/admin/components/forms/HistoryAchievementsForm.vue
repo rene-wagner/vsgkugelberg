@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import { useHistoryStore } from '../stores/historyStore';
-import type { HistoryContent, AchievementItem } from '../types/history.types';
-import HistoryAchievementRow from './HistoryAchievementRow.vue';
+import { useHistoryStore } from '../../stores/historyStore';
+import type { HistoryContent, AchievementItem } from '../../types/history.types';
+import HistoryAchievementRow from '../HistoryAchievementRow.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{

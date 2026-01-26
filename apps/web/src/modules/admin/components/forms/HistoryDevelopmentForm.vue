@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import { useHistoryStore } from '../stores/historyStore';
-import type { HistoryContent, ChronicleGroup, ChartData } from '../types/history.types';
+import { useHistoryStore } from '../../stores/historyStore';
+import type { HistoryContent, ChronicleGroup, ChartData } from '../../types/history.types';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
-import HistoryChartEditor from './HistoryChartEditor.vue';
-import HistoryChronicleGroupEditor from './HistoryChronicleGroupEditor.vue';
+import HistoryChartEditor from '../HistoryChartEditor.vue';
+import HistoryChronicleGroupEditor from '../HistoryChronicleGroupEditor.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{

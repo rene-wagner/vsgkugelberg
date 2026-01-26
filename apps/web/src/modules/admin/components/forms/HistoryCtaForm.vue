@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { useHistoryStore } from '../stores/historyStore';
-import type { HistoryContent } from '../types/history.types';
+import { useHistoryStore } from '../../stores/historyStore';
+import type { HistoryContent } from '../../types/history.types';
 
 const props = defineProps<{
   history: HistoryContent;

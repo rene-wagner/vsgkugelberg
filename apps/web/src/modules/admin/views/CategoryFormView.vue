@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useCategoriesStore, type Category } from '../stores/categoriesStore';
-import CategoryForm from '../components/CategoryForm.vue';
+import CategoryForm from '../components/forms/CategoryForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const route = useRoute();

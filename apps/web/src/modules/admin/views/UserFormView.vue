@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUsersStore, type User } from '../stores/usersStore';
-import UserForm from '../components/UserForm.vue';
+import UserForm from '../components/forms/UserForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const route = useRoute();

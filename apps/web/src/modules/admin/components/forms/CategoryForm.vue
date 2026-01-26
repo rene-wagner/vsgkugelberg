@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useCategoriesStore, type Category, type CreateCategoryData, type UpdateCategoryData } from '../stores/categoriesStore';
+import { useCategoriesStore, type Category, type CreateCategoryData, type UpdateCategoryData } from '../../stores/categoriesStore';
 import VsgTreeSelect from '@/shared/components/VsgTreeSelect.vue';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 

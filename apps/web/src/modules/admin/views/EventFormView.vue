@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useEventsStore, type EventItem } from '../stores/eventsStore';
-import EventForm from '../components/EventForm.vue';
+import EventForm from '../components/forms/EventForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const route = useRoute();

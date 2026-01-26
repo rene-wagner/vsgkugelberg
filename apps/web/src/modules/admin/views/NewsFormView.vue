@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useNewsStore, type NewsItem } from '../stores/newsStore';
-import NewsForm from '../components/NewsForm.vue';
+import NewsForm from '../components/forms/NewsForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const route = useRoute();

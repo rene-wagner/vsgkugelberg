@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useContactPersonsStore, type ContactPerson } from '../stores/contactPersonsStore';
-import ContactPersonForm from '../components/ContactPersonForm.vue';
+import ContactPersonForm from '../components/forms/ContactPersonForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const route = useRoute();

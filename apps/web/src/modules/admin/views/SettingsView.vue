@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useSettingsStore, type ClubSettings } from '../stores/settingsStore';
-import SettingsForm from '../components/SettingsForm.vue';
+import SettingsForm from '../components/forms/SettingsForm.vue';
 
 const settingsStore = useSettingsStore();
 

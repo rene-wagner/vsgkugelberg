@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import { useHistoryStore } from '../stores/historyStore';
-import type { HistoryContent, FestivalItem } from '../types/history.types';
-import HistoryFestivalItemRow from './HistoryFestivalItemRow.vue';
+import { useHistoryStore } from '../../stores/historyStore';
+import type { HistoryContent, FestivalItem } from '../../types/history.types';
+import HistoryFestivalItemRow from '../HistoryFestivalItemRow.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{

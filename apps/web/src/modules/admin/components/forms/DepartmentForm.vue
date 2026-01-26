@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useDepartmentsStore, type DepartmentExtended, type CreateDepartmentData, type UpdateDepartmentData } from '../stores/departmentsStore';
+import { useDepartmentsStore, type DepartmentExtended, type CreateDepartmentData, type UpdateDepartmentData } from '../../stores/departmentsStore';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
-import SvgIconSelector from './SvgIconSelector.vue';
+import SvgIconSelector from '../SvgIconSelector.vue';
 
 const props = defineProps<{
   department: DepartmentExtended | null;
