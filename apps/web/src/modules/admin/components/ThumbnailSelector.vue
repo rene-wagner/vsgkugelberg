@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useMediaStore, type MediaItem } from '../stores/mediaStore';
-import MediaSelectionModal from './MediaSelectionModal.vue';
+import MediaSelectionModal from './modals/MediaSelectionModal.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{

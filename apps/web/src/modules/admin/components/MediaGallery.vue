@@ -4,9 +4,9 @@ import { useMediaStore, type MediaItem, type MediaFolder } from '../stores/media
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import MediaGalleryItem from './MediaGalleryItem.vue';
 import FolderCard from './FolderCard.vue';
-import MediaPreviewModal from './MediaPreviewModal.vue';
-import DeleteConfirmModal from './DeleteConfirmModal.vue';
-import MoveMediaModal from './MoveMediaModal.vue';
+import MediaPreviewModal from './modals/MediaPreviewModal.vue';
+import DeleteConfirmModal from './modals/DeleteConfirmModal.vue';
+import MoveMediaModal from './modals/MoveMediaModal.vue';
 
 const mediaStore = useMediaStore();
 

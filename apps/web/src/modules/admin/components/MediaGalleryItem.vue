@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import type { MediaItem } from '../stores/mediaStore';
+import { formatFileSize } from '@/shared/utils/formatters';
 
 defineProps<{
   item: MediaItem;
@@ -22,12 +23,6 @@ const emit = defineEmits<{
 
 function isSvg(item: MediaItem): boolean {
   return item.mimetype === 'image/svg+xml';
-}
-
-function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 function getFileExtension(filename: string): string {

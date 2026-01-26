@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MediaItem } from '../stores/mediaStore';
+import type { MediaItem } from '../../stores/mediaStore';
 
 const emit = defineEmits<{
   close: [];

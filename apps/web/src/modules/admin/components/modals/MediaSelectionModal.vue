@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { useMediaStore, type MediaItem } from '../stores/mediaStore';
+import { useMediaStore, type MediaItem } from '../../stores/mediaStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 defineProps<{
