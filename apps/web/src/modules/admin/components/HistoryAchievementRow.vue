@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import VsgInput from '@/shared/components/VsgInput.vue';
 import type { AchievementItem } from '../types/history.types';
 import { useDepartmentsStore } from '../stores/departmentsStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -41,12 +42,14 @@ function handleInput(field: keyof AchievementItem, value: string) {
 
     <div class="flex-1 grid grid-cols-12 gap-4">
       <div class="col-span-2">
-        <input
-          :value="achievement.year"
+        <VsgInput
+          :model-value="achievement.year"
+          id="achievement-year"
           type="text"
           placeholder="Jahr"
-          class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-vsg-blue-900 focus:border-vsg-blue-600 outline-none font-bold text-center"
-          @input="handleInput('year', ($event.target as HTMLInputElement).value)"
+          variant="inline"
+          class="font-bold text-center"
+          @update:model-value="handleInput('year', $event as string)"
         />
       </div>
 
@@ -67,12 +70,14 @@ function handleInput(field: keyof AchievementItem, value: string) {
       </div>
 
       <div class="col-span-7 space-y-2">
-        <input
-          :value="achievement.headline"
+        <VsgInput
+          :model-value="achievement.headline"
+          id="achievement-headline"
           type="text"
           placeholder="Titel des Erfolgs"
-          class="w-full px-3 py-2 bg-white border border-gray-300 rounded-md text-sm text-vsg-blue-900 font-display tracking-widest focus:border-vsg-blue-600 outline-none"
-          @input="handleInput('headline', ($event.target as HTMLInputElement).value)"
+          variant="inline"
+          class="font-display tracking-widest"
+          @update:model-value="handleInput('headline', $event as string)"
         />
 
         <textarea

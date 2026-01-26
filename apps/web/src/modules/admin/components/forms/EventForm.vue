@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useEventsStore, type EventItem, type CreateEventData, type UpdateEventData, type EventCategory } from '@modules/admin';
 import VsgMarkdownEditor from '@shared/components/VsgMarkdownEditor.vue';
+import VsgInput from '@/shared/components/VsgInput.vue';
 
 const props = defineProps<{
   event: EventItem | null;
@@ -331,70 +332,44 @@ function toggleWeekDay(day: string) {
 
         <!-- Start Date/Time -->
         <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label
-              for="startDate"
-              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-            >
-              Startdatum <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="startDate"
-              v-model="startDate"
-              type="date"
-              required
-              class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-            />
-          </div>
-          <div v-if="!isFullDay">
-            <label
-              for="startTime"
-              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-            >
-              Startzeit <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="startTime"
-              v-model="startTime"
-              type="time"
-              required
-              class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-            />
-          </div>
+          <VsgInput
+            id="startDate"
+            v-model="startDate"
+            type="date"
+            label="Startdatum"
+            variant="form"
+            required
+          />
+          <VsgInput
+            v-if="!isFullDay"
+            id="startTime"
+            v-model="startTime"
+            type="time"
+            label="Startzeit"
+            variant="form"
+            required
+          />
         </div>
 
         <!-- End Date/Time -->
         <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label
-              for="endDate"
-              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-            >
-              Enddatum <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="endDate"
-              v-model="endDate"
-              type="date"
-              required
-              class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-            />
-          </div>
-          <div v-if="!isFullDay">
-            <label
-              for="endTime"
-              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-            >
-              Endzeit <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="endTime"
-              v-model="endTime"
-              type="time"
-              required
-              class="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-            />
-          </div>
+          <VsgInput
+            id="endDate"
+            v-model="endDate"
+            type="date"
+            label="Enddatum"
+            variant="form"
+            required
+          />
+          <VsgInput
+            v-if="!isFullDay"
+            id="endTime"
+            v-model="endTime"
+            type="time"
+            label="Endzeit"
+            variant="form"
+            required
+          />
         </div>
       </div>
     </div>

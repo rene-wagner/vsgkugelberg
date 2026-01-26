@@ -2,6 +2,7 @@
 import { ref, watch, computed } from 'vue';
 import type { DepartmentLocation, LocationAmenity, ContactPersonMedia } from '../types/department-extended.types';
 import ImageSelector from './ImageSelector.vue';
+import VsgInput from '@/shared/components/VsgInput.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
@@ -139,11 +140,13 @@ function handleRemoveAmenity(index: number) {
 
       <!-- Location Name -->
       <div class="flex-1 min-w-0">
-        <input
+        <VsgInput
           v-model="name"
+          id="location-name"
           type="text"
           placeholder="Standortname"
-          class="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-vsg-blue-900 font-semibold text-sm focus:outline-none focus:border-vsg-blue-600"
+          variant="inline"
+          class="font-semibold"
         />
       </div>
 
@@ -181,15 +184,14 @@ function handleRemoveAmenity(index: number) {
 
       <!-- Badge Row -->
       <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Badge Text </label>
-          <input
-            v-model="badge"
-            type="text"
-            placeholder="z.B. Haupthalle"
-            class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-          />
-        </div>
+        <VsgInput
+          v-model="badge"
+          id="location-badge"
+          type="text"
+          label="Badge Text"
+          placeholder="z.B. Haupthalle"
+          variant="inline"
+        />
         <div>
           <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Badge Variante </label>
           <select
@@ -204,36 +206,33 @@ function handleRemoveAmenity(index: number) {
 
       <!-- Address Row -->
       <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Straße </label>
-          <input
-            v-model="street"
-            type="text"
-            placeholder="Musterstraße 123"
-            class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-          />
-        </div>
-        <div>
-          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Stadt </label>
-          <input
-            v-model="city"
-            type="text"
-            placeholder="12345 Musterstadt"
-            class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-          />
-        </div>
+        <VsgInput
+          v-model="street"
+          id="location-street"
+          type="text"
+          label="Straße"
+          placeholder="Musterstraße 123"
+          variant="inline"
+        />
+        <VsgInput
+          v-model="city"
+          id="location-city"
+          type="text"
+          label="Stadt"
+          placeholder="12345 Musterstadt"
+          variant="inline"
+        />
       </div>
 
       <!-- Maps URL -->
-      <div>
-        <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Maps URL </label>
-        <input
-          v-model="mapsUrl"
-          type="url"
-          placeholder="https://maps.example.com/... (optional)"
-          class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-        />
-      </div>
+      <VsgInput
+        v-model="mapsUrl"
+        id="location-maps-url"
+        type="url"
+        label="Maps URL"
+        placeholder="https://maps.example.com/... (optional)"
+        variant="inline"
+      />
 
       <!-- Amenities Section -->
       <div>
@@ -262,11 +261,13 @@ function handleRemoveAmenity(index: number) {
 
         <!-- Add Amenity Input -->
         <div class="flex gap-2">
-          <input
+          <VsgInput
             v-model="newAmenity"
+            id="new-amenity"
             type="text"
             placeholder="z.B. Parkplatz"
-            class="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
+            variant="inline"
+            class="flex-1"
             @keydown.enter.prevent="handleAddAmenity"
           />
           <button

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import VsgContactPersonSelect from '@/shared/components/VsgContactPersonSelect.vue';
+import VsgInput from '@/shared/components/VsgInput.vue';
 import type { DepartmentTrainer, TrainerLicense } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -174,15 +175,14 @@ function handleRemoveLicense(index: number) {
       </div>
 
       <!-- Role -->
-      <div>
-        <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Rolle </label>
-        <input
-          v-model="role"
-          type="text"
-          placeholder="z.B. Cheftrainer, Co-Trainer"
-          class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-        />
-      </div>
+      <VsgInput
+        v-model="role"
+        id="trainer-role"
+        type="text"
+        label="Rolle"
+        placeholder="z.B. Cheftrainer, Co-Trainer"
+        variant="inline"
+      />
 
       <!-- Licenses Section -->
       <div>
@@ -212,11 +212,13 @@ function handleRemoveLicense(index: number) {
 
         <!-- Add License Form -->
         <div class="flex gap-2">
-          <input
+          <VsgInput
             v-model="newLicenseName"
+            id="new-license-name"
             type="text"
             placeholder="Lizenzname"
-            class="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
+            variant="inline"
+            class="flex-1"
             @keydown.enter.prevent="handleAddLicense"
           />
           <select

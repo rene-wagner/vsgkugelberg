@@ -2,6 +2,7 @@
 import { ref, watch, computed } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import TrainingSessionRow from './TrainingSessionRow.vue';
+import VsgInput from '@/shared/components/VsgInput.vue';
 import type { DepartmentTrainingGroup, DepartmentTrainingSession, DepartmentLocation } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -114,11 +115,13 @@ function handleSessionsDragEnd() {
 
       <!-- Group Title -->
       <div class="flex-1 min-w-0">
-        <input
+        <VsgInput
           v-model="name"
+          id="group-name"
           type="text"
           placeholder="Gruppenname"
-          class="w-full px-3 py-1.5 bg-white border border-gray-300 rounded text-vsg-blue-900 font-semibold text-sm focus:outline-none focus:border-vsg-blue-600"
+          variant="inline"
+          class="font-semibold"
         />
       </div>
 
@@ -146,15 +149,14 @@ function handleSessionsDragEnd() {
       <!-- Group Details Row -->
       <div class="grid grid-cols-3 gap-3">
         <!-- Age Range -->
-        <div>
-          <label class="block font-body text-xs text-gray-500 uppercase tracking-wider mb-1"> Altersbereich </label>
-          <input
-            v-model="ageRange"
-            type="text"
-            placeholder="z.B. 6-12 Jahre (optional)"
-            class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-          />
-        </div>
+        <VsgInput
+          v-model="ageRange"
+          id="group-age-range"
+          type="text"
+          label="Altersbereich"
+          placeholder="z.B. 6-12 Jahre (optional)"
+          variant="inline"
+        />
 
         <!-- Icon -->
         <div>

@@ -4,6 +4,7 @@ import { VueDraggable } from 'vue-draggable-plus';
 import { useHistoryStore } from '@modules/admin';
 import type { HistoryContent, HistoryFact, HistoryMilestone } from '../../types/history.types';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
+import VsgInput from '@/shared/components/VsgInput.vue';
 import HistoryFactRow from '../HistoryFactRow.vue';
 import HistoryMilestoneRow from '../HistoryMilestoneRow.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -115,20 +116,13 @@ async function handleSubmit() {
           />
         </div>
 
-        <div>
-          <label
-            for="foundingDate"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Gründungsdatum
-          </label>
-          <input
-            id="foundingDate"
-            v-model="foundingDate"
-            type="date"
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-          />
-        </div>
+        <VsgInput
+          id="foundingDate"
+          v-model="foundingDate"
+          type="date"
+          label="Gründungsdatum"
+          variant="form"
+        />
       </div>
     </div>
 
@@ -136,20 +130,13 @@ async function handleSubmit() {
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">DIE ECKDATEN (FACT CARD)</h2>
 
-      <div class="mb-6">
-        <label
-          for="foundingFactCardHeadline"
-          class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-        >
-          Karten-Überschrift
-        </label>
-        <input
-          id="foundingFactCardHeadline"
-          v-model="foundingFactCardHeadline"
-          type="text"
-          class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-        />
-      </div>
+      <VsgInput
+        id="foundingFactCardHeadline"
+        v-model="foundingFactCardHeadline"
+        type="text"
+        label="Karten-Überschrift"
+        variant="form"
+      />
 
       <div class="space-y-4">
         <VueDraggable

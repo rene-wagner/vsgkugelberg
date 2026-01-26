@@ -4,6 +4,7 @@ import { useMediaStore } from '../stores/mediaStore';
 import type { RegenerateThumbnailsResult } from '../stores/mediaStore';
 import MediaUploadZone from '../components/MediaUploadZone.vue';
 import MediaGallery from '../components/MediaGallery.vue';
+import VsgInput from '@/shared/components/VsgInput.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const mediaStore = useMediaStore();
@@ -285,12 +286,13 @@ async function executeRegenerateAll() {
         <div class="bg-white rounded-xl p-6 max-w-sm w-full shadow-xl">
           <h3 class="font-display text-lg tracking-wider text-vsg-blue-900 mb-4">NEUER ORDNER</h3>
           <div class="mb-6">
-            <label class="block text-sm font-body font-medium text-vsg-blue-900 mb-1"> Name </label>
-            <input
+            <VsgInput
               v-model="newFolderName"
+              id="new-folder-name"
               type="text"
+              label="Name"
               placeholder="z.B. Veranstaltungen"
-              class="w-full px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-vsg-blue-500/20 focus:border-vsg-blue-500 transition-all font-body text-sm"
+              variant="compact"
               @keyup.enter="handleCreateFolder"
             />
           </div>

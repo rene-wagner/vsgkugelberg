@@ -8,6 +8,7 @@ import {
   type UpdateContactPersonData,
 } from '../../stores/contactPersonsStore';
 import ProfileImageSelector from '../ProfileImageSelector.vue';
+import VsgInput from '@/shared/components/VsgInput.vue';
 
 const props = defineProps<{
   contactPerson: ContactPerson | null;
@@ -146,94 +147,59 @@ function handleCancel() {
       <div class="space-y-6">
         <!-- First Name -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label
-              for="firstName"
-              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-            >
-              Vorname <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="firstName"
-              v-model="firstName"
-              type="text"
-              required
-              class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-              placeholder="z.B. Max"
-            />
-          </div>
+          <VsgInput
+            id="firstName"
+            v-model="firstName"
+            type="text"
+            label="Vorname"
+            placeholder="z.B. Max"
+            variant="form"
+            required
+          />
 
           <!-- Last Name -->
-          <div>
-            <label
-              for="lastName"
-              class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-            >
-              Nachname <span class="text-red-500">*</span>
-            </label>
-            <input
-              id="lastName"
-              v-model="lastName"
-              type="text"
-              required
-              class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-              placeholder="z.B. Mustermann"
-            />
-          </div>
+          <VsgInput
+            id="lastName"
+            v-model="lastName"
+            type="text"
+            label="Nachname"
+            placeholder="z.B. Mustermann"
+            variant="form"
+            required
+          />
         </div>
 
         <!-- Type -->
-        <div>
-          <label
-            for="type"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Funktion / Rolle <span class="text-red-500">*</span>
-          </label>
-          <input
-            id="type"
-            v-model="type"
-            type="text"
-            required
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-            placeholder="z.B. Vorstandsvorsitzender, Schatzmeister, Trainer"
-          />
-        </div>
+        <VsgInput
+          id="type"
+          v-model="type"
+          type="text"
+          label="Funktion / Rolle"
+          placeholder="z.B. Vorstandsvorsitzender, Schatzmeister, Trainer"
+          variant="form"
+          required
+        />
 
         <!-- Phone -->
-        <div>
-          <label
-            for="phone"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Telefon <span class="text-red-500">*</span>
-          </label>
-          <input
-            id="phone"
-            v-model="phone"
-            type="tel"
-            required
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-            placeholder="z.B. +49 123 456789"
-          />
-        </div>
+        <VsgInput
+          id="phone"
+          v-model="phone"
+          type="tel"
+          label="Telefon"
+          placeholder="z.B. +49 123 456789"
+          variant="form"
+          required
+        />
 
         <!-- Email -->
-        <div>
-          <label
-            for="email"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            E-Mail
-          </label>
-          <input
-            id="email"
-            v-model="email"
-            type="email"
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-            placeholder="z.B. max@example.com"
-          />
-        </div>
+        <VsgInput
+          id="email"
+          v-model="email"
+          type="email"
+          label="E-Mail"
+          placeholder="z.B. max@example.com"
+          variant="form"
+        />
 
         <!-- Address -->
         <div>

@@ -3,6 +3,7 @@ import { ref, computed, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUsersStore, type User, type CreateUserData, type UpdateUserData } from '../../stores/usersStore';
 import VsgPasswordInput from '@shared/components/VsgPasswordInput.vue';
+import VsgInput from '@/shared/components/VsgInput.vue';
 
 const props = defineProps<{
   user: User | null;
@@ -142,40 +143,26 @@ function handleCancel() {
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Username -->
-        <div>
-          <label
-            for="username"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            Benutzername <span class="text-red-500">*</span>
-          </label>
-          <input
-            id="username"
-            v-model="username"
-            type="text"
-            required
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-            placeholder="benutzername"
-          />
-        </div>
+        <VsgInput
+          id="username"
+          v-model="username"
+          type="text"
+          label="Benutzername"
+          placeholder="benutzername"
+          variant="form"
+          required
+        />
 
         <!-- Email -->
-        <div>
-          <label
-            for="email"
-            class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"
-          >
-            E-Mail Adresse <span class="text-red-500">*</span>
-          </label>
-          <input
-            id="email"
-            v-model="email"
-            type="email"
-            required
-            class="form-input-custom w-full px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
-            placeholder="email@beispiel.de"
-          />
-        </div>
+        <VsgInput
+          id="email"
+          v-model="email"
+          type="email"
+          label="E-Mail Adresse"
+          placeholder="email@beispiel.de"
+          variant="form"
+          required
+        />
       </div>
     </div>
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
+import VsgInput from '@/shared/components/VsgInput.vue';
 import type { DepartmentStat } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -56,21 +57,23 @@ defineExpose({ hasChanges });
 
     <!-- Label Input -->
     <div class="flex-1">
-      <input
+      <VsgInput
         v-model="label"
+        id="stat-label"
         type="text"
         placeholder="Label (z.B. Mitglieder)"
-        class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
+        variant="inline"
       />
     </div>
 
     <!-- Value Input -->
     <div class="flex-1">
-      <input
+      <VsgInput
         v-model="value"
+        id="stat-value"
         type="text"
         placeholder="Wert (z.B. 150+)"
-        class="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
+        variant="inline"
       />
     </div>
 
