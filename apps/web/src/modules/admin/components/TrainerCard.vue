@@ -2,6 +2,7 @@
 import { ref, watch, computed } from 'vue';
 import VsgContactPersonSelect from '@/shared/components/VsgContactPersonSelect.vue';
 import VsgInput from '@/shared/components/VsgInput.vue';
+import AdminIconButton from './AdminIconButton.vue';
 import type { DepartmentTrainer, TrainerLicense } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -147,14 +148,12 @@ function handleRemoveLicense(index: number) {
       </span>
 
       <!-- Delete Button -->
-      <button
-        type="button"
-        class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+      <AdminIconButton
+        icon="trash"
+        variant="delete"
         title="Trainer löschen"
         @click="handleDelete"
-      >
-        <FontAwesomeIcon icon="trash" />
-      </button>
+      />
     </div>
 
     <!-- Card Body (Collapsible) -->

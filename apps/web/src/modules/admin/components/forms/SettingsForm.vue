@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useSettingsStore, type ClubSettings, type UpdateSettingsData } from '@modules/admin';
+import AdminButton from '../AdminButton.vue';
 
 const props = defineProps<{
   settings: ClubSettings | null;
@@ -151,13 +152,14 @@ async function handleSubmit() {
 
     <!-- Form Actions -->
     <div class="flex items-center justify-end border-t border-gray-200 pt-6">
-      <button
+      <AdminButton
         type="submit"
-        class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        size="large"
         :disabled="settingsStore.isSaving"
+        :loading="settingsStore.isSaving"
       >
         {{ settingsStore.isSaving ? 'Speichern...' : 'Speichern' }}
-      </button>
+      </AdminButton>
     </div>
   </form>
 </template>

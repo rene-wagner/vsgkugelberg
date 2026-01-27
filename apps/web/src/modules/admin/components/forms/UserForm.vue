@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { useUsersStore, type User, type CreateUserData, type UpdateUserData } from '../../stores/usersStore';
 import VsgPasswordInput from '@shared/components/VsgPasswordInput.vue';
 import VsgInput from '@/shared/components/VsgInput.vue';
+import AdminButton from '../AdminButton.vue';
 
 const props = defineProps<{
   user: User | null;
@@ -35,11 +36,11 @@ watch(
 const passwordError = computed(() => {
   if (password.value && confirmPassword.value) {
     if (password.value !== confirmPassword.value) {
-      return 'Passworter stimmen nicht uberein';
+      return 'Passwörter stimmen nicht überein';
     }
   }
   if (password.value && !confirmPassword.value) {
-    return 'Bitte Passwort bestatigen';
+    return 'Bitte Passwort bestätigen';
   }
   if (!password.value && confirmPassword.value) {
     return 'Bitte Passwort eingeben';
@@ -175,7 +176,7 @@ function handleCancel() {
         v-if="isEditMode"
         class="font-body font-normal text-sm text-gray-500 mb-6"
       >
-        Lasse die Felder leer, um das Passwort nicht zu andern.
+        Lasse die Felder leer, um das Passwort nicht zu ändern.
       </p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -199,7 +200,7 @@ function handleCancel() {
         <VsgPasswordInput
           id="confirmPassword"
           v-model="confirmPassword"
-          label="Passwort bestatigen"
+          label="Passwort bestätigen"
           :required="!isEditMode"
           variant="admin"
         >
@@ -223,31 +224,30 @@ function handleCancel() {
 
     <!-- Form Actions -->
     <div class="flex items-center justify-between border-t border-gray-200 pt-6">
-      <button
-        type="button"
-        class="px-6 py-2.5 border border-gray-300 text-gray-600 font-body text-sm rounded-lg hover:bg-gray-50 transition-colors"
+      <AdminButton
+        variant="secondary"
         @click="handleCancel"
       >
         Abbrechen
-      </button>
+      </AdminButton>
 
       <div class="flex items-center gap-3">
-        <button
+        <AdminButton
           v-if="isEditMode"
-          type="button"
-          class="px-6 py-2.5 border border-red-300 text-red-600 font-body text-sm rounded-lg hover:bg-red-50 transition-colors"
+          variant="danger-outline"
           :disabled="isSubmitting"
           @click="handleDelete"
         >
           Benutzer löschen
-        </button>
-        <button
+        </AdminButton>
+        <AdminButton
           type="submit"
-          class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          size="large"
           :disabled="!canSubmit || isSubmitting"
+          :loading="isSubmitting"
         >
           {{ isSubmitting ? 'Speichern...' : 'Speichern' }}
-        </button>
+        </AdminButton>
       </div>
     </div>
   </form>

@@ -3,6 +3,8 @@ import { ref, watch, computed } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import TrainingSessionRow from './TrainingSessionRow.vue';
 import VsgInput from '@/shared/components/VsgInput.vue';
+import AdminIconButton from './AdminIconButton.vue';
+import AdminAddButton from './AdminAddButton.vue';
 import type { DepartmentTrainingGroup, DepartmentTrainingSession, DepartmentLocation } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -131,14 +133,13 @@ function handleSessionsDragEnd() {
       </span>
 
       <!-- Delete Button -->
-      <button
-        type="button"
-        class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+      <AdminIconButton
+        icon="trash"
+        variant="delete"
         title="Trainingsgruppe löschen"
+        with-background
         @click="handleDelete"
-      >
-        <FontAwesomeIcon icon="trash" />
-      </button>
+      />
     </div>
 
     <!-- Card Body (Collapsible) -->
@@ -221,14 +222,10 @@ function handleSessionsDragEnd() {
         </div>
 
         <!-- Add Session Button -->
-        <button
-          type="button"
-          class="w-full py-2 border border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-vsg-blue-400 hover:text-vsg-blue-600 transition-colors font-body text-sm flex items-center justify-center gap-2"
+        <AdminAddButton
+          label="Trainingszeit hinzufügen"
           @click="handleAddSession"
-        >
-          <FontAwesomeIcon icon="plus" />
-          Trainingszeit hinzufügen
-        </button>
+        />
       </div>
     </div>
   </div>

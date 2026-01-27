@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AdminIconButton from './AdminIconButton.vue';
 import type { HistoryFact } from '../types/history.types';
 
 const props = defineProps<{
@@ -57,12 +58,11 @@ function handleInput(field: 'year' | 'headline' | 'description', value: string) 
       </div>
     </div>
 
-    <button
-      type="button"
-      class="text-gray-400 hover:text-red-600 transition-colors mt-2"
+    <AdminIconButton
+      icon="trash"
+      variant="delete"
+      title="Fakt löschen"
       @click="emit('delete')"
-    >
-      <FontAwesomeIcon icon="trash" />
-    </button>
+    />
   </div>
 </template>

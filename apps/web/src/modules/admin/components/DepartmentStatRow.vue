@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import VsgInput from '@/shared/components/VsgInput.vue';
+import AdminIconButton from './AdminIconButton.vue';
 import type { DepartmentStat } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -78,13 +79,11 @@ defineExpose({ hasChanges });
     </div>
 
     <!-- Delete Button -->
-    <button
-      type="button"
-      class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors shrink-0"
+    <AdminIconButton
+      icon="trash"
+      variant="delete"
       title="Statistik löschen"
       @click="handleDelete"
-    >
-      <FontAwesomeIcon icon="trash" />
-    </button>
+    />
   </div>
 </template>

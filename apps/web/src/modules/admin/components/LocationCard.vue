@@ -3,6 +3,8 @@ import { ref, watch, computed } from 'vue';
 import type { DepartmentLocation, LocationAmenity, ContactPersonMedia } from '../types/department-extended.types';
 import ImageSelector from './ImageSelector.vue';
 import VsgInput from '@/shared/components/VsgInput.vue';
+import AdminIconButton from './AdminIconButton.vue';
+import AdminButton from './AdminButton.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
@@ -157,14 +159,13 @@ function handleRemoveAmenity(index: number) {
       </span>
 
       <!-- Delete Button -->
-      <button
-        type="button"
-        class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+      <AdminIconButton
+        icon="trash"
+        variant="delete"
         title="Standort löschen"
+        with-background
         @click="handleDelete"
-      >
-        <FontAwesomeIcon icon="trash" />
-      </button>
+      />
     </div>
 
     <!-- Card Body (Collapsible) -->
@@ -270,13 +271,13 @@ function handleRemoveAmenity(index: number) {
             class="flex-1"
             @keydown.enter.prevent="handleAddAmenity"
           />
-          <button
-            type="button"
-            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-body"
+          <AdminButton
+            size="small"
+            variant="ghost"
             @click="handleAddAmenity"
           >
             Hinzufügen
-          </button>
+          </AdminButton>
         </div>
       </div>
     </div>

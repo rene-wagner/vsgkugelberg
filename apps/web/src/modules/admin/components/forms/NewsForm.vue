@@ -6,6 +6,7 @@ import { useCategoriesStore } from '../../stores/categoriesStore';
 import { useAuthStore } from '@/modules/auth/stores/authStore';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 import ThumbnailSelector from '../ThumbnailSelector.vue';
+import AdminButton from '../AdminButton.vue';
 import type { MediaItem } from '../../stores/mediaStore';
 
 const props = defineProps<{
@@ -285,31 +286,30 @@ function updateThumbnail(media: MediaItem | null) {
 
     <!-- Form Actions -->
     <div class="flex items-center justify-between border-t border-gray-200 pt-6">
-      <button
-        type="button"
-        class="px-6 py-2.5 border border-gray-300 text-gray-600 font-body text-sm rounded-lg hover:bg-gray-50 transition-colors"
+      <AdminButton
+        variant="secondary"
         @click="handleCancel"
       >
         Abbrechen
-      </button>
+      </AdminButton>
 
       <div class="flex items-center gap-3">
-        <button
+        <AdminButton
           v-if="isEditMode"
-          type="button"
-          class="px-6 py-2.5 border border-red-300 text-red-600 font-body text-sm rounded-lg hover:bg-red-50 transition-colors"
+          variant="danger-outline"
           :disabled="isSubmitting"
           @click="handleDelete"
         >
           Artikel löschen
-        </button>
-        <button
+        </AdminButton>
+        <AdminButton
           type="submit"
-          class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          size="large"
           :disabled="!canSubmit || isSubmitting"
+          :loading="isSubmitting"
         >
           {{ isSubmitting ? 'Speichern...' : 'Speichern' }}
-        </button>
+        </AdminButton>
       </div>
     </div>
   </form>

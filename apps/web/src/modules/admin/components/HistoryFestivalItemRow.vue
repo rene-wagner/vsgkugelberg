@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AdminIconButton from './AdminIconButton.vue';
 import type { FestivalItem } from '../types/history.types';
 
 const props = defineProps<{
@@ -43,12 +44,11 @@ function handleInput(field: 'headline' | 'text', value: string) {
       ></textarea>
     </div>
 
-    <button
-      type="button"
-      class="text-gray-400 hover:text-red-600 transition-colors mt-2"
+    <AdminIconButton
+      icon="trash"
+      variant="delete"
+      title="Element löschen"
       @click="emit('delete')"
-    >
-      <FontAwesomeIcon icon="trash" />
-    </button>
+    />
   </div>
 </template>

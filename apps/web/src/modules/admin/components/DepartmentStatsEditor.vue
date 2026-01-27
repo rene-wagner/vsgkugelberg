@@ -3,6 +3,8 @@ import { ref, computed, watch } from 'vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import { useDepartmentStatsStore } from '../stores/departmentStatsStore';
 import DepartmentStatRow from './DepartmentStatRow.vue';
+import AdminButton from './AdminButton.vue';
+import AdminAddButton from './AdminAddButton.vue';
 import type { DepartmentStat, CreateDepartmentStatDto, UpdateDepartmentStatDto } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -232,13 +234,12 @@ async function handleSave() {
         class="mb-4 text-gray-400"
       />
       <p class="text-gray-500 font-body mb-4">Noch keine Statistiken vorhanden.</p>
-      <button
-        type="button"
-        class="px-4 py-2 bg-vsg-blue-600 text-white font-body text-sm rounded-lg hover:bg-vsg-blue-700 transition-colors"
+      <AdminButton
+        variant="gold"
         @click="handleAdd"
       >
         Erste Statistik hinzufügen
-      </button>
+      </AdminButton>
     </div>
 
     <!-- Stats List with Drag & Drop -->
@@ -262,14 +263,11 @@ async function handleSave() {
       </VueDraggable>
 
       <!-- Add Button -->
-      <button
-        type="button"
-        class="w-full py-3 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-vsg-blue-400 hover:text-vsg-blue-600 transition-colors font-body text-sm flex items-center justify-center gap-2"
+      <AdminAddButton
+        label="Statistik hinzufügen"
+        icon="plus"
         @click="handleAdd"
-      >
-        <FontAwesomeIcon icon="plus" />
-        Statistik hinzufügen
-      </button>
+      />
     </template>
 
     <!-- Save Button -->
@@ -277,14 +275,14 @@ async function handleSave() {
       v-if="isDirty"
       class="flex justify-end pt-4 border-t border-gray-200"
     >
-      <button
-        type="button"
-        class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        :disabled="isSaving"
+      <AdminButton
+        variant="primary"
+        size="large"
+        :loading="isSaving"
         @click="handleSave"
       >
-        {{ isSaving ? 'Speichern...' : 'Speichern' }}
-      </button>
+        Speichern
+      </AdminButton>
     </div>
   </div>
 </template>

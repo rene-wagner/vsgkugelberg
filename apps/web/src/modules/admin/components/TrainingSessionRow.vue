@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import AdminIconButton from './AdminIconButton.vue';
 import type { DepartmentTrainingSession, DepartmentLocation } from '../types/department-extended.types';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
@@ -98,13 +99,11 @@ function handleDelete() {
     </select>
 
     <!-- Delete Button -->
-    <button
-      type="button"
-      class="p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded transition-colors shrink-0"
+    <AdminIconButton
+      icon="trash"
+      variant="delete"
       title="Trainingszeit löschen"
       @click="handleDelete"
-    >
-      <FontAwesomeIcon icon="trash" />
-    </button>
+    />
   </div>
 </template>

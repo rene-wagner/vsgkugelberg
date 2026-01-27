@@ -38,7 +38,7 @@ async function handleSubmit() {
     @submit.prevent="handleSubmit"
   >
     <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">HERO BEREICH</h2>
+      <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">Hero Bereich</h2>
 
       <div class="space-y-6">
         <div>

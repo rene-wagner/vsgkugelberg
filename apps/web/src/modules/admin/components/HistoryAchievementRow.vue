@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import VsgInput from '@/shared/components/VsgInput.vue';
+import AdminIconButton from './AdminIconButton.vue';
 import type { AchievementItem } from '../types/history.types';
 import { useDepartmentsStore } from '../stores/departmentsStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -90,12 +91,11 @@ function handleInput(field: keyof AchievementItem, value: string) {
       </div>
     </div>
 
-    <button
-      type="button"
-      class="text-gray-400 hover:text-red-600 transition-colors mt-2"
+    <AdminIconButton
+      icon="trash"
+      variant="delete"
+      title="Erfolg löschen"
       @click="emit('delete')"
-    >
-      <FontAwesomeIcon icon="trash" />
-    </button>
+    />
   </div>
 </template>

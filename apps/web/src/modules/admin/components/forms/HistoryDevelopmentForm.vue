@@ -6,6 +6,7 @@ import type { HistoryContent, ChronicleGroup, ChartData } from '../../types/hist
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 import HistoryChartEditor from '../HistoryChartEditor.vue';
 import HistoryChronicleGroupEditor from '../HistoryChronicleGroupEditor.vue';
+import AdminButton from '../AdminButton.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps<{
@@ -135,13 +136,14 @@ async function handleSubmit() {
     </div>
 
     <div class="flex justify-end">
-      <button
+      <AdminButton
         type="submit"
-        class="px-8 py-2.5 bg-vsg-blue-600 text-white font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        size="large"
         :disabled="historyStore.isSaving"
+        :loading="historyStore.isSaving"
       >
         {{ historyStore.isSaving ? 'Speichern...' : 'Speichern' }}
-      </button>
+      </AdminButton>
     </div>
   </form>
 </template>
