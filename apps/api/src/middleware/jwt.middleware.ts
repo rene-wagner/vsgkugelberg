@@ -35,8 +35,7 @@ export const jwtMiddleware = (req: Request, _res: Response, next: NextFunction) 
 
     const payload = decoded as unknown as JwtPayload;
 
-    /* eslint-disable @typescript-eslint/no-unsafe-member-access */
-    (req as any).user = {
+    req.user = {
       id: payload.sub,
       username: payload.username,
     };

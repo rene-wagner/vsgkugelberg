@@ -17,6 +17,7 @@ router.post(
   /* eslint-disable-next-line @typescript-eslint/no-unsafe-argument */
   passport.authenticate('local', { session: false }),
   asyncHandlerMiddleware(async (req, res) => {
+    // Passport local strategy sets full UserPayload on req.user
     const user = req.user as UserPayload;
 
     const { access_token, user: userData } = authService.login(user);

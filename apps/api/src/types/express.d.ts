@@ -1,23 +1,20 @@
-import { UserPayload } from '@/services/auth.service';
 import type { Request } from 'express';
+import { UserPayload } from '@/services/auth.service';
 
+/**
+ * Extend Passport's Express.User interface.
+ * Passport automatically adds `user?: User` to Express.Request.
+ *
+ * Uses Partial<UserPayload> to allow both:
+ * - JWT middleware: Sets only {id, username} from token
+ * - Passport local strategy: Sets full UserPayload from database
+ *
+ * Routes should check which fields are available based on their auth middleware.
+ */
 declare global {
   namespace Express {
-    /* eslint-disable-next-line @typescript-eslint/no-empty-object-type */
-    interface User extends UserPayload {}
-  }
-}
-
-// Extend Express Request to include user property with partial info
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: {
-      id: number;
-      username: string;
-      email?: string;
-      createdAt?: Date;
-      updatedAt?: Date;
-    };
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    interface User extends Partial<UserPayload> {}
   }
 }
 
