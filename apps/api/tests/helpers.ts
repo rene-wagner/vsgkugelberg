@@ -20,6 +20,8 @@ import {
   PasswordResetToken,
   Post,
   User,
+  HomepageContent,
+  HomepageStat,
 } from '../generated/prisma/client';
 
 const connectionString = `${process.env.DATABASE_URL}`;
@@ -43,6 +45,8 @@ export {
   PasswordResetToken,
   Post,
   User,
+  HomepageContent,
+  HomepageStat,
 };
 
 export async function cleanupDatabase() {

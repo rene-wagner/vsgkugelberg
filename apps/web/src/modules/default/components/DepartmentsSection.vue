@@ -5,6 +5,18 @@ import VsgSectionHeader from '@shared/components/VsgSectionHeader.vue';
 import DepartmentCard from './DepartmentCard.vue';
 import { useDefaultDepartmentsStore, getMediaUrl } from '../stores/departmentsStore';
 
+interface Props {
+  headline?: string;
+  description?: string;
+  subtitle?: string;
+}
+
+withDefaults(defineProps<Props>(), {
+  headline: 'ABTEILUNGEN',
+  description: 'Entdecke unsere vielfältigen Sportangebote und finde die passende Abteilung für dich.',
+  subtitle: 'Unsere Abteilungen',
+});
+
 const departmentsStore = useDefaultDepartmentsStore();
 const { departments, isLoading, error } = storeToRefs(departmentsStore);
 
@@ -17,8 +29,8 @@ onMounted(() => {
   <section class="relative bg-white py-32">
     <div class="mx-auto max-w-7xl px-6">
       <VsgSectionHeader
-        subtitle="Unsere Abteilungen"
-        title="ABTEILUNGEN"
+        :subtitle="subtitle"
+        :title="headline"
         class="mb-20"
       />
 

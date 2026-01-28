@@ -260,6 +260,39 @@ CREATE TABLE "HistoryMilestone" (
 );
 
 -- CreateTable
+CREATE TABLE "HomepageContent" (
+    "id" INTEGER NOT NULL DEFAULT 1,
+    "heroHeadline" TEXT NOT NULL,
+    "heroDescription" TEXT NOT NULL,
+    "heroTag" TEXT NOT NULL,
+    "departmentsHeadline" TEXT NOT NULL,
+    "departmentsDescription" TEXT NOT NULL,
+    "departmentsSubtitle" TEXT NOT NULL,
+    "postsHeadline" TEXT NOT NULL,
+    "postsDescription" TEXT NOT NULL,
+    "postsSubtitle" TEXT NOT NULL,
+    "postsCount" INTEGER NOT NULL DEFAULT 5,
+    "ctaHeadline" TEXT NOT NULL,
+    "ctaDescription" TEXT NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "HomepageContent_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "HomepageStat" (
+    "id" SERIAL NOT NULL,
+    "homepageContentId" INTEGER NOT NULL,
+    "label" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "HomepageStat_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "HistoryChartLabel" (
     "id" SERIAL NOT NULL,
     "historyContentId" INTEGER NOT NULL,
@@ -430,6 +463,9 @@ CREATE INDEX "HistoryFact_historyContentId_idx" ON "HistoryFact"("historyContent
 CREATE INDEX "HistoryMilestone_historyContentId_idx" ON "HistoryMilestone"("historyContentId");
 
 -- CreateIndex
+CREATE INDEX "HomepageStat_homepageContentId_idx" ON "HomepageStat"("homepageContentId");
+
+-- CreateIndex
 CREATE INDEX "HistoryChartLabel_historyContentId_idx" ON "HistoryChartLabel"("historyContentId");
 
 -- CreateIndex
@@ -506,6 +542,9 @@ ALTER TABLE "HistoryFact" ADD CONSTRAINT "HistoryFact_historyContentId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "HistoryMilestone" ADD CONSTRAINT "HistoryMilestone_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HomepageStat" ADD CONSTRAINT "HomepageStat_homepageContentId_fkey" FOREIGN KEY ("homepageContentId") REFERENCES "HomepageContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "HistoryChartLabel" ADD CONSTRAINT "HistoryChartLabel_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;

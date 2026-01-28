@@ -1,6 +1,18 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VsgButton from '@shared/components/VsgButton.vue';
+
+interface Props {
+  headline?: string;
+  description?: string;
+  tag?: string;
+}
+
+withDefaults(defineProps<Props>(), {
+  headline: 'VSG',
+  description: 'Tradition trifft Leidenschaft. Gemeinsam stark in Weißenfels.\nDein Verein. Deine Heimat.',
+  tag: 'Sportverein seit 1985',
+});
 </script>
 
 <template>
@@ -17,23 +29,20 @@ import VsgButton from '@shared/components/VsgButton.vue';
         <span
           class="mb-6 inline-block border border-vsg-gold-400/30 px-6 py-2 font-body text-sm font-normal uppercase tracking-[0.5em] text-vsg-gold-400"
         >
-          Sportverein seit 1985
+          {{ tag }}
         </span>
       </div>
 
       <h1
         class="animate-slide-up text-glow font-display text-[8rem] leading-[0.85] tracking-tight text-white delay-200 md:text-[12rem] lg:text-[16rem]"
       >
-        VSG
+        {{ headline }}
       </h1>
 
-      <h2 class="animate-slide-up font-display text-[4rem] leading-[0.9] tracking-[0.15em] text-vsg-gold-400 delay-300 md:text-[6rem] lg:text-[8rem]">
-        KUGELBERG
-      </h2>
-
-      <p class="animate-slide-up mx-auto mt-8 max-w-2xl font-body text-lg font-normal leading-relaxed text-vsg-blue-200 delay-400 md:text-xl">
-        Tradition trifft Leidenschaft. Gemeinsam stark in Weißenfels.
-        <span class="mt-2 block text-vsg-gold-400">Dein Verein. Deine Heimat.</span>
+      <p
+        class="animate-slide-up mx-auto mt-8 max-w-2xl font-body text-lg font-normal leading-relaxed text-vsg-blue-200 delay-400 md:text-xl whitespace-pre-line"
+      >
+        {{ description }}
       </p>
 
       <div class="animate-slide-up mt-12 flex flex-col items-center justify-center gap-6 delay-500 sm:flex-row">

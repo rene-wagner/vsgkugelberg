@@ -2,7 +2,7 @@
 import VsgButton from '@shared/components/VsgButton.vue';
 
 interface Props {
-  title?: string;
+  headline?: string;
   description?: string;
   primaryButtonText?: string;
   primaryButtonLink?: string;
@@ -12,7 +12,7 @@ interface Props {
 }
 
 withDefaults(defineProps<Props>(), {
-  title: 'WERDE TEIL DER<br />VSG FAMILIE',
+  headline: 'WERDE TEIL DER VSG FAMILIE',
   description: 'Egal ob aktiver Sportler, Unterstützer oder Förderer – bei uns findet jeder seinen Platz. Gemeinsam sind wir stärker.',
   primaryButtonText: 'Mitglied werden',
   primaryButtonLink: '/verein/mitgliedschaft',
@@ -37,7 +37,7 @@ withDefaults(defineProps<Props>(), {
       <h3
         class="font-display leading-tight tracking-wider text-vsg-blue-900 uppercase mb-8"
         :class="theme === 'white' ? 'text-4xl md:text-6xl' : 'text-5xl md:text-7xl lg:text-8xl'"
-        v-html="title"
+        v-html="headline"
       ></h3>
       <!-- eslint-enable vue/no-v-html -->
       <p

@@ -7,11 +7,25 @@ import NewsCardFeatured from './NewsCardFeatured.vue';
 import NewsCardListItem from './NewsCardListItem.vue';
 import { useDefaultPostsStore } from '../stores/postsStore';
 
+interface Props {
+  headline?: string;
+  description?: string;
+  subtitle?: string;
+  postsCount?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  headline: 'NEWS',
+  description: 'Bleib auf dem Laufenden mit den neuesten Nachrichten und Terminen unseres Vereins.',
+  subtitle: 'Aktuelles',
+  postsCount: 5,
+});
+
 const postsStore = useDefaultPostsStore();
 const { posts, isLoading, error } = storeToRefs(postsStore);
 
 onMounted(() => {
-  postsStore.fetchPublishedPosts(5);
+  postsStore.fetchPublishedPosts(props.postsCount);
 });
 
 // Format date to German locale
@@ -48,8 +62,8 @@ const listPosts = computed(() => posts.value.slice(1));
     <div class="mx-auto max-w-7xl px-6">
       <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between">
         <VsgSectionHeader
-          subtitle="Aktuelles"
-          title="NEWS"
+          :subtitle="subtitle"
+          :title="headline"
           :centered="false"
         />
         <VsgLinkArrow

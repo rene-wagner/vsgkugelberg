@@ -301,6 +301,38 @@ model HistoryMilestone {
   @@index([historyContentId])
 }
 
+model HomepageContent {
+  id                    Int            @id @default(1)
+  heroHeadline          String
+  heroDescription       String
+  heroTag               String
+  stats                 HomepageStat[]
+  departmentsHeadline   String
+  departmentsDescription String
+  departmentsSubtitle   String
+  postsHeadline         String
+  postsDescription      String
+  postsSubtitle         String
+  postsCount            Int            @default(5)
+  ctaHeadline           String
+  ctaDescription        String
+  updatedAt             DateTime       @updatedAt
+}
+
+model HomepageStat {
+  id              Int             @id @default(autoincrement())
+  homepageContentId Int
+  homepageContent  HomepageContent @relation(fields: [homepageContentId], references: [id], onDelete: Cascade)
+  label           String
+  value           String
+  sort            Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([homepageContentId])
+}
+
+
 model HistoryChartLabel {
   id               Int            @id @default(autoincrement())
   historyContentId Int
