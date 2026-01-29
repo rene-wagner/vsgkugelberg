@@ -132,6 +132,28 @@ export interface SeedContactPerson {
   phone: string;
 }
 
+export interface SeedHomepageStat {
+  label: string;
+  value: string;
+  sort: number;
+}
+
+export interface SeedHomepage {
+  heroHeadline: string;
+  heroDescription: string;
+  heroTag: string;
+  stats: SeedHomepageStat[];
+  departmentsHeadline: string;
+  departmentsDescription: string;
+  departmentsSubtitle: string;
+  postsHeadline: string;
+  postsDescription: string;
+  postsSubtitle: string;
+  postsCount: number;
+  ctaHeadline: string;
+  ctaDescription: string;
+}
+
 // Media migration types
 export type MediaFolderMap = Map<string, number>; // folderName → folderId
 export type MediaFileMap = Map<string, number>;   // originalFilename → mediaId

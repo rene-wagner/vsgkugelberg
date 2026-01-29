@@ -11,6 +11,7 @@ export class HomepageContentService {
       where: { id: 1 },
       include: {
         stats: { orderBy: { sort: 'asc' } },
+        heroLogo: true,
       },
     });
 
@@ -21,6 +22,14 @@ export class HomepageContentService {
       heroHeadline: content.heroHeadline,
       heroDescription: content.heroDescription,
       heroTag: content.heroTag,
+      heroLogoId: content.heroLogoId,
+      heroLogo: content.heroLogo ? {
+        id: content.heroLogo.id,
+        filename: content.heroLogo.filename,
+        originalName: content.heroLogo.originalName,
+        path: content.heroLogo.path,
+        mimetype: content.heroLogo.mimetype,
+      } : null,
       stats: content.stats.map((s) => ({
         label: s.label,
         value: s.value,
@@ -51,6 +60,7 @@ export class HomepageContentService {
           heroHeadline: data.heroHeadline,
           heroDescription: data.heroDescription,
           heroTag: data.heroTag,
+          heroLogoId: data.heroLogoId,
           departmentsHeadline: data.departmentsHeadline,
           departmentsDescription: data.departmentsDescription,
           departmentsSubtitle: data.departmentsSubtitle,
@@ -66,6 +76,7 @@ export class HomepageContentService {
           heroHeadline: data.heroHeadline ?? '',
           heroDescription: data.heroDescription ?? '',
           heroTag: data.heroTag ?? '',
+          heroLogoId: data.heroLogoId ?? null,
           departmentsHeadline: data.departmentsHeadline ?? '',
           departmentsDescription: data.departmentsDescription ?? '',
           departmentsSubtitle: data.departmentsSubtitle ?? '',

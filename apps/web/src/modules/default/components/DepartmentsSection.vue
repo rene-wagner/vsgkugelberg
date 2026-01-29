@@ -11,11 +11,7 @@ interface Props {
   subtitle?: string;
 }
 
-withDefaults(defineProps<Props>(), {
-  headline: 'ABTEILUNGEN',
-  description: 'Entdecke unsere vielfältigen Sportangebote und finde die passende Abteilung für dich.',
-  subtitle: 'Unsere Abteilungen',
-});
+const props = defineProps<Props>();
 
 const departmentsStore = useDefaultDepartmentsStore();
 const { departments, isLoading, error } = storeToRefs(departmentsStore);
@@ -29,10 +25,16 @@ onMounted(() => {
   <section class="relative bg-white py-32">
     <div class="mx-auto max-w-7xl px-6">
       <VsgSectionHeader
-        :subtitle="subtitle"
-        :title="headline"
-        class="mb-20"
+        :subtitle="props.subtitle || ''"
+        :title="props.headline || ''"
+        class="mb-6"
       />
+      <p
+        v-if="props.description"
+        class="mx-auto mt-6 mb-16 max-w-3xl text-center font-body text-lg text-gray-600"
+      >
+        {{ props.description }}
+      </p>
 
       <!-- Loading State -->
       <div

@@ -11,9 +11,7 @@ interface Props {
   theme?: 'gold' | 'white';
 }
 
-withDefaults(defineProps<Props>(), {
-  headline: 'WERDE TEIL DER VSG FAMILIE',
-  description: 'Egal ob aktiver Sportler, Unterstützer oder Förderer – bei uns findet jeder seinen Platz. Gemeinsam sind wir stärker.',
+const props = withDefaults(defineProps<Props>(), {
   primaryButtonText: 'Mitglied werden',
   primaryButtonLink: '/verein/mitgliedschaft',
   secondaryButtonText: 'Kontakt',
@@ -25,10 +23,10 @@ withDefaults(defineProps<Props>(), {
 <template>
   <section
     class="relative overflow-hidden py-32 text-center px-6"
-    :class="theme === 'white' ? 'bg-white' : ''"
+    :class="props.theme === 'white' ? 'bg-white' : ''"
   >
     <div
-      v-if="theme === 'gold'"
+      v-if="props.theme === 'gold'"
       class="absolute inset-0 bg-linear-to-r from-vsg-gold-600 via-vsg-gold-400 to-vsg-gold-300"
     />
 
@@ -36,15 +34,15 @@ withDefaults(defineProps<Props>(), {
       <!-- eslint-disable vue/no-v-html -->
       <h3
         class="font-display leading-tight tracking-wider text-vsg-blue-900 uppercase mb-8"
-        :class="theme === 'white' ? 'text-4xl md:text-6xl' : 'text-5xl md:text-7xl lg:text-8xl'"
-        v-html="headline"
+        :class="props.theme === 'white' ? 'text-4xl md:text-6xl' : 'text-5xl md:text-7xl lg:text-8xl'"
+        v-html="props.headline"
       ></h3>
       <!-- eslint-enable vue/no-v-html -->
       <p
-        v-if="description"
+        v-if="props.description"
         class="mx-auto mt-6 max-w-2xl font-body text-xl font-normal text-vsg-blue-800"
       >
-        {{ description }}
+        {{ props.description }}
       </p>
       <div class="mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row">
         <VsgButton
@@ -52,19 +50,19 @@ withDefaults(defineProps<Props>(), {
           size="lg"
           :glow="true"
           is-router
-          :to="primaryButtonLink"
+          :to="props.primaryButtonLink"
         >
-          {{ primaryButtonText }}
+          {{ props.primaryButtonText }}
         </VsgButton>
         <VsgButton
-          v-if="secondaryButtonText && secondaryButtonLink"
+          v-if="props.secondaryButtonText && props.secondaryButtonLink"
           variant="outline"
           size="lg"
           is-router
-          :to="secondaryButtonLink"
+          :to="props.secondaryButtonLink"
           class="border-vsg-blue-900! text-vsg-blue-900! hover:bg-vsg-blue-900/10!"
         >
-          {{ secondaryButtonText }}
+          {{ props.secondaryButtonText }}
         </VsgButton>
       </div>
     </div>

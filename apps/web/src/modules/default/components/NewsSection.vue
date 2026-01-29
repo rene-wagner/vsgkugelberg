@@ -2,7 +2,6 @@
 import { computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import VsgSectionHeader from '@shared/components/VsgSectionHeader.vue';
-import VsgLinkArrow from '@shared/components/VsgLinkArrow.vue';
 import NewsCardFeatured from './NewsCardFeatured.vue';
 import NewsCardListItem from './NewsCardListItem.vue';
 import { useDefaultPostsStore } from '../stores/postsStore';
@@ -15,9 +14,6 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  headline: 'NEWS',
-  description: 'Bleib auf dem Laufenden mit den neuesten Nachrichten und Terminen unseres Vereins.',
-  subtitle: 'Aktuelles',
   postsCount: 5,
 });
 
@@ -60,19 +56,17 @@ const listPosts = computed(() => posts.value.slice(1));
 <template>
   <section class="relative bg-gray-50 py-32">
     <div class="mx-auto max-w-7xl px-6">
-      <div class="mb-16 flex flex-col md:flex-row md:items-end md:justify-between">
-        <VsgSectionHeader
-          :subtitle="subtitle"
-          :title="headline"
-          :centered="false"
-        />
-        <VsgLinkArrow
-          href="/news"
-          class="mt-6 md:mt-0"
-        >
-          Alle Neuigkeiten
-        </VsgLinkArrow>
-      </div>
+      <VsgSectionHeader
+        :subtitle="props.subtitle || ''"
+        :title="props.headline || ''"
+        class="mb-6"
+      />
+      <p
+        v-if="props.description"
+        class="mx-auto mt-0 mb-12 max-w-4xl font-body text-lg text-gray-600"
+      >
+        {{ props.description }}
+      </p>
 
       <!-- Loading State -->
       <div
@@ -90,7 +84,7 @@ const listPosts = computed(() => posts.value.slice(1));
         <p class="text-red-600">{{ error }}</p>
         <button
           class="mt-4 rounded bg-vsg-blue-600 px-4 py-2 text-white hover:bg-vsg-blue-700"
-          @click="postsStore.fetchPublishedPosts(5)"
+          @click="postsStore.fetchPublishedPosts(props.postsCount)"
         >
           Erneut versuchen
         </button>

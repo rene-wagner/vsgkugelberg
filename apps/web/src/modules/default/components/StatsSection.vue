@@ -1,23 +1,13 @@
 <script setup lang="ts">
-export interface Stat {
-  value: string;
-  label: string;
-}
+import type { HomepageStat } from '@/shared/types/homepage-content.types';
 
 interface Props {
-  stats?: Stat[];
+  stats?: HomepageStat[];
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  stats: () => [
-    { value: '104', label: 'Jahre Tradition' },
-    { value: '850+', label: 'Mitglieder' },
-    { value: '4', label: 'Abteilungen' },
-    { value: '47', label: 'Titel' },
-  ],
-});
+const props = defineProps<Props>();
 
-const displayStats = props.stats;
+const displayStats = props.stats || [];
 </script>
 
 <template>

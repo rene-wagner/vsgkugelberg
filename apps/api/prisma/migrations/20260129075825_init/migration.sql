@@ -265,6 +265,7 @@ CREATE TABLE "HomepageContent" (
     "heroHeadline" TEXT NOT NULL,
     "heroDescription" TEXT NOT NULL,
     "heroTag" TEXT NOT NULL,
+    "heroLogoId" INTEGER,
     "departmentsHeadline" TEXT NOT NULL,
     "departmentsDescription" TEXT NOT NULL,
     "departmentsSubtitle" TEXT NOT NULL,
@@ -542,6 +543,9 @@ ALTER TABLE "HistoryFact" ADD CONSTRAINT "HistoryFact_historyContentId_fkey" FOR
 
 -- AddForeignKey
 ALTER TABLE "HistoryMilestone" ADD CONSTRAINT "HistoryMilestone_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "HomepageContent" ADD CONSTRAINT "HomepageContent_heroLogoId_fkey" FOREIGN KEY ("heroLogoId") REFERENCES "Media"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "HomepageStat" ADD CONSTRAINT "HomepageStat_homepageContentId_fkey" FOREIGN KEY ("homepageContentId") REFERENCES "HomepageContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;

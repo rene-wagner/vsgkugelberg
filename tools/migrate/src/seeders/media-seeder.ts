@@ -21,13 +21,14 @@ const MEDIA_SOURCE_DIR = path.join(__dirname, '../../data/media');
 const UPLOAD_TARGET_DIR = path.join(__dirname, '../../../../apps/api/uploads');
 
 // Media folders to create
-const MEDIA_FOLDERS = ['Kontakte', 'Abteilungen', 'Standorte'];
+const MEDIA_FOLDERS = ['Kontakte', 'Abteilungen', 'Standorte', 'Logos'];
 
 // Source directory to folder mapping
 const SOURCE_DIR_TO_FOLDER: Record<string, string> = {
   'contact-persons': 'Kontakte',
   'department-icons': 'Abteilungen',
   'locations': 'Standorte',
+  'logos': 'Logos',
 };
 
 /**

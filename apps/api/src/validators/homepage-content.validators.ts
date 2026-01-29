@@ -4,6 +4,7 @@ export const updateHomepageContentValidator = [
   body('heroHeadline').optional().isString().trim().notEmpty(),
   body('heroDescription').optional().isString().trim(),
   body('heroTag').optional().isString().trim(),
+  body('heroLogoId').optional().isInt(),
 
   body('departmentsHeadline').optional().isString().trim(),
   body('departmentsDescription').optional().isString().trim(),

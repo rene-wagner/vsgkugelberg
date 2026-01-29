@@ -22,6 +22,7 @@ onMounted(() => {
       :headline="homepageContent?.heroHeadline"
       :description="homepageContent?.heroDescription"
       :tag="homepageContent?.heroTag"
+      :logo="homepageContent?.heroLogo ?? null"
     />
     <StatsSection :stats="homepageContent?.stats" />
     <DepartmentsSection

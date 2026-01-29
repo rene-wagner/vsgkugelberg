@@ -7,6 +7,7 @@ export * from './departmentTrainingStore';
 export * from './departmentTrainersStore';
 export * from './eventsStore';
 export * from './historyStore';
+export * from './homepageContentStore';
 export * from './mediaStore';
 export * from './newsStore';
 export * from './settingsStore';

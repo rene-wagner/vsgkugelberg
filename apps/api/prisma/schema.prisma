@@ -209,22 +209,23 @@ model ContactPerson {
 }
 
 model Media {
-  id             Int             @id @default(autoincrement())
-  filename       String          @unique
-  originalName   String
-  path           String
-  mimetype       String
-  size           Int
-  type           String          @default("IMAGE")
-  thumbnails     Json?
-  folderId       Int?
-  folder         MediaFolder?    @relation(fields: [folderId], references: [id], onDelete: SetNull)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  departments    Department[]
-  posts          Post[]
-  contactPersons ContactPerson[]
-  locations      DepartmentLocation[]
+  id              Int                @id @default(autoincrement())
+  filename        String             @unique
+  originalName    String
+  path            String
+  mimetype        String
+  size            Int
+  type            String             @default("IMAGE")
+  thumbnails      Json?
+  folderId        Int?
+  folder          MediaFolder?       @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  departments     Department[]
+  posts           Post[]
+  contactPersons  ContactPerson[]
+  locations       DepartmentLocation[]
+  homepageContent HomepageContent[]
 
   @@index([type])
   @@index([createdAt])
@@ -306,6 +307,8 @@ model HomepageContent {
   heroHeadline          String
   heroDescription       String
   heroTag               String
+  heroLogoId            Int?
+  heroLogo              Media?         @relation(fields: [heroLogoId], references: [id], onDelete: SetNull)
   stats                 HomepageStat[]
   departmentsHeadline   String
   departmentsDescription String

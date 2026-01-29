@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VsgButton from '@shared/components/VsgButton.vue';
 
@@ -6,12 +7,20 @@ interface Props {
   headline?: string;
   description?: string;
   tag?: string;
+  logo?: { path: string; originalName: string } | null;
 }
 
-withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props>(), {
   headline: 'VSG',
   description: 'Tradition trifft Leidenschaft. Gemeinsam stark in Weißenfels.\nDein Verein. Deine Heimat.',
   tag: 'Sportverein seit 1985',
+  logo: null,
+});
+
+const logoUrl = computed(() => {
+  if (!props.logo) return null;
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
+  return `${apiBaseUrl}${props.logo.path}`;
 });
 </script>
 
@@ -25,7 +34,18 @@ withDefaults(defineProps<Props>(), {
     <div class="absolute bottom-1/4 left-0 h-80 w-80 rounded-full bg-vsg-blue-500/20 blur-3xl" />
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 py-20 text-center">
-      <div class="animate-slide-up">
+      <div
+        v-if="logoUrl"
+        class="animate-slide-up my-8 delay-100"
+      >
+        <img
+          :src="logoUrl"
+          :alt="logo?.originalName || 'Logo'"
+          class="mx-auto h-64 w-auto"
+        />
+      </div>
+
+      <div class="animate-slide-up my-8 delay-200">
         <span
           class="mb-6 inline-block border border-vsg-gold-400/30 px-6 py-2 font-body text-sm font-normal uppercase tracking-[0.5em] text-vsg-gold-400"
         >
@@ -34,35 +54,19 @@ withDefaults(defineProps<Props>(), {
       </div>
 
       <h1
-        class="animate-slide-up text-glow font-display text-[8rem] leading-[0.85] tracking-tight text-white delay-200 md:text-[12rem] lg:text-[16rem]"
+        class="animate-slide-up text-glow font-display text-[8rem] leading-[0.85] tracking-tight text-white delay-300 md:text-[12rem] lg:text-[16rem]"
       >
         {{ headline }}
       </h1>
 
       <p
-        class="animate-slide-up mx-auto mt-8 max-w-2xl font-body text-lg font-normal leading-relaxed text-vsg-blue-200 delay-400 md:text-xl whitespace-pre-line"
+        class="animate-slide-up mx-auto mt-8 max-w-2xl font-body text-lg font-normal leading-relaxed text-vsg-blue-300 delay-400 md:text-xl whitespace-pre-line"
       >
         {{ description }}
       </p>
 
-      <div class="animate-slide-up mt-12 flex flex-col items-center justify-center gap-6 delay-500 sm:flex-row">
-        <VsgButton
-          variant="primary"
-          size="lg"
-          :glow="true"
-        >
-          Jetzt beitreten
-        </VsgButton>
-        <VsgButton
-          variant="outline"
-          size="lg"
-        >
-          Mehr erfahren
-        </VsgButton>
-      </div>
-
       <!-- Scroll indicator -->
-      <div class="absolute bottom-1 left-1/2 -translate-x-1/2 animate-bounce delay-700">
+      <div class="absolute bottom-1 left-1/2 -translate-x-1/2 animate-bounce">
         <FontAwesomeIcon
           icon="arrow-down"
           class="text-vsg-gold-400"
