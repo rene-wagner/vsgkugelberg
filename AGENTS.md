@@ -1,493 +1,820 @@
-# VSG Kugelberg Monorepo - Agent Guide
+# AGENTS.md
 
-This document provides LLMs and AI agents with a comprehensive overview of the VSG Kugelberg monorepo project structure, architecture, and key conventions.
+AI Agent Guide for VSG Kugelberg e.V. Project
 
 ## Project Overview
 
-**VSG Kugelberg** is a modern web application for a German sports club (VSG Kugelberg e.V.). The project is structured as a **pnpm/Turborepo monorepo** containing a Vue 3 frontend, Express.js backend API, and migration tools.
+This is a monorepo for the sports club VSG Kugelberg e.V. website, consisting of a Vue 3 frontend, Express.js backend API with PostgreSQL database, and migration tools. The project enables club management with features for posts, departments, training schedules, events, contact management, and club history.
 
-**Author**: René Wagner  
-**Package Manager**: pnpm@10.28.0  
-**Build System**: Turborepo
+**Author:** René Wagner  
+**Package Manager:** pnpm@10.28.0  
+**Build System:** Turborepo  
+**License:** ISC
 
-## Monorepo Structure
+## Tech Stack
+
+### Backend (`apps/api`)
+
+- **Runtime:** Node.js with TypeScript
+- **Framework:** Express.js 5.1.0
+- **Database:** PostgreSQL via Prisma ORM 7.1.0
+- **Authentication:** Passport.js with JWT and bcrypt
+- **Session Store:** Redis (via ioredis)
+- **Rate Limiting:** express-rate-limit with Redis
+- **Validation:** express-validator
+- **Image Processing:** sharp
+- **Email:** nodemailer
+- **File Uploads:** multer
+- **Testing:** Vitest with supertest
+- **Linting:** oxlint
+- **Formatting:** oxfmt
+
+### Frontend (`apps/web`)
+
+- **Framework:** Vue 3.5.13 with TypeScript
+- **Router:** Vue Router 4.5.0
+- **State Management:** Pinia 2.3.1
+- **Build Tool:** Vite 6.3.5
+- **Styling:** TailwindCSS 4.1.18
+- **Icons:** FontAwesome 7.1.0
+- **Charts:** Chart.js 4.5.1
+- **Calendar:** v-calendar 3.1.2
+- **Markdown:** marked 17.0.1, easymde 2.20.0
+- **Drag & Drop:** vue-draggable-plus
+- **Testing:** Vitest
+- **Type Checking:** vue-tsc
+- **Linting:** oxlint
+- **Formatting:** oxfmt
+
+### Tools
+
+- **Migration Tool:** TypeScript utility for migrating from Joomla/MySQL to PostgreSQL
+- **Version Control:** Git with Husky pre-commit hooks
+- **Containerization:** Docker with docker-compose
+
+## Architecture
+
+### Monorepo Structure
 
 ```
 vsgkugelberg/
 ├── apps/
-│   ├── web/          # Vue 3 frontend application
-│   └── api/          # Express.js backend API
+│   ├── api/          # Express.js backend
+│   └── web/          # Vue 3 frontend
 ├── tools/
-│   └── migrate/  # Database migration utility
-├── data/             # Data files
-├── .github/          # GitHub workflows and CI/CD
-├── .husky/           # Git hooks
-├── docker-compose.yml
-├── Makefile
-├── turbo.json
-└── pnpm-workspace.yaml
+│   └── migrate/      # Database migration utilities
+├── docs/
+│   └── plans/        # Technical design documents
+└── [config files]
 ```
 
-## Architecture Overview
+### Backend Architecture
 
-### Frontend (apps/web)
+- **Service Layer Pattern:** Business logic in `services/`, routes in `routes/`, validators in `validators/`
+- **Middleware Chain:** CORS → JSON parsing → Cookie parser → Passport → Rate limiting → Route handling → Error handling
+- **Database:** Prisma Client with PostgreSQL adapter, connection pooling via pg
+- **Authentication Flow:** Local strategy + JWT tokens stored in HTTP-only cookies
+- **Error Handling:** Centralized error handler middleware with custom HTTP error classes
 
-**Technology Stack**:
-- **Framework**: Vue 3 with Composition API
-- **Build Tool**: Vite 6
-- **Type Safety**: TypeScript 5.9
-- **State Management**: Pinia 2
-- **Routing**: Vue Router 4
-- **Styling**: Tailwind CSS 4
-- **Icons**: FontAwesome
-- **Testing**: Vitest
-- **Linting**: oxlint (Oxc-based linter)
-- **Formatting**: oxfmt (Oxc-based formatter)
+### Frontend Architecture
 
-**Module Structure**:
-The frontend follows a modular architecture with three main modules:
+- **Module-Based Structure:** Organized by feature modules (`admin`, `auth`, `default`)
+- **Each Module Contains:**
+  - `components/` - Vue components
+  - `views/` - Page-level components
+  - `stores/` - Pinia state management
+  - `router/` - Route definitions
+  - `types/` - TypeScript interfaces
+- **Shared Resources:** Common components, utilities, and types in `src/shared/`
 
-1. **default** (`apps/web/src/modules/default/`): Public-facing pages
-   - Homepage, about, departments, contact, events, blog posts
-   - Components, views, stores, types, and routes
+## Project Structure
 
-2. **admin** (`apps/web/src/modules/admin/`): Admin dashboard
-   - Content management (posts, media, categories)
-   - Department management (trainers, locations, training sessions)
-   - Event management, user management
-   - Components, views, stores, types, and routes
-
-3. **auth** (`apps/web/src/modules/auth/`): Authentication
-   - Login, password reset
-   - Auth store with JWT-based authentication
-   - Protected route guards
-
-**Shared Resources** (`apps/web/src/shared/`):
-- `components/`: Reusable UI components
-- `composables/`: Vue composables (e.g., useApi, usePagination)
-- `layouts/`: Layout components (DefaultLayout, AdminLayout)
-- `types/`: Shared TypeScript types
-- `utils/`: Utility functions
-
-**Key Features**:
-- Markdown editor (EasyMDE) for content creation
-- Calendar view (v-calendar) for events
-- Charts (Chart.js) for statistics
-- Drag-and-drop (vue-draggable-plus) for ordering
-- Image galleries and media management
-
-### Backend (apps/api)
-
-**Technology Stack**:
-- **Runtime**: Node.js
-- **Framework**: Express.js 5
-- **Type Safety**: TypeScript 5.9
-- **Database**: PostgreSQL (via Prisma)
-- **ORM**: Prisma 7 with PostgreSQL adapter
-- **Authentication**: Passport.js (local strategy) + JWT
-- **Caching**: Redis (ioredis)
-- **Email**: Nodemailer (MailHog for development)
-- **File Upload**: Multer with Sharp for image processing
-- **Validation**: express-validator
-- **Testing**: Vitest with Supertest
-- **Linting**: oxlint
-- **Formatting**: oxfmt
-
-**Architecture Pattern**: Layered Architecture
+### Backend Structure (`apps/api/src/`)
 
 ```
 src/
-├── app.ts              # Express app setup
-├── index.ts            # Server entry point
-├── config/             # Configuration (CORS, upload, database)
-├── routes/             # API endpoint definitions
-├── middleware/         # Request processing (auth, validation, errors)
-├── services/           # Business logic layer
-├── validators/         # Input validation schemas
-├── strategies/         # Passport authentication strategies
-├── lib/                # Library code and utilities
-├── types/              # TypeScript type definitions
-└── errors/             # Custom error classes
+├── app.ts                    # Express app setup
+├── index.ts                  # Server entry point
+├── config/                   # Configuration files
+│   ├── cors.config.ts
+│   ├── jwt.config.ts
+│   ├── redis.config.ts
+│   └── upload.config.ts
+├── errors/                   # Custom error classes
+│   └── http-errors.ts
+├── lib/                      # Third-party library wrappers
+│   └── prisma.lib.ts
+├── middleware/               # Express middleware
+│   ├── async-handler.middleware.ts
+│   ├── auth-guard.middleware.ts
+│   ├── error-handler.middleware.ts
+│   ├── honeypot.middleware.ts
+│   ├── jwt.middleware.ts
+│   ├── rate-limit.middleware.ts
+│   └── validation.middleware.ts
+├── routes/                   # API route definitions
+│   ├── index.ts              # Main router
+│   ├── auth.routes.ts
+│   ├── categories.routes.ts
+│   ├── contact.routes.ts
+│   ├── departments.routes.ts
+│   ├── events.routes.ts
+│   ├── health.routes.ts
+│   ├── history.routes.ts
+│   ├── homepage-content.routes.ts
+│   ├── media.routes.ts
+│   ├── posts.routes.ts
+│   ├── settings.routes.ts
+│   └── users.routes.ts
+├── services/                 # Business logic layer
+│   ├── auth.service.ts
+│   ├── categories.service.ts
+│   ├── contact-form.service.ts
+│   ├── departments.service.ts
+│   ├── email.service.ts
+│   ├── events.service.ts
+│   ├── history.service.ts
+│   ├── homepage-content.service.ts
+│   ├── media.service.ts
+│   ├── password.service.ts
+│   ├── posts.service.ts
+│   ├── settings.service.ts
+│   ├── slugify.service.ts
+│   └── users.service.ts
+├── strategies/               # Passport authentication strategies
+│   └── local.strategy.ts
+├── types/                    # TypeScript type definitions
+│   ├── express.d.ts          # Express augmentations
+│   └── [feature].types.ts
+└── validators/               # express-validator schemas
+    └── [feature].validators.ts
 ```
 
-**API Routes** (`apps/api/src/routes/`):
-- `auth.routes.ts`: Authentication (login, logout, password reset)
-- `posts.routes.ts`: Blog post CRUD
-- `categories.routes.ts`: Category management
-- `departments.routes.ts`: Sports department management
-- `department-stats.routes.ts`: Department statistics
-- `department-training.routes.ts`: Training groups and sessions
-- `department-locations.routes.ts`: Training locations
-- `department-trainers.routes.ts`: Trainer management
-- `events.routes.ts`: Event calendar
-- `media.routes.ts`: Media file management
-- `media-folders.routes.ts`: Media folder organization
-- `contact-persons.routes.ts`: Contact person management
-- `contact.routes.ts`: Contact form submission
-- `users.routes.ts`: User management
-- `settings.routes.ts`: Club settings
-- `history.routes.ts`: Club history entries
-- `health.routes.ts`: Health check endpoint
-- `me.routes.ts`: Current user info
+### Frontend Structure (`apps/web/src/`)
 
-**Services** (`apps/api/src/services/`):
-Each service contains business logic for its domain:
-- `auth.service.ts`: Authentication logic
-- `posts.service.ts`: Post management
-- `categories.service.ts`: Category tree operations
-- `departments.service.ts`: Department operations
-- `events.service.ts`: Event with recurrence (rrule)
-- `media.service.ts`: File upload and image processing
-- `email.service.ts`: Email sending
-- `password-reset.service.ts`: Password reset tokens
-- `slugify.service.ts`: URL slug generation
-- And more...
+```
+src/
+├── main.ts                   # App entry point
+├── App.vue                   # Root component
+├── style.css                 # Global styles
+├── assets/                   # Static assets
+├── router/                   # Global router config
+│   ├── index.ts
+│   └── types.ts
+├── modules/                  # Feature modules
+│   ├── admin/                # Admin dashboard
+│   │   ├── components/
+│   │   ├── views/
+│   │   ├── stores/
+│   │   ├── router/
+│   │   └── types/
+│   ├── auth/                 # Authentication
+│   │   ├── components/
+│   │   ├── views/
+│   │   ├── stores/
+│   │   └── router/
+│   └── default/              # Public-facing site
+│       ├── components/
+│       ├── views/
+│       ├── stores/
+│       ├── router/
+│       └── types/
+└── shared/                   # Shared resources
+    ├── components/           # Reusable UI components
+    ├── composables/          # Vue composables
+    ├── constants/            # App-wide constants
+    ├── layouts/              # Layout components
+    ├── services/             # API service layer
+    ├── types/                # Shared TypeScript types
+    └── utils/                # Utility functions
+```
 
-### Database Schema (apps/api/prisma/schema.prisma)
+### Database Models (Prisma Schema)
 
-**Database**: PostgreSQL  
-**Schema Location**: `apps/api/prisma/schema.prisma` (379 lines)  
-**Migrations**: `apps/api/prisma/migrations/`  
-**Generated Client**: `apps/api/generated/prisma/`
+**Core Content:**
+- `Post` - Blog posts with categories, thumbnails, and hit tracking
+- `Category` - Hierarchical category system
+- `Media` - File management with folders and thumbnails
+- `MediaFolder` - Folder hierarchy for organizing media
 
-**Key Models**:
+**Department Management:**
+- `Department` - Sports departments with icons and slugs
+- `DepartmentStat` - Department statistics (ordered)
+- `DepartmentTrainingGroup` - Training groups with age ranges
+- `DepartmentTrainingSession` - Training schedule
+- `DepartmentLocation` - Venue information with amenities
+- `DepartmentTrainer` - Trainer associations with roles
 
-1. **Users & Authentication**:
-   - `User`: Username, email, password (bcrypt hashed)
-   - `PasswordResetToken`: Token-based password reset
+**Club Information:**
+- `ClubSettings` - Singleton club-wide settings
+- `Event` - Calendar events with recurrence support
+- `ContactPerson` - Contact information with profile images
+- `HistoryContent` - Singleton club history with nested data
+- `HomepageContent` - Singleton homepage configuration
 
-2. **Content Management**:
-   - `Post`: Blog posts with slug, content (Markdown), thumbnails, categories
-   - `Category`: Hierarchical categories (self-referencing)
-   - `Media`: Uploaded files with metadata
-   - `MediaFolder`: Folder organization for media
+**Authentication:**
+- `User` - Admin users with authentication
+- `PasswordResetToken` - Password reset functionality
 
-3. **Sports Departments**:
-   - `Department`: Sports departments (e.g., football, gymnastics)
-   - `DepartmentStat`: Key statistics per department
-   - `DepartmentTrainingGroup`: Training groups with age ranges
-   - `DepartmentTrainingSession`: Training schedule (day, time, location)
-   - `DepartmentLocation`: Training venues with amenities
-   - `DepartmentTrainer`: Trainers with roles and licenses
-
-4. **Events & Calendar**:
-   - `Event`: Events with recurrence rules (rrule), categories
-
-5. **Club Information**:
-   - `ClubSettings`: Global club settings (singleton with id=1)
-   - `ContactPerson`: Key contact persons
-   - `ClubHistory`: Historical milestones
-   - `ClubHistoryImage`: Images for history entries
-
-**Relationships**:
-- Many-to-many: Post ↔ Category
-- One-to-many: User → Post, Department → (Stats, Locations, Trainers, TrainingGroups)
-- Hierarchical: Category tree structure
-- Foreign keys with cascade deletes for data integrity
+**Key Patterns:**
+- **Singleton Models:** Use `@id @default(1)` for single-record tables (`ClubSettings`, `HistoryContent`, `HomepageContent`)
+- **Ordered Relations:** Many models use `sort` field for ordering (`DepartmentStat`, `HomepageStat`, etc.)
+- **Soft Relations:** Optional foreign keys with `onDelete: SetNull` for media
+- **Cascade Deletes:** Child records cascade on parent deletion
 
 ## Development Workflow
 
-### Setup Commands
+### Getting Started
 
 ```bash
 # Install dependencies
 pnpm install
 
-# Generate Prisma client
-pnpm --filter api prisma:generate
-
-# Run database migrations
-pnpm --filter api prisma:migrate
-```
-
-### Development Commands
-
-```bash
-# Start all apps in development mode
+# Start development servers (all apps)
 pnpm dev
 
 # Start specific app
-pnpm --filter web dev
-pnpm --filter api dev
+cd apps/api && pnpm dev
+cd apps/web && pnpm dev
 
-# Type checking
-pnpm type-check
-
-# Linting
-pnpm lint          # Check
-pnpm lint:fix      # Fix
-
-# Formatting
-pnpm format        # Check
-pnpm format:fix    # Fix
-
-# Testing
+# Run tests
 pnpm test
-pnpm test:ci
-pnpm test:coverage
-```
 
-### Build Commands
+# Run linter
+pnpm lint
 
-```bash
-# Build all apps
+# Fix linting issues
+pnpm lint:fix
+
+# Format code
+pnpm format:fix
+
+# Build for production
 pnpm build
-
-# Build specific app
-pnpm --filter web build
-pnpm --filter api build
 ```
 
-### Database Commands
+### Database Management
 
 ```bash
-# Prisma commands (run in api workspace)
-pnpm --filter api prisma:generate      # Generate client
-pnpm --filter api prisma:migrate       # Run migrations
-pnpm --filter api prisma:deploy        # Deploy migrations (production)
-pnpm --filter api prisma:studio        # Open Prisma Studio
+cd apps/api
+
+# Generate Prisma Client
+pnpm prisma:generate
+
+# Create migration
+pnpm prisma:migrate
+
+# Deploy migrations
+pnpm prisma:deploy
+
+# Open Prisma Studio
+pnpm prisma:studio
 ```
 
-### Maintenance Commands (Makefile)
+### Docker
 
 ```bash
-# Clean build artifacts and node_modules
-make clean
+# Start services (PostgreSQL, Redis, MailHog)
+docker-compose up -d
 
-# Reset migrations (dangerous!)
-make clean-migrations
+# Stop services
+docker-compose down
 ```
 
-## Docker Services
+### Git Workflow
 
-**Docker Compose Services** (`docker-compose.yml`):
+- **Pre-commit hooks:** Husky runs linting/formatting before commits
+- **Branch strategy:** Feature branches with descriptive names
+- **Commit messages:** Clear, concise descriptions of changes
 
-- **postgres**: PostgreSQL 18 (port 5432)
-- **redis**: Redis 7 (port 6379)
-- **mysql**: MySQL 9.5 (port 3306) - for migration purposes
-- **mailhog**: MailHog (SMTP: 1025, UI: 8025) - email testing
-
-## Environment Configuration
-
-### Root `.env.example`
-
-```
-POSTGRES_USER=
-POSTGRES_PASSWORD=
-POSTGRES_DB=
-POSTGRES_PORT=
-
-MYSQL_ROOT_PASSWORD=
-MYSQL_DATABASE=
-MYSQL_USER=
-MYSQL_PASSWORD=
-MYSQL_PORT=
-
-REDIS_PORT=6379
-```
-
-### API `.env` (apps/api/.env.example)
-
-Includes additional variables:
-- `DATABASE_URL`: PostgreSQL connection string
-- `JWT_SECRET`: JWT signing secret
-- `REDIS_URL`: Redis connection string
-- `EMAIL_*`: Email configuration
-- Upload and CORS settings
-
-### Web `.env` (apps/web/.env.example)
-
-```
-VITE_API_BASE_URL=  # API base URL (e.g., http://localhost:3000/api)
-```
-
-## Code Style & Conventions
-
-### TypeScript
-
-- **Strict mode enabled** in all projects
-- Use explicit types for function parameters and returns
-- Prefer interfaces over types for object shapes
-- Use type guards for runtime type checking
-
-### Vue 3
-
-- **Composition API** with `<script setup>` syntax
-- **Single File Components** (SFC) with TypeScript
-- Props: Use `defineProps<T>()` with TypeScript
-- Emits: Use `defineEmits<T>()` with TypeScript
-- Composables: Prefix with `use` (e.g., `useApi`, `useAuthStore`)
-
-### Express.js
-
-- **Async/await** for asynchronous operations
-- **Middleware chain**: validation → authentication → authorization → handler
-- **Error handling**: Use custom error classes, centralized error handler
-- **Service layer**: Business logic in services, routes only for routing
-
-### Naming Conventions
-
-- **Files**: kebab-case (e.g., `auth.service.ts`, `media-folders.routes.ts`)
-- **Components**: PascalCase (e.g., `MediaGallery.vue`)
-- **Functions/Variables**: camelCase
-- **Constants**: UPPER_SNAKE_CASE
-- **Types/Interfaces**: PascalCase
-
-### Code Quality Tools
-
-- **Linting**: oxlint (Oxc-based, replaces ESLint)
-- **Formatting**: oxfmt (Oxc-based, replaces Prettier)
-- Configuration files: `.oxlintrc.json`, `.oxfmtrc.json`
-
-## Testing
-
-### Frontend (apps/web)
-
-- **Framework**: Vitest
-- **Location**: Inline tests or `__tests__/` directories
-- **Coverage**: Vitest coverage with v8
-
-### Backend (apps/api)
-
-- **Framework**: Vitest
-- **HTTP Testing**: Supertest
-- **Test Environment**: Separate test database (`.env.test`)
-- **Coverage**: Vitest coverage with v8
-- **Location**: `tests/` directory
-
-**Running API Tests**:
-```bash
-# Uses .env.test for test database
-pnpm --filter api test
-pnpm --filter api test:ci
-pnpm --filter api test:coverage
-```
-
-## Key Architectural Patterns
-
-### Frontend Patterns
-
-1. **Module-based Organization**: Each feature is a module with its own routes, stores, components, and views
-2. **Composition API**: Reusable logic in composables
-3. **Pinia Stores**: Centralized state management
-4. **Route Guards**: Authentication and permission checks in router
-5. **API Layer**: Centralized API calls via `useApi` composable
+## Key Patterns and Conventions
 
 ### Backend Patterns
 
-1. **Layered Architecture**: Routes → Middleware → Services → Database
-2. **Service Layer**: Business logic isolated from HTTP concerns
-3. **Validation Layer**: Input validation with express-validator
-4. **Authentication**: JWT-based auth with Passport.js local strategy
-5. **Error Handling**: Custom error classes with centralized handler
-6. **Rate Limiting**: Redis-backed rate limiting
-7. **File Upload**: Multer + Sharp for image processing
+#### Service Layer Pattern
 
-## Authentication Flow
+Services contain all business logic. Routes are thin and delegate to services.
 
-1. **Login**: POST `/api/auth/login` with username/password
-   - Returns JWT in HTTP-only cookie + user data
-2. **Auth Check**: GET `/api/auth/check`
-   - Validates JWT from cookie
-3. **Logout**: POST `/api/auth/logout`
-   - Clears JWT cookie
-4. **Password Reset**: 
-   - Request: POST `/api/auth/forgot-password` (sends email)
-   - Verify: POST `/api/auth/verify-reset-token`
-   - Reset: POST `/api/auth/reset-password`
+```typescript
+// ✅ GOOD - Logic in service
+export const createPost = async (data: CreatePostDTO): Promise<Post> => {
+  const slug = slugify(data.title);
+  return await prisma.post.create({ data: { ...data, slug } });
+};
 
-**Frontend**: Auth state stored in Pinia (`useAuthStore`), persisted across refreshes
+// Route just calls service
+router.post('/', asyncHandler(async (req, res) => {
+  const post = await postService.createPost(req.body);
+  res.status(201).json(post);
+}));
+```
 
-## Media Management
+#### Validation Pattern
 
-- **Upload Endpoint**: POST `/api/media/upload`
-- **Storage**: Local filesystem (`apps/api/uploads/`)
-- **Processing**: Sharp for image optimization (JPEG, WebP, PNG)
-- **Organization**: Media folders for categorization
-- **Serving**: Static file serving via Express
+Use express-validator for input validation. Validators are in separate files.
 
-## Notable Features
+```typescript
+// validators/post.validators.ts
+export const createPostValidator = [
+  body('title').trim().notEmpty().isLength({ max: 200 }),
+  body('content').optional().isString(),
+  validationMiddleware
+];
 
-1. **Markdown Content**: Blog posts and content use Markdown (EasyMDE editor)
-2. **Event Recurrence**: Events support recurring schedules via rrule library
-3. **Category Hierarchy**: Nested categories with parent-child relationships
-4. **Image Processing**: Automatic thumbnail generation and format conversion
-5. **Slug Generation**: Automatic URL-friendly slugs for posts and categories
-6. **Drag-and-Drop Ordering**: Visual sorting for training groups, locations, etc.
-7. **Contact Form**: Public contact form with email notifications
+// routes/posts.routes.ts
+router.post('/', createPostValidator, asyncHandler(handler));
+```
 
-## Migration Tool (tools/migrate)
+#### Error Handling
 
-A utility for migrating data from MySQL to PostgreSQL. Used during the database migration phase.
+Use custom HTTP error classes and async handler middleware.
 
-**Purpose**: Historical data import from old MySQL database to new PostgreSQL schema
+```typescript
+// ✅ GOOD - Throw custom errors
+import { NotFoundError, BadRequestError } from '@/errors/http-errors';
 
-## Git Workflow
+if (!user) throw new NotFoundError('User not found');
+if (invalid) throw new BadRequestError('Invalid input');
 
-- **Hooks**: Husky for pre-commit and pre-push hooks
-- **Conventional Commits**: Recommended (not enforced)
-- **Recent Changes**: Check `git log` for recent activity
+// ✅ GOOD - Use asyncHandler to catch async errors
+router.get('/:id', asyncHandler(async (req, res) => {
+  const post = await postService.getPost(req.params.id);
+  res.json(post);
+}));
+```
 
-## Common Tasks for LLMs
+#### Authentication Pattern
+
+Routes requiring authentication use `authGuard` middleware.
+
+```typescript
+import { authGuard } from '@/middleware/auth-guard.middleware';
+
+// Public route
+router.get('/', asyncHandler(handler));
+
+// Protected route
+router.post('/', authGuard, asyncHandler(handler));
+
+// User available via req.user (added by Passport)
+```
+
+#### Singleton Content Pattern
+
+For single-record tables, use upsert with `id: 1`.
+
+```typescript
+// ✅ GOOD - Upsert singleton
+export const updateSettings = async (data: UpdateSettingsDTO) => {
+  return await prisma.clubSettings.upsert({
+    where: { id: 1 },
+    update: data,
+    create: { id: 1, ...data }
+  });
+};
+```
+
+#### Pagination Pattern
+
+Consistent pagination for list endpoints.
+
+```typescript
+interface PaginationParams {
+  page?: number;
+  limit?: number;
+}
+
+export const getPosts = async ({ page = 1, limit = 10 }: PaginationParams) => {
+  const skip = (page - 1) * limit;
+  const [posts, total] = await Promise.all([
+    prisma.post.findMany({ skip, take: limit, orderBy: { createdAt: 'desc' } }),
+    prisma.post.count()
+  ]);
+  return { posts, total, page, limit };
+};
+```
+
+### Frontend Patterns
+
+#### Pinia Store Pattern
+
+Stores follow a consistent structure with state, getters, and actions.
+
+```typescript
+// ✅ GOOD - Pinia store structure
+export const usePostsStore = defineStore('posts', () => {
+  // State
+  const posts = ref<Post[]>([]);
+  const loading = ref(false);
+  const error = ref<string | null>(null);
+
+  // Getters
+  const publishedPosts = computed(() => posts.value.filter(p => p.published));
+
+  // Actions
+  const fetchPosts = async () => {
+    loading.value = true;
+    try {
+      posts.value = await api.getPosts();
+    } catch (e) {
+      error.value = e.message;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  return { posts, loading, error, publishedPosts, fetchPosts };
+});
+```
+
+#### API Service Layer
+
+API calls are centralized in service files, not in components.
+
+```typescript
+// ✅ GOOD - API in service
+// services/posts.service.ts
+export const getPosts = async (): Promise<Post[]> => {
+  const response = await fetch(`${API_BASE}/posts`);
+  if (!response.ok) throw new Error('Failed to fetch posts');
+  return response.json();
+};
+
+// Component uses store, store uses service
+const postsStore = usePostsStore();
+await postsStore.fetchPosts(); // Calls service internally
+```
+
+#### Component Composition
+
+Components are modular and focused. Use composables for reusable logic.
+
+```typescript
+// ✅ GOOD - Extract reusable logic to composables
+// composables/useApi.ts
+export const useApi = <T>(fetcher: () => Promise<T>) => {
+  const data = ref<T | null>(null);
+  const loading = ref(false);
+  const error = ref<string | null>(null);
+
+  const execute = async () => {
+    loading.value = true;
+    try {
+      data.value = await fetcher();
+    } catch (e) {
+      error.value = e.message;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  return { data, loading, error, execute };
+};
+```
+
+#### Module Organization
+
+Each feature module is self-contained with its own components, views, stores, routes, and types.
+
+```
+modules/admin/
+├── components/          # Admin-specific components
+├── views/              # Admin page views
+├── stores/             # Admin state management
+├── router/             # Admin routes
+├── types/              # Admin TypeScript types
+└── index.ts            # Module exports
+```
+
+### Code Style Conventions
+
+#### TypeScript
+
+- Use explicit types for function parameters and return values
+- Prefer interfaces over type aliases for object shapes
+- Use enums for fixed sets of values
+- Avoid `any` - use `unknown` if type is truly unknown
+
+#### Naming Conventions
+
+- **Files:** kebab-case (`user.service.ts`, `post-card.component.vue`)
+- **Variables/Functions:** camelCase (`getUserById`, `isLoading`)
+- **Classes/Interfaces:** PascalCase (`UserService`, `PostDTO`)
+- **Constants:** UPPER_SNAKE_CASE (`API_BASE_URL`, `MAX_FILE_SIZE`)
+- **Components:** PascalCase (`PostCard.vue`, `HeroSection.vue`)
+
+#### Vue Components
+
+- Use Composition API with `<script setup>`
+- Props with TypeScript interfaces
+- Emit events with `defineEmits`
+- Use `v-bind` shorthand (`:prop`) and `v-on` shorthand (`@event`)
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue';
+
+interface Props {
+  title: string;
+  count?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  count: 0
+});
+
+const emit = defineEmits<{
+  update: [value: number];
+}>();
+
+const localCount = ref(props.count);
+</script>
+
+<template>
+  <div>
+    <h1>{{ title }}</h1>
+    <button @click="emit('update', localCount++)">
+      {{ localCount }}
+    </button>
+  </div>
+</template>
+```
+
+#### Error Handling
+
+- Always handle errors in async operations
+- Show user-friendly error messages
+- Log errors for debugging
+- Use try-catch for expected errors, let unexpected errors bubble up
+
+## Testing
+
+### Backend Testing
+
+- **Framework:** Vitest with supertest
+- **Test Files:** `tests/integration/*.test.ts`
+- **Pattern:** Integration tests for API endpoints
+- **Setup:** `tests/setup.ts` configures test environment
+- **Helpers:** Shared test utilities in `tests/helpers/`
+
+```bash
+# Run tests
+cd apps/api && pnpm test
+
+# Run tests in CI mode
+pnpm test:ci
+
+# Run with coverage
+pnpm test:coverage
+
+# Run with UI
+pnpm test:ui
+```
+
+**Testing Pattern:**
+
+```typescript
+import request from 'supertest';
+import { app } from '@/app';
+
+describe('POST /api/posts', () => {
+  it('creates a post', async () => {
+    const response = await request(app)
+      .post('/api/posts')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ title: 'Test Post', content: 'Content' });
+    
+    expect(response.status).toBe(201);
+    expect(response.body.title).toBe('Test Post');
+  });
+});
+```
+
+### Frontend Testing
+
+- **Framework:** Vitest
+- **Pattern:** Unit tests for components and utilities
+
+```bash
+# Run tests
+cd apps/web && pnpm test
+
+# Run in CI mode
+pnpm test:ci
+
+# Run with coverage
+pnpm test:coverage
+```
+
+## Common Tasks
 
 ### Adding a New API Endpoint
 
-1. Create route in `apps/api/src/routes/[feature].routes.ts`
-2. Add validation in `apps/api/src/validators/[feature].validator.ts`
-3. Implement business logic in `apps/api/src/services/[feature].service.ts`
-4. Register route in `apps/api/src/routes/index.ts`
-5. Add TypeScript types in `apps/api/src/types/[feature].types.ts`
+1. **Define types** in `src/types/[feature].types.ts`
+2. **Create validators** in `src/validators/[feature].validators.ts`
+3. **Implement service** in `src/services/[feature].service.ts`
+4. **Create routes** in `src/routes/[feature].routes.ts`
+5. **Register routes** in `src/routes/index.ts`
+6. **Write tests** in `tests/integration/[feature].test.ts`
 
-### Adding a New Frontend Page
+### Adding a New Frontend Feature
 
-1. Create view in `apps/web/src/modules/[module]/views/[Page].vue`
-2. Add route in `apps/web/src/modules/[module]/router/routes.ts`
-3. Create components in `apps/web/src/modules/[module]/components/`
-4. Add types in `apps/web/src/modules/[module]/types/`
-5. Create store if needed in `apps/web/src/modules/[module]/stores/`
+1. **Create types** in module's `types/` folder
+2. **Create store** in module's `stores/` folder
+3. **Create service** for API calls in `shared/services/`
+4. **Create components** in module's `components/` folder
+5. **Create views** in module's `views/` folder
+6. **Add routes** in module's `router/` folder
 
-### Modifying Database Schema
+### Adding a New Database Model
 
-1. Edit `apps/api/prisma/schema.prisma`
-2. Run `pnpm --filter api prisma:generate`
-3. Create migration: `pnpm --filter api prisma:migrate`
-4. Update TypeScript types if needed
-5. Update services and routes to use new schema
+1. **Update schema** in `apps/api/prisma/schema.prisma`
+2. **Create migration**: `cd apps/api && pnpm prisma:migrate`
+3. **Generate client**: `pnpm prisma:generate`
+4. **Create types** for the model
+5. **Create service** for business logic
+6. **Create validators** for input validation
+7. **Create routes** for API endpoints
 
-## Important Notes for LLMs
+### Modifying Singleton Content
 
-1. **Monorepo Context**: Always specify workspace when running commands (e.g., `pnpm --filter api <command>`)
-2. **TypeScript**: All code is TypeScript. Do not suggest JavaScript.
-3. **Code Style**: Use oxlint and oxfmt, not ESLint/Prettier
-4. **Testing**: Tests use Vitest, not Jest
-5. **Database**: Always use Prisma Client, not raw SQL
-6. **Authentication**: JWT in HTTP-only cookies, not localStorage
-7. **File Paths**: Use absolute paths with `@` alias in Vue (e.g., `@/components/Button.vue`)
-8. **Environment Variables**: Respect `.env.example` structure
-9. **Turbo Cache**: Turbo caches build outputs; use `--force` to bypass
-10. **Prisma Client**: Regenerate after schema changes
+For singleton models like `HomepageContent`, `HistoryContent`, `ClubSettings`:
 
-## Project Maturity
+1. **Update schema** with new fields
+2. **Create migration**
+3. **Update seed data** if applicable
+4. **Update service** to handle new fields
+5. **Update validators** for new fields
+6. **Update frontend types** and UI
 
-This is an **active, mature project** with:
-- Established architecture and patterns
-- Comprehensive feature set
-- Production-ready code quality
-- Ongoing development and maintenance
+## Important Files
 
-When making changes, prefer **consistency with existing patterns** over introducing new approaches.
+### Configuration Files
 
-## Resources
+- `.editorconfig` - Editor formatting rules (2 space indent, LF line endings)
+- `pnpm-workspace.yaml` - Workspace package configuration
+- `turbo.json` - Turborepo task configuration
+- `docker-compose.yml` - Development services (PostgreSQL, Redis, MailHog)
+- `.husky/pre-commit` - Git pre-commit hooks
 
-- **Turborepo**: https://turbo.build/repo/docs
-- **Prisma**: https://www.prisma.io/docs
-- **Vue 3**: https://vuejs.org/guide
-- **Pinia**: https://pinia.vuejs.org
-- **Express**: https://expressjs.com
-- **Vitest**: https://vitest.dev
-- **Oxc**: https://oxc-project.github.io (oxlint, oxfmt)
+### Environment Files
+
+Backend `.env` variables:
+- `DATABASE_URL` - PostgreSQL connection string
+- `JWT_SECRET` - JWT signing secret
+- `REDIS_HOST`, `REDIS_PORT` - Redis configuration
+- `EMAIL_*` - Email service configuration
+- `CORS_ORIGIN` - Allowed CORS origins
+
+Frontend `.env` variables:
+- `VITE_API_BASE_URL` - API endpoint URL
+
+### Entry Points
+
+- Backend: `apps/api/src/index.ts`
+- Frontend: `apps/web/src/main.ts`
+- Migration tool: `tools/migrate/src/index.ts`
+
+## Migration Tool
+
+Located in `tools/migrate/`, this utility migrates data from a legacy Joomla/MySQL database to the new PostgreSQL schema.
+
+**Features:**
+- Migrates posts and categories
+- Seeds departments, contact persons, history, and media
+- Handles data transformation and validation
+- Supports dry-run mode
+
+**Usage:**
+```bash
+cd tools/migrate
+cp .env.example .env
+# Configure source and target databases
+pnpm install
+pnpm start
+```
+
+## API Endpoints Overview
+
+### Public Endpoints
+
+- `GET /api/health` - Health check
+- `GET /api/posts` - List posts
+- `GET /api/posts/:slug` - Get post by slug
+- `GET /api/departments` - List departments
+- `GET /api/departments/:slug` - Get department details
+- `GET /api/events` - List events
+- `GET /api/history` - Get club history
+- `GET /api/homepage-content` - Get homepage configuration
+- `GET /api/settings` - Get club settings
+- `POST /api/contact` - Submit contact form
+
+### Protected Endpoints (Authentication Required)
+
+**Authentication:**
+- `POST /api/auth/login` - Login
+- `POST /api/auth/logout` - Logout
+- `POST /api/auth/password-reset/request` - Request password reset
+- `POST /api/auth/password-reset/reset` - Reset password
+
+**User Management:**
+- `GET /api/me` - Get current user
+- `PATCH /api/me` - Update current user
+- `GET /api/users` - List users (admin)
+- `POST /api/users` - Create user (admin)
+- `PATCH /api/users/:id` - Update user (admin)
+- `DELETE /api/users/:id` - Delete user (admin)
+
+**Content Management:**
+- `POST /api/posts` - Create post
+- `PATCH /api/posts/:id` - Update post
+- `DELETE /api/posts/:id` - Delete post
+- `POST /api/categories` - Create category
+- `PATCH /api/categories/:id` - Update category
+- `DELETE /api/categories/:id` - Delete category
+
+**Department Management:**
+- Full CRUD for departments, stats, training groups, sessions, locations, trainers
+
+**Media Management:**
+- `POST /api/media` - Upload media
+- `GET /api/media` - List media
+- `DELETE /api/media/:id` - Delete media
+- Full CRUD for media folders
+
+**System Management:**
+- `PATCH /api/settings` - Update club settings
+- `PATCH /api/history` - Update history content
+- `PATCH /api/homepage-content` - Update homepage content
+
+## Best Practices
+
+### Do's ✅
+
+- **Use the service layer** - Keep routes thin, logic in services
+- **Validate all inputs** - Use express-validator on backend, validate on frontend
+- **Handle errors gracefully** - Use try-catch, provide user-friendly messages
+- **Use TypeScript properly** - Explicit types, no `any`
+- **Write tests** - Integration tests for API, unit tests for utilities
+- **Follow conventions** - File naming, folder structure, code style
+- **Use async/await** - Cleaner than promises or callbacks
+- **Leverage Prisma** - Use relations, `include`, `select` for efficient queries
+- **Keep components focused** - Single responsibility, extract reusable logic
+- **Use composables** - Share logic between components
+- **Optimize queries** - Use pagination, limit fields, add indexes
+- **Secure endpoints** - Authentication, authorization, rate limiting
+- **Document complex logic** - Comments for "why", not "what"
+
+### Don'ts ❌
+
+- **Don't put logic in routes** - Use services
+- **Don't trust user input** - Always validate and sanitize
+- **Don't use `any`** - Use proper types or `unknown`
+- **Don't hardcode values** - Use constants or environment variables
+- **Don't mix concerns** - Separate UI, logic, data access
+- **Don't ignore errors** - Always handle or log them
+- **Don't skip migrations** - Database changes must be migrated
+- **Don't commit sensitive data** - Use `.env` files, never commit them
+- **Don't fetch in loops** - Use batch operations or `include`
+- **Don't expose internal errors** - Return user-friendly messages
+- **Don't skip type checking** - Run `pnpm type-check` before committing
+
+## Additional Resources
+
+- **Prisma Docs:** https://www.prisma.io/docs
+- **Vue 3 Docs:** https://vuejs.org/guide/introduction.html
+- **Pinia Docs:** https://pinia.vuejs.org/
+- **Express Docs:** https://expressjs.com/
+- **Vitest Docs:** https://vitest.dev/
+
+## Quick Reference Commands
+
+```bash
+# Development
+pnpm dev                    # Start all apps
+pnpm build                  # Build all apps
+pnpm test                   # Run all tests
+pnpm lint                   # Lint all apps
+pnpm format:fix             # Format all code
+
+# Database
+cd apps/api
+pnpm prisma:generate        # Generate Prisma Client
+pnpm prisma:migrate         # Create migration
+pnpm prisma:studio          # Open DB GUI
+
+# Docker
+docker-compose up -d        # Start services
+docker-compose down         # Stop services
+docker-compose logs -f      # View logs
+
+# Git
+git status                  # Check changes
+git add .                   # Stage changes
+git commit -m "message"     # Commit changes
+git push                    # Push to remote
+```
 
 ---
 
-**Last Updated**: 2026-01-26  
-**Maintainer**: René Wagner
+**Last Updated:** 2026-01-29
