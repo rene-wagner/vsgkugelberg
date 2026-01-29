@@ -69,9 +69,7 @@ async function handleSubmit() {
         </div>
 
         <div>
-          <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2">
-            Logo (Optional)
-          </label>
+          <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Logo (Optional) </label>
           <ImageSelector
             v-model:media-id="heroLogoId"
             v-model:media="heroLogo"

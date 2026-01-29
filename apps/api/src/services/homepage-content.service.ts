@@ -23,13 +23,15 @@ export class HomepageContentService {
       heroDescription: content.heroDescription,
       heroTag: content.heroTag,
       heroLogoId: content.heroLogoId,
-      heroLogo: content.heroLogo ? {
-        id: content.heroLogo.id,
-        filename: content.heroLogo.filename,
-        originalName: content.heroLogo.originalName,
-        path: content.heroLogo.path,
-        mimetype: content.heroLogo.mimetype,
-      } : null,
+      heroLogo: content.heroLogo
+        ? {
+            id: content.heroLogo.id,
+            filename: content.heroLogo.filename,
+            originalName: content.heroLogo.originalName,
+            path: content.heroLogo.path,
+            mimetype: content.heroLogo.mimetype,
+          }
+        : null,
       stats: content.stats.map((s) => ({
         label: s.label,
         value: s.value,
