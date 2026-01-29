@@ -63,7 +63,7 @@ const listPosts = computed(() => posts.value.slice(1));
       />
       <p
         v-if="props.description"
-        class="mx-auto mt-0 mb-12 max-w-4xl font-body text-lg text-gray-600"
+        class="mx-auto mt-6 mb-16 max-w-3xl text-center font-body text-lg text-gray-600"
       >
         {{ props.description }}
       </p>
