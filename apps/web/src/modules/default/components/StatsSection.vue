@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { HomepageStat } from '@/shared/types/homepage-content.types';
 
 interface Props {
@@ -7,7 +8,7 @@ interface Props {
 
 const props = defineProps<Props>();
 
-const displayStats = props.stats || [];
+const displayStats = computed(() => props.stats || []);
 </script>
 
 <template>
