@@ -34,7 +34,6 @@ const logoUrl = computed(() => {
     <div class="absolute bottom-1/4 left-0 h-80 w-80 rounded-full bg-vsg-blue-500/20 blur-3xl" />
 
     <div class="relative z-10 mx-auto max-w-7xl px-6 py-20 text-center">
-
       <div
         v-if="logoUrl"
         class="animate-slide-up my-8 delay-100"
@@ -47,22 +46,16 @@ const logoUrl = computed(() => {
       </div>
 
       <div class="animate-slide-up my-8 delay-200">
-        <span
-          class="inline-block border border-vsg-gold-400/30 px-6 py-2 font-body font-normal uppercase tracking-widest text-vsg-gold-400"
-        >
+        <span class="inline-block border border-vsg-gold-400/30 px-6 py-2 font-body font-normal uppercase tracking-widest text-vsg-gold-400">
           {{ tag }}
         </span>
       </div>
 
-      <h1
-        class="animate-slide-up text-glow font-display text-7xl text-white delay-300 md:text-8xl lg:text-9xl"
-      >
+      <h1 class="animate-slide-up text-glow font-display text-7xl text-white delay-300 md:text-8xl lg:text-9xl">
         {{ headline }}
       </h1>
 
-      <p
-        class="animate-slide-up mx-auto mt-8 max-w-2xl font-body text-lg font-normal text-vsg-blue-300 delay-400 md:text-xl whitespace-pre-line"
-      >
+      <p class="animate-slide-up mx-auto mt-8 max-w-2xl font-body text-lg font-normal text-vsg-blue-300 delay-400 md:text-xl whitespace-pre-line">
         {{ description }}
       </p>
 
