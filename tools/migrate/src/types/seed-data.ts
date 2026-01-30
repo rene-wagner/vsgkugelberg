@@ -154,6 +154,14 @@ export interface SeedHomepage {
   ctaDescription: string;
 }
 
+export interface SeedBoardContent {
+  headline: string;
+  description: string;
+  sectionHeadline: string;
+  sectionDescription: string;
+  note: string;
+}
+
 // Media migration types
 export type MediaFolderMap = Map<string, number>; // folderName → folderId
 export type MediaFileMap = Map<string, number>;   // originalFilename → mediaId

@@ -15,6 +15,7 @@ import { mediaFolderRouter } from './media-folders.routes';
 import { contactRouter } from './contact.routes';
 import { historyRouter } from './history.routes';
 import { homepageContentRouter } from './homepage-content.routes';
+import { boardContentRouter } from './board-content.routes';
 
 const router = Router();
 
@@ -33,5 +34,6 @@ router.use('/media', mediaRouter);
 router.use('/contact', contactRouter);
 router.use('/history', historyRouter);
 router.use('/homepage-content', homepageContentRouter);
+router.use('/board-content', boardContentRouter);
 
 export { router };

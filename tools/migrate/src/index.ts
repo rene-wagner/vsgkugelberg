@@ -9,6 +9,7 @@ import {
   seedDepartmentsComplete,
   seedHistory,
   seedHomepage,
+  seedBoardContent,
   seedMediaFolders,
   seedMediaFiles,
   linkContactPersonImages,
@@ -132,7 +133,10 @@ async function main(): Promise<void> {
     // 8. Seed homepage
     await seedHomepage(pgClient, mediaMap);
 
-    // 9. Run migrators (categories and posts)
+    // 9. Seed board content
+    await seedBoardContent(pgClient);
+
+    // 10. Run migrators (categories and posts)
     const categoryMap = await migrateCategories(mysqlConn, pgClient);
     results.categories = categoryMap.size;
     results.posts = await migratePosts(mysqlConn, pgClient, categoryMap);

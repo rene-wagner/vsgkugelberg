@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import type { SeedUser, CompleteDepartmentData, SeedHistory, SeedContactPerson, SeedHomepage } from '../types';
+import type { SeedUser, CompleteDepartmentData, SeedHistory, SeedContactPerson, SeedHomepage, SeedBoardContent } from '../types';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -29,5 +29,10 @@ export async function loadContactPersonSeedData(): Promise<SeedContactPerson[]> 
 
 export async function loadHomepageSeedData(): Promise<SeedHomepage> {
   const data = await fs.readFile(path.join(DATA_DIR, 'homepage.json'), 'utf-8');
+  return JSON.parse(data);
+}
+
+export async function loadBoardContentSeedData(): Promise<SeedBoardContent> {
+  const data = await fs.readFile(path.join(DATA_DIR, 'board-content.json'), 'utf-8');
   return JSON.parse(data);
 }

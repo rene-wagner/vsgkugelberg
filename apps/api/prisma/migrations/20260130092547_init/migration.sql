@@ -369,6 +369,30 @@ CREATE TABLE "HistoryAchievement" (
 );
 
 -- CreateTable
+CREATE TABLE "BoardContent" (
+    "id" INTEGER NOT NULL DEFAULT 1,
+    "headline" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "sectionHeadline" TEXT NOT NULL,
+    "sectionDescription" TEXT NOT NULL,
+    "note" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "BoardContent_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "BoardMember" (
+    "id" SERIAL NOT NULL,
+    "boardContentId" INTEGER NOT NULL,
+    "contactPersonId" INTEGER NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "BoardMember_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_CategoryToPost" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL,
@@ -488,6 +512,12 @@ CREATE INDEX "HistoryFestivalItem_historyContentId_idx" ON "HistoryFestivalItem"
 CREATE INDEX "HistoryAchievement_historyContentId_idx" ON "HistoryAchievement"("historyContentId");
 
 -- CreateIndex
+CREATE INDEX "BoardMember_boardContentId_idx" ON "BoardMember"("boardContentId");
+
+-- CreateIndex
+CREATE INDEX "BoardMember_contactPersonId_idx" ON "BoardMember"("contactPersonId");
+
+-- CreateIndex
 CREATE INDEX "_CategoryToPost_B_index" ON "_CategoryToPost"("B");
 
 -- AddForeignKey
@@ -570,6 +600,12 @@ ALTER TABLE "HistoryFestivalItem" ADD CONSTRAINT "HistoryFestivalItem_historyCon
 
 -- AddForeignKey
 ALTER TABLE "HistoryAchievement" ADD CONSTRAINT "HistoryAchievement_historyContentId_fkey" FOREIGN KEY ("historyContentId") REFERENCES "HistoryContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BoardMember" ADD CONSTRAINT "BoardMember_boardContentId_fkey" FOREIGN KEY ("boardContentId") REFERENCES "BoardContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "BoardMember" ADD CONSTRAINT "BoardMember_contactPersonId_fkey" FOREIGN KEY ("contactPersonId") REFERENCES "ContactPerson"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_CategoryToPost" ADD CONSTRAINT "_CategoryToPost_A_fkey" FOREIGN KEY ("A") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;

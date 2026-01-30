@@ -204,6 +204,7 @@ model ContactPerson {
   profileImageId     Int?
   profileImage       Media?              @relation(fields: [profileImageId], references: [id], onDelete: SetNull)
   departmentTrainers DepartmentTrainer[]
+  boardMembers       BoardMember[]
   createdAt          DateTime            @default(now())
   updatedAt          DateTime            @updatedAt
 }
@@ -411,4 +412,28 @@ model HistoryAchievement {
   sort             Int            @default(0)
 
   @@index([historyContentId])
+}
+
+model BoardContent {
+  id                 Int           @id @default(1)
+  headline           String
+  description        String
+  sectionHeadline    String
+  sectionDescription String
+  note               String
+  boardMembers       BoardMember[]
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+}
+
+model BoardMember {
+  id               Int            @id @default(autoincrement())
+  boardContentId   Int
+  boardContent     BoardContent   @relation(fields: [boardContentId], references: [id], onDelete: Cascade)
+  contactPersonId  Int
+  contactPerson    ContactPerson  @relation(fields: [contactPersonId], references: [id], onDelete: Cascade)
+  sort             Int            @default(0)
+
+  @@index([boardContentId])
+  @@index([contactPersonId])
 }

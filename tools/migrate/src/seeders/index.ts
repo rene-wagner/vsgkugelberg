@@ -3,4 +3,5 @@ export * from './contact-person-seeder';
 export * from './department-seeder';
 export * from './history-seeder';
 export * from './homepage-content-seeder';
+export * from './board-content-seeder';
 export * from './media-seeder';
