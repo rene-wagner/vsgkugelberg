@@ -85,7 +85,7 @@ function getBadgeColor(index: number): string {
               >
                 <div class="flex items-start gap-4">
                   <!-- Profile Image -->
-                  <div class="flex-shrink-0">
+                  <div class="shrink-0">
                     <div
                       v-if="member.profileImage"
                       class="h-16 w-16 shrink-0 overflow-hidden rounded-full bg-gray-200"
