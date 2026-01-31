@@ -38,9 +38,7 @@ const availableContactPersons = computed(() => {
 function handleAddMember() {
   if (!selectedContactPersonId.value) return;
 
-  const contactPerson = contactPersonsStore.contactPersons?.find(
-    (cp) => cp.id === selectedContactPersonId.value,
-  );
+  const contactPerson = contactPersonsStore.contactPersons?.find((cp) => cp.id === selectedContactPersonId.value);
   if (!contactPerson) return;
 
   const newMember: BoardMember = {
@@ -108,9 +106,7 @@ async function handleSubmit() {
             v-model="selectedContactPersonId"
             class="flex-1 px-4 py-2.5 bg-white border border-gray-300 rounded-lg text-vsg-blue-900 text-sm focus:outline-none focus:border-vsg-blue-600"
           >
-            <option :value="null">
-              -- Kontaktperson auswählen --
-            </option>
+            <option :value="null">-- Kontaktperson auswählen --</option>
             <option
               v-for="cp in availableContactPersons"
               :key="cp.id"
@@ -133,9 +129,7 @@ async function handleSubmit() {
 
       <!-- Board Members List -->
       <div class="space-y-3">
-        <p class="font-body text-sm text-gray-600 mb-3">
-          Ziehen Sie die Mitglieder, um die Reihenfolge zu ändern:
-        </p>
+        <p class="font-body text-sm text-gray-600 mb-3">Ziehen Sie die Mitglieder, um die Reihenfolge zu ändern:</p>
 
         <VueDraggable
           v-model="localBoardMembers"
@@ -154,7 +148,7 @@ async function handleSubmit() {
             </div>
 
             <!-- Profile Image -->
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
               <div
                 v-if="member.profileImage"
                 class="w-12 h-12 rounded-full overflow-hidden bg-gray-200"
@@ -178,16 +172,12 @@ async function handleSubmit() {
 
             <!-- Member Info -->
             <div class="flex-1">
-              <p class="font-display text-sm text-vsg-blue-900">
-                {{ member.firstName }} {{ member.lastName }}
-              </p>
+              <p class="font-display text-sm text-vsg-blue-900">{{ member.firstName }} {{ member.lastName }}</p>
               <p class="font-body text-xs text-gray-600">{{ member.type }}</p>
             </div>
 
             <!-- Sort Order -->
-            <div class="text-sm text-gray-500 font-mono">
-              #{{ index + 1 }}
-            </div>
+            <div class="text-sm text-gray-500 font-mono">#{{ index + 1 }}</div>
 
             <!-- Remove Button -->
             <button

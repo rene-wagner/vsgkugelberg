@@ -116,9 +116,7 @@ function getBadgeColor(index: number): string {
                     >
                       {{ member.type }}
                     </span>
-                    <p class="mt-2 font-body text-lg font-semibold text-vsg-blue-900">
-                      {{ member.firstName }} {{ member.lastName }}
-                    </p>
+                    <p class="mt-2 font-body text-lg font-semibold text-vsg-blue-900">{{ member.firstName }} {{ member.lastName }}</p>
                   </div>
                 </div>
               </div>

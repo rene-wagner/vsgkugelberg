@@ -32,8 +32,6 @@ export interface BoardMemberDto {
   sort?: number;
 }
 
-export type UpdateBoardContentDto = Partial<
-  Omit<BoardContent, 'id' | 'createdAt' | 'updatedAt' | 'boardMembers'>
-> & {
+export type UpdateBoardContentDto = Partial<Omit<BoardContent, 'id' | 'createdAt' | 'updatedAt' | 'boardMembers'>> & {
   boardMembers?: BoardMemberDto[];
 };
