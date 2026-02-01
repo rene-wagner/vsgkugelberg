@@ -6,6 +6,7 @@ import MediaUploadZone from '../components/MediaUploadZone.vue';
 import MediaGallery from '../components/MediaGallery.vue';
 import VsgInput from '@/shared/components/VsgInput.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AdminAlert from '../components/AdminAlert.vue';
 
 const mediaStore = useMediaStore();
 
@@ -153,19 +154,14 @@ async function executeRegenerateAll() {
     </div>
 
     <!-- Error State -->
-    <div
+    <AdminAlert
       v-else-if="mediaStore.error"
-      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
-    >
-      <p class="text-sm text-red-600 font-body">{{ mediaStore.error }}</p>
-      <button
-        type="button"
-        class="mt-3 text-sm text-red-700 underline hover:no-underline"
-        @click="mediaStore.clearError()"
-      >
-        Schliessen
-      </button>
-    </div>
+      variant="error"
+      :message="mediaStore.error"
+      dismissible
+      class="mb-6"
+      @dismiss="mediaStore.clearError()"
+    />
 
     <!-- Gallery Section -->
     <div

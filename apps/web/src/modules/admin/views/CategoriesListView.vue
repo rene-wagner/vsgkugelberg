@@ -2,6 +2,7 @@
 import { computed, onMounted } from 'vue';
 import { useCategoriesStore, type Category } from '../stores/categoriesStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AdminAlert from '../components/AdminAlert.vue';
 
 const categoriesStore = useCategoriesStore();
 
@@ -9,16 +10,8 @@ interface FlattenedCategory extends Category {
   depth: number;
 }
 
-// Success message timer
-let successTimer: ReturnType<typeof setTimeout> | null = null;
-
 function clearSuccessMessage() {
-  if (successTimer) {
-    clearTimeout(successTimer);
-  }
-  successTimer = setTimeout(() => {
-    categoriesStore.successMessage = null;
-  }, 5000);
+  categoriesStore.successMessage = null;
 }
 
 // Recursively flatten the category tree with depth information
@@ -60,9 +53,6 @@ async function handleRecalculateSlugs() {
   if (!confirmed) return;
 
   await categoriesStore.recalculateSlugs();
-  if (categoriesStore.successMessage) {
-    clearSuccessMessage();
-  }
 }
 </script>
 
@@ -100,28 +90,23 @@ async function handleRecalculateSlugs() {
     </div>
 
     <!-- Error State -->
-    <div
+    <AdminAlert
       v-else-if="categoriesStore.error"
-      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
-    >
-      <p class="text-sm text-red-600 font-body">{{ categoriesStore.error }}</p>
-    </div>
+      variant="error"
+      :message="categoriesStore.error"
+      class="mb-6"
+    />
 
     <!-- Success State -->
-    <div
+    <AdminAlert
       v-if="categoriesStore.successMessage"
-      class="bg-green-50 border border-green-200 rounded-xl p-6 mb-6 flex items-center justify-between"
-    >
-      <p class="text-sm text-green-600 font-body">
-        {{ categoriesStore.successMessage }}
-      </p>
-      <button
-        class="text-green-600 hover:text-green-700"
-        @click="categoriesStore.successMessage = null"
-      >
-        <FontAwesomeIcon icon="xmark" />
-      </button>
-    </div>
+      variant="success"
+      :message="categoriesStore.successMessage"
+      dismissible
+      :auto-dismiss="5000"
+      class="mb-6"
+      @dismiss="clearSuccessMessage"
+    />
 
     <!-- Table -->
     <div

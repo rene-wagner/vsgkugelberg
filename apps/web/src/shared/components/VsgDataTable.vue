@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VsgPagination from './VsgPagination.vue';
+import AdminAlert from '@/modules/admin/components/AdminAlert.vue';
 import type { Column, ActionButton, PaginationMeta } from '@/shared/types/table.types';
 
 interface Props {
@@ -205,17 +206,18 @@ function handlePageChange(page: number): void {
     </div>
 
     <!-- Error State -->
-    <div
+    <AdminAlert
       v-else-if="error"
-      class="bg-red-50 border border-red-200 rounded-xl p-6 mb-6"
+      variant="error"
+      class="mb-6"
     >
       <slot
         name="error"
         :error="error"
       >
-        <p class="text-sm text-red-600 font-body">{{ error }}</p>
+        <span class="text-sm text-red-600 font-body">{{ error }}</span>
       </slot>
-    </div>
+    </AdminAlert>
 
     <!-- Table -->
     <div

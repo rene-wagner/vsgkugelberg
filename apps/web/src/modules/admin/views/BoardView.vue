@@ -5,7 +5,7 @@ import VsgTabNav, { type TabDefinition } from '@/shared/components/VsgTabNav.vue
 import BoardHeroForm from '../components/forms/BoardHeroForm.vue';
 import BoardMembersForm from '../components/forms/BoardMembersForm.vue';
 import BoardNoteForm from '../components/forms/BoardNoteForm.vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AdminAlert from '../components/AdminAlert.vue';
 
 const boardContentStore = useBoardContentStore();
 
@@ -34,33 +34,24 @@ onMounted(async () => {
     </div>
 
     <!-- Success/Error Messages -->
-    <div
+    <AdminAlert
       v-if="boardContentStore.successMessage"
-      class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex justify-between items-center"
-    >
-      <p class="text-sm text-green-600 font-body">
-        {{ boardContentStore.successMessage }}
-      </p>
-      <button
-        class="text-green-600 hover:text-green-800"
-        @click="boardContentStore.clearMessages"
-      >
-        <FontAwesomeIcon icon="xmark" />
-      </button>
-    </div>
+      variant="success"
+      :message="boardContentStore.successMessage"
+      dismissible
+      :auto-dismiss="5000"
+      class="mb-6"
+      @dismiss="boardContentStore.clearMessages"
+    />
 
-    <div
+    <AdminAlert
       v-if="boardContentStore.error"
-      class="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex justify-between items-center"
-    >
-      <p class="text-sm text-red-600 font-body">{{ boardContentStore.error }}</p>
-      <button
-        class="text-red-600 hover:text-red-800"
-        @click="boardContentStore.clearMessages"
-      >
-        <FontAwesomeIcon icon="xmark" />
-      </button>
-    </div>
+      variant="error"
+      :message="boardContentStore.error"
+      dismissible
+      class="mb-6"
+      @dismiss="boardContentStore.clearMessages"
+    />
 
     <!-- Loading State -->
     <div

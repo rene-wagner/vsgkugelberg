@@ -8,6 +8,7 @@ import HistoryDevelopmentForm from '../components/forms/HistoryDevelopmentForm.v
 import HistoryFestivalsForm from '../components/forms/HistoryFestivalsForm.vue';
 import HistoryAchievementsForm from '../components/forms/HistoryAchievementsForm.vue';
 import HistoryCtaForm from '../components/forms/HistoryCtaForm.vue';
+import AdminAlert from '../components/AdminAlert.vue';
 
 const historyStore = useHistoryStore();
 
@@ -39,33 +40,23 @@ onMounted(async () => {
     </div>
 
     <!-- Success/Error Messages -->
-    <div
+    <AdminAlert
       v-if="historyStore.successMessage"
-      class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex justify-between items-center"
-    >
-      <p class="text-sm text-green-600 font-body">
-        {{ historyStore.successMessage }}
-      </p>
-      <button
-        class="text-green-600 hover:text-green-800"
-        @click="historyStore.clearMessages"
-      >
-        <FontAwesomeIcon icon="xmark" />
-      </button>
-    </div>
+      variant="success"
+      :message="historyStore.successMessage"
+      dismissible
+      class="mb-6"
+      @dismiss="historyStore.clearMessages"
+    />
 
-    <div
+    <AdminAlert
       v-if="historyStore.error"
-      class="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex justify-between items-center"
-    >
-      <p class="text-sm text-red-600 font-body">{{ historyStore.error }}</p>
-      <button
-        class="text-red-600 hover:text-red-800"
-        @click="historyStore.clearMessages"
-      >
-        <FontAwesomeIcon icon="xmark" />
-      </button>
-    </div>
+      variant="error"
+      :message="historyStore.error"
+      dismissible
+      class="mb-6"
+      @dismiss="historyStore.clearMessages"
+    />
 
     <!-- Loading State -->
     <div

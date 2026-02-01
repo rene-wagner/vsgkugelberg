@@ -7,6 +7,7 @@ import HomepageStatsForm from '../components/forms/HomepageStatsForm.vue';
 import HomepageDepartmentsForm from '../components/forms/HomepageDepartmentsForm.vue';
 import HomepagePostsForm from '../components/forms/HomepagePostsForm.vue';
 import HomepageCtaForm from '../components/forms/HomepageCtaForm.vue';
+import AdminAlert from '../components/AdminAlert.vue';
 
 const homepageContentStore = useHomepageContentStore();
 
@@ -37,33 +38,23 @@ onMounted(async () => {
     </div>
 
     <!-- Success/Error Messages -->
-    <div
+    <AdminAlert
       v-if="homepageContentStore.successMessage"
-      class="mb-6 bg-green-50 border border-green-200 rounded-xl p-4 flex justify-between items-center"
-    >
-      <p class="text-sm text-green-600 font-body">
-        {{ homepageContentStore.successMessage }}
-      </p>
-      <button
-        class="text-green-600 hover:text-green-800"
-        @click="homepageContentStore.clearMessages"
-      >
-        <FontAwesomeIcon icon="xmark" />
-      </button>
-    </div>
+      variant="success"
+      :message="homepageContentStore.successMessage"
+      dismissible
+      class="mb-6"
+      @dismiss="homepageContentStore.clearMessages"
+    />
 
-    <div
+    <AdminAlert
       v-if="homepageContentStore.error"
-      class="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex justify-between items-center"
-    >
-      <p class="text-sm text-red-600 font-body">{{ homepageContentStore.error }}</p>
-      <button
-        class="text-red-600 hover:text-red-800"
-        @click="homepageContentStore.clearMessages"
-      >
-        <FontAwesomeIcon icon="xmark" />
-      </button>
-    </div>
+      variant="error"
+      :message="homepageContentStore.error"
+      dismissible
+      class="mb-6"
+      @dismiss="homepageContentStore.clearMessages"
+    />
 
     <!-- Loading State -->
     <div
