@@ -9,6 +9,7 @@ target/
 
 # Build outputs
 dist/
+*.config.d.ts
 
 # Turborepo
 .turbo/
