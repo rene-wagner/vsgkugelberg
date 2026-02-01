@@ -2,6 +2,7 @@
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VsgPagination from './VsgPagination.vue';
 import AdminAlert from '@/modules/admin/components/AdminAlert.vue';
+import AdminPageHeader from '@/modules/admin/components/AdminPageHeader.vue';
 import type { Column, ActionButton, PaginationMeta } from '@/shared/types/table.types';
 
 interface Props {
@@ -172,18 +173,11 @@ function handlePageChange(page: number): void {
 
 <template>
   <div>
-    <!-- Page Header -->
-    <div class="mb-8 flex items-start justify-between">
-      <div>
-        <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">{{ title }}</h1>
-        <p
-          v-if="description"
-          class="font-body font-normal text-vsg-blue-600 mt-1"
-        >
-          {{ description }}
-        </p>
-      </div>
-      <div class="flex gap-3">
+    <AdminPageHeader
+      :title="title"
+      :description="description"
+    >
+      <template #actions>
         <slot name="header-actions" />
         <router-link
           v-if="addButtonRoute"
@@ -192,8 +186,8 @@ function handlePageChange(page: number): void {
         >
           {{ addButtonText }}
         </router-link>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <!-- Loading State -->
     <div

@@ -8,6 +8,7 @@ import HomepageDepartmentsForm from '../components/forms/HomepageDepartmentsForm
 import HomepagePostsForm from '../components/forms/HomepagePostsForm.vue';
 import HomepageCtaForm from '../components/forms/HomepageCtaForm.vue';
 import AdminAlert from '../components/AdminAlert.vue';
+import AdminPageHeader from '../components/AdminPageHeader.vue';
 
 const homepageContentStore = useHomepageContentStore();
 
@@ -28,14 +29,10 @@ onMounted(async () => {
 
 <template>
   <div>
-    <!-- Page Header -->
-    <div class="mb-8">
-      <div class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2">
-        <span class="text-vsg-blue-600">Startseite</span>
-      </div>
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">Startseite verwalten</h1>
-      <p class="font-body font-normal text-vsg-blue-600 mt-1">Pflegen Sie die Inhalte der Startseite</p>
-    </div>
+    <AdminPageHeader
+      title="Startseite verwalten"
+      description="Pflegen Sie die Inhalte der Startseite"
+    />
 
     <!-- Success/Error Messages -->
     <AdminAlert

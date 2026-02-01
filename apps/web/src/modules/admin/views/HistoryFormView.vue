@@ -9,6 +9,7 @@ import HistoryFestivalsForm from '../components/forms/HistoryFestivalsForm.vue';
 import HistoryAchievementsForm from '../components/forms/HistoryAchievementsForm.vue';
 import HistoryCtaForm from '../components/forms/HistoryCtaForm.vue';
 import AdminAlert from '../components/AdminAlert.vue';
+import AdminPageHeader from '../components/AdminPageHeader.vue';
 
 const historyStore = useHistoryStore();
 
@@ -30,14 +31,10 @@ onMounted(async () => {
 
 <template>
   <div>
-    <!-- Page Header -->
-    <div class="mb-8">
-      <div class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2">
-        <span class="text-vsg-blue-600">Historie</span>
-      </div>
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">Vereinshistorie verwalten</h1>
-      <p class="font-body font-normal text-vsg-blue-600 mt-1">Pfleget die Inhalte der Chronik und Meilensteine</p>
-    </div>
+    <AdminPageHeader
+      title="Vereinshistorie verwalten"
+      description="Pfleget die Inhalte der Chronik und Meilensteine"
+    />
 
     <!-- Success/Error Messages -->
     <AdminAlert

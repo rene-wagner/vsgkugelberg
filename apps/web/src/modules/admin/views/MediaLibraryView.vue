@@ -7,6 +7,7 @@ import MediaGallery from '../components/MediaGallery.vue';
 import VsgInput from '@/shared/components/VsgInput.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import AdminAlert from '../components/AdminAlert.vue';
+import AdminPageHeader from '../components/AdminPageHeader.vue';
 
 const mediaStore = useMediaStore();
 
@@ -90,11 +91,10 @@ async function executeRegenerateAll() {
 
 <template>
   <div>
-    <!-- Page Header -->
-    <div class="mb-8">
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">MEDIATHEK</h1>
-      <p class="font-body font-normal text-vsg-blue-600 mt-1">Verwalte Bilder und Medien</p>
-    </div>
+    <AdminPageHeader
+      title="MEDIATHEK"
+      description="Verwalte Bilder und Medien"
+    />
 
     <!-- Upload Zone -->
     <div class="mb-8">

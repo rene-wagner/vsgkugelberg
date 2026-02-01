@@ -1,14 +1,13 @@
 <script setup lang="ts">
-// Admin statutes (Satzung) view
+import AdminPageHeader from '../components/AdminPageHeader.vue';
 </script>
 
 <template>
   <div>
-    <!-- Page Header -->
-    <div class="mb-8">
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">SATZUNG</h1>
-      <p class="font-body font-normal text-vsg-blue-600 mt-1">Verwaltung der Vereinsatzung</p>
-    </div>
+    <AdminPageHeader
+      title="SATZUNG"
+      description="Verwaltung der Vereinsatzung"
+    />
 
     <!-- Page Content Placeholder -->
     <div class="bg-gray-50 border border-gray-200 rounded-xl p-8">

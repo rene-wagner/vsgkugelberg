@@ -6,6 +6,7 @@ import BoardHeroForm from '../components/forms/BoardHeroForm.vue';
 import BoardMembersForm from '../components/forms/BoardMembersForm.vue';
 import BoardNoteForm from '../components/forms/BoardNoteForm.vue';
 import AdminAlert from '../components/AdminAlert.vue';
+import AdminPageHeader from '../components/AdminPageHeader.vue';
 
 const boardContentStore = useBoardContentStore();
 
@@ -24,14 +25,10 @@ onMounted(async () => {
 
 <template>
   <div>
-    <!-- Page Header -->
-    <div class="mb-8">
-      <div class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2">
-        <span class="text-vsg-blue-600">Verein</span>
-      </div>
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">Vorstand verwalten</h1>
-      <p class="font-body font-normal text-vsg-blue-600 mt-1">Pflege die Inhalte der Vorstandsseite</p>
-    </div>
+    <AdminPageHeader
+      title="Vorstand verwalten"
+      description="Pflege die Inhalte der Vorstandsseite"
+    />
 
     <!-- Success/Error Messages -->
     <AdminAlert

@@ -1,14 +1,13 @@
 <script setup lang="ts">
-// Admin dashboard view
+import AdminPageHeader from '../components/AdminPageHeader.vue';
 </script>
 
 <template>
   <div>
-    <!-- Page Header -->
-    <div class="mb-8">
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">Dashboard</h1>
-      <p class="font-body font-normal text-vsg-blue-600 mt-1">Willkommen im Administrationsbereich</p>
-    </div>
+    <AdminPageHeader
+      title="Dashboard"
+      description="Willkommen im Administrationsbereich"
+    />
 
     <!-- Dashboard Content Placeholder -->
     <div class="bg-gray-50 border border-gray-200 rounded-xl p-8">

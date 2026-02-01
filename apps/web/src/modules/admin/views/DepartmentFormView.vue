@@ -12,7 +12,7 @@ import DepartmentStatsEditor from '../components/DepartmentStatsEditor.vue';
 import DepartmentTrainingEditor from '../components/DepartmentTrainingEditor.vue';
 import DepartmentLocationsEditor from '../components/DepartmentLocationsEditor.vue';
 import DepartmentTrainersEditor from '../components/DepartmentTrainersEditor.vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AdminPageHeader from '../components/AdminPageHeader.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -29,7 +29,6 @@ const activeTab = ref('grunddaten');
 const isEditMode = computed(() => !!route.params.slug);
 const pageTitle = computed(() => (isEditMode.value ? 'ABTEILUNG BEARBEITEN' : 'ABTEILUNG ERSTELLEN'));
 const pageSubtitle = computed(() => (isEditMode.value ? 'Bearbeite die Abteilungsdaten' : 'Erstelle eine neue Abteilung'));
-const breadcrumbAction = computed(() => (isEditMode.value ? 'Bearbeiten' : 'Erstellen'));
 
 // Tab definitions - tabs 2-5 disabled in create mode
 const tabs = computed<TabDefinition[]>(() => {
@@ -126,25 +125,10 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
 
 <template>
   <div>
-    <!-- Page Header -->
-    <div class="mb-8">
-      <div class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2">
-        <router-link
-          to="/admin/abteilungen"
-          class="hover:text-vsg-blue-600 transition-colors"
-        >
-          Abteilungen
-        </router-link>
-        <FontAwesomeIcon icon="chevron-right" />
-        <span class="text-vsg-blue-600">{{ breadcrumbAction }}</span>
-      </div>
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
-        {{ pageTitle }}
-      </h1>
-      <p class="font-body font-normal text-vsg-blue-600 mt-1">
-        {{ pageSubtitle }}
-      </p>
-    </div>
+    <AdminPageHeader
+      :title="pageTitle"
+      :description="pageSubtitle"
+    />
 
     <!-- Loading State -->
     <div

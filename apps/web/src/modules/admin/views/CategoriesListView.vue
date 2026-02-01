@@ -3,6 +3,7 @@ import { computed, onMounted } from 'vue';
 import { useCategoriesStore, type Category } from '../stores/categoriesStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import AdminAlert from '../components/AdminAlert.vue';
+import AdminPageHeader from '../components/AdminPageHeader.vue';
 
 const categoriesStore = useCategoriesStore();
 
@@ -58,13 +59,11 @@ async function handleRecalculateSlugs() {
 
 <template>
   <div>
-    <!-- Page Header -->
-    <div class="mb-8 flex items-start justify-between">
-      <div>
-        <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">Kategorien</h1>
-        <p class="font-body font-normal text-vsg-blue-600 mt-1">Verwalte alle Kategorien</p>
-      </div>
-      <div class="flex gap-3">
+    <AdminPageHeader
+      title="Kategorien"
+      description="Verwalte alle Kategorien"
+    >
+      <template #actions>
         <button
           class="px-6 py-2.5 border-2 border-vsg-blue-900 text-vsg-blue-900 font-display text-sm tracking-wider rounded-lg hover:bg-vsg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           :disabled="categoriesStore.isRecalculating"
@@ -78,8 +77,8 @@ async function handleRecalculateSlugs() {
         >
           Kategorie hinzufügen
         </router-link>
-      </div>
-    </div>
+      </template>
+    </AdminPageHeader>
 
     <!-- Loading State -->
     <div

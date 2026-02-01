@@ -3,7 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useEventsStore, type EventItem } from '../stores/eventsStore';
 import EventForm from '../components/forms/EventForm.vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AdminPageHeader from '../components/AdminPageHeader.vue';
 
 const route = useRoute();
 const eventsStore = useEventsStore();
@@ -14,7 +14,6 @@ const isLoading = ref(false);
 const isEditMode = computed(() => !!route.params.id);
 const pageTitle = computed(() => (isEditMode.value ? 'VERANSTALTUNG BEARBEITEN' : 'VERANSTALTUNG ERSTELLEN'));
 const pageSubtitle = computed(() => (isEditMode.value ? 'Bearbeite die Veranstaltungsdaten' : 'Erstelle eine neue Veranstaltung'));
-const breadcrumbAction = computed(() => (isEditMode.value ? 'Bearbeiten' : 'Erstellen'));
 
 onMounted(async () => {
   if (isEditMode.value) {
@@ -28,25 +27,10 @@ onMounted(async () => {
 
 <template>
   <div>
-    <!-- Page Header -->
-    <div class="mb-8">
-      <div class="flex items-center gap-2 text-sm font-body font-normal text-gray-500 mb-2">
-        <router-link
-          to="/admin/termine"
-          class="hover:text-vsg-blue-600 transition-colors"
-        >
-          Veranstaltungen
-        </router-link>
-        <FontAwesomeIcon icon="chevron-right" />
-        <span class="text-vsg-blue-600">{{ breadcrumbAction }}</span>
-      </div>
-      <h1 class="font-display text-4xl tracking-wider text-vsg-blue-900">
-        {{ pageTitle }}
-      </h1>
-      <p class="font-body font-normal text-vsg-blue-600 mt-1">
-        {{ pageSubtitle }}
-      </p>
-    </div>
+    <AdminPageHeader
+      :title="pageTitle"
+      :description="pageSubtitle"
+    />
 
     <!-- Loading State -->
     <div
