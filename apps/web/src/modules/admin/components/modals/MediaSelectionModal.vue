@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useMediaStore, type MediaItem } from '../../stores/mediaStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import AdminLoadingState from '../AdminLoadingState.vue';
 
 defineProps<{
   isOpen: boolean;
@@ -93,12 +94,7 @@ function handleOverlayClick(event: MouseEvent) {
           </div>
 
           <!-- Loading State -->
-          <div
-            v-if="mediaStore.isLoading"
-            class="flex items-center justify-center py-12"
-          >
-            <div class="text-vsg-blue-600 font-body">Laden...</div>
-          </div>
+          <AdminLoadingState v-if="mediaStore.isLoading" />
 
           <!-- Error State -->
           <div

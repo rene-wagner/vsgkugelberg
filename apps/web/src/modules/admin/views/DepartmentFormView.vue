@@ -13,6 +13,7 @@ import DepartmentTrainingEditor from '../components/DepartmentTrainingEditor.vue
 import DepartmentLocationsEditor from '../components/DepartmentLocationsEditor.vue';
 import DepartmentTrainersEditor from '../components/DepartmentTrainersEditor.vue';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
+import AdminLoadingState from '../components/AdminLoadingState.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -131,12 +132,7 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
     />
 
     <!-- Loading State -->
-    <div
-      v-if="isLoading"
-      class="flex items-center justify-center py-12"
-    >
-      <div class="text-vsg-blue-600 font-body">Laden...</div>
-    </div>
+    <AdminLoadingState v-if="isLoading" />
 
     <!-- Content with Tabs -->
     <div v-else>

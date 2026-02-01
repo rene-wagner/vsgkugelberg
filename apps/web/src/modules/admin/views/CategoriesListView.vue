@@ -4,6 +4,7 @@ import { useCategoriesStore, type Category } from '../stores/categoriesStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import AdminAlert from '../components/AdminAlert.vue';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
+import AdminLoadingState from '../components/AdminLoadingState.vue';
 
 const categoriesStore = useCategoriesStore();
 
@@ -81,12 +82,7 @@ async function handleRecalculateSlugs() {
     </AdminPageHeader>
 
     <!-- Loading State -->
-    <div
-      v-if="categoriesStore.isLoading"
-      class="flex items-center justify-center py-12"
-    >
-      <div class="text-vsg-blue-600 font-body">Laden...</div>
-    </div>
+    <AdminLoadingState v-if="categoriesStore.isLoading" />
 
     <!-- Error State -->
     <AdminAlert

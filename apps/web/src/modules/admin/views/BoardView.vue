@@ -7,6 +7,7 @@ import BoardMembersForm from '../components/forms/BoardMembersForm.vue';
 import BoardNoteForm from '../components/forms/BoardNoteForm.vue';
 import AdminAlert from '../components/AdminAlert.vue';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
+import AdminLoadingState from '../components/AdminLoadingState.vue';
 
 const boardContentStore = useBoardContentStore();
 
@@ -51,12 +52,7 @@ onMounted(async () => {
     />
 
     <!-- Loading State -->
-    <div
-      v-if="boardContentStore.isLoading && !boardContentStore.boardContent"
-      class="flex items-center justify-center py-12"
-    >
-      <div class="text-vsg-blue-600 font-body">Laden...</div>
-    </div>
+    <AdminLoadingState v-if="boardContentStore.isLoading && !boardContentStore.boardContent" />
 
     <!-- Content with Tabs -->
     <div v-else-if="boardContentStore.boardContent">

@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import { useCategoriesStore, type Category } from '../stores/categoriesStore';
 import CategoryForm from '../components/forms/CategoryForm.vue';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
+import AdminLoadingState from '../components/AdminLoadingState.vue';
 
 const route = useRoute();
 const categoriesStore = useCategoriesStore();
@@ -35,12 +36,7 @@ onMounted(async () => {
     />
 
     <!-- Loading State -->
-    <div
-      v-if="isLoading"
-      class="flex items-center justify-center py-12"
-    >
-      <div class="text-vsg-blue-600 font-body">Laden...</div>
-    </div>
+    <AdminLoadingState v-if="isLoading" />
 
     <!-- Form -->
     <CategoryForm

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VsgPagination from './VsgPagination.vue';
 import AdminAlert from '@/modules/admin/components/AdminAlert.vue';
 import AdminPageHeader from '@/modules/admin/components/AdminPageHeader.vue';
+import AdminLoadingState from '@/modules/admin/components/AdminLoadingState.vue';
 import type { Column, ActionButton, PaginationMeta } from '@/shared/types/table.types';
 
 interface Props {
@@ -190,14 +191,12 @@ function handlePageChange(page: number): void {
     </AdminPageHeader>
 
     <!-- Loading State -->
-    <div
+    <slot
       v-if="loading"
-      class="flex items-center justify-center py-12"
+      name="loading"
     >
-      <slot name="loading">
-        <div class="text-vsg-blue-600 font-body">Laden...</div>
-      </slot>
-    </div>
+      <AdminLoadingState />
+    </slot>
 
     <!-- Error State -->
     <AdminAlert

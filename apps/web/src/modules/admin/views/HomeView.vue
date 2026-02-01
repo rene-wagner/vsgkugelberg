@@ -9,6 +9,7 @@ import HomepagePostsForm from '../components/forms/HomepagePostsForm.vue';
 import HomepageCtaForm from '../components/forms/HomepageCtaForm.vue';
 import AdminAlert from '../components/AdminAlert.vue';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
+import AdminLoadingState from '../components/AdminLoadingState.vue';
 
 const homepageContentStore = useHomepageContentStore();
 
@@ -54,12 +55,7 @@ onMounted(async () => {
     />
 
     <!-- Loading State -->
-    <div
-      v-if="homepageContentStore.isLoading && !homepageContentStore.homepageContent"
-      class="flex items-center justify-center py-12"
-    >
-      <div class="text-vsg-blue-600 font-body">Laden...</div>
-    </div>
+    <AdminLoadingState v-if="homepageContentStore.isLoading && !homepageContentStore.homepageContent" />
 
     <!-- Content with Tabs -->
     <div v-else-if="homepageContentStore.homepageContent">

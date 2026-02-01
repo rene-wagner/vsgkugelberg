@@ -10,6 +10,7 @@ import HistoryAchievementsForm from '../components/forms/HistoryAchievementsForm
 import HistoryCtaForm from '../components/forms/HistoryCtaForm.vue';
 import AdminAlert from '../components/AdminAlert.vue';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
+import AdminLoadingState from '../components/AdminLoadingState.vue';
 
 const historyStore = useHistoryStore();
 
@@ -56,12 +57,7 @@ onMounted(async () => {
     />
 
     <!-- Loading State -->
-    <div
-      v-if="historyStore.isLoading && !historyStore.history"
-      class="flex items-center justify-center py-12"
-    >
-      <div class="text-vsg-blue-600 font-body">Laden...</div>
-    </div>
+    <AdminLoadingState v-if="historyStore.isLoading && !historyStore.history" />
 
     <!-- Content with Tabs -->
     <div v-else-if="historyStore.history">

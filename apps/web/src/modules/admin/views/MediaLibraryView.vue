@@ -8,6 +8,7 @@ import VsgInput from '@/shared/components/VsgInput.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import AdminAlert from '../components/AdminAlert.vue';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
+import AdminLoadingState from '../components/AdminLoadingState.vue';
 
 const mediaStore = useMediaStore();
 
@@ -146,12 +147,7 @@ async function executeRegenerateAll() {
     </div>
 
     <!-- Loading State -->
-    <div
-      v-if="mediaStore.isLoading && mediaStore.media.length === 0"
-      class="flex items-center justify-center py-12"
-    >
-      <div class="text-vsg-blue-600 font-body">Laden...</div>
-    </div>
+    <AdminLoadingState v-if="mediaStore.isLoading && mediaStore.media.length === 0" />
 
     <!-- Error State -->
     <AdminAlert
@@ -226,14 +222,12 @@ async function executeRegenerateAll() {
           </div>
 
           <!-- Loading State -->
-          <div
+          <AdminLoadingState
             v-else-if="mediaStore.isRegenerating"
-            class="text-center py-8"
-          >
-            <div class="w-12 h-12 border-4 border-vsg-blue-200 border-t-vsg-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-            <p class="font-body text-gray-600">Thumbnails werden regeneriert...</p>
-            <p class="font-body text-sm text-gray-500 mt-2">Bitte warten, dies kann einige Zeit dauern.</p>
-          </div>
+            padding="py-8"
+            message="Thumbnails werden regeneriert..."
+            hint="Bitte warten, dies kann einige Zeit dauern."
+          />
 
           <!-- Result State -->
           <div v-else-if="regenerateResult">

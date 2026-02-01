@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import { useNewsStore, type NewsItem } from '../stores/newsStore';
 import NewsForm from '../components/forms/NewsForm.vue';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
+import AdminLoadingState from '../components/AdminLoadingState.vue';
 
 const route = useRoute();
 const newsStore = useNewsStore();
@@ -33,12 +34,7 @@ onMounted(async () => {
     />
 
     <!-- Loading State -->
-    <div
-      v-if="isLoading"
-      class="flex items-center justify-center py-12"
-    >
-      <div class="text-vsg-blue-600 font-body">Laden...</div>
-    </div>
+    <AdminLoadingState v-if="isLoading" />
 
     <!-- Form -->
     <NewsForm

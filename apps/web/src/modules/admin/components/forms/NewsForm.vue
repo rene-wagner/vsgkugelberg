@@ -7,6 +7,7 @@ import { useAuthStore } from '@/modules/auth/stores/authStore';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 import ThumbnailSelector from '../ThumbnailSelector.vue';
 import AdminButton from '../AdminButton.vue';
+import AdminLoadingState from '../AdminLoadingState.vue';
 import type { MediaItem } from '../../stores/mediaStore';
 
 const props = defineProps<{
@@ -246,12 +247,10 @@ function updateThumbnail(media: MediaItem | null) {
     <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
       <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">Kategorien</h2>
 
-      <div
+      <AdminLoadingState
         v-if="categoriesStore.isLoading"
-        class="text-vsg-blue-600 font-body text-sm"
-      >
-        Laden...
-      </div>
+        padding="py-4"
+      />
       <div
         v-else-if="categoriesStore.categories.length === 0"
         class="text-gray-500 font-body text-sm"
