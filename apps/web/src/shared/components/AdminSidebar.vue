@@ -44,6 +44,8 @@ const navGroups: NavGroup[] = [
           { name: 'Geschichte', path: '/admin/verein/geschichte' },
           { name: 'Vorstand', path: '/admin/verein/vorstand' },
           { name: 'Satzung', path: '/admin/verein/satzung' },
+          { name: 'Beitragsordnung', path: '/admin/verein/beitragsordnung' },
+          { name: 'Sportversicherung', path: '/admin/verein/sportversicherung' },
           { name: 'Mitgliedschaft', path: '/admin/verein/mitgliedschaft' },
         ],
       },

@@ -10,6 +10,9 @@ import {
   seedHistory,
   seedHomepage,
   seedBoardContent,
+  seedStatutes,
+  seedMembershipFee,
+  seedSportInsurance,
   seedMediaFolders,
   seedMediaFiles,
   linkContactPersonImages,
@@ -136,7 +139,16 @@ async function main(): Promise<void> {
     // 9. Seed board content
     await seedBoardContent(pgClient);
 
-    // 10. Run migrators (categories and posts)
+    // 10. Seed statutes
+    await seedStatutes(pgClient);
+
+    // 11. Seed membership fee
+    await seedMembershipFee(pgClient);
+
+    // 12. Seed sport insurance
+    await seedSportInsurance(pgClient);
+
+    // 13. Run migrators (categories and posts)
     const categoryMap = await migrateCategories(mysqlConn, pgClient);
     results.categories = categoryMap.size;
     results.posts = await migratePosts(mysqlConn, pgClient, categoryMap);

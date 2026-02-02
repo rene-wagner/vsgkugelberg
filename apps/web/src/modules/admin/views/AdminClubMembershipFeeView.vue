@@ -1,65 +1,65 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue';
-import { useStatutesStore } from '../stores/statutesStore';
+import { useMembershipFeeStore } from '../stores/membershipFeeStore';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
 import AdminLoadingState from '../components/AdminLoadingState.vue';
 import AdminAlert from '../components/AdminAlert.vue';
 import AdminButton from '../components/AdminButton.vue';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 
-const statutesStore = useStatutesStore();
+const membershipFeeStore = useMembershipFeeStore();
 
 const content = ref('');
 
 async function handleSave() {
-  await statutesStore.updateStatutes({ content: content.value });
+  await membershipFeeStore.updateMembershipFee({ content: content.value });
 }
 
-// Watch for statutes changes to update local content
+// Watch for membership fee changes to update local content
 watch(
-  () => statutesStore.statutes,
-  (newStatutes) => {
-    if (newStatutes) {
-      content.value = newStatutes.content;
+  () => membershipFeeStore.membershipFee,
+  (newMembershipFee) => {
+    if (newMembershipFee) {
+      content.value = newMembershipFee.content;
     }
   },
   { immediate: true },
 );
 
 onMounted(async () => {
-  await statutesStore.fetchStatutes();
+  await membershipFeeStore.fetchMembershipFee();
 });
 </script>
 
 <template>
   <div>
     <AdminPageHeader
-      title="SATZUNG"
-      description="Verwaltung der Vereinssatzung"
+      title="BEITRAGSORDNUNG"
+      description="Verwaltung der Beitragsordnung"
     />
 
     <!-- Success/Error Messages -->
     <AdminAlert
-      v-if="statutesStore.successMessage"
+      v-if="membershipFeeStore.successMessage"
       variant="success"
-      :message="statutesStore.successMessage"
+      :message="membershipFeeStore.successMessage"
       dismissible
       :auto-dismiss="5000"
       class="mb-6"
-      @dismiss="statutesStore.clearMessages"
+      @dismiss="membershipFeeStore.clearMessages"
     />
 
     <AdminAlert
-      v-if="statutesStore.error"
+      v-if="membershipFeeStore.error"
       variant="error"
-      :message="statutesStore.error"
+      :message="membershipFeeStore.error"
       dismissible
       class="mb-6"
-      @dismiss="statutesStore.clearMessages"
+      @dismiss="membershipFeeStore.clearMessages"
     />
 
     <!-- Loading State -->
-    <AdminLoadingState v-if="statutesStore.isLoading && !statutesStore.statutes" />
+    <AdminLoadingState v-if="membershipFeeStore.isLoading && !membershipFeeStore.membershipFee" />
 
     <!-- Content Editor -->
     <div
@@ -67,13 +67,13 @@ onMounted(async () => {
       class="max-w-4xl"
     >
       <div class="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
-        <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">SATZUNGSTEXT</h2>
+        <h2 class="font-display text-xl tracking-wider text-vsg-blue-900 mb-6">BEITRAGSORDNUNG</h2>
 
         <div class="mb-6">
           <label class="block font-body font-normal text-xs tracking-wider text-vsg-blue-600 uppercase mb-2"> Inhalt (Markdown) </label>
           <VsgMarkdownEditor
             v-model="content"
-            placeholder="Satzungstext eingeben..."
+            placeholder="Beitragsordnung eingeben..."
             min-height="500px"
           />
         </div>
@@ -87,11 +87,11 @@ onMounted(async () => {
       <div class="flex justify-end">
         <AdminButton
           size="large"
-          :disabled="statutesStore.isSaving"
-          :loading="statutesStore.isSaving"
+          :disabled="membershipFeeStore.isSaving"
+          :loading="membershipFeeStore.isSaving"
           @click="handleSave"
         >
-          {{ statutesStore.isSaving ? 'Speichern...' : 'Satzung speichern' }}
+          {{ membershipFeeStore.isSaving ? 'Speichern...' : 'Beitragsordnung speichern' }}
         </AdminButton>
       </div>
     </div>

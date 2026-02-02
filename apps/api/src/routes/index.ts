@@ -16,6 +16,9 @@ import { contactRouter } from './contact.routes';
 import { historyRouter } from './history.routes';
 import { homepageContentRouter } from './homepage-content.routes';
 import { boardContentRouter } from './board-content.routes';
+import { statutesRouter } from './statutes.routes';
+import { membershipFeeRouter } from './membership-fee.routes';
+import { sportInsuranceRouter } from './sport-insurance.routes';
 
 const router = Router();
 
@@ -35,5 +38,8 @@ router.use('/contact', contactRouter);
 router.use('/history', historyRouter);
 router.use('/homepage-content', homepageContentRouter);
 router.use('/board-content', boardContentRouter);
+router.use('/statutes', statutesRouter);
+router.use('/membership-fee', membershipFeeRouter);
+router.use('/sport-insurance', sportInsuranceRouter);
 
 export { router };

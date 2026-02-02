@@ -393,6 +393,33 @@ CREATE TABLE "BoardMember" (
 );
 
 -- CreateTable
+CREATE TABLE "StatutesContent" (
+    "id" INTEGER NOT NULL DEFAULT 1,
+    "content" TEXT NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "StatutesContent_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MembershipFeeContent" (
+    "id" INTEGER NOT NULL DEFAULT 1,
+    "content" TEXT NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "MembershipFeeContent_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "SportInsuranceContent" (
+    "id" INTEGER NOT NULL DEFAULT 1,
+    "content" TEXT NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "SportInsuranceContent_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_CategoryToPost" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL,

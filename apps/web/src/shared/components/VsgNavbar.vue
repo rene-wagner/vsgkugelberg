@@ -26,6 +26,8 @@ const vereinItems: MenuItem[] = [
   { label: 'Geschichte', to: '/verein/geschichte' },
   { label: 'Vorstand', to: '/verein/vorstand' },
   { label: 'Satzung', to: '/verein/satzung' },
+  { label: 'Beitragsordnung', to: '/verein/beitragsordnung' },
+  { label: 'Sportversicherung', to: '/verein/sportversicherung' },
   { label: 'Mitgliedschaft', to: '/verein/mitgliedschaft' },
 ];
 

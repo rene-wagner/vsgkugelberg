@@ -437,3 +437,21 @@ model BoardMember {
   @@index([boardContentId])
   @@index([contactPersonId])
 }
+
+model StatutesContent {
+  id        Int      @id @default(1)
+  content   String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+model MembershipFeeContent {
+  id        Int      @id @default(1)
+  content   String   @db.Text
+  updatedAt DateTime @updatedAt
+}
+
+model SportInsuranceContent {
+  id        Int      @id @default(1)
+  content   String   @db.Text
+  updatedAt DateTime @updatedAt
+}

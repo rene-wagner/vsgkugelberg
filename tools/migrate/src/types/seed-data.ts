@@ -162,6 +162,18 @@ export interface SeedBoardContent {
   note: string;
 }
 
+export interface SeedStatutes {
+  content: string;
+}
+
+export interface SeedMembershipFee {
+  content: string;
+}
+
+export interface SeedSportInsurance {
+  content: string;
+}
+
 // Media migration types
 export type MediaFolderMap = Map<string, number>; // folderName → folderId
 export type MediaFileMap = Map<string, number>;   // originalFilename → mediaId

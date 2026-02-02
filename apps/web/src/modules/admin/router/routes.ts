@@ -37,6 +37,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../views/AdminClubMembershipView.vue'),
       },
       {
+        path: 'verein/beitragsordnung',
+        name: 'admin-verein-beitragsordnung',
+        component: () => import('../views/AdminClubMembershipFeeView.vue'),
+      },
+      {
+        path: 'verein/sportversicherung',
+        name: 'admin-verein-sportversicherung',
+        component: () => import('../views/AdminClubSportInsuranceView.vue'),
+      },
+      {
         path: 'benutzer',
         name: 'admin-benutzer',
         component: () => import('../views/AdminUserOverviewView.vue'),

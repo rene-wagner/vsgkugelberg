@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 import { useDefaultContactPersonsStore, type ContactPerson } from '../stores/contactPersonsStore';
 import ContactForm from '../components/ContactForm.vue';
 import VsgSecureContact from '../components/VsgSecureContact.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
+const route = useRoute();
 const contactPersonsStore = useDefaultContactPersonsStore();
 const selectedContactPersonId = ref<number | null>(null);
 
@@ -15,8 +17,21 @@ const selectedContactPerson = computed<ContactPerson | null>(() => {
   return contactPersonsStore.contactPersons.find((cp) => cp.id === selectedContactPersonId.value) || null;
 });
 
-onMounted(() => {
-  contactPersonsStore.fetchContactPersons();
+onMounted(async () => {
+  await contactPersonsStore.fetchContactPersons();
+
+  // Check for person query parameter to pre-select contact person
+  const personIdParam = route.query.person;
+  if (personIdParam) {
+    const personId = Number(personIdParam);
+    if (!isNaN(personId) && personId > 0) {
+      // Verify contact person exists
+      const exists = contactPersonsStore.contactPersons.some((cp) => cp.id === personId);
+      if (exists) {
+        selectedContactPersonId.value = personId;
+      }
+    }
+  }
 });
 
 function formatOptionLabel(cp: ContactPerson): string {

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import { useStatutesStore } from '../../stores/statutesStore';
+import { useSportInsuranceStore } from '../../stores/sportInsuranceStore';
 import VsgMarkdownRenderer from '@/shared/components/VsgMarkdownRenderer.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-const statutesStore = useStatutesStore();
+const sportInsuranceStore = useSportInsuranceStore();
 
 onMounted(async () => {
-  await statutesStore.fetchStatutes();
+  await sportInsuranceStore.fetchSportInsurance();
 });
 </script>
 
@@ -16,8 +16,8 @@ onMounted(async () => {
     <!-- Header Section -->
     <section class="bg-vsg-blue-900 pb-20 pt-40">
       <div class="mx-auto max-w-4xl px-6 text-center">
-        <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">SATZUNG</h1>
-        <p class="mt-4 font-body text-lg text-vsg-blue-200">Die Vereinssatzung des VSG Kugelberg e.V.</p>
+        <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">SPORTVERSICHERUNG</h1>
+        <p class="mt-4 font-body text-lg text-vsg-blue-200">Informationen zur Sportversicherung des VSG Kugelberg e.V.</p>
       </div>
     </section>
 
@@ -28,7 +28,7 @@ onMounted(async () => {
         <div class="mb-12">
           <div class="rounded-xl border border-vsg-blue-100 bg-vsg-blue-50 p-6">
             <p class="font-body text-lg text-vsg-blue-700">
-              <strong class="text-vsg-blue-900">Fragen zur Satzung?</strong>
+              <strong class="text-vsg-blue-900">Fragen zur Sportversicherung?</strong>
               Wenden Sie sich gerne an unseren Vorstand über die
               <RouterLink
                 to="/kontakt"
@@ -42,7 +42,7 @@ onMounted(async () => {
 
         <!-- Loading State -->
         <div
-          v-if="statutesStore.isLoading"
+          v-if="sportInsuranceStore.isLoading"
           class="flex justify-center py-12"
         >
           <FontAwesomeIcon
@@ -54,26 +54,26 @@ onMounted(async () => {
 
         <!-- Error State -->
         <div
-          v-else-if="statutesStore.error"
+          v-else-if="sportInsuranceStore.error"
           class="rounded-xl border border-red-200 bg-red-50 p-6 text-center"
         >
-          <p class="font-body text-red-600">{{ statutesStore.error }}</p>
+          <p class="font-body text-red-600">{{ sportInsuranceStore.error }}</p>
         </div>
 
         <!-- No Content State -->
         <div
-          v-else-if="!statutesStore.statutes?.content"
+          v-else-if="!sportInsuranceStore.sportInsurance?.content"
           class="rounded-xl border border-vsg-blue-200 bg-vsg-blue-50 p-6 text-center"
         >
-          <p class="font-body text-vsg-blue-600">Die Satzung wird derzeit aktualisiert.</p>
+          <p class="font-body text-vsg-blue-600">Die Sportversicherungsinformationen werden derzeit aktualisiert.</p>
         </div>
 
-        <!-- Statutes Content -->
+        <!-- Sport Insurance Content -->
         <div
           v-else
           class="prose prose-lg max-w-none"
         >
-          <VsgMarkdownRenderer :content="statutesStore.statutes.content" />
+          <VsgMarkdownRenderer :content="sportInsuranceStore.sportInsurance.content" />
         </div>
       </div>
     </section>
