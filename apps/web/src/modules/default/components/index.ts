@@ -2,6 +2,7 @@ export * from './ContactForm.vue';
 export * from './CtaSection.vue';
 export * from './DepartmentCard.vue';
 export * from './DepartmentsSection.vue';
+export * from './VsgContentSection.vue';
 export * from './VsgHeroSection.vue';
 export * from './NewsCardFeatured.vue';
 export * from './NewsCardListItem.vue';
