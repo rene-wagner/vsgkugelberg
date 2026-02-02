@@ -8,7 +8,7 @@ import HistoryDevelopmentForm from '../components/forms/HistoryDevelopmentForm.v
 import HistoryFestivalsForm from '../components/forms/HistoryFestivalsForm.vue';
 import HistoryAchievementsForm from '../components/forms/HistoryAchievementsForm.vue';
 import HistoryCtaForm from '../components/forms/HistoryCtaForm.vue';
-import AdminAlert from '../components/AdminAlert.vue';
+import { VsgAlert } from '@/shared/components';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
 import AdminLoadingState from '../components/AdminLoadingState.vue';
 
@@ -38,7 +38,7 @@ onMounted(async () => {
     />
 
     <!-- Success/Error Messages -->
-    <AdminAlert
+    <VsgAlert
       v-if="historyStore.successMessage"
       variant="success"
       :message="historyStore.successMessage"
@@ -47,7 +47,7 @@ onMounted(async () => {
       @dismiss="historyStore.clearMessages"
     />
 
-    <AdminAlert
+    <VsgAlert
       v-if="historyStore.error"
       variant="error"
       :message="historyStore.error"

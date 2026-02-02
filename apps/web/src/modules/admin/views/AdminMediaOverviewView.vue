@@ -6,7 +6,7 @@ import MediaUploadZone from '../components/MediaUploadZone.vue';
 import MediaGallery from '../components/MediaGallery.vue';
 import VsgInput from '@/shared/components/VsgInput.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import AdminAlert from '../components/AdminAlert.vue';
+import { VsgAlert } from '@/shared/components';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
 import AdminLoadingState from '../components/AdminLoadingState.vue';
 
@@ -150,7 +150,7 @@ async function executeRegenerateAll() {
     <AdminLoadingState v-if="mediaStore.isLoading && mediaStore.media.length === 0" />
 
     <!-- Error State -->
-    <AdminAlert
+    <VsgAlert
       v-else-if="mediaStore.error"
       variant="error"
       :message="mediaStore.error"

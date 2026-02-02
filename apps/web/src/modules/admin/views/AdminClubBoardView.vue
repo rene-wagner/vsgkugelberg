@@ -5,7 +5,7 @@ import VsgTabNav, { type TabDefinition } from '@/shared/components/VsgTabNav.vue
 import BoardHeroForm from '../components/forms/BoardHeroForm.vue';
 import BoardMembersForm from '../components/forms/BoardMembersForm.vue';
 import BoardNoteForm from '../components/forms/BoardNoteForm.vue';
-import AdminAlert from '../components/AdminAlert.vue';
+import { VsgAlert } from '@/shared/components';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
 import AdminLoadingState from '../components/AdminLoadingState.vue';
 
@@ -32,7 +32,7 @@ onMounted(async () => {
     />
 
     <!-- Success/Error Messages -->
-    <AdminAlert
+    <VsgAlert
       v-if="boardContentStore.successMessage"
       variant="success"
       :message="boardContentStore.successMessage"
@@ -42,7 +42,7 @@ onMounted(async () => {
       @dismiss="boardContentStore.clearMessages"
     />
 
-    <AdminAlert
+    <VsgAlert
       v-if="boardContentStore.error"
       variant="error"
       :message="boardContentStore.error"

@@ -2,7 +2,7 @@
 import { computed, ref, onMounted, onUnmounted, watch } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-interface AdminAlertProps {
+interface VsgAlertProps {
   /**
    * Alert visual variant
    * - success: Green background for success messages
@@ -30,7 +30,7 @@ interface AdminAlertProps {
   showIcon?: boolean;
 }
 
-const props = withDefaults(defineProps<AdminAlertProps>(), {
+const props = withDefaults(defineProps<VsgAlertProps>(), {
   variant: 'info',
   dismissible: false,
   autoDismiss: false,
@@ -137,7 +137,7 @@ const containerClasses = computed(() => {
  * Compute text classes based on variant
  */
 const textClasses = computed(() => {
-  const classes = ['text-sm', 'font-body'];
+  const classes = ['font-body'];
 
   switch (props.variant) {
     case 'success':
@@ -233,7 +233,7 @@ const dismissButtonClasses = computed(() => {
       v-if="dismissible"
       type="button"
       :class="dismissButtonClasses"
-      aria-label="Schliessen"
+      aria-label="Schließen"
       @click="handleDismiss"
     >
       <FontAwesomeIcon icon="xmark" />

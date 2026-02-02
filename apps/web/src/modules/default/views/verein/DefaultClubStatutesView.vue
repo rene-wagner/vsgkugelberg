@@ -5,6 +5,7 @@ import VsgMarkdownRenderer from '@/shared/components/VsgMarkdownRenderer.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VsgHeroSection from '../../components/VsgHeroSection.vue';
 import VsgContentSection from '../../components/VsgContentSection.vue';
+import VsgAlert from '@/shared/components/VsgAlert.vue';
 
 const statutesStore = useStatutesStore();
 
@@ -22,21 +23,18 @@ onMounted(async () => {
     />
 
     <VsgContentSection>
-      <!-- Contact Note -->
-      <div class="mb-12">
-        <div class="rounded-xl border border-vsg-blue-100 bg-vsg-blue-50 p-6">
-          <p class="font-body text-lg text-vsg-blue-700">
-            <strong class="text-vsg-blue-900">Fragen zur Satzung?</strong>
-            Wenden Sie sich gerne an unseren Vorstand über die
-            <RouterLink
-              to="/kontakt"
-              class="text-vsg-gold-600 underline hover:text-vsg-gold-700"
-            >
-              Kontaktseite </RouterLink
-            >.
-          </p>
-        </div>
-      </div>
+      <VsgAlert variant="info">
+        <p class="font-body text-lg text-vsg-blue-700">
+          <strong class="text-vsg-blue-900">Fragen zur Satzung?</strong>
+          Wenden Sie sich gerne an unseren Vorstand über die
+          <RouterLink
+            to="/kontakt"
+            class="text-vsg-gold-600 underline hover:text-vsg-gold-700"
+          >
+            Kontaktseite </RouterLink
+          >.
+        </p>
+      </VsgAlert>
 
       <!-- Loading State -->
       <div

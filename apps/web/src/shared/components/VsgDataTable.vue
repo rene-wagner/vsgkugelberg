@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import VsgPagination from './VsgPagination.vue';
-import AdminAlert from '@/modules/admin/components/AdminAlert.vue';
+import VsgAlert from './VsgAlert.vue';
 import AdminPageHeader from '@/modules/admin/components/AdminPageHeader.vue';
 import AdminLoadingState from '@/modules/admin/components/AdminLoadingState.vue';
 import type { Column, ActionButton, PaginationMeta } from '@/shared/types/table.types';
@@ -199,7 +199,7 @@ function handlePageChange(page: number): void {
     </slot>
 
     <!-- Error State -->
-    <AdminAlert
+    <VsgAlert
       v-else-if="error"
       variant="error"
       class="mb-6"
@@ -210,7 +210,7 @@ function handlePageChange(page: number): void {
       >
         <span class="text-sm text-red-600 font-body">{{ error }}</span>
       </slot>
-    </AdminAlert>
+    </VsgAlert>
 
     <!-- Table -->
     <div

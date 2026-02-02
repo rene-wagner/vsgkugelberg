@@ -3,7 +3,7 @@ import { ref, onMounted, watch } from 'vue';
 import { useSportInsuranceStore } from '../stores/sportInsuranceStore';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
 import AdminLoadingState from '../components/AdminLoadingState.vue';
-import AdminAlert from '../components/AdminAlert.vue';
+import { VsgAlert } from '@/shared/components';
 import AdminButton from '../components/AdminButton.vue';
 import VsgMarkdownEditor from '@/shared/components/VsgMarkdownEditor.vue';
 
@@ -39,7 +39,7 @@ onMounted(async () => {
     />
 
     <!-- Success/Error Messages -->
-    <AdminAlert
+    <VsgAlert
       v-if="sportInsuranceStore.successMessage"
       variant="success"
       :message="sportInsuranceStore.successMessage"
@@ -49,7 +49,7 @@ onMounted(async () => {
       @dismiss="sportInsuranceStore.clearMessages"
     />
 
-    <AdminAlert
+    <VsgAlert
       v-if="sportInsuranceStore.error"
       variant="error"
       :message="sportInsuranceStore.error"

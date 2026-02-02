@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useBoardContentStore } from '../../stores/boardContentStore';
 import VsgHeroSection from '../../components/VsgHeroSection.vue';
 import VsgContentSection from '../../components/VsgContentSection.vue';
+import VsgAlert from '@/shared/components/VsgAlert.vue';
 
 const boardContentStore = useBoardContentStore();
 
@@ -56,6 +57,11 @@ function getBadgeColor(index: number): string {
         v-else-if="boardContentStore.boardContent"
         class="space-y-12"
       >
+        <VsgAlert
+          :message="boardContentStore.boardContent.note"
+          variant="info"
+        />
+
         <!-- Introduction -->
         <div>
           <h2 class="font-display text-2xl tracking-wider text-vsg-blue-900 md:text-3xl">
@@ -124,15 +130,6 @@ function getBadgeColor(index: number): string {
         >
           <div class="rounded-xl bg-gray-50 border border-gray-200 p-8 text-center">
             <p class="font-body text-gray-600">Derzeit sind keine Vorstandsmitglieder hinterlegt.</p>
-          </div>
-        </div>
-
-        <!-- Contact Note -->
-        <div class="border-t border-vsg-blue-100 pt-12">
-          <div class="rounded-xl bg-vsg-blue-50 border border-vsg-blue-100 p-6">
-            <p class="font-body text-lg text-vsg-blue-700 whitespace-pre-line">
-              {{ boardContentStore.boardContent.note }}
-            </p>
           </div>
         </div>
       </div>

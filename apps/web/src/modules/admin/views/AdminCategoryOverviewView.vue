@@ -2,7 +2,7 @@
 import { computed, onMounted } from 'vue';
 import { useCategoriesStore, type Category } from '../stores/categoriesStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import AdminAlert from '../components/AdminAlert.vue';
+import { VsgAlert } from '@/shared/components';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
 import AdminLoadingState from '../components/AdminLoadingState.vue';
 
@@ -85,7 +85,7 @@ async function handleRecalculateSlugs() {
     <AdminLoadingState v-if="categoriesStore.isLoading" />
 
     <!-- Error State -->
-    <AdminAlert
+    <VsgAlert
       v-else-if="categoriesStore.error"
       variant="error"
       :message="categoriesStore.error"
@@ -93,7 +93,7 @@ async function handleRecalculateSlugs() {
     />
 
     <!-- Success State -->
-    <AdminAlert
+    <VsgAlert
       v-if="categoriesStore.successMessage"
       variant="success"
       :message="categoriesStore.successMessage"

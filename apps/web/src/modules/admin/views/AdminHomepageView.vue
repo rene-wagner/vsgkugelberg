@@ -7,7 +7,7 @@ import HomepageStatsForm from '../components/forms/HomepageStatsForm.vue';
 import HomepageDepartmentsForm from '../components/forms/HomepageDepartmentsForm.vue';
 import HomepagePostsForm from '../components/forms/HomepagePostsForm.vue';
 import HomepageCtaForm from '../components/forms/HomepageCtaForm.vue';
-import AdminAlert from '../components/AdminAlert.vue';
+import { VsgAlert } from '@/shared/components';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
 import AdminLoadingState from '../components/AdminLoadingState.vue';
 
@@ -36,7 +36,7 @@ onMounted(async () => {
     />
 
     <!-- Success/Error Messages -->
-    <AdminAlert
+    <VsgAlert
       v-if="homepageContentStore.successMessage"
       variant="success"
       :message="homepageContentStore.successMessage"
@@ -45,7 +45,7 @@ onMounted(async () => {
       @dismiss="homepageContentStore.clearMessages"
     />
 
-    <AdminAlert
+    <VsgAlert
       v-if="homepageContentStore.error"
       variant="error"
       :message="homepageContentStore.error"
