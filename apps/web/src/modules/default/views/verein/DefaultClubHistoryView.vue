@@ -4,6 +4,7 @@ import { VsgFactCard, VsgTimeline, VsgChart, VsgAccordion, VsgSuccessList, VsgMa
 import CtaSection from '../../components/CtaSection.vue';
 import { useHistoryStore } from '../../stores/historyStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import HeroSection from '../../components/HeroSection.vue';
 
 const historyStore = useHistoryStore();
 
@@ -99,35 +100,12 @@ onMounted(async () => {
 
     <template v-else-if="historyStore.history">
       <!-- Hero Section -->
-      <header class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
-        <!-- Background gradient overlay -->
-        <div class="absolute inset-0 bg-linear-to-br from-vsg-blue-900 via-vsg-blue-800/50 to-transparent"></div>
-
-        <!-- Decorative elements -->
-        <div class="absolute top-1/4 right-0 w-96 h-96 bg-vsg-gold-500/10 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-1/4 left-0 w-80 h-80 bg-vsg-blue-500/20 rounded-full blur-3xl"></div>
-
-        <div class="relative z-10 text-center px-6 max-w-4xl animate-fadeIn">
-          <span class="inline-block font-body text-sm tracking-[0.6em] text-vsg-gold-400 uppercase mb-4 border border-vsg-gold-500/30 px-6 py-2">
-            Tradition seit 1985
-          </span>
-          <h1 class="font-display text-7xl md:text-9xl lg:text-[12rem] text-white tracking-tight leading-none mb-6 text-glow uppercase">
-            {{ historyStore.history.heroHeadline }}
-          </h1>
-          <div class="font-body text-vsg-blue-200 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-            <VsgMarkdownRenderer :content="historyStore.history.heroSubHeadline" />
-          </div>
-        </div>
-
-        <!-- Scroll indicator -->
-        <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce z-20">
-          <FontAwesomeIcon
-            icon="arrow-down"
-            class="text-vsg-gold-400"
-          />
-        </div>
-      </header>
-
+      <HeroSection
+        :headline="historyStore.history.heroHeadline"
+        :description="historyStore.history.heroSubHeadline"
+        tag="Tradition seit 1985"
+      />
+      
       <!-- Section: Founding (White Background) -->
       <section
         id="founding"
@@ -144,7 +122,7 @@ onMounted(async () => {
               <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 uppercase">
                 {{ historyStore.history.foundingHeadline }}
               </h2>
-              <div class="font-body text-gray-600 text-lg leading-relaxed">
+              <div class="font-body text-vsg-blue-700 text-lg leading-relaxed">
                 <VsgMarkdownRenderer :content="historyStore.history.foundingDescription" />
               </div>
 
@@ -184,7 +162,7 @@ onMounted(async () => {
             <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 mb-4 uppercase">
               {{ historyStore.history.developmentHeadline }}
             </h2>
-            <div class="font-body text-gray-600 max-w-2xl mx-auto text-lg">
+            <div class="font-body text-vsg-blue-700 max-w-2xl mx-auto text-lg">
               <VsgMarkdownRenderer :content="historyStore.history.developmentDescription" />
             </div>
           </div>
@@ -230,7 +208,7 @@ onMounted(async () => {
             <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 mt-2 uppercase">
               {{ historyStore.history.festivalsHeadline }}
             </h2>
-            <p class="font-body text-gray-600 mt-4 max-w-2xl mx-auto text-lg">
+            <p class="font-body text-vsg-blue-700 mt-4 max-w-2xl mx-auto text-lg">
               {{ historyStore.history.festivalsDescription }}
             </p>
           </div>
@@ -244,7 +222,7 @@ onMounted(async () => {
               <h4 class="font-display text-2xl text-vsg-blue-900 tracking-widest uppercase">
                 {{ item.headline }}
               </h4>
-              <p class="font-body text-base text-gray-600 mt-4 leading-relaxed">
+              <p class="font-body text-base text-vsg-blue-700 mt-4 leading-relaxed">
                 {{ item.text }}
               </p>
             </div>

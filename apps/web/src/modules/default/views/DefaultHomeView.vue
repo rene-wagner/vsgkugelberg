@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import HeroSection from '../components/HeroSection.vue';
 import StatsSection from '../components/StatsSection.vue';
@@ -9,7 +9,7 @@ import CtaSection from '../components/CtaSection.vue';
 import { useHomepageContentStore } from '../stores/homepageContentStore';
 
 const homepageContentStore = useHomepageContentStore();
-const { homepageContent, isLoading, error } = storeToRefs(homepageContentStore);
+const { homepageContent } = storeToRefs(homepageContentStore);
 
 onMounted(() => {
   homepageContentStore.fetchHomepageContent();
@@ -24,18 +24,22 @@ onMounted(() => {
       :tag="homepageContent?.heroTag"
       :logo="homepageContent?.heroLogo ?? null"
     />
+
     <StatsSection :stats="homepageContent?.stats" />
+
     <DepartmentsSection
       :headline="homepageContent?.departmentsHeadline"
       :description="homepageContent?.departmentsDescription"
       :subtitle="homepageContent?.departmentsSubtitle"
     />
+
     <NewsSection
       :headline="homepageContent?.postsHeadline"
       :description="homepageContent?.postsDescription"
       :subtitle="homepageContent?.postsSubtitle"
       :posts-count="homepageContent?.postsCount ?? 5"
     />
+
     <CtaSection
       :headline="homepageContent?.ctaHeadline"
       :description="homepageContent?.ctaDescription"

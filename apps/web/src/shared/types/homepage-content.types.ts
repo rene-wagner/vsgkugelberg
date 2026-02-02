@@ -9,6 +9,13 @@ export interface HomepageContent {
   heroHeadline: string;
   heroDescription: string;
   heroTag: string;
+  heroLogo?: {
+    id: number;
+    filename: string;
+    originalName: string;
+    path: string;
+    mimetype: string;
+  } | null;
   stats: HomepageStat[];
   departmentsHeadline: string;
   departmentsDescription: string;
