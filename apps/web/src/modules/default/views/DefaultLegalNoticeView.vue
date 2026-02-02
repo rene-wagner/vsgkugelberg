@@ -1,16 +1,14 @@
 <script setup lang="ts">
-// Static legal notice page - no reactive state needed
+import VsgHeroSection from '../components/VsgHeroSection.vue';
 </script>
 
 <template>
-  <div class="bg-white">
-    <!-- Header Section -->
-    <section class="bg-vsg-blue-900 pb-20 pt-40">
-      <div class="mx-auto max-w-4xl px-6 text-center">
-        <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">IMPRESSUM</h1>
-        <p class="mt-4 font-body text-lg text-vsg-blue-200">Angaben gemäß § 5 TMG</p>
-      </div>
-    </section>
+  <div>
+    <VsgHeroSection
+      headline="IMPRESSUM"
+      description="Angaben gemäß § 5 TMG"
+      min-height="70vh"
+    />
 
     <!-- Content Section -->
     <section class="py-16">

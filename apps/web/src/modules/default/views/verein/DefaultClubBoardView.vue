@@ -2,6 +2,7 @@
 import { onMounted, computed } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useBoardContentStore } from '../../stores/boardContentStore';
+import VsgHeroSection from '../../components/VsgHeroSection.vue';
 
 const boardContentStore = useBoardContentStore();
 
@@ -25,18 +26,12 @@ function getBadgeColor(index: number): string {
 </script>
 
 <template>
-  <div class="bg-white">
-    <!-- Header Section -->
-    <section class="bg-vsg-blue-900 pb-20 pt-40">
-      <div class="mx-auto max-w-4xl px-6 text-center">
-        <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">
-          {{ boardContentStore.boardContent?.headline || 'VORSTAND' }}
-        </h1>
-        <p class="mt-4 font-body text-lg text-vsg-blue-200">
-          {{ boardContentStore.boardContent?.description || 'Die Führung des VSG Kugelberg' }}
-        </p>
-      </div>
-    </section>
+  <div>
+    <VsgHeroSection
+      :headline="boardContentStore.boardContent?.headline || 'VORSTAND'"
+      :description="boardContentStore.boardContent?.description || 'Die Führung des VSG Kugelberg'"
+      min-height="70vh"
+    />
 
     <!-- Content Section -->
     <section class="py-16">

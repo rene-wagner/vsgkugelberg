@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
-import HeroSection from '../components/HeroSection.vue';
+import VsgHeroSection from '../components/VsgHeroSection.vue';
 import StatsSection from '../components/StatsSection.vue';
 import DepartmentsSection from '../components/DepartmentsSection.vue';
 import NewsSection from '../components/NewsSection.vue';
@@ -18,11 +18,13 @@ onMounted(() => {
 
 <template>
   <div>
-    <HeroSection
+    <VsgHeroSection
       :headline="homepageContent?.heroHeadline"
       :description="homepageContent?.heroDescription"
       :tag="homepageContent?.heroTag"
       :logo="homepageContent?.heroLogo ?? null"
+      min-height="screen"
+      :show-scroll-indicator="true"
     />
 
     <StatsSection :stats="homepageContent?.stats" />

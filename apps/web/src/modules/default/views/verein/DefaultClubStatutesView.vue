@@ -3,6 +3,7 @@ import { onMounted } from 'vue';
 import { useStatutesStore } from '../../stores/statutesStore';
 import VsgMarkdownRenderer from '@/shared/components/VsgMarkdownRenderer.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import VsgHeroSection from '../../components/VsgHeroSection.vue';
 
 const statutesStore = useStatutesStore();
 
@@ -12,14 +13,12 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="bg-white">
-    <!-- Header Section -->
-    <section class="bg-vsg-blue-900 pb-20 pt-40">
-      <div class="mx-auto max-w-4xl px-6 text-center">
-        <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">SATZUNG</h1>
-        <p class="mt-4 font-body text-lg text-vsg-blue-200">Die Vereinssatzung des VSG Kugelberg e.V.</p>
-      </div>
-    </section>
+  <div>
+    <VsgHeroSection
+      headline="SATZUNG"
+      description="Die Vereinssatzung des VSG Kugelberg e.V."
+      min-height="70vh"
+    />
 
     <!-- Content Section -->
     <section class="py-16">

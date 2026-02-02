@@ -3,8 +3,7 @@ import { onMounted, computed } from 'vue';
 import { VsgFactCard, VsgTimeline, VsgChart, VsgAccordion, VsgSuccessList, VsgMarkdownRenderer } from '@/shared/components';
 import CtaSection from '../../components/CtaSection.vue';
 import { useHistoryStore } from '../../stores/historyStore';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import HeroSection from '../../components/HeroSection.vue';
+import VsgHeroSection from '../../components/VsgHeroSection.vue';
 
 const historyStore = useHistoryStore();
 
@@ -100,10 +99,11 @@ onMounted(async () => {
 
     <template v-else-if="historyStore.history">
       <!-- Hero Section -->
-      <HeroSection
+      <VsgHeroSection
         :headline="historyStore.history.heroHeadline"
         :description="historyStore.history.heroSubHeadline"
         tag="Tradition seit 1985"
+        min-height="70vh"
       />
 
       <!-- Section: Founding (White Background) -->

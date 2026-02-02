@@ -5,6 +5,7 @@ import { useDefaultContactPersonsStore, type ContactPerson } from '../stores/con
 import ContactForm from '../components/ContactForm.vue';
 import VsgSecureContact from '../components/VsgSecureContact.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import VsgHeroSection from '../components/VsgHeroSection.vue';
 
 const route = useRoute();
 const contactPersonsStore = useDefaultContactPersonsStore();
@@ -68,14 +69,12 @@ function encodeBase64(value: string): string {
 </script>
 
 <template>
-  <div class="bg-white">
-    <!-- Header Section -->
-    <section class="bg-vsg-blue-900 pb-20 pt-40">
-      <div class="mx-auto max-w-4xl px-6 text-center">
-        <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">Kontakt</h1>
-        <p class="mt-4 font-body text-lg text-vsg-blue-200">Finden Sie den richtigen Ansprechpartner</p>
-      </div>
-    </section>
+  <div>
+    <VsgHeroSection
+      headline="Kontakt"
+      description="Finden Sie den richtigen Ansprechpartner"
+      min-height="70vh"
+    />
 
     <!-- Content Section -->
     <section class="py-16">

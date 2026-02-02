@@ -1,16 +1,16 @@
 <script setup lang="ts">
+import VsgHeroSection from '../components/VsgHeroSection.vue';
+
 // Static privacy policy page - no reactive state needed
 </script>
 
 <template>
-  <div class="bg-white">
-    <!-- Header Section -->
-    <section class="bg-vsg-blue-900 pb-20 pt-40">
-      <div class="mx-auto max-w-4xl px-6 text-center">
-        <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">DATENSCHUTZ</h1>
-        <p class="mt-4 font-body text-lg text-vsg-blue-200">Datenschutzerklärung gemäß DSGVO</p>
-      </div>
-    </section>
+  <div>
+    <VsgHeroSection
+      headline="DATENSCHUTZ"
+      description="Datenschutzerklärung gemäß DSGVO"
+      min-height="70vh"
+    />
 
     <!-- Content Section -->
     <section class="py-16">

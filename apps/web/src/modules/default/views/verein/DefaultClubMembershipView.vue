@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import VsgHeroSection from '../../components/VsgHeroSection.vue';
 
 // Static membership information page
 </script>
 
 <template>
-  <div class="bg-white">
-    <!-- Header Section -->
-    <section class="bg-vsg-blue-900 pb-20 pt-40">
-      <div class="mx-auto max-w-4xl px-6 text-center">
-        <h1 class="font-display text-5xl tracking-wider text-white md:text-7xl">Mitgliedschaft</h1>
-        <p class="mt-4 font-body text-lg text-vsg-blue-200">Werde Teil des VSG Kugelberg</p>
-      </div>
-    </section>
+  <div>
+    <VsgHeroSection
+      headline="Mitgliedschaft"
+      description="Werde Teil des VSG Kugelberg"
+      min-height="70vh"
+    />
 
     <!-- Content Section -->
     <section class="py-16">

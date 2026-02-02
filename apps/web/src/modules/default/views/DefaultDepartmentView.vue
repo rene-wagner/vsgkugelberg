@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { RouterLink } from 'vue-router';
 import { useDefaultDepartmentsStore, getMediaUrl } from '../stores/departmentsStore';
-import VsgDepartmentHeroSection from '../components/VsgDepartmentHeroSection.vue';
+import VsgHeroSection from '../components/VsgHeroSection.vue';
 import StatsSection from '../components/StatsSection.vue';
 import VsgTrainingScheduleSection from '../components/VsgTrainingScheduleSection.vue';
 import VsgLocationSection from '../components/VsgLocationSection.vue';
@@ -190,14 +190,15 @@ const departmentCta = computed<DepartmentCta>(() => {
     <!-- Department Content -->
     <template v-else-if="currentDepartment">
       <!-- Hero Section -->
-      <VsgDepartmentHeroSection
-        :title="currentDepartment.name.toUpperCase()"
+      <VsgHeroSection
+        :headline="currentDepartment.name.toUpperCase()"
         :description="currentDepartment.shortDescription"
         :icon-url="currentDepartment.icon ? getMediaUrl(currentDepartment.icon) : undefined"
         :primary-cta-label="departmentTrainingGroups.length > 0 ? 'TRAININGSZEITEN' : undefined"
         :primary-cta-anchor="departmentTrainingGroups.length > 0 ? '#trainingszeiten' : undefined"
         :secondary-cta-label="departmentLocations.length > 0 ? 'UNSERE STANDORTE' : undefined"
         :secondary-cta-anchor="departmentLocations.length > 0 ? '#standorte' : undefined"
+        min-height="70vh"
       />
 
       <!-- Stats Section -->
