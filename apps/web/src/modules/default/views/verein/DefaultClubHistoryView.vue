@@ -105,7 +105,7 @@ onMounted(async () => {
         :description="historyStore.history.heroSubHeadline"
         tag="Tradition seit 1985"
       />
-      
+
       <!-- Section: Founding (White Background) -->
       <section
         id="founding"
