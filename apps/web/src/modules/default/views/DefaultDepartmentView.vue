@@ -2,8 +2,8 @@
 import { watch, onMounted, onUnmounted, watchEffect, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
-import { RouterLink } from 'vue-router';
 import { useDefaultDepartmentsStore, getMediaUrl } from '../stores/departmentsStore';
+import VsgApiState from '@/shared/components/VsgApiState.vue';
 import VsgHeroSection from '../components/VsgHeroSection.vue';
 import StatsSection from '../components/StatsSection.vue';
 import VsgTrainingScheduleSection from '../components/VsgTrainingScheduleSection.vue';
@@ -11,7 +11,6 @@ import VsgLocationSection from '../components/VsgLocationSection.vue';
 import VsgTrainersSection from '../components/VsgTrainersSection.vue';
 import VsgDepartmentCtaSection from '../components/VsgDepartmentCtaSection.vue';
 import type { Stat, TrainingGroup, DepartmentLocation, Trainer, DepartmentCta } from '../types/department-detail.types';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const route = useRoute();
 const departmentsStore = useDefaultDepartmentsStore();
@@ -138,62 +137,17 @@ const departmentCta = computed<DepartmentCta>(() => {
 
 <template>
   <div class="min-h-screen text-white overflow-x-hidden selection:bg-vsg-gold-500 selection:text-vsg-blue-900">
-    <!-- Loading State -->
-    <div
-      v-if="currentDepartmentLoading"
-      class="flex min-h-[60vh] items-center justify-center bg-vsg-blue-900"
+    <VsgApiState
+      :is-loading="currentDepartmentLoading"
+      :error="currentDepartmentError"
+      :empty="!currentDepartment"
+      empty-message="Abteilung nicht gefunden"
     >
-      <div class="h-12 w-12 animate-spin rounded-full border-4 border-vsg-blue-200 border-t-vsg-gold-400"></div>
-    </div>
-
-    <!-- Error State -->
-    <div
-      v-else-if="currentDepartmentError"
-      class="flex min-h-[60vh] flex-col items-center justify-center bg-white px-6"
-    >
-      <div class="max-w-md text-center">
-        <FontAwesomeIcon
-          icon="triangle-exclamation"
-          class="mx-auto mb-6 text-red-400"
-        />
-        <h1 class="mb-4 font-display text-2xl text-vsg-blue-900">Fehler beim Laden</h1>
-        <p class="mb-6 text-vsg-blue-700">{{ currentDepartmentError }}</p>
-        <button
-          class="rounded-lg bg-vsg-blue-600 px-6 py-3 font-body text-sm font-medium text-white transition-colors hover:bg-vsg-blue-700"
-          @click="fetchDepartment"
-        >
-          Erneut versuchen
-        </button>
-      </div>
-    </div>
-
-    <!-- Not Found State -->
-    <div
-      v-else-if="currentDepartmentNotFound"
-      class="flex min-h-[60vh] flex-col items-center justify-center bg-white px-6"
-    >
-      <div class="max-w-md text-center">
-        <div class="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-vsg-blue-100">
-          <span class="font-display text-4xl text-vsg-blue-600">404</span>
-        </div>
-        <h1 class="mb-4 font-display text-2xl text-vsg-blue-900">Abteilung nicht gefunden</h1>
-        <p class="mb-6 text-vsg-blue-700">Die angeforderte Abteilung existiert nicht oder wurde entfernt.</p>
-        <RouterLink
-          to="/"
-          class="inline-block rounded-lg bg-vsg-gold-400 px-6 py-3 font-body text-sm font-medium text-vsg-blue-900 transition-colors hover:bg-vsg-gold-300"
-        >
-          Zur Startseite
-        </RouterLink>
-      </div>
-    </div>
-
-    <!-- Department Content -->
-    <template v-else-if="currentDepartment">
       <!-- Hero Section -->
       <VsgHeroSection
-        :headline="currentDepartment.name.toUpperCase()"
-        :description="currentDepartment.shortDescription"
-        :icon-url="currentDepartment.icon ? getMediaUrl(currentDepartment.icon) : undefined"
+        :headline="currentDepartment!.name.toUpperCase()"
+        :description="currentDepartment!.shortDescription"
+        :icon-url="currentDepartment!.icon ? getMediaUrl(currentDepartment!.icon) : undefined"
         :primary-cta-label="departmentTrainingGroups.length > 0 ? 'TRAININGSZEITEN' : undefined"
         :primary-cta-anchor="departmentTrainingGroups.length > 0 ? '#trainingszeiten' : undefined"
         :secondary-cta-label="departmentLocations.length > 0 ? 'UNSERE STANDORTE' : undefined"
@@ -246,6 +200,6 @@ const departmentCta = computed<DepartmentCta>(() => {
         :secondary-cta-label="departmentCta.secondaryCtaLabel"
         :secondary-cta-route="departmentCta.secondaryCtaRoute"
       />
-    </template>
+    </VsgApiState>
   </div>
 </template>

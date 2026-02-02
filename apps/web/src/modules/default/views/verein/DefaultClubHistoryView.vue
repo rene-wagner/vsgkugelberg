@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, computed } from 'vue';
-import { VsgFactCard, VsgTimeline, VsgChart, VsgAccordion, VsgSuccessList, VsgMarkdownRenderer } from '@/shared/components';
+import { VsgFactCard, VsgTimeline, VsgChart, VsgAccordion, VsgSuccessList, VsgMarkdownRenderer, VsgApiState } from '@/shared/components';
 import CtaSection from '../../components/CtaSection.vue';
 import { useHistoryStore } from '../../stores/historyStore';
 import VsgHeroSection from '../../components/VsgHeroSection.vue';
@@ -69,39 +69,16 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen text-white overflow-x-hidden selection:bg-vsg-gold-500 selection:text-vsg-blue-900">
-    <!-- Loading State -->
-    <div
-      v-if="historyStore.isLoading && !historyStore.history"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-vsg-blue-900"
+    <VsgApiState
+      :is-loading="historyStore.isLoading"
+      :error="historyStore.error"
+      :empty="!historyStore.history"
+      empty-message="Die Vereinsgeschichte wird derzeit aktualisiert."
     >
-      <div class="text-center">
-        <div class="w-16 h-16 border-4 border-vsg-gold-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-        <p class="font-display tracking-widest text-vsg-gold-400">LADEN...</p>
-      </div>
-    </div>
-
-    <!-- Error State -->
-    <div
-      v-else-if="historyStore.error"
-      class="min-h-screen flex items-center justify-center pt-20"
-    >
-      <div class="text-center p-8 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-md">
-        <h2 class="font-display text-3xl text-vsg-gold-400 mb-4">FEHLER BEIM LADEN</h2>
-        <p class="font-body text-vsg-blue-200 mb-8">{{ historyStore.error }}</p>
-        <button
-          class="px-8 py-3 bg-vsg-gold-500 text-vsg-blue-900 font-display text-sm tracking-wider hover:bg-vsg-gold-400 transition-colors"
-          @click="historyStore.fetchHistory"
-        >
-          ERNEUT VERSUCHEN
-        </button>
-      </div>
-    </div>
-
-    <template v-else-if="historyStore.history">
       <!-- Hero Section -->
       <VsgHeroSection
-        :headline="historyStore.history.heroHeadline"
-        :description="historyStore.history.heroSubHeadline"
+        :headline="historyStore.history!.heroHeadline"
+        :description="historyStore.history!.heroSubHeadline"
         tag="Tradition seit 1985"
         min-height="70vh"
       />
@@ -120,16 +97,16 @@ onMounted(async () => {
                 <span class="font-display text-vsg-gold-600 text-2xl tracking-widest uppercase">Der Ursprung</span>
               </div>
               <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 uppercase">
-                {{ historyStore.history.foundingHeadline }}
+                {{ historyStore.history!.foundingHeadline }}
               </h2>
               <div class="font-body text-vsg-blue-700 text-lg leading-relaxed">
-                <VsgMarkdownRenderer :content="historyStore.history.foundingDescription" />
+                <VsgMarkdownRenderer :content="historyStore.history!.foundingDescription" />
               </div>
 
               <VsgFactCard
-                :title="historyStore.history.foundingFactCardHeadline"
+                :title="historyStore.history!.foundingFactCardHeadline"
                 :facts="
-                  historyStore.history.foundingFacts.map((f) => ({
+                  historyStore.history!.foundingFacts.map((f) => ({
                     label: f.headline,
                     value: f.year + ': ' + f.description,
                   }))
@@ -139,9 +116,9 @@ onMounted(async () => {
 
             <!-- Timeline -->
             <VsgTimeline
-              :title="historyStore.history.foundingMilestonesHeadline"
+              :title="historyStore.history!.foundingMilestonesHeadline"
               :items="
-                historyStore.history.foundingMilestones.map((m) => ({
+                historyStore.history!.foundingMilestones.map((m) => ({
                   year: m.year,
                   title: m.headline,
                   description: m.description,
@@ -160,10 +137,10 @@ onMounted(async () => {
         <div class="max-w-7xl mx-auto px-6">
           <div class="text-center mb-16">
             <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 mb-4 uppercase">
-              {{ historyStore.history.developmentHeadline }}
+              {{ historyStore.history!.developmentHeadline }}
             </h2>
             <div class="font-body text-vsg-blue-700 max-w-2xl mx-auto text-lg">
-              <VsgMarkdownRenderer :content="historyStore.history.developmentDescription" />
+              <VsgMarkdownRenderer :content="historyStore.history!.developmentDescription" />
             </div>
           </div>
 
@@ -206,16 +183,16 @@ onMounted(async () => {
           <div class="text-center mb-16">
             <span class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase">Vereinsleben</span>
             <h2 class="font-display text-5xl md:text-6xl text-vsg-blue-900 mt-2 uppercase">
-              {{ historyStore.history.festivalsHeadline }}
+              {{ historyStore.history!.festivalsHeadline }}
             </h2>
             <p class="font-body text-vsg-blue-700 mt-4 max-w-2xl mx-auto text-lg">
-              {{ historyStore.history.festivalsDescription }}
+              {{ historyStore.history!.festivalsDescription }}
             </p>
           </div>
 
           <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div
-              v-for="item in historyStore.history.festivalsItems"
+              v-for="item in historyStore.history!.festivalsItems"
               :key="item.headline"
               class="bg-gray-50 border border-gray-200 p-8 hover:bg-gray-100 transition-all group overflow-hidden relative shadow-sm"
             >
@@ -239,7 +216,7 @@ onMounted(async () => {
           <div class="text-center mb-16">
             <span class="font-display text-vsg-gold-600 text-2xl tracking-[0.2em] uppercase">Unser Stolz</span>
             <h2 class="font-display text-5xl md:text-7xl text-vsg-blue-900 mt-2 uppercase">
-              {{ historyStore.history.achievementsHeadline }}
+              {{ historyStore.history!.achievementsHeadline }}
             </h2>
           </div>
 
@@ -252,13 +229,13 @@ onMounted(async () => {
 
       <!-- CTA Section -->
       <CtaSection
-        :title="historyStore.history.ctaHeadline"
-        :description="historyStore.history.ctaDescription"
+        :title="historyStore.history!.ctaHeadline"
+        :description="historyStore.history!.ctaDescription"
         primary-button-text="MITGLIED WERDEN"
         primary-button-link="/verein/mitgliedschaft"
         theme="gold"
       />
-    </template>
+    </VsgApiState>
   </div>
 </template>
 

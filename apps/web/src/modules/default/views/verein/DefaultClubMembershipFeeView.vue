@@ -2,7 +2,7 @@
 import { onMounted } from 'vue';
 import { useMembershipFeeStore } from '../../stores/membershipFeeStore';
 import VsgMarkdownRenderer from '@/shared/components/VsgMarkdownRenderer.vue';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import VsgApiState from '@/shared/components/VsgApiState.vue';
 import VsgHeroSection from '../../components/VsgHeroSection.vue';
 import VsgContentSection from '../../components/VsgContentSection.vue';
 import VsgAlert from '@/shared/components/VsgAlert.vue';
@@ -36,41 +36,16 @@ onMounted(async () => {
         </p>
       </VsgAlert>
 
-      <!-- Loading State -->
-      <div
-        v-if="membershipFeeStore.isLoading"
-        class="flex justify-center py-12"
+      <VsgApiState
+        :is-loading="membershipFeeStore.isLoading"
+        :error="membershipFeeStore.error"
+        :empty="!membershipFeeStore.membershipFee?.content"
+        empty-message="Die Beitragsordnung wird derzeit aktualisiert."
       >
-        <FontAwesomeIcon
-          icon="spinner"
-          spin
-          class="text-4xl text-vsg-gold-400"
-        />
-      </div>
-
-      <!-- Error State -->
-      <div
-        v-else-if="membershipFeeStore.error"
-        class="rounded-xl border border-red-200 bg-red-50 p-6 text-center"
-      >
-        <p class="font-body text-red-600">{{ membershipFeeStore.error }}</p>
-      </div>
-
-      <!-- No Content State -->
-      <div
-        v-else-if="!membershipFeeStore.membershipFee?.content"
-        class="rounded-xl border border-vsg-blue-200 bg-vsg-blue-50 p-6 text-center"
-      >
-        <p class="font-body text-vsg-blue-600">Die Beitragsordnung wird derzeit aktualisiert.</p>
-      </div>
-
-      <!-- Membership Fee Content -->
-      <div
-        v-else
-        class="prose prose-lg max-w-none"
-      >
-        <VsgMarkdownRenderer :content="membershipFeeStore.membershipFee.content" />
-      </div>
+        <div class="prose prose-lg max-w-none">
+          <VsgMarkdownRenderer :content="membershipFeeStore.membershipFee!.content" />
+        </div>
+      </VsgApiState>
     </VsgContentSection>
   </div>
 </template>
