@@ -69,7 +69,7 @@ function encodeBase64(value: string): string {
 </script>
 
 <template>
-  <div>
+  <div class="min-h-screen text-white overflow-x-hidden selection:bg-vsg-gold-500 selection:text-vsg-blue-900">
     <VsgHeroSection
       headline="Kontakt"
       description="Finden Sie den richtigen Ansprechpartner"

@@ -6,7 +6,7 @@ import VsgHeroSection from '../../components/VsgHeroSection.vue';
 </script>
 
 <template>
-  <div>
+  <div class="min-h-screen text-white overflow-x-hidden selection:bg-vsg-gold-500 selection:text-vsg-blue-900">
     <VsgHeroSection
       headline="Mitgliedschaft"
       description="Werde Teil des VSG Kugelberg"

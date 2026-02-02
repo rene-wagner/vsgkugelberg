@@ -26,7 +26,7 @@ function getBadgeColor(index: number): string {
 </script>
 
 <template>
-  <div>
+  <div class="min-h-screen text-white overflow-x-hidden selection:bg-vsg-gold-500 selection:text-vsg-blue-900">
     <VsgHeroSection
       :headline="boardContentStore.boardContent?.headline || 'VORSTAND'"
       :description="boardContentStore.boardContent?.description || 'Die Führung des VSG Kugelberg'"
