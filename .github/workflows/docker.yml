@@ -20,6 +20,8 @@ jobs:
     permissions:
       contents: read
       packages: write
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
