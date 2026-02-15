@@ -1,19 +1,16 @@
 import ora from 'ora';
-import type { Connection } from 'mysql2/promise';
 import type { Client } from 'pg';
-import { CATEGORY_QUERY } from '../config/constants';
 import type { JoomlaCategory, CategoryMap } from '../types';
+import { loadCategoriesFromCSV } from '../database';
 import { logger } from '../utils';
 
 export async function migrateCategories(
-  mysqlConn: Connection,
   pgClient: Client,
 ): Promise<CategoryMap> {
   const spinner = ora('Migrating categories...').start();
 
   try {
-    const [rows] = await mysqlConn.query(CATEGORY_QUERY);
-    const categories = rows as JoomlaCategory[];
+    const categories = await loadCategoriesFromCSV();
 
     const categoryMap: CategoryMap = new Map();
 
