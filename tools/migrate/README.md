@@ -1,6 +1,6 @@
 # Migration Tool
 
-A one-time migration tool for transferring data from the legacy MySQL (Joomla) database to the new PostgreSQL database used by the VSG Kugelberg application.
+A one-time migration tool for transferring data from CSV files to the new PostgreSQL database used by the VSG Kugelberg application.
 
 ## Overview
 
@@ -12,7 +12,7 @@ This tool performs two main operations:
    - Departments with stats, locations, training groups, and sessions
    - Club history content
 
-2. **Migration**: Migrates legacy content from MySQL to PostgreSQL
+2. **Migration**: Migrates legacy content from CSV files to PostgreSQL
    - Categories (hierarchical structure)
    - Blog posts (with automatic slug generation)
 
@@ -24,10 +24,10 @@ tools/migrate/
 │   ├── index.ts                      # Main entry point with CLI
 │   ├── config/
 │   │   ├── database.ts               # Database connection configuration
-│   │   └── constants.ts              # SQL queries and constants
+│   │   └── constants.ts              # Constants
 │   ├── types/
 │   │   ├── database.ts               # Database connection types
-│   │   ├── joomla.ts                 # MySQL/Joomla data types
+│   │   ├── joomla.ts                 # Legacy data types
 │   │   ├── seed-data.ts              # Seed data interfaces
 │   │   └── index.ts                  # Barrel export
 │   ├── utils/
@@ -36,7 +36,7 @@ tools/migrate/
 │   │   ├── data-loader.ts            # JSON file loading functions
 │   │   └── index.ts                  # Barrel export
 │   ├── database/
-│   │   ├── mysql.ts                  # MySQL connection with spinner
+│   │   ├── csv-loader.ts             # CSV file loading functions
 │   │   ├── postgres.ts               # PostgreSQL connection with spinner
 │   │   └── index.ts                  # Barrel export
 │   ├── seeders/
@@ -46,10 +46,12 @@ tools/migrate/
 │   │   ├── history-seeder.ts         # Seeds club history
 │   │   └── index.ts                  # Barrel export
 │   └── migrators/
-│       ├── category-migrator.ts      # Migrates categories from MySQL
-│       ├── post-migrator.ts          # Migrates posts from MySQL
+│       ├── category-migrator.ts      # Migrates categories from CSV
+│       ├── post-migrator.ts          # Migrates posts from CSV
 │       └── index.ts                  # Barrel export
 ├── data/
+│   ├── categories.csv                # Category data (from legacy system)
+│   ├── posts.csv                     # Post data (from legacy system)
 │   ├── users.json                    # Seed user data
 │   ├── departments.json              # Department data with related entities
 │   ├── history.json                  # Club history content
@@ -65,15 +67,6 @@ tools/migrate/
 
 Create a `.env` file in the project root with the following variables:
 
-#### MySQL (Source Database)
-```bash
-MYSQL_HOST=localhost
-MYSQL_PORT=3306
-MYSQL_USER=your_mysql_user
-MYSQL_PASSWORD=your_mysql_password
-MYSQL_DATABASE=your_joomla_database
-```
-
 #### PostgreSQL (Target Database)
 ```bash
 POSTGRES_HOST=localhost
@@ -83,9 +76,15 @@ POSTGRES_PASSWORD=your_postgres_password
 POSTGRES_DATABASE=your_postgres_database
 ```
 
+### CSV Data Files
+
+Place your exported CSV data in the `data/` directory:
+
+- `categories.csv` - Category data with columns: id, name, slug, description, parentId, createdAt, updatedAt
+- `posts.csv` - Post data with columns: id, title, content, catid, hits, created, modified, oldPost, authorId, published
+
 ### Database Requirements
 
-- **MySQL**: Legacy Joomla 3.x database with `j3x_categories` and `j3x_content` tables
 - **PostgreSQL**: VSG Kugelberg database with Prisma schema applied (run migrations first)
 
 ## Usage
@@ -108,18 +107,17 @@ pnpm migrate
 
 ```
 ═══════════════════════════════════════════
-  MySQL → PostgreSQL Migration Tool
+  CSV → PostgreSQL Migration Tool
 ═══════════════════════════════════════════
 
-✔ Connected to MySQL at localhost:3306
 ✔ Connected to PostgreSQL at localhost:5432
 
 ✔ Seeded 2 users
 ✔ Seeded 15 contact persons
 ✔ Seeded departments: 4 departments, 16 stats, 8 locations, 6 groups, 13 sessions
 ✔ Seeded history content
-✔ Migrated 156 categories
-✔ Migrated 234 posts
+✔ Migrated 8 categories
+✔ Migrated 30 posts
 
 ═══════════════════════════════════════════
   Migration Summary
@@ -134,22 +132,30 @@ pnpm migrate
 ├─────────────────────────┼────────────┼───────────────┤
 │ Departments             │ 4          │ ✓ Complete    │
 ├─────────────────────────┼────────────┼───────────────┤
-│ Categories              │ 156        │ ✓ Complete    │
+│ Categories              │ 8          │ ✓ Complete    │
 ├─────────────────────────┼────────────┼───────────────┤
-│ Posts                   │ 234        │ ✓ Complete    │
+│ Posts                   │ 30         │ ✓ Complete    │
 └─────────────────────────┴────────────┴───────────────┘
 
-Total time: 8.45s
+Total time: 3.45s
 
 ✔ Closed PostgreSQL connection
-✔ Closed MySQL connection
 ```
 
 ## Architecture
 
+### CSV Loader (`database/csv-loader.ts`)
+
+Loads data from CSV files using fast-csv:
+
+- **loadCategoriesFromCSV()**: Reads `data/categories.csv` and returns JoomlaCategory array
+- **loadPostsFromCSV()**: Reads `data/posts.csv` and returns JoomlaPost array
+
+Both functions parse CSV with headers and convert data types appropriately.
+
 ### Seeders
 
-Seeders populate PostgreSQL with initial data from JSON files and CSV.
+Seeders populate PostgreSQL with initial data from JSON files.
 
 #### User Seeder (`user-seeder.ts`)
 - **Source**: `data/users.json`
@@ -178,28 +184,66 @@ Seeders populate PostgreSQL with initial data from JSON files and CSV.
 
 ### Migrators
 
-Migrators transfer data from MySQL (Joomla) to PostgreSQL.
+Migrators transfer data from CSV files to PostgreSQL.
 
 #### Category Migrator (`category-migrator.ts`)
-- **Source**: MySQL `j3x_categories` table
+- **Source**: `data/categories.csv`
 - **Target**: PostgreSQL `Category` table
 - **Features**:
   - Preserves hierarchical parent-child relationships
-  - Maps old MySQL IDs to new PostgreSQL IDs
+  - Maps old IDs to new PostgreSQL IDs
   - Warns about missing parent categories (continues execution)
-- **Query**: Fetches published content categories ordered by left-right tree position
 
 #### Post Migrator (`post-migrator.ts`)
-- **Source**: MySQL `j3x_content` table
+- **Source**: `data/posts.csv`
 - **Target**: PostgreSQL `Post` table
 - **Features**:
   - Generates URL-friendly slugs from titles using `slugify`
   - Skips duplicate slugs (ON CONFLICT DO NOTHING)
-  - Excludes specific post IDs (blacklist in query)
   - Associates posts with migrated categories
 - **Behavior**: Iterates through all categories and migrates posts for each
 
 ## Seed Data Files
+
+### Editing Categories (`data/categories.csv`)
+
+CSV file with category data:
+
+```csv
+id,name,slug,description,parentId,createdAt,updatedAt
+1,Allgemein,allgemein,Allgemeine Neuigkeiten,,2024-01-01T00:00:00Z,2024-01-01T00:00:00Z
+2,Fußball,fussball,Neuigkeiten aus der Fußballabteilung,,2024-01-01T00:00:00Z,2024-01-01T00:00:00Z
+3,Herren,herren,Herrenmannschaft,2,2024-01-01T00:00:00Z,2024-01-01T00:00:00Z
+```
+
+**Notes**:
+- `id` must be unique
+- `slug` must be unique
+- `parentId` references another category's id (null for root categories)
+- Dates should be in ISO 8601 format
+
+### Editing Posts (`data/posts.csv`)
+
+CSV file with post data:
+
+```csv
+id,title,content,catid,hits,created,modified,oldPost,authorId,published
+1,"Post Title","<p>HTML content</p>",1,42,2024-01-15T10:00:00Z,2024-01-15T10:00:00Z,1,2,1
+```
+
+**Required Fields**:
+- `id` - Unique identifier
+- `title` - Post title
+- `content` - HTML content (can be null)
+- `catid` - Category ID (must reference existing category)
+- `created` - Creation date (ISO 8601)
+- `modified` - Last modified date (ISO 8601)
+
+**Optional Fields**:
+- `hits` - View count (default: 0)
+- `oldPost` - Flag for old posts (0 or 1)
+- `authorId` - Author user ID
+- `published` - Published flag (0 or 1)
 
 ### Editing Users (`data/users.json`)
 
@@ -345,23 +389,29 @@ JSON array of contact person objects:
 **Errors** (halt execution):
 - Missing environment variables
 - Database connection failures
-- Missing required JSON file
+- Missing required CSV files
 - SQL constraint violations
 
 ### Common Issues
 
 #### Missing Environment Variables
 ```
-Error: Missing required environment variables: MYSQL_HOST, MYSQL_PASSWORD
+Error: Missing required environment variables: POSTGRES_HOST, POSTGRES_PASSWORD
 ```
 **Solution**: Ensure all required env vars are set in `.env`
 
 #### Connection Refused
 ```
-Failed to connect to MySQL
-Error: connect ECONNREFUSED 127.0.0.1:3306
+Failed to connect to PostgreSQL
+Error: connect ECONNREFUSED 127.0.0.1:5432
 ```
-**Solution**: Verify MySQL is running and credentials are correct
+**Solution**: Verify PostgreSQL is running and credentials are correct
+
+#### Missing CSV Files
+```
+Error: ENOENT: no such file or directory, open '/path/to/data/categories.csv'
+```
+**Solution**: Ensure CSV files exist in the `data/` directory
 
 ## Extending the Tool
 
@@ -401,24 +451,64 @@ export * from './new-seeder';
 const newDataCount = await seedNewData(pgClient);
 ```
 
-### Adding a New Migrator
+### Adding a New CSV Data Source
 
-1. Create new file in `src/migrators/new-migrator.ts`:
+1. Create new CSV file in `data/new-data.csv`
+
+2. Add type definition in `src/types/joomla.ts`:
+
+```typescript
+export interface NewDataType {
+  id: number;
+  name: string;
+  // ... other fields
+}
+```
+
+3. Add loader function in `src/database/csv-loader.ts`:
+
+```typescript
+export async function loadNewDataFromCSV(): Promise<NewDataType[]> {
+  return new Promise((resolve, reject) => {
+    const data: NewDataType[] = [];
+    const filePath = path.join(DATA_DIR, 'new-data.csv');
+
+    fs.createReadStream(filePath)
+      .pipe(csv.parse({ headers: true }))
+      .on('error', (error) => reject(error))
+      .on('data', (row: Record<string, string>) => {
+        data.push({
+          id: parseInt(row.id, 10),
+          name: row.name,
+          // ... parse other fields
+        });
+      })
+      .on('end', () => {
+        data.sort((a, b) => a.id - b.id);
+        resolve(data);
+      });
+  });
+}
+```
+
+4. Create migrator in `src/migrators/new-migrator.ts`:
 
 ```typescript
 import ora from 'ora';
-import type { Connection } from 'mysql2/promise';
 import type { Client } from 'pg';
+import { loadNewDataFromCSV } from '../database';
 
-export async function migrateNewData(
-  mysqlConn: Connection,
-  pgClient: Client
-): Promise<number> {
+export async function migrateNewData(pgClient: Client): Promise<number> {
   const spinner = ora('Migrating new data...').start();
   
   try {
-    // Your migration logic here
-    const count = 0; // Count migrated records
+    const data = await loadNewDataFromCSV();
+    let count = 0;
+    
+    for (const item of data) {
+      // Your migration logic here
+      count++;
+    }
     
     spinner.succeed(`Migrated ${count} records`);
     return count;
@@ -429,28 +519,7 @@ export async function migrateNewData(
 }
 ```
 
-2. Export and call similarly to seeders
-
-### Adding New Seed Data Files
-
-1. Create JSON file in `data/new-data.json`
-
-2. Add type definition in `src/types/seed-data.ts`:
-
-```typescript
-export interface NewSeedData {
-  // Your fields here
-}
-```
-
-3. Add loader function in `src/utils/data-loader.ts`:
-
-```typescript
-export async function loadNewSeedData(): Promise<NewSeedData[]> {
-  const data = await fs.readFile(path.join(DATA_DIR, 'new-data.json'), 'utf-8');
-  return JSON.parse(data);
-}
-```
+5. Export and call similarly to existing migrators
 
 ## Troubleshooting
 
@@ -469,8 +538,8 @@ The migration is designed to be **idempotent** where possible:
 ### Slow Performance
 
 The migration uses single database connections (not pools) as it's a one-time operation. For large datasets:
-- Ensure good network connection between MySQL and PostgreSQL
-- Consider running on the same machine as databases
+- Ensure good network connection to PostgreSQL
+- Consider running on the same machine as the database
 - Monitor database logs for slow queries
 
 ### Data Validation Issues
@@ -483,7 +552,7 @@ The tool trusts database constraints for validation. If inserts fail:
 ## Notes
 
 - This is a **one-time migration tool** - not meant for regular use
-- Designed for the initial data import when transitioning from Joomla to the new system
+- Designed for the initial data import when transitioning from a legacy system to the new system
 - Uses direct SQL queries for performance (not Prisma ORM)
 - Single-threaded execution (no parallel processing)
 

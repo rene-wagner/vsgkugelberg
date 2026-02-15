@@ -1,7 +1,8 @@
 import type { DbConfig } from '../types';
 
-export function getDbConfig(prefix: 'MYSQL' | 'POSTGRES'): DbConfig {
-  const defaultPort = prefix === 'MYSQL' ? 3306 : 5432;
+export function getPostgresConfig(): DbConfig {
+  const prefix = 'POSTGRES';
+  const defaultPort = 5432;
 
   const config: DbConfig = {
     host: process.env[`${prefix}_HOST`] || '',
@@ -20,12 +21,4 @@ export function getDbConfig(prefix: 'MYSQL' | 'POSTGRES'): DbConfig {
   }
 
   return config;
-}
-
-export function getMySQLConfig(): DbConfig {
-  return getDbConfig('MYSQL');
-}
-
-export function getPostgresConfig(): DbConfig {
-  return getDbConfig('POSTGRES');
 }

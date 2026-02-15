@@ -2,7 +2,7 @@ import 'dotenv/config';
 import ora from 'ora';
 import chalk from 'chalk';
 import Table from 'cli-table3';
-import { connectMySQL, connectPostgres } from './database';
+import { connectPostgres } from './database';
 import {
   seedUsers,
   seedContactPersons,
@@ -37,7 +37,7 @@ interface MigrationResults {
 
 function printHeader(): void {
   console.log(chalk.blue.bold('═══════════════════════════════════════════'));
-  console.log(chalk.blue.bold('  MySQL → PostgreSQL Migration Tool'));
+  console.log(chalk.blue.bold('  CSV → PostgreSQL Migration Tool'));
   console.log(chalk.blue.bold('═══════════════════════════════════════════\n'));
 }
 
@@ -76,12 +76,10 @@ async function main(): Promise<void> {
   const globalTimer = new Timer();
   printHeader();
 
-  let mysqlConn = null;
   let pgClient = null;
 
   try {
-    // Connect to databases
-    mysqlConn = await connectMySQL();
+    // Connect to PostgreSQL database
     pgClient = await connectPostgres();
 
     // Track results
@@ -149,9 +147,9 @@ async function main(): Promise<void> {
     await seedSportInsurance(pgClient);
 
     // 13. Run migrators (categories and posts)
-    const categoryMap = await migrateCategories(mysqlConn, pgClient);
+    const categoryMap = await migrateCategories(pgClient);
     results.categories = categoryMap.size;
-    results.posts = await migratePosts(mysqlConn, pgClient, categoryMap);
+    results.posts = await migratePosts(pgClient, categoryMap);
 
     // Print summary
     printSummary(results, globalTimer);
@@ -159,16 +157,11 @@ async function main(): Promise<void> {
     console.error(chalk.red.bold('\n✗ Migration failed:'), error);
     throw error;
   } finally {
-    // Cleanup connections
+    // Cleanup connection
     if (pgClient) {
       const pgSpinner = ora('Closing PostgreSQL connection...').start();
       await pgClient.end();
       pgSpinner.succeed('Closed PostgreSQL connection');
-    }
-    if (mysqlConn) {
-      const mysqlSpinner = ora('Closing MySQL connection...').start();
-      await mysqlConn.end();
-      mysqlSpinner.succeed('Closed MySQL connection');
     }
   }
 }
