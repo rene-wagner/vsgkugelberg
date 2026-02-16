@@ -1,5 +1,7 @@
 # Stage 1: Build
 FROM node:24-alpine AS builder
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
 WORKDIR /app
 
 # Install pnpm
