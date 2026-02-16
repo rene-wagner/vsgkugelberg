@@ -13,8 +13,7 @@
     "format:fix": "turbo format:fix",
     "test": "turbo test",
     "test:ci": "turbo test:ci",
-    "test:coverage": "turbo test:coverage",
-    "prepare": "husky"
+    "test:coverage": "turbo test:coverage"
   },
   "author": "René Wagner",
   "license": "ISC",

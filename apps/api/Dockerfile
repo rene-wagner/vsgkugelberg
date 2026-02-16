@@ -27,14 +27,17 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
 
-# Copy built artifacts
-COPY --from=builder /app/apps/api/dist ./dist
-COPY --from=builder /app/apps/api/package.json ./
-COPY --from=builder /app/apps/api/prisma ./prisma
-COPY --from=builder /app/node_modules/.pnpm ./node_modules/.pnpm
+# Copy package files for dependency installation
+COPY --from=builder /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
+COPY --from=builder /app/apps/api/package.json ./apps/api/
 
-# Install production deps only
+# Install production dependencies only
 RUN pnpm install --prod --frozen-lockfile
 
+# Copy built artifacts
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
+COPY --from=builder /app/apps/api/generated ./apps/api/generated
+
 EXPOSE 3000
-CMD ["node", "dist/index.js"]
+CMD ["node", "apps/api/dist/index.js"]
