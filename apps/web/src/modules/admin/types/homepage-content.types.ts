@@ -12,6 +12,8 @@ export interface MediaItem {
   mimetype: string;
   size: number;
   type: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface HomepageContent {

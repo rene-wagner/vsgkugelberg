@@ -1,5 +1,7 @@
 # Stage 1: Build
 FROM node:24-alpine AS builder
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
