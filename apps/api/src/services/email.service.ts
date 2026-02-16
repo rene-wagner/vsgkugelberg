@@ -80,7 +80,7 @@ class SmtpEmailService implements EmailService {
     }
 
     // Build transport config - auth is optional for MailHog and similar local SMTP servers
-    const transportConfig: nodemailer.TransportOptions = {
+    const transportConfig: any = {
       host,
       port,
       secure: port === 465,

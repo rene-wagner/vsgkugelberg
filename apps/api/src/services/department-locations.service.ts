@@ -1,6 +1,6 @@
 import { NotFoundException } from '@/errors/http-errors';
 import { CreateDepartmentLocationDto, UpdateDepartmentLocationDto, DepartmentLocation } from '@/types/department-location.types';
-import { prisma } from '@/lib/prisma.lib';
+import { prisma, Prisma } from '@/lib/prisma.lib';
 
 export class DepartmentLocationsService {
   private async getDepartmentIdBySlug(slug: string): Promise<number> {
@@ -28,7 +28,7 @@ export class DepartmentLocationsService {
         street: dto.street,
         city: dto.city,
         mapsUrl: dto.mapsUrl ?? null,
-        amenities: dto.amenities,
+        amenities: dto.amenities as unknown as Prisma.InputJsonValue,
         imageId: dto.imageId ?? null,
         sort: dto.sort ?? 0,
       },
@@ -59,8 +59,8 @@ export class DepartmentLocationsService {
         ...(dto.street !== undefined && { street: dto.street }),
         ...(dto.city !== undefined && { city: dto.city }),
         ...(dto.mapsUrl !== undefined && { mapsUrl: dto.mapsUrl }),
-        ...(dto.amenities !== undefined && { amenities: dto.amenities }),
-        ...(dto.imageId !== undefined && { imageId: dto.imageId }),
+        ...(dto.amenities !== undefined && { amenities: dto.amenities as unknown as Prisma.InputJsonValue }),
+        ...(dto.imageId !== undefined && (dto.imageId === null ? { image: { disconnect: true } } : { image: { connect: { id: dto.imageId } } })),
         ...(dto.sort !== undefined && { sort: dto.sort }),
       },
       include: { image: true },

@@ -14,9 +14,13 @@ import {
   ContactPerson,
   Event,
   Media,
+  MediaFolder,
   Post,
   User,
   HistoryContent,
+  MembershipFeeContent,
+  SportInsuranceContent,
+  StatutesContent,
 } from '../../generated/prisma/client';
 
 const connectionString = `${process.env.DATABASE_URL}`;
@@ -38,7 +42,11 @@ export {
   ContactPerson,
   Event,
   Media,
+  MediaFolder,
   Post,
   User,
   HistoryContent,
+  MembershipFeeContent,
+  SportInsuranceContent,
+  StatutesContent,
 };

@@ -215,7 +215,11 @@ export class PostsService {
 
     // Handle thumbnail - can be set, changed, or removed (null)
     if (updatePostDto.thumbnailId !== undefined) {
-      updateData.thumbnailId = updatePostDto.thumbnailId;
+      if (updatePostDto.thumbnailId === null) {
+        updateData.thumbnail = { disconnect: true };
+      } else {
+        updateData.thumbnail = { connect: { id: updatePostDto.thumbnailId } };
+      }
     }
 
     try {

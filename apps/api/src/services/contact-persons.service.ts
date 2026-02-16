@@ -122,7 +122,11 @@ export class ContactPersonsService {
 
     // Handle profileImageId: can be set to a value, or explicitly set to null to remove
     if (updateContactPersonDto.profileImageId !== undefined) {
-      updateData.profileImageId = updateContactPersonDto.profileImageId;
+      if (updateContactPersonDto.profileImageId === null) {
+        updateData.profileImage = { disconnect: true };
+      } else {
+        updateData.profileImage = { connect: { id: updateContactPersonDto.profileImageId } };
+      }
     }
 
     return prisma.contactPerson.update({

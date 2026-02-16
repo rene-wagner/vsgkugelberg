@@ -1,4 +1,5 @@
 import type { Request } from 'express';
+import type { ParsedQs } from 'qs';
 import { UserPayload } from '@/services/auth.service';
 
 /**
@@ -26,5 +27,5 @@ export type TypedRequest<T> = Request<
   Record<string, string>, // params
   unknown, // res body
   T, // req body
-  Record<string, string> // query
+  ParsedQs // query
 >;

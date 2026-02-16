@@ -156,7 +156,11 @@ export class CategoriesService {
       updateData.slug = newSlug;
 
       if (parentChanged) {
-        updateData.parentId = updateCategoryDto.parentId;
+        if (updateCategoryDto.parentId === null) {
+          updateData.parent = { disconnect: true };
+        } else if (updateCategoryDto.parentId !== undefined) {
+          updateData.parent = { connect: { id: updateCategoryDto.parentId } };
+        }
       }
 
       // Update the category first

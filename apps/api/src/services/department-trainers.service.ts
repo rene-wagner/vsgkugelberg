@@ -36,7 +36,7 @@ export class DepartmentTrainersService {
           departmentId,
           contactPersonId: dto.contactPersonId,
           role: dto.role,
-          licenses: dto.licenses,
+          licenses: dto.licenses as unknown as Prisma.InputJsonValue,
           sort: dto.sort ?? 0,
         },
         include: {
@@ -44,7 +44,7 @@ export class DepartmentTrainersService {
             include: { profileImage: true },
           },
         },
-      });
+      }) as unknown as DepartmentTrainerWithContactPerson;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
         throw new ConflictException(`This contact person is already a trainer for this department`);
@@ -69,7 +69,7 @@ export class DepartmentTrainersService {
       where: { id },
       data: {
         ...(dto.role !== undefined && { role: dto.role }),
-        ...(dto.licenses !== undefined && { licenses: dto.licenses }),
+        ...(dto.licenses !== undefined && { licenses: dto.licenses as unknown as Prisma.InputJsonValue }),
         ...(dto.sort !== undefined && { sort: dto.sort }),
       },
       include: {
@@ -77,7 +77,7 @@ export class DepartmentTrainersService {
           include: { profileImage: true },
         },
       },
-    });
+    }) as unknown as DepartmentTrainerWithContactPerson;
   }
 
   async remove(departmentSlug: string, id: number): Promise<DepartmentTrainerWithContactPerson> {

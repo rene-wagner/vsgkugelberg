@@ -79,7 +79,7 @@ export class MediaService {
         size: createMediaDto.size,
         type: createMediaDto.type || 'IMAGE',
         folderId: createMediaDto.folderId || null,
-        ...(thumbnails && { thumbnails }),
+        ...(thumbnails && { thumbnails: thumbnails as Prisma.InputJsonValue }),
       },
     });
   }
@@ -153,7 +153,7 @@ export class MediaService {
     // Update database
     return prisma.media.update({
       where: { id },
-      data: { thumbnails },
+      data: { thumbnails: thumbnails as Prisma.InputJsonValue },
     });
   }
 
@@ -215,7 +215,7 @@ export class MediaService {
           // Update database
           await prisma.media.update({
             where: { id: media.id },
-            data: { thumbnails },
+            data: { thumbnails: thumbnails as Prisma.InputJsonValue },
           });
           result.succeeded++;
         } else {

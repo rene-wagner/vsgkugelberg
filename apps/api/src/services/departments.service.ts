@@ -145,7 +145,11 @@ export class DepartmentsService {
 
     // Handle iconId: can be set to a value, or explicitly set to null to remove
     if (updateDepartmentDto.iconId !== undefined) {
-      updateData.iconId = updateDepartmentDto.iconId;
+      if (updateDepartmentDto.iconId === null) {
+        updateData.icon = { disconnect: true };
+      } else {
+        updateData.icon = { connect: { id: updateDepartmentDto.iconId } };
+      }
     }
 
     try {
