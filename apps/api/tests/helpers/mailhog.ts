@@ -63,7 +63,7 @@ export async function getEmails(): Promise<MailHogMessage[]> {
     if (!response.ok) {
       throw new Error(`MailHog API returned ${response.status}`);
     }
-    const data = await response.json() as MailHogResponse;
+    const data = (await response.json()) as MailHogResponse;
     return data.items;
   } catch (error) {
     if (error instanceof TypeError && error.message.includes('fetch')) {

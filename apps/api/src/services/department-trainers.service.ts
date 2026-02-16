@@ -31,7 +31,7 @@ export class DepartmentTrainersService {
     await this.validateContactPerson(dto.contactPersonId);
 
     try {
-      return await prisma.departmentTrainer.create({
+      return (await prisma.departmentTrainer.create({
         data: {
           departmentId,
           contactPersonId: dto.contactPersonId,
@@ -44,7 +44,7 @@ export class DepartmentTrainersService {
             include: { profileImage: true },
           },
         },
-      }) as unknown as DepartmentTrainerWithContactPerson;
+      })) as unknown as DepartmentTrainerWithContactPerson;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
         throw new ConflictException(`This contact person is already a trainer for this department`);
