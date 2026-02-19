@@ -22,7 +22,7 @@ import {
   User,
   HomepageContent,
   HomepageStat,
-} from '../generated/prisma/client';
+} from '../src/generated/prisma/client';
 
 const connectionString = `${process.env.DATABASE_URL}`;
 const adapter = new PrismaPg({ connectionString });
