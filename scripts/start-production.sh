@@ -56,11 +56,11 @@ log_error() {
 # ===============================
 
 check_env_file() {
-    if [ ! -f ".env.production" ]; then
-        log_error ".env.production file not found!"
+    if [ ! -f ".env" ]; then
+        log_error ".env file not found!"
         log_info "Create it from the template:"
-        echo "  cp .env.production.example .env.production"
-        echo "  # Then edit .env.production with your values"
+        echo "  cp .env.example .env"
+        echo "  # Then edit .env with your production values"
         exit 1
     fi
     log_success "Environment file found"
@@ -71,7 +71,7 @@ check_required_vars() {
 
     # Source the env file
     set -a
-    source .env.production
+    source .env
     set +a
 
     # Check required variables
@@ -177,7 +177,7 @@ cmd_init_env() {
 
 cmd_build() {
     log_info "Building Docker images..."
-    docker compose --env-file .env.production build
+    docker compose --env-file .env build
     log_success "Images built successfully"
 }
 
@@ -190,7 +190,7 @@ cmd_start() {
     check_traefik_network
 
     log_info "Building and starting services..."
-    docker compose --env-file .env.production up -d --build
+    docker compose --env-file .env up -d --build
 
     log_success "Services started successfully!"
     echo ""
@@ -203,7 +203,7 @@ cmd_start() {
 
 cmd_stop() {
     log_info "Stopping services..."
-    docker compose --env-file .env.production down
+    docker compose --env-file .env down
     log_success "Services stopped"
 }
 
@@ -216,15 +216,15 @@ cmd_restart() {
 cmd_logs() {
     local service="${1:-}"
     if [ -n "$service" ]; then
-        docker compose --env-file .env.production logs -f "$service"
+        docker compose --env-file .env logs -f "$service"
     else
-        docker compose --env-file .env.production logs -f
+        docker compose --env-file .env logs -f
     fi
 }
 
 cmd_status() {
     log_info "Service Status:"
-    docker compose --env-file .env.production ps
+    docker compose --env-file .env ps
 }
 
 cmd_pull() {
@@ -249,16 +249,16 @@ cmd_migrate() {
     fi
 
     # Ensure postgres is running
-    if ! docker compose --env-file .env.production ps postgres | grep -q "running"; then
+    if ! docker compose --env-file .env ps postgres | grep -q "running"; then
         log_warning "PostgreSQL is not running. Starting it first..."
-        docker compose --env-file .env.production up -d postgres
+        docker compose --env-file .env up -d postgres
         log_info "Waiting for PostgreSQL to be healthy..."
         sleep 10
     fi
 
     # Run migration with profile
     log_info "Starting migration container..."
-    docker compose --env-file .env.production --profile migrate run --rm migrate
+    docker compose --env-file .env --profile migrate run --rm migrate
 
     log_success "Migration completed!"
 }
