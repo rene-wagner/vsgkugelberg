@@ -5,14 +5,15 @@
 # ===============================
 # Usage: ./scripts/start-production.sh [command]
 # Commands:
-#   start   - Build and start all services (default)
-#   stop    - Stop all services
-#   restart - Restart all services
-#   logs    - Show service logs
-#   status  - Show service status
-#   build   - Build images without starting
-#   pull    - Pull latest code and rebuild
-#   migrate - Run database migration/seeding tool
+#   start    - Build and start all services (default)
+#   stop     - Stop all services
+#   restart  - Restart all services
+#   logs     - Show service logs
+#   status   - Show service status
+#   build    - Build images without starting
+#   pull     - Pull latest code and rebuild
+#   migrate  - Run database migration/seeding tool
+#   init-env - Copy .env.example files to project root and symlink back
 
 set -e
 
@@ -127,6 +128,53 @@ check_docker() {
 # Commands
 # ===============================
 
+cmd_init_env() {
+    log_info "Initialising environment files from .env.example templates..."
+
+    local sources=(
+        "apps/api/.env.example:.env.api:apps/api/.env"
+        "apps/web/.env.example:.env.web:apps/web/.env"
+        "tools/migrate/.env.example:.env.migrate:tools/migrate/.env"
+    )
+
+    for entry in "${sources[@]}"; do
+        IFS=":" read -r src dest link <<< "$entry"
+
+        if [ ! -f "$src" ]; then
+            log_error "Source file not found: $src"
+            exit 1
+        fi
+
+        # Copy .env.example to project root under the new name
+        if [ -f "$dest" ]; then
+            log_warning "$dest already exists – skipping copy"
+        else
+            cp "$src" "$dest"
+            log_success "Copied $src → $dest"
+        fi
+
+        # Create symlink inside the app/tool directory pointing back to project root
+        local depth
+        depth=$(echo "$link" | tr -cd '/' | wc -c)
+        local rel_prefix
+        rel_prefix=$(printf '../%.0s' $(seq 1 "$depth"))
+        local symlink_target="${rel_prefix}${dest}"
+
+        if [ -L "$link" ]; then
+            log_warning "$link symlink already exists – skipping"
+        elif [ -f "$link" ]; then
+            log_warning "$link is a regular file – skipping symlink creation"
+        else
+            ln -s "$symlink_target" "$link"
+            log_success "Symlinked $link → $symlink_target"
+        fi
+    done
+
+    echo ""
+    log_success "Environment files initialised."
+    log_info "Edit the generated .env.api, .env.web and .env.migrate files in the project root, then run '$0 start'."
+}
+
 cmd_build() {
     log_info "Building Docker images..."
     docker compose --env-file .env.production build
@@ -233,6 +281,7 @@ show_help() {
     echo "  build     Build images without starting"
     echo "  pull      Pull latest code and rebuild"
     echo "  migrate   Run database migration/seeding tool"
+    echo "  init-env  Copy .env.example files to project root and symlink back"
     echo "  help      Show this help message"
 }
 
@@ -266,6 +315,9 @@ case "$COMMAND" in
         ;;
     migrate)
         cmd_migrate
+        ;;
+    init-env)
+        cmd_init_env
         ;;
     help|--help|-h)
         show_help
