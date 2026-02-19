@@ -51,8 +51,6 @@ RUN pnpm install --frozen-lockfile --prod
 
 # Copy built files from builder stage
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
-COPY --from=builder /app/apps/api/node_modules/.prisma ./apps/api/node_modules/.prisma
-COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 
 # Create uploads directory with proper permissions
 RUN mkdir -p /app/apps/api/uploads \
