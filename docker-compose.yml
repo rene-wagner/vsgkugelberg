@@ -40,7 +40,7 @@ services:
       retries: 5
 
   # ===============================
-  # API Service (Express.js)
+  # API Service
   # ===============================
   api:
     build:
@@ -54,21 +54,21 @@ services:
       redis:
         condition: service_healthy
     environment:
-      NODE_ENV: production
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
-      REDIS_URL: redis://vsgkugelberg_redis:6379
+      NODE_ENV: ${NODE_ENV}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
       JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRATION: ${JWT_EXPIRATION:-12h}
-      CORS_ORIGINS: ${CORS_ORIGINS:-https://vsgweb.rwgnr.de}
-      APP_URL: ${APP_URL:-https://vsgweb.rwgnr.de}
-      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-smtp}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      THUMBNAIL_QUALITY: ${THUMBNAIL_QUALITY}
+      APP_URL: ${APP_URL}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER}
       SMTP_HOST: ${SMTP_HOST}
-      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_PORT: ${SMTP_PORT}
       SMTP_USER: ${SMTP_USER}
       SMTP_PASS: ${SMTP_PASS}
       SMTP_FROM: ${SMTP_FROM}
       HONEYPOT_SECRET: ${HONEYPOT_SECRET}
-      UPLOAD_DIR: /app/apps/api/uploads
     volumes:
       - vsgkugelberg_uploads:/app/apps/api/uploads
     networks:
@@ -105,6 +105,8 @@ services:
     restart: unless-stopped
     depends_on:
       - api
+    environment:
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL}
     networks:
       - traefik_proxy
     labels:
@@ -136,8 +138,8 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
+      POSTGRES_HOST: ${PSOTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DATABASE: ${POSTGRES_DB}
