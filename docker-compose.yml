@@ -1,49 +1,330 @@
 services:
+  # ===============================
+  # PostgreSQL Database
+  # ===============================
   postgres:
-    image: postgres:18-alpine
-    container_name: postgres_db
-    ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+    image: postgres:16-alpine
+    container_name: vsg-postgres
+    restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - vsg-internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
+  # ===============================
+  # Redis Server
+  # ===============================
   redis:
     image: redis:7-alpine
-    container_name: redis_cache
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
+    container_name: vsg-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
-    command: redis-server --appendonly yes
+    networks:
+      - vsg-internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  mysql:
-    image: mysql:9.5
-    container_name: mysql_db
-    ports:
-      - "${MYSQL_PORT:-3306}:3306"
+  # ===============================
+  # API Service (Express.js)
+  # ===============================
+  api:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    container_name: vsg-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-12h}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://vsgweb.rwgnr.de}
+      APP_URL: ${APP_URL:-https://vsgweb.rwgnr.de}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-smtp}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM: ${SMTP_FROM}
+      HONEYPOT_SECRET: ${HONEYPOT_SECRET}
+      UPLOAD_DIR: /app/apps/api/uploads
     volumes:
-      - mysql_data:/var/lib/mysql
+      - uploads:/app/apps/api/uploads
+    networks:
+      - vsg-internal
+      - traefik
+    labels:
+      # Enable Traefik
+      - "traefik.enable=true"
+      # Router configuration
+      - "traefik.http.routers.vsg-api.rule=Host(`vsgapi.rwgnr.de`)"
+      - "traefik.http.routers.vsg-api.entrypoints=websecure"
+      - "traefik.http.routers.vsg-api.tls=true"
+      - "traefik.http.routers.vsg-api.tls.certresolver=letsencrypt"
+      # Service configuration
+      - "traefik.http.services.vsg-api.loadbalancer.server.port=3000"
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.vsg-api-http.rule=Host(`vsgapi.rwgnr.de`)"
+      - "traefik.http.routers.vsg-api-http.entrypoints=web"
+      - "traefik.http.routers.vsg-api-http.middlewares=https-redirect"
+      # Middleware for redirect
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
 
-  mailhog:
-    image: mailhog/mailhog:latest
-    container_name: mailhog
-    ports:
-      - "${MAILHOG_SMTP_PORT:-1025}:1025"
-      - "${MAILHOG_UI_PORT:-8025}:8025"
+  # ===============================
+  # Web Service (Vue 3 / Nginx)
+  # ===============================
+  web:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+      args:
+        VITE_API_BASE_URL: https://vsgapi.rwgnr.de
+    container_name: vsg-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    networks:
+      - traefik
+    labels:
+      # Enable Traefik
+      - "traefik.enable=true"
+      # Router configuration
+      - "traefik.http.routers.vsg-web.rule=Host(`vsgweb.rwgnr.de`)"
+      - "traefik.http.routers.vsg-web.entrypoints=websecure"
+      - "traefik.http.routers.vsg-web.tls=true"
+      - "traefik.http.routers.vsg-web.tls.certresolver=letsencrypt"
+      # Service configuration
+      - "traefik.http.services.vsg-web.loadbalancer.server.port=80"
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.vsg-web-http.rule=Host(`vsgweb.rwgnr.de`)"
+      - "traefik.http.routers.vsg-web-http.entrypoints=web"
+      - "traefik.http.routers.vsg-web-http.middlewares=https-redirect"
 
+  # ===============================
+  # Migration Tool (run with --profile migrate)
+  # ===============================
+  migrate:
+    build:
+      context: .
+      dockerfile: ./tools/migrate/Dockerfile
+    container_name: vsg-migrate
+    profiles:
+      - migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DATABASE: ${POSTGRES_DB}
+    volumes:
+      # Mount CSV data files from host
+      - ./tools/migrate/data:/app/tools/migrate/data:ro
+    networks:
+      - vsg-internal
+
+# ===============================
+# Networks
+# ===============================
+networks:
+  vsg-internal:
+    driver: bridge
+  traefik:
+    external: true
+
+# ===============================
+# Volumes
+# ===============================
 volumes:
   postgres_data:
-    driver: local
-  mysql_data:
-    driver: local
   redis_data:
-    driver: local
+  uploads:
+  services:
+  # ===============================
+  # PostgreSQL Database
+  # ===============================
+  postgres:
+    image: postgres:16-alpine
+    container_name: vsg-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - vsg-internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # ===============================
+  # Redis Server
+  # ===============================
+  redis:
+    image: redis:7-alpine
+    container_name: vsg-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - vsg-internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ===============================
+  # API Service (Express.js)
+  # ===============================
+  api:
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    container_name: vsg-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-12h}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://vsgweb.rwgnr.de}
+      APP_URL: ${APP_URL:-https://vsgweb.rwgnr.de}
+      EMAIL_PROVIDER: ${EMAIL_PROVIDER:-smtp}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASS: ${SMTP_PASS}
+      SMTP_FROM: ${SMTP_FROM}
+      HONEYPOT_SECRET: ${HONEYPOT_SECRET}
+      UPLOAD_DIR: /app/apps/api/uploads
+    volumes:
+      - uploads:/app/apps/api/uploads
+    networks:
+      - vsg-internal
+      - traefik
+    labels:
+      # Enable Traefik
+      - "traefik.enable=true"
+      # Router configuration
+      - "traefik.http.routers.vsg-api.rule=Host(`vsgapi.rwgnr.de`)"
+      - "traefik.http.routers.vsg-api.entrypoints=websecure"
+      - "traefik.http.routers.vsg-api.tls=true"
+      - "traefik.http.routers.vsg-api.tls.certresolver=letsencrypt"
+      # Service configuration
+      - "traefik.http.services.vsg-api.loadbalancer.server.port=3000"
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.vsg-api-http.rule=Host(`vsgapi.rwgnr.de`)"
+      - "traefik.http.routers.vsg-api-http.entrypoints=web"
+      - "traefik.http.routers.vsg-api-http.middlewares=https-redirect"
+      # Middleware for redirect
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+
+  # ===============================
+  # Web Service (Vue 3 / Nginx)
+  # ===============================
+  web:
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+      args:
+        VITE_API_BASE_URL: https://vsgapi.rwgnr.de
+    container_name: vsg-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    networks:
+      - traefik
+    labels:
+      # Enable Traefik
+      - "traefik.enable=true"
+      # Router configuration
+      - "traefik.http.routers.vsg-web.rule=Host(`vsgweb.rwgnr.de`)"
+      - "traefik.http.routers.vsg-web.entrypoints=websecure"
+      - "traefik.http.routers.vsg-web.tls=true"
+      - "traefik.http.routers.vsg-web.tls.certresolver=letsencrypt"
+      # Service configuration
+      - "traefik.http.services.vsg-web.loadbalancer.server.port=80"
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.vsg-web-http.rule=Host(`vsgweb.rwgnr.de`)"
+      - "traefik.http.routers.vsg-web-http.entrypoints=web"
+      - "traefik.http.routers.vsg-web-http.middlewares=https-redirect"
+
+  # ===============================
+  # Migration Tool (run with --profile migrate)
+  # ===============================
+  migrate:
+    build:
+      context: .
+      dockerfile: ./tools/migrate/Dockerfile
+    container_name: vsg-migrate
+    profiles:
+      - migrate
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DATABASE: ${POSTGRES_DB}
+    volumes:
+      # Mount CSV data files from host
+      - ./tools/migrate/data:/app/tools/migrate/data:ro
+    networks:
+      - vsg-internal
+
+# ===============================
+# Networks
+# ===============================
+networks:
+  vsg-internal:
+    driver: bridge
+  traefik:
+    external: true
+
+# ===============================
+# Volumes
+# ===============================
+volumes:
+  postgres_data:
+  redis_data:
+  uploads:

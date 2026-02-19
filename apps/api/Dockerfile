@@ -1,14 +1,15 @@
-# Stage 1: Build
-FROM node:24-alpine AS builder
-ARG DATABASE_URL
-ENV DATABASE_URL=$DATABASE_URL
-WORKDIR /app
+# ===============================
+# Stage 1: Builder
+# ===============================
+FROM node:22-alpine AS builder
 
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
 
-# Copy workspace files
-COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
+WORKDIR /app
+
+# Copy workspace configuration files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 COPY apps/api/package.json ./apps/api/
 
 # Install dependencies
@@ -17,27 +18,54 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY apps/api ./apps/api
 
-# Generate Prisma client and build
-RUN pnpm --filter api prisma:generate
-RUN pnpm --filter api build
+# Generate Prisma client
+WORKDIR /app/apps/api
+RUN pnpm prisma:generate
 
-# Stage 2: Production
-FROM node:24-alpine AS production
-WORKDIR /app
+# Build TypeScript
+RUN pnpm build
 
+# ===============================
+# Stage 2: Production Runner
+# ===============================
+FROM node:22-alpine AS runner
+
+# Install pnpm for production dependencies
 RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
 
-# Copy package files for dependency installation
-COPY --from=builder /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
-COPY --from=builder /app/apps/api/package.json ./apps/api/
+# Create non-root user for security
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 expressjs
+
+WORKDIR /app
+
+# Copy workspace configuration files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api/package.json ./apps/api/
 
 # Install production dependencies only
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --frozen-lockfile --prod
 
-# Copy built artifacts
+# Copy built files from builder stage
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/node_modules/.prisma ./apps/api/node_modules/.prisma
 COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
-COPY --from=builder /app/apps/api/generated ./apps/api/generated
 
+# Create uploads directory with proper permissions
+RUN mkdir -p /app/apps/api/uploads \
+    && chown -R expressjs:nodejs /app
+
+# Switch to non-root user
+USER expressjs
+
+WORKDIR /app/apps/api
+
+# Expose port
 EXPOSE 3000
-CMD ["node", "apps/api/dist/index.js"]
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+
+# Run migrations and start the server
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]
