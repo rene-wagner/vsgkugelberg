@@ -9,7 +9,7 @@ prisma/generated/
 # Vitest
 .vitest/
 
-/generated/prisma
+generated
 
 # Uploads (keep .gitkeep)
 uploads/*

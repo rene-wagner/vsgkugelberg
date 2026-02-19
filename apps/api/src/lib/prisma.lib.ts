@@ -21,7 +21,7 @@ import {
   MembershipFeeContent,
   SportInsuranceContent,
   StatutesContent,
-} from '../../generated/prisma/client';
+} from '../generated/prisma/client';
 
 const connectionString = `${process.env.DATABASE_URL}`;
 
