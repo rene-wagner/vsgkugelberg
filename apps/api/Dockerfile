@@ -19,6 +19,10 @@ RUN pnpm install --frozen-lockfile
 COPY apps/api ./apps/api
 
 # Generate Prisma client
+# DATABASE_URL is required by prisma.config.ts at parse time, but prisma generate
+# never connects to the database - a placeholder is sufficient for code generation.
+ARG DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder
+ENV DATABASE_URL=${DATABASE_URL}
 RUN pnpm --filter api prisma:generate
 
 # Build TypeScript
@@ -47,8 +51,8 @@ RUN pnpm install --frozen-lockfile --prod
 
 # Copy built files from builder stage
 COPY --from=builder /app/apps/api/dist ./apps/api/dist
-# COPY --from=builder /app/apps/api/node_modules/.prisma ./apps/api/node_modules/.prisma
-# COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
+COPY --from=builder /app/apps/api/node_modules/.prisma ./apps/api/node_modules/.prisma
+COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
 
 # Create uploads directory with proper permissions
 RUN mkdir -p /app/apps/api/uploads \
