@@ -79,10 +79,7 @@ services:
     restart: unless-stopped
     depends_on:
       - vsg-api
-    env_file:
-      - .env
     networks:
-      - vsg-internal
       - traefik_proxy
     labels:
       # Enable Traefik
