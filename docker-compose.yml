@@ -43,9 +43,7 @@ services:
   # API Service
   # ===============================
   vsg-api:
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
+    image: ghcr.io/rene-wagner/vsgkugelberg-api:latest
     container_name: vsg-api
     restart: unless-stopped
     depends_on:
