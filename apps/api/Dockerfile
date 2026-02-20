@@ -25,6 +25,9 @@ RUN --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL \
 # Build TypeScript
 RUN pnpm --filter api build
 
+RUN --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL \
+    pnpm --filter api prisma:migrate
+
 # ===============================
 # Stage 2: Production Runner
 # ===============================

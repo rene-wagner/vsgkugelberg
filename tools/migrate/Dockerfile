@@ -18,7 +18,5 @@ RUN pnpm install --frozen-lockfile
 # Copy migration tool source code
 COPY tools/migrate ./tools/migrate
 
-WORKDIR /app/tools/migrate
-
 # Run migration
-CMD ["pnpm", "migrate"]
+CMD ["sh", "-c", "pnpm --filter migrate migrate"]
