@@ -3,10 +3,10 @@
 # ===============================
 FROM node:22-alpine AS builder
 
+WORKDIR /app
+
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
-
-WORKDIR /app
 
 # Copy workspace configuration files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -19,11 +19,8 @@ RUN pnpm install --frozen-lockfile
 COPY apps/api ./apps/api
 
 # Generate Prisma client
-# DATABASE_URL is required by prisma.config.ts at parse time, but prisma generate
-# never connects to the database - a placeholder is sufficient for code generation.
-ARG DATABASE_URL=postgresql://placeholder:placeholder@placeholder:5432/placeholder
-ENV DATABASE_URL=${DATABASE_URL}
-RUN pnpm --filter api prisma:generate
+RUN --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL \
+    pnpm --filter api prisma:generate
 
 # Build TypeScript
 RUN pnpm --filter api build
@@ -33,14 +30,14 @@ RUN pnpm --filter api build
 # ===============================
 FROM node:22-alpine AS runner
 
+WORKDIR /app
+
 # Install pnpm for production dependencies
 RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
 
 # Create non-root user for security
 RUN addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 expressjs
-
-WORKDIR /app
 
 # Copy workspace configuration files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -59,8 +56,6 @@ RUN mkdir -p /app/apps/api/uploads \
 # Switch to non-root user
 USER expressjs
 
-WORKDIR /app/apps/api
-
 # Expose port
 EXPOSE 3000
 
@@ -69,4 +64,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
 
 # Run migrations and start the server
-CMD ["sh", "-c", "node dist/index.js"]
+CMD ["sh", "-c", "pnpm --filter api start"]
