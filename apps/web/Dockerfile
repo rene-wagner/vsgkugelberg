@@ -19,10 +19,6 @@ RUN pnpm install --frozen-lockfile
 COPY apps/web ./apps/web
 
 # Build the Vue application
-WORKDIR /app/apps/web
-RUN pnpm build
-
-# Generate Prisma client
 RUN --mount=type=secret,id=VITE_API_BASE_URL,env=VITE_API_BASE_URL \
     pnpm --filter web build
 

@@ -82,6 +82,7 @@ services:
     env_file:
       - .env
     networks:
+      - vsg-internal
       - traefik_proxy
     labels:
       # Enable Traefik
