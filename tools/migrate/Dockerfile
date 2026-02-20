@@ -20,7 +20,8 @@ RUN pnpm install --frozen-lockfile
 COPY apps/api ./apps/api
 COPY tools/migrate ./tools/migrate
 
-RUN pnpm --filter api prisma:deploy
+RUN --mount=type=secret,id=DATABASE_URL,env=DATABASE_URL \
+    pnpm --filter api prisma:deploy
 
 # Run migration
 CMD ["sh", "-c", "pnpm --filter migrate migrate"]
