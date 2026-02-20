@@ -79,6 +79,8 @@ services:
     restart: unless-stopped
     depends_on:
       - vsg-api
+    env_file:
+      - .env
     networks:
       - traefik_proxy
     labels:
@@ -97,9 +99,7 @@ services:
   # Migration Tool (run with --profile migrate)
   # ===============================
   vsg-migrate:
-    build:
-      context: .
-      dockerfile: ./tools/migrate/Dockerfile
+    image: ghcr.io/rene-wagner/vsgkugelberg-migrate:latest
     container_name: vsg-migrate
     profiles:
       - migrate
