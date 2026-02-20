@@ -74,11 +74,7 @@ services:
   # Web Service (Vue 3 / Nginx)
   # ===============================
   vsg-web:
-    build:
-      context: .
-      dockerfile: ./apps/web/Dockerfile
-      args:
-        VITE_API_BASE_URL: https://vsgapi.rwgnr.de
+    image: ghcr.io/rene-wagner/vsgkugelberg-web:latest
     container_name: vsg-web
     restart: unless-stopped
     depends_on:

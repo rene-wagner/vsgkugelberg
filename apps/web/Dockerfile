@@ -3,10 +3,10 @@
 # ===============================
 FROM node:22-alpine AS builder
 
+WORKDIR /app
+
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@10.28.0 --activate
-
-WORKDIR /app
 
 # Copy workspace configuration files
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
@@ -18,13 +18,13 @@ RUN pnpm install --frozen-lockfile
 # Copy source code
 COPY apps/web ./apps/web
 
-# Build argument for API URL (baked into the build)
-ARG VITE_API_BASE_URL=https://vsgapi.rwgnr.de
-ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
-
 # Build the Vue application
 WORKDIR /app/apps/web
 RUN pnpm build
+
+# Generate Prisma client
+RUN --mount=type=secret,id=VITE_API_BASE_URL,env=VITE_API_BASE_URL \
+    pnpm --filter web build
 
 # ===============================
 # Stage 2: Production Runner (Nginx)
