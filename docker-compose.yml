@@ -2,18 +2,18 @@ services:
   # ===============================
   # PostgreSQL Database
   # ===============================
-  postgres:
+  vsg-postgres:
     image: postgres:18-alpine
-    container_name: vsgkugelberg_postgres
+    container_name: vsg-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - vsgkugelberg_postgres_data:/var/lib/postgresql/data
+      - vsg-postgres-data:/var/lib/postgresql/data
     networks:
-      - vsgkugelberg_internal
+      - vsg-internal
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -24,15 +24,15 @@ services:
   # ===============================
   # Redis Server
   # ===============================
-  redis:
+  vsg-redis:
     image: redis:7-alpine
-    container_name: vsgkugelberg_redis
+    container_name: vsg-redis
     restart: unless-stopped
     command: redis-server --appendonly yes
     volumes:
-      - vsgkugelberg_redis_data:/data
+      - vsg-redis-data:/data
     networks:
-      - vsgkugelberg_internal
+      - vsg-internal
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -42,120 +42,91 @@ services:
   # ===============================
   # API Service
   # ===============================
-  api:
+  vsg-api:
     build:
       context: .
       dockerfile: ./apps/api/Dockerfile
-    container_name: vsgkugelberg_api
+    container_name: vsg-api
     restart: unless-stopped
     depends_on:
-      postgres:
+      vsg-postgres:
         condition: service_healthy
-      redis:
+      vsg-redis:
         condition: service_healthy
-    environment:
-      NODE_ENV: ${NODE_ENV}
-      DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: ${REDIS_URL}
-      JWT_SECRET: ${JWT_SECRET}
-      JWT_EXPIRATION: ${JWT_EXPIRATION}
-      CORS_ORIGINS: ${CORS_ORIGINS}
-      THUMBNAIL_QUALITY: ${THUMBNAIL_QUALITY}
-      APP_URL: ${APP_URL}
-      EMAIL_PROVIDER: ${EMAIL_PROVIDER}
-      SMTP_HOST: ${SMTP_HOST}
-      SMTP_PORT: ${SMTP_PORT}
-      SMTP_USER: ${SMTP_USER}
-      SMTP_PASS: ${SMTP_PASS}
-      SMTP_FROM: ${SMTP_FROM}
-      HONEYPOT_SECRET: ${HONEYPOT_SECRET}
+    env_file:
+      - .env
     volumes:
-      - vsgkugelberg_uploads:/app/apps/api/uploads
+      - vsg-uploads:/app/apps/api/uploads
     networks:
-      - vsgkugelberg_internal
+      - vsg-internal
       - traefik_proxy
     labels:
       # Enable Traefik
       - "traefik.enable=true"
       # Router configuration
-      - "traefik.http.routers.vsgkugelberg-api.rule=Host(`vsgapi.rwgnr.de`)"
-      - "traefik.http.routers.vsgkugelberg-api.entrypoints=websecure"
-      - "traefik.http.routers.vsgkugelberg-api.tls=true"
-      - "traefik.http.routers.vsgkugelberg-api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.vsg-api.rule=Host(`vsgapi.rwgnr.de`)"
+      - "traefik.http.routers.vsg-api.entrypoints=websecure"
+      - "traefik.http.routers.vsg-api.tls.certresolver=letsencrypt"
       # Service configuration
-      - "traefik.http.services.vsgkugelberg-api.loadbalancer.server.port=3000"
-      # HTTP to HTTPS redirect
-      - "traefik.http.routers.vsgkugelberg-api-http.rule=Host(`vsgapi.rwgnr.de`)"
-      - "traefik.http.routers.vsgkugelberg-api-http.entrypoints=web"
-      - "traefik.http.routers.vsgkugelberg-api-http.middlewares=https-redirect"
-      # Middleware for redirect
-      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
+      - "traefik.http.services.vsg-api.loadbalancer.server.port=3000"
+      # Use Traefik network
       - "traefik.docker.network=traefik_proxy"
 
   # ===============================
   # Web Service (Vue 3 / Nginx)
   # ===============================
-  web:
+  vsg-web:
     build:
       context: .
       dockerfile: ./apps/web/Dockerfile
       args:
         VITE_API_BASE_URL: https://vsgapi.rwgnr.de
-    container_name: vsgkugelberg-web
+    container_name: vsg-web
     restart: unless-stopped
     depends_on:
-      - api
-    environment:
-      VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+      - vsg-api
+    env_file:
+      - .env
     networks:
       - traefik_proxy
     labels:
       # Enable Traefik
       - "traefik.enable=true"
       # Router configuration
-      - "traefik.http.routers.vsgkugelberg-web.rule=Host(`vsgweb.rwgnr.de`)"
-      - "traefik.http.routers.vsgkugelberg-web.entrypoints=websecure"
-      - "traefik.http.routers.vsgkugelberg-web.tls=true"
-      - "traefik.http.routers.vsgkugelberg-web.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.vsg-web.rule=Host(`vsgweb.rwgnr.de`)"
+      - "traefik.http.routers.vsg-web.entrypoints=websecure"
+      - "traefik.http.routers.vsg-web.tls.certresolver=letsencrypt"
       # Service configuration
-      - "traefik.http.services.vsgkugelberg-web.loadbalancer.server.port=80"
-      # HTTP to HTTPS redirect
-      - "traefik.http.routers.vsgkugelberg-web-http.rule=Host(`vsgweb.rwgnr.de`)"
-      - "traefik.http.routers.vsgkugelberg-web-http.entrypoints=web"
-      - "traefik.http.routers.vsgkugelberg-web-http.middlewares=https-redirect"
+      - "traefik.http.services.vsg-web.loadbalancer.server.port=80"
+      # Use Traefik network
       - "traefik.docker.network=traefik_proxy"
 
   # ===============================
   # Migration Tool (run with --profile migrate)
   # ===============================
-  migrate:
+  vsg-migrate:
     build:
       context: .
       dockerfile: ./tools/migrate/Dockerfile
-    container_name: vsgkugelberg-migrate
+    container_name: vsg-migrate
     profiles:
       - migrate
     depends_on:
-      postgres:
+      vsg-postgres:
         condition: service_healthy
-    environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DATABASE: ${POSTGRES_DB}
+    env_file:
+      - .env
     volumes:
       # Mount CSV data files from host
-      - ./tools/migrate/data:/app/tools/migrate/data:ro
+      - ./data:/app/tools/migrate/data:ro
     networks:
-      - vsgkugelberg_internal
+      - vsg-internal
 
 # ===============================
 # Networks
 # ===============================
 networks:
-  vsgkugelberg_internal:
+  vsg-internal:
     driver: bridge
   traefik_proxy:
     external: true
@@ -164,6 +135,6 @@ networks:
 # Volumes
 # ===============================
 volumes:
-  vsgkugelberg_postgres_data:
-  vsgkugelberg_redis_data:
-  vsgkugelberg_uploads:
+  vsg-postgres-data:
+  vsg-redis-data:
+  vsg-uploads:
