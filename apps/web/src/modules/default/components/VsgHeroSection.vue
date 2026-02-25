@@ -43,8 +43,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const logoUrl = computed(() => {
   if (!props.logo) return null;
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || '';
-  return `${apiBaseUrl}${props.logo.path}`;
+  return props.logo.path;
 });
 
 const minHeightClass = computed(() => {
