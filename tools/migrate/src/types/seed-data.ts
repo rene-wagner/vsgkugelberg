@@ -139,8 +139,6 @@ export interface SeedHomepageStat {
 }
 
 export interface SeedHomepage {
-  heroHeadline: string;
-  heroDescription: string;
   heroTag: string;
   stats: SeedHomepageStat[];
   departmentsHeadline: string;

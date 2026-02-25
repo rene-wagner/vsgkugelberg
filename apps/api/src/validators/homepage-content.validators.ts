@@ -1,8 +1,6 @@
 import { body } from 'express-validator';
 
 export const updateHomepageContentValidator = [
-  body('heroHeadline').optional().isString().trim().notEmpty(),
-  body('heroDescription').optional().isString().trim(),
   body('heroTag').optional().isString().trim(),
   body('heroLogoId').optional().isInt(),
 

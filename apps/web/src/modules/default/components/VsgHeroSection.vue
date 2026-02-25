@@ -27,7 +27,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  headline: 'VSG',
+  headline: '',
   description: undefined,
   subtitle: undefined,
   tag: undefined,

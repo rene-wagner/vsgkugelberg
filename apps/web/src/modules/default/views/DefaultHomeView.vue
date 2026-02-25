@@ -19,8 +19,6 @@ onMounted(() => {
 <template>
   <div class="min-h-screen text-white overflow-x-hidden selection:bg-vsg-gold-500 selection:text-vsg-blue-900">
     <VsgHeroSection
-      :headline="homepageContent?.heroHeadline"
-      :description="homepageContent?.heroDescription"
       :tag="homepageContent?.heroTag"
       :logo="homepageContent?.heroLogo ?? null"
       min-height="screen"

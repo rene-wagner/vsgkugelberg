@@ -262,8 +262,6 @@ CREATE TABLE "HistoryMilestone" (
 -- CreateTable
 CREATE TABLE "HomepageContent" (
     "id" INTEGER NOT NULL DEFAULT 1,
-    "heroHeadline" TEXT NOT NULL,
-    "heroDescription" TEXT NOT NULL,
     "heroTag" TEXT NOT NULL,
     "heroLogoId" INTEGER,
     "departmentsHeadline" TEXT NOT NULL,

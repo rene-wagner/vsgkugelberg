@@ -18,8 +18,6 @@ export interface MediaItem {
 
 export interface HomepageContent {
   id: number;
-  heroHeadline: string;
-  heroDescription: string;
   heroTag: string;
   heroLogoId?: number | null;
   heroLogo?: MediaItem | null;

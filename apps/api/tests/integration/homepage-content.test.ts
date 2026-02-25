@@ -27,8 +27,6 @@ describe('Homepage Content API Integration Tests', () => {
     await prisma.homepageContent.create({
       data: {
         id: 1,
-        heroHeadline: 'ORIGINAL HEADLINE',
-        heroDescription: 'Original description',
         heroTag: 'Original tag',
         departmentsHeadline: 'ABTEILUNGEN',
         departmentsDescription: 'Depts desc',
@@ -55,8 +53,7 @@ describe('Homepage Content API Integration Tests', () => {
       const response = await request(app).get('/api/homepage-content');
 
       expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('heroHeadline', 'ORIGINAL HEADLINE');
-      expect(response.body).toHaveProperty('heroDescription', 'Original description');
+      expect(response.body).toHaveProperty('heroTag', 'Original tag');
       expect(response.body).toHaveProperty('postsCount', 5);
     });
 
@@ -81,23 +78,20 @@ describe('Homepage Content API Integration Tests', () => {
       const { cookies } = await createAuthenticatedUser();
 
       const updateData = {
-        heroHeadline: 'NEW HEADLINE',
-        heroDescription: 'NEW DESCRIPTION',
+        heroTag: 'NEW TAG',
         postsCount: 10,
       };
 
       const response = await request(app).patch('/api/homepage-content').set('Cookie', cookies).send(updateData);
 
       expect(response.status).toBe(200);
-      expect(response.body.heroHeadline).toBe('NEW HEADLINE');
-      expect(response.body.heroDescription).toBe('NEW DESCRIPTION');
+      expect(response.body.heroTag).toBe('NEW TAG');
       expect(response.body.postsCount).toBe(10);
 
       const updated = await prisma.homepageContent.findUnique({
         where: { id: 1 },
       });
-      expect(updated?.heroHeadline).toBe('NEW HEADLINE');
-      expect(updated?.heroDescription).toBe('NEW DESCRIPTION');
+      expect(updated?.heroTag).toBe('NEW TAG');
       expect(updated?.postsCount).toBe(10);
     });
 
@@ -122,7 +116,7 @@ describe('Homepage Content API Integration Tests', () => {
     });
 
     it('should return 401 without authentication', async () => {
-      const response = await request(app).patch('/api/homepage-content').send({ heroHeadline: 'UNAUTHORIZED' });
+      const response = await request(app).patch('/api/homepage-content').send({ heroTag: 'UNAUTHORIZED' });
       expect(response.status).toBe(401);
     });
 
@@ -144,13 +138,13 @@ describe('Homepage Content API Integration Tests', () => {
       await request(app).patch('/api/homepage-content').set('Cookie', cookies).send(initialData);
 
       const partialUpdate = {
-        heroHeadline: 'PARTIAL UPDATE',
+        heroTag: 'PARTIAL UPDATE TAG',
       };
 
       const response = await request(app).patch('/api/homepage-content').set('Cookie', cookies).send(partialUpdate);
 
       expect(response.status).toBe(200);
-      expect(response.body.heroHeadline).toBe('PARTIAL UPDATE');
+      expect(response.body.heroTag).toBe('PARTIAL UPDATE TAG');
       expect(response.body.stats).toHaveLength(1);
       expect(response.body.stats[0].label).toBe('Initial Stat');
     });
@@ -162,8 +156,6 @@ describe('Homepage Content API Integration Tests', () => {
       await prisma.homepageStat.deleteMany();
 
       const updateData = {
-        heroHeadline: 'CREATED VIA UPSERT',
-        heroDescription: 'New content',
         heroTag: 'Tag',
         departmentsHeadline: 'ABTEILUNGEN',
         departmentsDescription: 'Desc',
@@ -179,13 +171,13 @@ describe('Homepage Content API Integration Tests', () => {
       const response = await request(app).patch('/api/homepage-content').set('Cookie', cookies).send(updateData);
 
       expect(response.status).toBe(200);
-      expect(response.body.heroHeadline).toBe('CREATED VIA UPSERT');
+      expect(response.body.heroTag).toBe('Tag');
 
       const created = await prisma.homepageContent.findUnique({
         where: { id: 1 },
       });
       expect(created).not.toBeNull();
-      expect(created?.heroHeadline).toBe('CREATED VIA UPSERT');
+      expect(created?.heroTag).toBe('Tag');
     });
   });
 });

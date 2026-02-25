@@ -20,17 +20,15 @@ export async function seedHomepage(pgClient: Client, mediaMap: MediaFileMap): Pr
     // 1. Create HomepageContent
     await pgClient.query(
       `INSERT INTO "HomepageContent" (
-        "id", "heroHeadline", "heroDescription", "heroTag", "heroLogoId",
+        "id", "heroTag", "heroLogoId",
         "departmentsHeadline", "departmentsDescription", "departmentsSubtitle",
         "postsHeadline", "postsDescription", "postsSubtitle", "postsCount",
         "ctaHeadline", "ctaDescription", "updatedAt"
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW()
       )`,
       [
         1,
-        homepage.heroHeadline,
-        homepage.heroDescription,
         homepage.heroTag,
         logoMediaId,
         homepage.departmentsHeadline,

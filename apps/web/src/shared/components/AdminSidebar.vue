@@ -24,7 +24,6 @@ const navGroups: NavGroup[] = [
     items: [
       { name: 'Dashboard', path: '/admin', icon: 'gauge' },
       { name: 'Abteilungen', path: '/admin/abteilungen', icon: 'cubes' },
-      { name: 'Termine', path: '/admin/termine', icon: 'calendar' },
       { name: 'Kontakt', path: '/admin/kontakt', icon: 'address-book' },
       { name: 'Kategorien', path: '/admin/kategorien', icon: 'sitemap' },
       { name: 'Beiträge', path: '/admin/beitraege', icon: 'newspaper' },

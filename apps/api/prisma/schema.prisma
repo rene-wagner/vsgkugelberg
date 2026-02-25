@@ -305,8 +305,6 @@ model HistoryMilestone {
 
 model HomepageContent {
   id                    Int            @id @default(1)
-  heroHeadline          String
-  heroDescription       String
   heroTag               String
   heroLogoId            Int?
   heroLogo              Media?         @relation(fields: [heroLogoId], references: [id], onDelete: SetNull)

@@ -19,8 +19,6 @@ export class HomepageContentService {
 
     return {
       id: content.id,
-      heroHeadline: content.heroHeadline,
-      heroDescription: content.heroDescription,
       heroTag: content.heroTag,
       heroLogoId: content.heroLogoId,
       heroLogo: content.heroLogo
@@ -59,8 +57,6 @@ export class HomepageContentService {
       await tx.homepageContent.upsert({
         where: { id: 1 },
         update: {
-          heroHeadline: data.heroHeadline,
-          heroDescription: data.heroDescription,
           heroTag: data.heroTag,
           heroLogoId: data.heroLogoId,
           departmentsHeadline: data.departmentsHeadline,
@@ -75,8 +71,6 @@ export class HomepageContentService {
         },
         create: {
           id: 1,
-          heroHeadline: data.heroHeadline ?? '',
-          heroDescription: data.heroDescription ?? '',
           heroTag: data.heroTag ?? '',
           heroLogoId: data.heroLogoId ?? null,
           departmentsHeadline: data.departmentsHeadline ?? '',

@@ -158,11 +158,6 @@ function toggleAbteilungen() {
             </div>
           </div>
 
-          <a
-            href="#"
-            class="font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
-            >Termine</a
-          >
           <RouterLink
             to="/kontakt"
             class="font-body text-sm font-normal uppercase tracking-wider text-vsg-gold-300 transition-colors hover:text-vsg-gold-400"
@@ -294,14 +289,6 @@ function toggleAbteilungen() {
         </div>
       </div>
 
-      <div class="mb-4 w-full max-w-xs">
-        <a
-          href="#"
-          class="block font-display text-4xl tracking-wider text-white transition-colors hover:text-vsg-gold-400"
-          @click="closeMenu"
-          >Termine</a
-        >
-      </div>
       <div class="mb-4 w-full max-w-xs">
         <RouterLink
           to="/kontakt"
