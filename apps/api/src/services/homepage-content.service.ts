@@ -6,7 +6,7 @@ export class HomepageContentService {
    * Get the homepage content.
    * There is only one record with ID 1.
    */
-  async get(client: Prisma.TransactionClient | typeof prisma = prisma): Promise<HomepageContent | null> {
+  async get(baseUrl: string, client: Prisma.TransactionClient | typeof prisma = prisma): Promise<HomepageContent | null> {
     const content = await client.homepageContent.findUnique({
       where: { id: 1 },
       include: {
@@ -26,7 +26,7 @@ export class HomepageContentService {
             id: content.heroLogo.id,
             filename: content.heroLogo.filename,
             originalName: content.heroLogo.originalName,
-            path: content.heroLogo.path,
+            path: `${baseUrl}/uploads/${content.heroLogo.filename}`,
             mimetype: content.heroLogo.mimetype,
           }
         : null,
@@ -52,7 +52,7 @@ export class HomepageContentService {
    * Update the homepage content.
    * Uses a transaction to clear existing stats and recreate them.
    */
-  async update(data: UpdateHomepageContentDto) {
+  async update(data: UpdateHomepageContentDto, baseUrl: string) {
     return prisma.$transaction(async (tx) => {
       await tx.homepageContent.upsert({
         where: { id: 1 },
@@ -97,7 +97,7 @@ export class HomepageContentService {
         });
       }
 
-      return this.get(tx);
+      return this.get(baseUrl, tx);
     });
   }
 }
