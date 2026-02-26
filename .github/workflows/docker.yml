@@ -9,10 +9,6 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  # Wait for CI to pass
-  ci:
-    uses: ./.github/workflows/ci.yml
-
   build-api:
     name: Build API Image
     runs-on: ubuntu-latest
