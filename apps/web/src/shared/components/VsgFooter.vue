@@ -2,6 +2,7 @@
 import { computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useHistoryStore } from '@/modules/admin/stores/historyStore';
+import VsgLogo from './VsgLogo.vue';
 
 const historyStore = useHistoryStore();
 
@@ -42,18 +43,8 @@ onMounted(() => {
       <div class="grid gap-12 md:grid-cols-4">
         <!-- Brand -->
         <div class="md:col-span-2">
-          <div class="mb-6 flex items-center gap-4">
-            <div class="flex h-14 w-14 items-center justify-center rounded-lg bg-vsg-gold-400">
-              <img
-                src="@/assets/logo.svg"
-                alt="VSG Kugelberg Logo"
-                title="VSG Kugelberg Logo"
-              />
-            </div>
-            <div>
-              <span class="font-display text-3xl tracking-wider text-white">VSG KUGELBERG</span>
-              <span class="block font-body text-xs font-normal uppercase tracking-[0.3em] text-vsg-gold-400">Weißenfels</span>
-            </div>
+          <div class="mb-6">
+            <VsgLogo class="h-14" />
           </div>
           <p class="max-w-md font-body font-normal leading-relaxed text-vsg-blue-300">
             Seit über {{ age }} Jahren der Sportverein für Weißenfels und Umgebung. Tradition, Gemeinschaft und sportliche Exzellenz.

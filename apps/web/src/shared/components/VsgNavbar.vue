@@ -3,6 +3,7 @@ import { ref, computed, onMounted } from 'vue';
 import { RouterLink } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import VsgButton from './VsgButton.vue';
+import VsgLogo from './VsgLogo.vue';
 import { useDefaultDepartmentsStore } from '@modules/default/stores/departmentsStore';
 import { useAuthStore } from '@/modules/auth/stores/authStore';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -71,19 +72,9 @@ function toggleAbteilungen() {
         <!-- Logo -->
         <RouterLink
           to="/"
-          class="flex items-center gap-4"
+          class="flex items-center"
         >
-          <div class="animate-pulse-gold flex h-12 w-12 items-center justify-center rounded-lg bg-vsg-gold-400">
-            <img
-              src="@/assets/logo.svg"
-              alt="VSG Kugelberg Logo"
-              title="VSG Kugelberg Logo"
-            />
-          </div>
-          <div>
-            <span class="font-display text-3xl tracking-wider text-white">VSG KUGELBERG</span>
-            <span class="block font-body text-xs font-normal uppercase tracking-[0.3em] text-vsg-gold-400">Weissenfels</span>
-          </div>
+          <VsgLogo class="h-12" />
         </RouterLink>
 
         <!-- Desktop Menu -->
