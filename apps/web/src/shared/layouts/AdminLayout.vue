@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/modules/auth/stores/authStore';
 import VsgToastContainer from '@shared/components/VsgToastContainer.vue';
 import AdminSidebar from '@shared/components/AdminSidebar.vue';
+import VsgLogo from '@shared/components/VsgLogo.vue';
 
 const isUserMenuOpen = ref(false);
 const router = useRouter();
@@ -24,15 +25,9 @@ async function handleLogout() {
         <!-- Logo -->
         <RouterLink
           to="/"
-          class="flex items-center gap-3"
+          class="flex items-center"
         >
-          <div class="w-10 h-10 bg-vsg-gold-400 rounded-lg flex items-center justify-center">
-            <span class="font-display text-vsg-blue-900 text-xl tracking-tight">VK</span>
-          </div>
-          <div class="hidden sm:block">
-            <span class="font-display text-xl tracking-wider text-white">VSG KUGELBERG</span>
-            <span class="block text-[10px] font-body font-normal tracking-[0.3em] text-vsg-gold-400 uppercase">Admin Dashboard</span>
-          </div>
+          <VsgLogo class="h-10" />
         </RouterLink>
 
         <!-- User Menu -->

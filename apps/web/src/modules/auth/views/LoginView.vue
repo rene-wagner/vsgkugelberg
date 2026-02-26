@@ -2,24 +2,19 @@
 import { RouterLink } from 'vue-router';
 import LoginForm from '../components/LoginForm.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import VsgLogo from '@shared/components/VsgLogo.vue';
 </script>
 
 <template>
   <section class="min-h-screen flex items-center justify-center overflow-hidden">
     <div class="relative z-10 w-full max-w-md mx-auto px-6 py-12">
-      <!-- Logo and Brand -->
+      <!-- Logo -->
       <div class="text-center mb-10 animate-slide-up">
         <RouterLink
           to="/"
-          class="inline-flex items-center gap-4 mb-6"
+          class="inline-flex mb-6"
         >
-          <div class="w-14 h-14 bg-vsg-gold-400 rounded-lg flex items-center justify-center animate-pulse-gold">
-            <span class="font-display text-vsg-blue-900 text-3xl tracking-tight">VK</span>
-          </div>
-          <div class="text-left">
-            <span class="font-display text-3xl tracking-wider text-white block">VSG KUGELBERG</span>
-            <span class="text-xs font-body font-normal tracking-[0.3em] text-vsg-gold-400 uppercase">Weissenfels</span>
-          </div>
+          <VsgLogo class="h-14" />
         </RouterLink>
       </div>
 
