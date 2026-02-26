@@ -13,7 +13,7 @@ const homepageContentService = new HomepageContentService();
 router.get(
   '/',
   asyncHandlerMiddleware(async (req, res) => {
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const baseUrl = process.env.API_BASE_URL ?? `${req.protocol}://${req.get('host')}`;
     const homepageContent = await homepageContentService.get(baseUrl);
     res.json(homepageContent);
   }),
@@ -26,7 +26,7 @@ router.patch(
   updateHomepageContentValidator,
   validationMiddleware,
   asyncHandlerMiddleware(async (req, res) => {
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
+    const baseUrl = process.env.API_BASE_URL ?? `${req.protocol}://${req.get('host')}`;
     const updateHomepageContentDto: UpdateHomepageContentDto = req.body;
     const homepageContent = await homepageContentService.update(updateHomepageContentDto, baseUrl);
     res.json(homepageContent);
