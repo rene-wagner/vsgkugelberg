@@ -4,7 +4,7 @@ import type { HomepageContent } from '../../../shared/types/homepage-content.typ
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const useHomepageContentStore = defineStore('homepageContent', () => {
+export const useHomepageContentStore = defineStore('homepageContentPublic', () => {
   const homepageContent = ref<HomepageContent | null>(null);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
