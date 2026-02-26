@@ -10,6 +10,8 @@ const vereinLinks = [
   { label: 'Geschichte', href: '/verein/geschichte', isRouter: true },
   { label: 'Vorstand', href: '/verein/vorstand', isRouter: true },
   { label: 'Satzung', href: '/verein/satzung', isRouter: true },
+  { label: 'Beitragsordnung', href: '/verein/beitragsordnung', isRouter: true },
+  { label: 'Sportversicherung', href: '/verein/sportversicherung', isRouter: true },
   { label: 'Mitgliedschaft', href: '/verein/mitgliedschaft', isRouter: true },
 ];
 
