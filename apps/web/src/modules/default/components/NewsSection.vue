@@ -110,7 +110,7 @@ const listPosts = computed(() => posts.value.slice(1));
           :date="formatDate(featuredPost.createdAt)"
           :title="featuredPost.title.toUpperCase()"
           :excerpt="getExcerpt(featuredPost.content)"
-          :href="`/news/${featuredPost.slug}`"
+          :href="`/beitrag/${featuredPost.slug}`"
         />
 
         <!-- News List -->
@@ -123,7 +123,7 @@ const listPosts = computed(() => posts.value.slice(1));
             :key="post.id"
             :date="formatDate(post.createdAt)"
             :title="post.title"
-            :href="`/news/${post.slug}`"
+            :href="`/beitrag/${post.slug}`"
           />
         </div>
       </div>

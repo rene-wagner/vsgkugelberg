@@ -1,7 +1,6 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+import { api, ApiError } from '@/shared/utils/api';
 
 export interface Author {
   id: number;
@@ -21,6 +20,11 @@ export interface Tag {
   slug: string;
 }
 
+export interface Thumbnail {
+  filename: string;
+  originalName: string;
+}
+
 export interface Post {
   id: number;
   title: string;
@@ -31,6 +35,7 @@ export interface Post {
   author: Author;
   categories: Category[];
   tags: Tag[];
+  thumbnail: Thumbnail | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -45,10 +50,19 @@ interface PaginatedResponse {
   };
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 export const useDefaultPostsStore = defineStore('default-posts', () => {
+  // List state
   const posts = ref<Post[]>([]);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
+
+  // Single post state
+  const currentPost = ref<Post | null>(null);
+  const currentPostLoading = ref(false);
+  const currentPostError = ref<string | null>(null);
+  const currentPostNotFound = ref(false);
 
   async function fetchPublishedPosts(limit = 5): Promise<void> {
     isLoading.value = true;
@@ -72,10 +86,42 @@ export const useDefaultPostsStore = defineStore('default-posts', () => {
     }
   }
 
+  async function fetchPostBySlug(slug: string): Promise<void> {
+    currentPostLoading.value = true;
+    currentPostError.value = null;
+    currentPostNotFound.value = false;
+    currentPost.value = null;
+
+    try {
+      currentPost.value = await api.get<Post>(`/api/posts/${slug}`);
+    } catch (e) {
+      if (e instanceof ApiError && e.statusCode === 404) {
+        currentPostNotFound.value = true;
+      } else {
+        currentPostError.value = e instanceof Error ? e.message : 'Ein Fehler ist aufgetreten';
+      }
+    } finally {
+      currentPostLoading.value = false;
+    }
+  }
+
+  function clearCurrentPost(): void {
+    currentPost.value = null;
+    currentPostLoading.value = false;
+    currentPostError.value = null;
+    currentPostNotFound.value = false;
+  }
+
   return {
     posts,
     isLoading,
     error,
     fetchPublishedPosts,
+    currentPost,
+    currentPostLoading,
+    currentPostError,
+    currentPostNotFound,
+    fetchPostBySlug,
+    clearCurrentPost,
   };
 });

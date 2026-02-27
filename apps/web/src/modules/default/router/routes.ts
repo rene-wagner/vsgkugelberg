@@ -60,6 +60,11 @@ const routes: RouteRecordRaw[] = [
         name: 'department-detail',
         component: () => import('../views/DefaultDepartmentView.vue'),
       },
+      {
+        path: 'beitrag/:slug',
+        name: 'post-detail',
+        component: () => import('../views/DefaultPostView.vue'),
+      },
     ],
   },
 ];
