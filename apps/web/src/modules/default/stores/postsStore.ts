@@ -58,6 +58,11 @@ export const useDefaultPostsStore = defineStore('default-posts', () => {
   const isLoading = ref(false);
   const error = ref<string | null>(null);
 
+  // Department posts state (filtered by category)
+  const departmentPosts = ref<Post[]>([]);
+  const isDepartmentPostsLoading = ref(false);
+  const departmentPostsError = ref<string | null>(null);
+
   // Single post state
   const currentPost = ref<Post | null>(null);
   const currentPostLoading = ref(false);
@@ -84,6 +89,34 @@ export const useDefaultPostsStore = defineStore('default-posts', () => {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  async function fetchPublishedPostsByCategory(categorySlug: string, limit = 5): Promise<void> {
+    isDepartmentPostsLoading.value = true;
+    departmentPostsError.value = null;
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/posts?published=true&category=${encodeURIComponent(categorySlug)}&limit=${limit}`, {
+        method: 'GET',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch posts');
+      }
+
+      const result = (await response.json()) as PaginatedResponse;
+      departmentPosts.value = result.data;
+    } catch (e) {
+      departmentPostsError.value = e instanceof Error ? e.message : 'An error occurred';
+    } finally {
+      isDepartmentPostsLoading.value = false;
+    }
+  }
+
+  function clearDepartmentPosts(): void {
+    departmentPosts.value = [];
+    isDepartmentPostsLoading.value = false;
+    departmentPostsError.value = null;
   }
 
   async function fetchPostBySlug(slug: string): Promise<void> {
@@ -117,6 +150,11 @@ export const useDefaultPostsStore = defineStore('default-posts', () => {
     isLoading,
     error,
     fetchPublishedPosts,
+    departmentPosts,
+    isDepartmentPostsLoading,
+    departmentPostsError,
+    fetchPublishedPostsByCategory,
+    clearDepartmentPosts,
     currentPost,
     currentPostLoading,
     currentPostError,

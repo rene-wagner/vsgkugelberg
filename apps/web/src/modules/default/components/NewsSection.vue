@@ -11,6 +11,7 @@ interface Props {
   description?: string;
   subtitle?: string;
   postsCount?: number;
+  categorySlug?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -18,11 +19,28 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const postsStore = useDefaultPostsStore();
-const { posts, isLoading, error } = storeToRefs(postsStore);
+const { posts, isLoading, error, departmentPosts, isDepartmentPostsLoading, departmentPostsError } = storeToRefs(postsStore);
+
+// Use separate state when filtering by category
+const activePosts = computed(() => (props.categorySlug ? departmentPosts.value : posts.value));
+const activeLoading = computed(() => (props.categorySlug ? isDepartmentPostsLoading.value : isLoading.value));
+const activeError = computed(() => (props.categorySlug ? departmentPostsError.value : error.value));
 
 onMounted(() => {
-  postsStore.fetchPublishedPosts(props.postsCount);
+  if (props.categorySlug) {
+    postsStore.fetchPublishedPostsByCategory(props.categorySlug, props.postsCount);
+  } else {
+    postsStore.fetchPublishedPosts(props.postsCount);
+  }
 });
+
+function retry() {
+  if (props.categorySlug) {
+    postsStore.fetchPublishedPostsByCategory(props.categorySlug, props.postsCount);
+  } else {
+    postsStore.fetchPublishedPosts(props.postsCount);
+  }
+}
 
 // Format date to German locale
 function formatDate(dateString: string): string {
@@ -47,10 +65,10 @@ function getCategoryName(categories: { name: string }[]): string {
 }
 
 // Featured post is the first one
-const featuredPost = computed(() => posts.value[0] || null);
+const featuredPost = computed(() => activePosts.value[0] || null);
 
 // Remaining posts for the list (skip first)
-const listPosts = computed(() => posts.value.slice(1));
+const listPosts = computed(() => activePosts.value.slice(1));
 </script>
 
 <template>
@@ -70,7 +88,7 @@ const listPosts = computed(() => posts.value.slice(1));
 
       <!-- Loading State -->
       <div
-        v-if="isLoading"
+        v-if="activeLoading"
         class="flex justify-center py-12"
       >
         <div class="h-12 w-12 animate-spin rounded-full border-4 border-vsg-blue-200 border-t-vsg-blue-600"></div>
@@ -78,13 +96,13 @@ const listPosts = computed(() => posts.value.slice(1));
 
       <!-- Error State -->
       <div
-        v-else-if="error"
+        v-else-if="activeError"
         class="mx-auto max-w-2xl rounded-lg bg-red-50 p-6 text-center"
       >
-        <p class="text-red-600">{{ error }}</p>
+        <p class="text-red-600">{{ activeError }}</p>
         <button
           class="mt-4 rounded bg-vsg-blue-600 px-4 py-2 text-white hover:bg-vsg-blue-700"
-          @click="postsStore.fetchPublishedPosts(props.postsCount)"
+          @click="retry"
         >
           Erneut versuchen
         </button>
@@ -92,7 +110,7 @@ const listPosts = computed(() => posts.value.slice(1));
 
       <!-- Empty State -->
       <div
-        v-else-if="posts.length === 0"
+        v-else-if="activePosts.length === 0"
         class="mx-auto max-w-2xl rounded-lg bg-white p-12 text-center shadow-sm"
       >
         <p class="text-lg text-gray-600">Derzeit sind keine Neuigkeiten verfugbar.</p>

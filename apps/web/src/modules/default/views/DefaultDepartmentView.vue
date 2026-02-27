@@ -3,11 +3,13 @@ import { watch, onMounted, onUnmounted, watchEffect, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { storeToRefs } from 'pinia';
 import { useDefaultDepartmentsStore, getMediaUrl } from '../stores/departmentsStore';
+import { useDefaultPostsStore } from '../stores/postsStore';
 import VsgApiState from '@/shared/components/VsgApiState.vue';
 import VsgHeroSection from '../components/VsgHeroSection.vue';
 import StatsSection from '../components/StatsSection.vue';
 import VsgTrainingScheduleSection from '../components/VsgTrainingScheduleSection.vue';
 import VsgLocationSection from '../components/VsgLocationSection.vue';
+import NewsSection from '../components/NewsSection.vue';
 import VsgTrainersSection from '../components/VsgTrainersSection.vue';
 import VsgDepartmentCtaSection from '../components/VsgDepartmentCtaSection.vue';
 import type { Stat, TrainingGroup, DepartmentLocation, Trainer, DepartmentCta } from '../types/department-detail.types';
@@ -15,6 +17,8 @@ import type { Stat, TrainingGroup, DepartmentLocation, Trainer, DepartmentCta } 
 const route = useRoute();
 const departmentsStore = useDefaultDepartmentsStore();
 const { currentDepartment, currentDepartmentLoading, currentDepartmentError, currentDepartmentNotFound } = storeToRefs(departmentsStore);
+
+const postsStore = useDefaultPostsStore();
 
 function fetchDepartment() {
   const slug = route.params.slug as string;
@@ -50,6 +54,7 @@ watchEffect(() => {
 // Clear state on unmount
 onUnmounted(() => {
   departmentsStore.clearCurrentDepartment();
+  postsStore.clearDepartmentPosts();
 });
 
 // Transform API stats to component format
@@ -179,6 +184,13 @@ const departmentCta = computed<DepartmentCta>(() => {
         subtitle="Wo wir spielen"
         description="Moderne Hallen mit professioneller Ausstattung für optimale Trainingsbedingungen."
         :locations="departmentLocations"
+      />
+
+      <!-- News Section -->
+      <NewsSection
+        headline="AKTUELLE NEUIGKEITEN"
+        subtitle="Was bei uns los ist"
+        :category-slug="currentDepartment!.slug"
       />
 
       <!-- Trainers Section -->
