@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
+import AdminButton from '@/modules/admin/components/AdminButton.vue';
 
 const props = defineProps<{
   title: string;
@@ -59,23 +60,23 @@ function formatFileSize(bytes?: number): string {
             <p class="font-body text-xs text-gray-500">{{ formatFileSize(props.item.size) }}</p>
           </div>
         </div>
-      </div>
 
-      <div class="flex justify-end gap-3">
-        <button
-          type="button"
-          class="px-4 py-2 border border-gray-300 text-gray-600 font-body text-sm rounded-lg hover:bg-gray-50 transition-colors"
-          @click="emit('cancel')"
-        >
-          Abbrechen
-        </button>
-        <button
-          type="button"
-          class="px-4 py-2 bg-red-600 text-white font-body text-sm rounded-lg hover:bg-red-700 transition-colors"
-          @click="emit('confirm')"
-        >
-          Löschen
-        </button>
+        <div class="flex justify-end gap-3">
+          <AdminButton
+            variant="secondary"
+            size="small"
+            @click="emit('cancel')"
+          >
+            Abbrechen
+          </AdminButton>
+          <AdminButton
+            variant="danger"
+            size="small"
+            @click="emit('confirm')"
+          >
+            Löschen
+          </AdminButton>
+        </div>
       </div>
     </div>
   </Teleport>
