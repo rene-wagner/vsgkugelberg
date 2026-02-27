@@ -2,6 +2,7 @@
 import VsgNavbar from '@shared/components/VsgNavbar.vue';
 import VsgFooter from '@shared/components/VsgFooter.vue';
 import VsgToastContainer from '@shared/components/VsgToastContainer.vue';
+import CookieConsentBanner from '@shared/components/CookieConsentBanner.vue';
 </script>
 
 <template>
@@ -12,5 +13,6 @@ import VsgToastContainer from '@shared/components/VsgToastContainer.vue';
     </main>
     <VsgFooter />
     <VsgToastContainer />
+    <CookieConsentBanner />
   </div>
 </template>
