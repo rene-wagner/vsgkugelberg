@@ -62,7 +62,7 @@ router.post(
       path: req.file.filename, // Just the filename, path is constructed from UPLOAD_DIR
       mimetype: req.file.mimetype,
       size: req.file.size,
-      type: 'IMAGE',
+      type: req.file.mimetype === 'application/pdf' ? 'DOCUMENT' : 'IMAGE',
       folderId,
     });
 

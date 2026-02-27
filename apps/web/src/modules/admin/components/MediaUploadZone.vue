@@ -12,7 +12,7 @@ const mediaStore = useMediaStore();
 const isDragging = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 
-const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'application/pdf'];
 
 const uploadItems = computed(() => {
   return Array.from(mediaStore.uploadProgress.values());
@@ -59,7 +59,7 @@ async function processFiles(files: File[]) {
 
   if (validFiles.length < files.length) {
     const invalidCount = files.length - validFiles.length;
-    alert(`${invalidCount} Datei(en) wurden ignoriert. Erlaubte Formate: JPG, PNG, WebP, SVG`);
+    alert(`${invalidCount} Datei(en) wurden ignoriert. Erlaubte Formate: JPG, PNG, WebP, SVG, PDF`);
   }
 
   if (validFiles.length > 0) {
@@ -85,7 +85,7 @@ async function processFiles(files: File[]) {
         ref="fileInput"
         type="file"
         class="hidden"
-        accept="image/jpeg,image/png,image/webp,image/svg+xml"
+        accept="image/jpeg,image/png,image/webp,image/svg+xml,application/pdf"
         multiple
         @change="handleFileChange"
       />
@@ -115,7 +115,7 @@ async function processFiles(files: File[]) {
               <span class="text-vsg-blue-600 font-medium">klicken</span>
             </span>
           </p>
-          <p class="font-body text-xs text-gray-400 mt-1">JPG, PNG, WebP, SVG (max. 10MB)</p>
+          <p class="font-body text-xs text-gray-400 mt-1">JPG, PNG, WebP, SVG, PDF (max. 10MB)</p>
         </div>
       </div>
     </div>

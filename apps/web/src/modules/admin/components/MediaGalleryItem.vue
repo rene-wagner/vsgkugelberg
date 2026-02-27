@@ -25,6 +25,10 @@ function isSvg(item: MediaItem): boolean {
   return item.mimetype === 'image/svg+xml';
 }
 
+function isPdf(item: MediaItem): boolean {
+  return item.mimetype === 'application/pdf';
+}
+
 function getFileExtension(filename: string): string {
   return filename.split('.').pop()?.toUpperCase() || '';
 }
@@ -32,7 +36,21 @@ function getFileExtension(filename: string): string {
 
 <template>
   <div class="group relative bg-white border border-gray-200 rounded-lg overflow-hidden aspect-square">
+    <!-- PDF tile -->
+    <div
+      v-if="isPdf(item)"
+      class="w-full h-full flex flex-col items-center justify-center bg-gray-50 gap-2"
+    >
+      <FontAwesomeIcon
+        icon="file-pdf"
+        class="text-red-500 text-4xl"
+      />
+      <span class="font-body text-xs text-gray-500 px-2 text-center truncate w-full text-center">PDF</span>
+    </div>
+
+    <!-- Image tile -->
     <img
+      v-else
       :src="mediaUrl"
       :alt="item.originalName"
       class="w-full h-full object-cover"

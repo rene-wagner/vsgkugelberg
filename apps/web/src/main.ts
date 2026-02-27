@@ -57,6 +57,7 @@ import {
   faUsers,
   faWrench,
   faXmark,
+  faFilePdf,
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -84,6 +85,7 @@ library.add(
   faEye,
   faEyeSlash,
   faFileArrowDown,
+  faFilePdf,
   faFolder,
   faFolderPlus,
   faGrip,
@@ -136,6 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
     `img-src 'self' data: https: ${import.meta.env.VITE_API_BASE_URL};`,
     "font-src 'self' data: https://maxcdn.bootstrapcdn.com;",
     `connect-src 'self' ${import.meta.env.VITE_API_BASE_URL};`,
+    `object-src 'self' ${import.meta.env.VITE_API_BASE_URL};`,
   ].join('; ');
   document.head.appendChild(meta);
 });

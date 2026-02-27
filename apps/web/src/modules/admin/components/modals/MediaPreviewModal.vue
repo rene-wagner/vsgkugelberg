@@ -17,6 +17,10 @@ function formatFileSize(bytes: number): string {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
+
+function isPdf(item: MediaItem): boolean {
+  return item.mimetype === 'application/pdf';
+}
 </script>
 
 <template>
@@ -26,7 +30,7 @@ function formatFileSize(bytes: number): string {
       class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
       @click.self="emit('close')"
     >
-      <div class="relative max-w-4xl max-h-full">
+      <div class="relative max-w-4xl w-full max-h-full">
         <button
           type="button"
           class="absolute -top-10 right-0 p-2 text-white hover:text-gray-300 transition-colors"
@@ -35,7 +39,18 @@ function formatFileSize(bytes: number): string {
           <FontAwesomeIcon icon="xmark" />
         </button>
 
+        <!-- PDF preview -->
+        <embed
+          v-if="isPdf(item)"
+          :src="mediaUrl"
+          type="application/pdf"
+          class="w-full rounded-lg"
+          style="height: 80vh"
+        />
+
+        <!-- Image preview -->
         <img
+          v-else
           :src="mediaUrl"
           :alt="item.originalName"
           class="max-w-full max-h-[80vh] object-contain rounded-lg"
