@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { BadRequestException } from '@/errors/http-errors';
 
 // Allowed MIME types for image uploads
-const ALLOWED_MIMETYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'];
+const ALLOWED_MIMETYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'application/pdf'];
 
 // Max file size (default 10MB)
 const MAX_FILE_SIZE = parseInt(process.env.MAX_FILE_SIZE || '10485760', 10);
