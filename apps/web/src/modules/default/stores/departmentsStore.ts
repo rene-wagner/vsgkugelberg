@@ -91,6 +91,7 @@ export interface Department {
   name: string;
   slug: string;
   shortDescription: string;
+  welcomeText: string | null;
   iconId: number | null;
   icon: MediaItem | null;
   stats: DepartmentStat[];

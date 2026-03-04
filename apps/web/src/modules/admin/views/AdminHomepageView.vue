@@ -7,6 +7,7 @@ import HomepageStatsForm from '../components/forms/HomepageStatsForm.vue';
 import HomepageDepartmentsForm from '../components/forms/HomepageDepartmentsForm.vue';
 import HomepagePostsForm from '../components/forms/HomepagePostsForm.vue';
 import HomepageCtaForm from '../components/forms/HomepageCtaForm.vue';
+import HomepageWelcomeForm from '../components/forms/HomepageWelcomeForm.vue';
 import { VsgAlert } from '@/shared/components';
 import AdminPageHeader from '../components/AdminPageHeader.vue';
 import AdminLoadingState from '../components/AdminLoadingState.vue';
@@ -21,6 +22,7 @@ const tabs = computed<TabDefinition[]>(() => [
   { id: 'departments', label: 'Abteilungen' },
   { id: 'posts', label: 'Beiträge' },
   { id: 'cta', label: 'CTA' },
+  { id: 'welcome', label: 'Willkommen' },
 ]);
 
 onMounted(async () => {
@@ -81,6 +83,9 @@ onMounted(async () => {
         </div>
         <div v-show="activeTab === 'cta'">
           <HomepageCtaForm :homepage-content="homepageContentStore.homepageContent" />
+        </div>
+        <div v-show="activeTab === 'welcome'">
+          <HomepageWelcomeForm :homepage-content="homepageContentStore.homepageContent" />
         </div>
       </div>
     </div>

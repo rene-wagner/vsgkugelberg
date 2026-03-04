@@ -24,5 +24,6 @@ export interface HomepageContent {
   postsCount: number;
   ctaHeadline: string;
   ctaDescription: string;
+  welcomeText: string | null;
   updatedAt: string;
 }

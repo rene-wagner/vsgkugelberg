@@ -4,12 +4,14 @@ import { Media } from './media.types';
 export interface CreateDepartmentDto {
   name: string;
   shortDescription: string;
+  welcomeText?: string | null;
   iconId?: number;
 }
 
 export interface UpdateDepartmentDto {
   name?: string;
   shortDescription?: string;
+  welcomeText?: string | null;
   iconId?: number | null;
 }
 

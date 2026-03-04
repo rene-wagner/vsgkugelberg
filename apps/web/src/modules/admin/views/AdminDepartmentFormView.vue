@@ -7,6 +7,7 @@ import { useDepartmentTrainingStore } from '../stores/departmentTrainingStore';
 import { useDepartmentLocationsStore } from '../stores/departmentLocationsStore';
 import { useDepartmentTrainersStore } from '../stores/departmentTrainersStore';
 import DepartmentForm from '../components/forms/DepartmentForm.vue';
+import DepartmentWelcomeForm from '../components/forms/DepartmentWelcomeForm.vue';
 import VsgTabNav, { type TabDefinition } from '@/shared/components/VsgTabNav.vue';
 import DepartmentStatsEditor from '../components/DepartmentStatsEditor.vue';
 import DepartmentTrainingEditor from '../components/DepartmentTrainingEditor.vue';
@@ -59,6 +60,12 @@ const tabs = computed<TabDefinition[]>(() => {
     {
       id: 'trainer',
       label: 'TRAINER',
+      disabled: disabledInCreateMode,
+      disabledTooltip,
+    },
+    {
+      id: 'willkommen',
+      label: 'WILLKOMMEN',
       disabled: disabledInCreateMode,
       disabledTooltip,
     },
@@ -199,6 +206,14 @@ async function handleDepartmentSaved(savedDepartment: DepartmentExtended) {
               :initial-trainers="department.trainers || []"
             />
           </div>
+        </div>
+
+        <!-- Tab 6: Willkommen -->
+        <div v-show="activeTab === 'willkommen'">
+          <DepartmentWelcomeForm
+            v-if="department"
+            :department="department"
+          />
         </div>
       </div>
     </div>

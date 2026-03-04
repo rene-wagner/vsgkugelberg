@@ -16,6 +16,14 @@ export const createDepartmentValidator = [
     .withMessage('Short description must be between 10 and 5000 characters'),
 
   body('iconId').optional().isInt({ min: 1 }).withMessage('Icon ID must be a positive integer'),
+
+  body('welcomeText')
+    .optional({ nullable: true })
+    .custom((value) => {
+      if (value === null) return true;
+      if (typeof value === 'string') return true;
+      throw new Error('Welcome text must be a string or null');
+    }),
 ];
 
 export const updateDepartmentValidator = [
@@ -29,6 +37,14 @@ export const updateDepartmentValidator = [
       if (value === null) return true;
       if (Number.isInteger(value) && value >= 1) return true;
       throw new Error('Icon ID must be a positive integer or null');
+    }),
+
+  body('welcomeText')
+    .optional({ nullable: true })
+    .custom((value) => {
+      if (value === null) return true;
+      if (typeof value === 'string') return true;
+      throw new Error('Welcome text must be a string or null');
     }),
 ];
 
