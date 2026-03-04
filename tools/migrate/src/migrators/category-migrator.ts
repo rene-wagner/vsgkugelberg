@@ -1,7 +1,7 @@
 import ora from 'ora';
 import type { Client } from 'pg';
-import type { JoomlaCategory, CategoryMap } from '../types';
-import { loadCategoriesFromCSV } from '../database';
+import type { CategoryMap } from '../types';
+import { loadCategoriesData } from '../utils';
 import { logger } from '../utils';
 
 export async function migrateCategories(
@@ -10,7 +10,7 @@ export async function migrateCategories(
   const spinner = ora('Migrating categories...').start();
 
   try {
-    const categories = await loadCategoriesFromCSV();
+    const categories = await loadCategoriesData();
 
     const categoryMap: CategoryMap = new Map();
 

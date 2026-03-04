@@ -38,7 +38,7 @@ interface MigrationResults {
 
 function printHeader(): void {
   console.log(chalk.blue.bold('═══════════════════════════════════════════'));
-  console.log(chalk.blue.bold('  CSV → PostgreSQL Migration Tool'));
+  console.log(chalk.blue.bold('  VSG Kugelberg Migration Tool'));
   console.log(chalk.blue.bold('═══════════════════════════════════════════\n'));
 }
 
@@ -53,20 +53,20 @@ function printSummary(results: MigrationResults, timer: Timer): void {
   });
 
   table.push(
+    ['Users', results.users.toString(), chalk.green('✓ Complete')],
     ['Media Folders', results.mediaFolders.toString(), chalk.green('✓ Complete')],
     ['Media Files', results.mediaFiles.toString(), chalk.green('✓ Complete')],
-    ['Users', results.users.toString(), chalk.green('✓ Complete')],
     ['Contact Persons', results.contactPersons.toString(), chalk.green('✓ Complete')],
     [
       'Contact Person Images',
       results.linkedContactPersonImages.toString(),
       chalk.green('✓ Linked'),
     ],
+    ['Categories', results.categories.toString(), chalk.green('✓ Complete')],
+    ['Posts', results.posts.toString(), chalk.green('✓ Complete')],
     ['Departments', results.departments.toString(), chalk.green('✓ Complete')],
     ['Department Icons', results.linkedDepartmentIcons.toString(), chalk.green('✓ Linked')],
     ['Location Images', results.linkedLocationImages.toString(), chalk.green('✓ Linked')],
-    ['Categories', results.categories.toString(), chalk.green('✓ Complete')],
-    ['Posts', results.posts.toString(), chalk.green('✓ Complete')],
   );
 
   console.log(table.toString());
@@ -97,27 +97,31 @@ async function main(): Promise<void> {
       linkedLocationImages: 0,
     };
 
-    // 1. Seed media folders and files (BEFORE other seeders)
+    // 1. Seed users
+    results.users = await seedUsers(pgClient);
+
+    // 2. Seed media folders and files
     const folderMap = await seedMediaFolders(pgClient);
     results.mediaFolders = folderMap.size;
 
     const mediaMap = await seedMediaFiles(pgClient, folderMap);
     results.mediaFiles = mediaMap.size;
 
-    // 2. Seed users
-    results.users = await seedUsers(pgClient);
-
-    // 3. Seed contact persons
+    // 3. Seed contact persons and link images
     results.contactPersons = await seedContactPersons(pgClient);
-
-    // 4. Link contact person images
     results.linkedContactPersonImages = await linkContactPersonImages(pgClient, mediaMap);
 
-    // 5. Seed departments
+    // 4. Migrate categories
+    const categoryMap = await migrateCategories(pgClient);
+    results.categories = categoryMap.size;
+
+    // 5. Migrate posts
+    results.posts = await migratePosts(pgClient, categoryMap);
+
+    // 6. Seed departments, then link icons and location images
     const departmentResults = await seedDepartmentsComplete(pgClient);
     results.departments = departmentResults.departments;
 
-    // 6. Link department icons and location images
     results.linkedDepartmentIcons = await linkDepartmentIcons(
       pgClient,
       departmentResults.departmentMap,
@@ -129,31 +133,14 @@ async function main(): Promise<void> {
       mediaMap,
     );
 
-    // 7. Seed history
+    // 7. Seed remaining singleton content
     await seedHistory(pgClient);
-
-    // 8. Seed homepage
     await seedHomepage(pgClient, mediaMap);
-
-    // 9. Seed board content
     await seedBoardContent(pgClient);
-
-    // 10. Seed statutes
     await seedStatutes(pgClient);
-
-    // 11. Seed membership fee
     await seedMembershipFee(pgClient);
-
-    // 12. Seed sport insurance
     await seedSportInsurance(pgClient);
-
-    // 13. Seed membership page content
     await seedMembership(pgClient);
-
-    // 14. Run migrators (categories and posts)
-    const categoryMap = await migrateCategories(pgClient);
-    results.categories = categoryMap.size;
-    results.posts = await migratePosts(pgClient, categoryMap);
 
     // Print summary
     printSummary(results, globalTimer);
