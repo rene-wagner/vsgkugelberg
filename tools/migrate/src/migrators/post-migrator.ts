@@ -1,8 +1,8 @@
 import ora from 'ora';
 import slugify from 'slugify';
 import type { Client } from 'pg';
-import type { JoomlaCategory, JoomlaPost, CategoryMap } from '../types';
-import { loadCategoriesFromCSV, loadPostsFromCSV } from '../database';
+import type { CategoryMap } from '../types';
+import { loadCategoriesData, loadPostsData } from '../utils';
 import { logger } from '../utils';
 
 export async function migratePosts(
@@ -12,11 +12,11 @@ export async function migratePosts(
   const spinner = ora('Migrating posts...').start();
 
   try {
-    // Load all posts from CSV
-    const allPosts = await loadPostsFromCSV();
+    // Load all posts from JSON
+    const allPosts = await loadPostsData();
     
     // Load categories to map posts to categories
-    const categories = await loadCategoriesFromCSV();
+    const categories = await loadCategoriesData();
 
     let totalPosts = 0;
 
