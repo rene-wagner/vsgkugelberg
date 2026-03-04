@@ -420,6 +420,59 @@ CREATE TABLE "SportInsuranceContent" (
 );
 
 -- CreateTable
+CREATE TABLE "MembershipContent" (
+    "id" INTEGER NOT NULL DEFAULT 1,
+    "heroHeadline" TEXT NOT NULL DEFAULT '',
+    "heroSubHeadline" TEXT NOT NULL DEFAULT '',
+    "introText" TEXT NOT NULL DEFAULT '',
+    "trialPeriodHeadline" TEXT NOT NULL DEFAULT '',
+    "trialPeriodText" TEXT NOT NULL DEFAULT '',
+    "processHeadline" TEXT NOT NULL DEFAULT '',
+    "processText" TEXT NOT NULL DEFAULT '',
+    "documentsHeadline" TEXT NOT NULL DEFAULT '',
+    "ctaHeadline" TEXT NOT NULL DEFAULT '',
+    "ctaDescription" TEXT NOT NULL DEFAULT '',
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "MembershipContent_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MembershipDepartmentStat" (
+    "id" SERIAL NOT NULL,
+    "membershipContentId" INTEGER NOT NULL,
+    "departmentName" TEXT NOT NULL,
+    "totalCount" INTEGER NOT NULL DEFAULT 0,
+    "maleCount" INTEGER NOT NULL DEFAULT 0,
+    "femaleCount" INTEGER NOT NULL DEFAULT 0,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "MembershipDepartmentStat_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MembershipProcessStep" (
+    "id" SERIAL NOT NULL,
+    "membershipContentId" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "MembershipProcessStep_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "MembershipDocument" (
+    "id" SERIAL NOT NULL,
+    "membershipContentId" INTEGER NOT NULL,
+    "title" TEXT NOT NULL,
+    "url" TEXT NOT NULL,
+    "sort" INTEGER NOT NULL DEFAULT 0,
+
+    CONSTRAINT "MembershipDocument_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_CategoryToPost" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL,
@@ -545,6 +598,15 @@ CREATE INDEX "BoardMember_boardContentId_idx" ON "BoardMember"("boardContentId")
 CREATE INDEX "BoardMember_contactPersonId_idx" ON "BoardMember"("contactPersonId");
 
 -- CreateIndex
+CREATE INDEX "MembershipDepartmentStat_membershipContentId_idx" ON "MembershipDepartmentStat"("membershipContentId");
+
+-- CreateIndex
+CREATE INDEX "MembershipProcessStep_membershipContentId_idx" ON "MembershipProcessStep"("membershipContentId");
+
+-- CreateIndex
+CREATE INDEX "MembershipDocument_membershipContentId_idx" ON "MembershipDocument"("membershipContentId");
+
+-- CreateIndex
 CREATE INDEX "_CategoryToPost_B_index" ON "_CategoryToPost"("B");
 
 -- AddForeignKey
@@ -633,6 +695,15 @@ ALTER TABLE "BoardMember" ADD CONSTRAINT "BoardMember_boardContentId_fkey" FOREI
 
 -- AddForeignKey
 ALTER TABLE "BoardMember" ADD CONSTRAINT "BoardMember_contactPersonId_fkey" FOREIGN KEY ("contactPersonId") REFERENCES "ContactPerson"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MembershipDepartmentStat" ADD CONSTRAINT "MembershipDepartmentStat_membershipContentId_fkey" FOREIGN KEY ("membershipContentId") REFERENCES "MembershipContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MembershipProcessStep" ADD CONSTRAINT "MembershipProcessStep_membershipContentId_fkey" FOREIGN KEY ("membershipContentId") REFERENCES "MembershipContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "MembershipDocument" ADD CONSTRAINT "MembershipDocument_membershipContentId_fkey" FOREIGN KEY ("membershipContentId") REFERENCES "MembershipContent"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_CategoryToPost" ADD CONSTRAINT "_CategoryToPost_A_fkey" FOREIGN KEY ("A") REFERENCES "Category"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -34,7 +34,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'verein/mitgliedschaft',
         name: 'admin-verein-mitgliedschaft',
-        component: () => import('../views/AdminClubMembershipView.vue'),
+        component: () => import('../views/AdminClubMembershipFormView.vue'),
       },
       {
         path: 'verein/beitragsordnung',

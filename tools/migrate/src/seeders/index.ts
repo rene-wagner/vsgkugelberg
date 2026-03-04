@@ -8,3 +8,4 @@ export * from './media-seeder';
 export * from './statutes-seeder';
 export * from './membership-fee-seeder';
 export * from './sport-insurance-seeder';
+export * from './membership-seeder';
