@@ -13,6 +13,7 @@ import {
   seedStatutes,
   seedMembershipFee,
   seedSportInsurance,
+  seedMembership,
   seedMediaFolders,
   seedMediaFiles,
   linkContactPersonImages,
@@ -146,7 +147,10 @@ async function main(): Promise<void> {
     // 12. Seed sport insurance
     await seedSportInsurance(pgClient);
 
-    // 13. Run migrators (categories and posts)
+    // 13. Seed membership page content
+    await seedMembership(pgClient);
+
+    // 14. Run migrators (categories and posts)
     const categoryMap = await migrateCategories(pgClient);
     results.categories = categoryMap.size;
     results.posts = await migratePosts(pgClient, categoryMap);

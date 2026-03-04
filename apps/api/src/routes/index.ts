@@ -19,6 +19,7 @@ import { boardContentRouter } from './board-content.routes';
 import { statutesRouter } from './statutes.routes';
 import { membershipFeeRouter } from './membership-fee.routes';
 import { sportInsuranceRouter } from './sport-insurance.routes';
+import { membershipRouter } from './membership.routes';
 
 const router = Router();
 
@@ -41,5 +42,6 @@ router.use('/board-content', boardContentRouter);
 router.use('/statutes', statutesRouter);
 router.use('/membership-fee', membershipFeeRouter);
 router.use('/sport-insurance', sportInsuranceRouter);
+router.use('/membership', membershipRouter);
 
 export { router };

@@ -172,6 +172,39 @@ export interface SeedSportInsurance {
   content: string;
 }
 
+export interface SeedMembershipDepartmentStat {
+  departmentName: string;
+  totalCount: number;
+  maleCount: number;
+  femaleCount: number;
+}
+
+export interface SeedMembershipProcessStep {
+  title: string;
+  description: string;
+}
+
+export interface SeedMembershipDocument {
+  title: string;
+  url: string;
+}
+
+export interface SeedMembership {
+  heroHeadline: string;
+  heroSubHeadline: string;
+  introText: string;
+  trialPeriodHeadline: string;
+  trialPeriodText: string;
+  processHeadline: string;
+  processText: string;
+  documentsHeadline: string;
+  ctaHeadline: string;
+  ctaDescription: string;
+  departmentStats: SeedMembershipDepartmentStat[];
+  processSteps: SeedMembershipProcessStep[];
+  documents: SeedMembershipDocument[];
+}
+
 // Media migration types
 export type MediaFolderMap = Map<string, number>; // folderName → folderId
 export type MediaFileMap = Map<string, number>;   // originalFilename → mediaId
