@@ -455,3 +455,64 @@ model SportInsuranceContent {
   content   String   @db.Text
   updatedAt DateTime @updatedAt
 }
+
+model MembershipContent {
+  id                  Int                      @id @default(1)
+  // Hero Section
+  heroHeadline        String                   @default("")
+  heroSubHeadline     String                   @default("")
+  // Intro
+  introText           String                   @default("") @db.Text
+  // Trial Period Section
+  trialPeriodHeadline String                   @default("")
+  trialPeriodText     String                   @default("") @db.Text
+  // Sign-Up Process Section
+  processHeadline     String                   @default("")
+  processText         String                   @default("") @db.Text
+  // Documents Section
+  documentsHeadline   String                   @default("")
+  // CTA Section
+  ctaHeadline         String                   @default("")
+  ctaDescription      String                   @default("")
+  // Relations
+  departmentStats     MembershipDepartmentStat[]
+  processSteps        MembershipProcessStep[]
+  documents           MembershipDocument[]
+
+  updatedAt           DateTime                 @updatedAt
+}
+
+model MembershipDepartmentStat {
+  id                  Int               @id @default(autoincrement())
+  membershipContentId Int
+  membershipContent   MembershipContent @relation(fields: [membershipContentId], references: [id], onDelete: Cascade)
+  departmentName      String
+  totalCount          Int               @default(0)
+  maleCount           Int               @default(0)
+  femaleCount         Int               @default(0)
+  sort                Int               @default(0)
+
+  @@index([membershipContentId])
+}
+
+model MembershipProcessStep {
+  id                  Int               @id @default(autoincrement())
+  membershipContentId Int
+  membershipContent   MembershipContent @relation(fields: [membershipContentId], references: [id], onDelete: Cascade)
+  title               String
+  description         String            @db.Text
+  sort                Int               @default(0)
+
+  @@index([membershipContentId])
+}
+
+model MembershipDocument {
+  id                  Int               @id @default(autoincrement())
+  membershipContentId Int
+  membershipContent   MembershipContent @relation(fields: [membershipContentId], references: [id], onDelete: Cascade)
+  title               String
+  url                 String
+  sort                Int               @default(0)
+
+  @@index([membershipContentId])
+}
