@@ -58,6 +58,7 @@ CREATE TABLE "Department" (
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "shortDescription" TEXT NOT NULL,
+    "welcomeText" TEXT,
     "iconId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -273,6 +274,7 @@ CREATE TABLE "HomepageContent" (
     "postsCount" INTEGER NOT NULL DEFAULT 5,
     "ctaHeadline" TEXT NOT NULL,
     "ctaDescription" TEXT NOT NULL,
+    "welcomeText" TEXT,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "HomepageContent_pkey" PRIMARY KEY ("id")

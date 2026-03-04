@@ -185,6 +185,7 @@ export interface DepartmentExtended {
   name: string;
   slug: string;
   shortDescription: string;
+  welcomeText: string | null;
   iconId: number | null;
   icon: ContactPersonMedia | null;
   stats: DepartmentStat[];

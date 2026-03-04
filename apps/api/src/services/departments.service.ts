@@ -101,6 +101,7 @@ export class DepartmentsService {
           name: createDepartmentDto.name,
           slug,
           shortDescription: createDepartmentDto.shortDescription,
+          welcomeText: createDepartmentDto.welcomeText ?? null,
           iconId: createDepartmentDto.iconId,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -141,6 +142,10 @@ export class DepartmentsService {
 
     if (updateDepartmentDto.shortDescription !== undefined) {
       updateData.shortDescription = updateDepartmentDto.shortDescription;
+    }
+
+    if (updateDepartmentDto.welcomeText !== undefined) {
+      updateData.welcomeText = updateDepartmentDto.welcomeText;
     }
 
     // Handle iconId: can be set to a value, or explicitly set to null to remove

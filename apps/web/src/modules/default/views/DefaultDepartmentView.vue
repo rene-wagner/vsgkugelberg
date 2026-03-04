@@ -12,6 +12,7 @@ import VsgLocationSection from '../components/VsgLocationSection.vue';
 import NewsSection from '../components/NewsSection.vue';
 import VsgTrainersSection from '../components/VsgTrainersSection.vue';
 import VsgDepartmentCtaSection from '../components/VsgDepartmentCtaSection.vue';
+import WelcomeSection from '../components/WelcomeSection.vue';
 import type { Stat, TrainingGroup, DepartmentLocation, Trainer, DepartmentCta } from '../types/department-detail.types';
 
 const route = useRoute();
@@ -158,6 +159,12 @@ const departmentCta = computed<DepartmentCta>(() => {
         :secondary-cta-label="departmentLocations.length > 0 ? 'UNSERE STANDORTE' : undefined"
         :secondary-cta-anchor="departmentLocations.length > 0 ? '#standorte' : undefined"
         min-height="70vh"
+      />
+
+      <!-- Stats Section -->
+      <WelcomeSection
+        v-if="currentDepartment!.welcomeText"
+        :welcome-text="currentDepartment!.welcomeText"
       />
 
       <!-- Stats Section -->

@@ -16,6 +16,8 @@ export const updateHomepageContentValidator = [
   body('ctaHeadline').optional().isString().trim(),
   body('ctaDescription').optional().isString().trim(),
 
+  body('welcomeText').optional({ nullable: true }).isString().trim(),
+
   body('stats').optional().isArray(),
   body('stats.*.label').isString().trim().notEmpty(),
   body('stats.*.value').isString().trim().notEmpty(),

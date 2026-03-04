@@ -44,6 +44,7 @@ export class HomepageContentService {
       postsCount: content.postsCount,
       ctaHeadline: content.ctaHeadline,
       ctaDescription: content.ctaDescription,
+      welcomeText: content.welcomeText,
       updatedAt: content.updatedAt,
     };
   }
@@ -68,6 +69,7 @@ export class HomepageContentService {
           postsCount: data.postsCount,
           ctaHeadline: data.ctaHeadline,
           ctaDescription: data.ctaDescription,
+          welcomeText: data.welcomeText,
         },
         create: {
           id: 1,
@@ -82,6 +84,7 @@ export class HomepageContentService {
           postsCount: data.postsCount ?? 5,
           ctaHeadline: data.ctaHeadline ?? '',
           ctaDescription: data.ctaDescription ?? '',
+          welcomeText: data.welcomeText ?? null,
         },
       });
 

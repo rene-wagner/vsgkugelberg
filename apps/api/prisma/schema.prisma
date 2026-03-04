@@ -71,6 +71,7 @@ model Department {
   name             String                    @unique
   slug             String                    @unique
   shortDescription String
+  welcomeText      String?
   iconId           Int?
   icon             Media?                    @relation(fields: [iconId], references: [id], onDelete: SetNull)
   stats            DepartmentStat[]
@@ -318,6 +319,7 @@ model HomepageContent {
   postsCount            Int            @default(5)
   ctaHeadline           String
   ctaDescription        String
+  welcomeText           String?
   updatedAt             DateTime       @updatedAt
 }
 

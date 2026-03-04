@@ -2,6 +2,7 @@
 import { onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import VsgHeroSection from '../components/VsgHeroSection.vue';
+import WelcomeSection from '../components/WelcomeSection.vue';
 import StatsSection from '../components/StatsSection.vue';
 import DepartmentsSection from '../components/DepartmentsSection.vue';
 import NewsSection from '../components/NewsSection.vue';
@@ -23,6 +24,11 @@ onMounted(() => {
       :logo="homepageContent?.heroLogo ?? null"
       min-height="screen"
       :show-scroll-indicator="true"
+    />
+
+    <WelcomeSection
+      v-if="homepageContent?.welcomeText"
+      :welcome-text="homepageContent.welcomeText"
     />
 
     <StatsSection :stats="homepageContent?.stats" />

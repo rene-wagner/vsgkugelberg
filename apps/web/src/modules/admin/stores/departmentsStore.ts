@@ -27,6 +27,7 @@ export interface CreateDepartmentData {
 export interface UpdateDepartmentData {
   name?: string;
   shortDescription?: string;
+  welcomeText?: string | null;
   iconId?: number | null;
 }
 
