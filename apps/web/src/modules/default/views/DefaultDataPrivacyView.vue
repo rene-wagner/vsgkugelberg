@@ -15,133 +15,148 @@ import VsgContentSection from '../components/VsgContentSection.vue';
 
     <VsgContentSection>
       <div class="space-y-12">
-        <!-- Verantwortliche Stelle -->
+        <!-- 1. Verantwortliche Stelle -->
         <div>
           <h2 class="font-display text-2xl tracking-wider text-vsg-blue-900 md:text-3xl">1. Verantwortliche Stelle</h2>
           <div class="mt-4 space-y-4 font-body text-lg leading-relaxed text-vsg-blue-700">
             <p>Verantwortlich für die Datenverarbeitung auf dieser Website ist:</p>
             <p>
               VSG Kugelberg e.V.<br />
-              <span class="text-vsg-gold-600">[Adresse einfügen]</span><br />
-              <span class="text-vsg-gold-600">[PLZ Ort einfügen]</span>
+              Thomas-Müntzer-Str. 28<br />
+              06667 Weißenfels
             </p>
             <p>
-              E-Mail: <span class="text-vsg-gold-600">[E-Mail einfügen]</span><br />
-              Telefon:
-              <span class="text-vsg-gold-600">[Telefon einfügen]</span>
+              <strong class="text-vsg-blue-900">E-Mail:</strong>
+              <a
+                href="mailto:christian.koehler@vsg-kugelberg.de"
+                class="hover:text-vsg-gold-600 transition-colors"
+              >
+                christian.koehler@vsg-kugelberg.de </a
+              ><br />
+              <strong class="text-vsg-blue-900">Telefon:</strong> 0171 6905088
             </p>
           </div>
         </div>
 
-        <!-- Datenerfassung auf der Website -->
+        <!-- 2. Personenbezogene Daten -->
         <div>
-          <h2 class="font-display text-2xl tracking-wider text-vsg-blue-900 md:text-3xl">2. Datenerfassung auf der Website</h2>
+          <h2 class="font-display text-2xl tracking-wider text-vsg-blue-900 md:text-3xl">2. Personenbezogene Daten</h2>
           <div class="mt-4 space-y-6 font-body text-lg leading-relaxed text-vsg-blue-700">
-            <!-- Cookies -->
             <div>
-              <h3 class="mb-2 font-display text-xl text-vsg-blue-800">Cookies</h3>
+              <h3 class="mb-2 font-display text-xl text-vsg-blue-800">Allgemeine Nutzung der Website</h3>
               <p>
-                Unsere Website verwendet Cookies. Cookies sind kleine Textdateien, die auf Ihrem Endgerät gespeichert werden. Sie richten keinen
-                Schaden an und enthalten keine Viren. Cookies dienen dazu, unser Angebot nutzerfreundlicher und effektiver zu gestalten.
+                Sie können unsere Webseite ohne Angabe personenbezogener Daten besuchen. Soweit auf unseren Seiten personenbezogene Daten (wie Name,
+                Anschrift oder E-Mail-Adresse) erhoben werden, erfolgt dies, soweit möglich, auf freiwilliger Basis. Diese Daten werden ohne Ihre
+                ausdrückliche Zustimmung nicht an Dritte weitergegeben.
               </p>
               <p class="mt-2">
-                Sie können Ihren Browser so einstellen, dass Sie über das Setzen von Cookies informiert werden und Cookies nur im Einzelfall erlauben.
+                Sofern zwischen Ihnen und uns ein Vertragsverhältnis begründet, inhaltlich ausgestaltet oder geändert werden soll oder Sie an uns eine
+                Anfrage stellen, erheben und verwenden wir personenbezogene Daten von Ihnen, soweit dies zu diesen Zwecken erforderlich ist
+                (Bestandsdaten). Sämtliche personenbezogenen Daten werden nur solange gespeichert wie dies für den genannten Zweck (Bearbeitung Ihrer
+                Anfrage oder Abwicklung eines Vertrags) erforderlich ist. Hierbei werden steuer- und handelsrechtliche Aufbewahrungsfristen
+                berücksichtigt.
+              </p>
+              <p class="mt-2">
+                Wir weisen ausdrücklich darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken
+                aufweisen kann und nicht lückenlos vor dem Zugriff durch Dritte geschützt werden kann. Die Verwendung der Kontaktdaten unseres
+                Impressums zur gewerblichen Werbung ist ausdrücklich nicht erwünscht, es sei denn wir hatten zuvor unsere schriftliche Einwilligung
+                erteilt oder es besteht bereits eine Geschäftsbeziehung.
               </p>
             </div>
 
-            <!-- Server-Log-Files -->
             <div>
-              <h3 class="mb-2 font-display text-xl text-vsg-blue-800">Server-Log-Files</h3>
+              <h3 class="mb-2 font-display text-xl text-vsg-blue-800">Vereinsmitglieder</h3>
               <p>
-                Der Provider der Seiten erhebt und speichert automatisch Informationen in sogenannten Server-Log-Files, die Ihr Browser automatisch an
-                uns übermittelt. Dies sind:
+                Die Nutzung der dem Verein zur Verfügung gestellten personenbezogenen Daten der Vereinsmitglieder — wie Name, Vorname, Geburtsdatum,
+                Anschrift, Kontoverbindung, Mailadresse und Telefonnummer sowie von Bildmaterial, welches im Rahmen von Vereinsveranstaltungen
+                entstanden ist — erfolgt ausschließlich auf der Grundlage der Datenschutzgrundverordnung (DSGVO) und des Bundesdatenschutzgesetzes
+                (BDSG).
               </p>
-              <ul class="mt-2 list-inside list-disc space-y-1 pl-4">
-                <li>Browsertyp und Browserversion</li>
-                <li>Verwendetes Betriebssystem</li>
-                <li>Referrer URL</li>
-                <li>Hostname des zugreifenden Rechners</li>
-                <li>Uhrzeit der Serveranfrage</li>
-                <li>IP-Adresse</li>
-              </ul>
-              <p class="mt-2">Eine Zusammenführung dieser Daten mit anderen Datenquellen wird nicht vorgenommen.</p>
-            </div>
-
-            <!-- Kontaktformular -->
-            <div>
-              <h3 class="mb-2 font-display text-xl text-vsg-blue-800">Kontaktformular</h3>
-              <p>
-                Wenn Sie uns per Kontaktformular Anfragen zukommen lassen, werden Ihre Angaben aus dem Anfrageformular inklusive der von Ihnen dort
-                angegebenen Kontaktdaten zwecks Bearbeitung der Anfrage und für den Fall von Anschlussfragen bei uns gespeichert. Diese Daten geben
-                wir nicht ohne Ihre Einwilligung weiter.
+              <p class="mt-2">
+                Diese Daten dienen der Erfüllung von Vereinspflichten auf Grundlage der Vereinssatzung (u.a. Einzug von Beiträgen, Mitteilung von
+                Terminen für Vereinsveranstaltungen) und gegenüber behördlicher Institutionen wie dem Landessportbund, Kreissportbund, den
+                Sportfachverbänden (Tischtennis, Volleyball, Gymnastik und Badminton), der Verwaltung des Landkreises und der Stadt Weißenfels sowie
+                dem Finanzamt. Hier werden die Daten z.B. im Zusammenhang mit der Sportstättennutzung, der Höhe von Mitgliedsbeiträgen, der
+                Beantragung und Abrechnung von Fördermitteln und der Abgabe der Körperschaftssteuererklärung benötigt. Sie dienen darüber hinaus,
+                insbesondere in Bezug auf Inhalte unserer Homepage, als Kommunikationsmittel innerhalb und außerhalb des Vereins.
+              </p>
+              <p class="mt-2">
+                Auf Anordnung der zuständigen Stellen dürfen wir im Einzelfall Auskunft über diese Daten (Bestandsdaten) erteilen, soweit dies für
+                Zwecke der Strafverfolgung, zur Gefahrenabwehr, zur Erfüllung der gesetzlichen Aufgaben der Verfassungsschutzbehörden oder des
+                Militärischen Abschirmdienstes oder zur Durchsetzung der Rechte am geistigen Eigentum erforderlich ist.
               </p>
             </div>
           </div>
         </div>
 
-        <!-- Rechte der Betroffenen -->
+        <!-- 3. Rechte der Betroffenen -->
         <div>
           <h2 class="font-display text-2xl tracking-wider text-vsg-blue-900 md:text-3xl">3. Rechte der Betroffenen</h2>
           <div class="mt-4 space-y-4 font-body text-lg leading-relaxed text-vsg-blue-700">
+            <p>Zu den Rechten der betroffenen Personen zählen gemäß DSGVO:</p>
+            <ul class="list-inside list-disc space-y-2 pl-4">
+              <li>Informationspflichten bei der Erhebung von personenbezogenen Daten (Art. 13 und 14 DSGVO)</li>
+              <li>Auskunftsrecht (Art. 15 DSGVO)</li>
+              <li>Recht auf Berichtigung (Art. 16 DSGVO)</li>
+              <li>Recht auf Löschung (Art. 17 DSGVO)</li>
+              <li>Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
+              <li>Mitteilungspflicht in Bezug auf die Berichtigung, Löschung oder Einschränkung der Verarbeitung (Art. 19 DSGVO)</li>
+              <li>Recht auf Datenübertragbarkeit (Art. 20 DSGVO)</li>
+              <li>Widerspruchsrecht (Art. 21 DSGVO)</li>
+            </ul>
+            <p>Für die Ausübung und Nachfragen hinsichtlich dieser Rechte steht Ihnen der Ansprechpartner des Vereins gern zur Verfügung:</p>
             <p>
-              Sie haben jederzeit das Recht auf unentgeltliche Auskunft über Ihre gespeicherten personenbezogenen Daten, deren Herkunft und Empfänger
-              und den Zweck der Datenverarbeitung sowie ein Recht auf Berichtigung oder Löschung dieser Daten.
+              Christian Köhler<br />
+              <strong class="text-vsg-blue-900">E-Mail:</strong>
+              <a
+                href="mailto:christian.koehler@vsg-kugelberg.de"
+                class="hover:text-vsg-gold-600 transition-colors"
+              >
+                christian.koehler@vsg-kugelberg.de </a
+              ><br />
+              <strong class="text-vsg-blue-900">Telefon:</strong> 0171 6905088
             </p>
-
-            <div>
-              <h3 class="mb-2 font-display text-xl text-vsg-blue-800">Auskunftsrecht</h3>
-              <p>
-                Sie haben das Recht, eine Bestätigung darüber zu verlangen, ob betreffende Daten verarbeitet werden und auf Auskunft über diese Daten
-                sowie auf weitere Informationen und Kopie der Daten.
-              </p>
-            </div>
-
-            <div>
-              <h3 class="mb-2 font-display text-xl text-vsg-blue-800">Widerrufsrecht</h3>
-              <p>
-                Sie haben das Recht, erteilte Einwilligungen jederzeit zu widerrufen. Durch den Widerruf der Einwilligung wird die Rechtmäßigkeit der
-                aufgrund der Einwilligung bis zum Widerruf erfolgten Verarbeitung nicht berührt.
-              </p>
-            </div>
-
-            <div>
-              <h3 class="mb-2 font-display text-xl text-vsg-blue-800">Recht auf Löschung</h3>
-              <p>
-                Sie haben das Recht, zu verlangen, dass betreffende Daten unverzüglich gelöscht werden, und wir sind verpflichtet, personenbezogene
-                Daten unverzüglich zu löschen, sofern einer der gesetzlichen Gründe zutrifft.
-              </p>
-            </div>
-
-            <div>
-              <h3 class="mb-2 font-display text-xl text-vsg-blue-800">Beschwerderecht bei der Aufsichtsbehörde</h3>
-              <p>
-                Sie haben das Recht, sich bei einer Datenschutz-Aufsichtsbehörde über die Verarbeitung Ihrer personenbezogenen Daten zu beschweren.
-              </p>
-            </div>
           </div>
         </div>
 
-        <!-- Social Media & Externe Links -->
+        <!-- 4. Google Analytics -->
         <div>
-          <h2 class="font-display text-2xl tracking-wider text-vsg-blue-900 md:text-3xl">4. Social Media & Externe Links</h2>
+          <h2 class="font-display text-2xl tracking-wider text-vsg-blue-900 md:text-3xl">4. Google Analytics</h2>
           <div class="mt-4 space-y-4 font-body text-lg leading-relaxed text-vsg-blue-700">
             <p>
-              Unsere Website kann Links zu externen Webseiten Dritter enthalten. Auf die Inhalte dieser Webseiten haben wir keinen Einfluss. Deshalb
-              können wir für diese fremden Inhalte auch keine Gewähr übernehmen.
+              Diese Website benutzt Google Analytics, einen Webanalysedienst der Google Inc. (Google). Google Analytics verwendet sog. Cookies,
+              Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie ermöglichen. Die durch
+              den Cookie erzeugten Informationen über Ihre Benutzung dieser Website werden in der Regel an einen Server von Google in den USA
+              übertragen und dort gespeichert.
             </p>
             <p>
-              Bei Nutzung von Social-Media-Plugins oder Links zu sozialen Netzwerken können personenbezogene Daten an die jeweiligen Anbieter
-              übertragen werden. Wir weisen darauf hin, dass wir als Anbieter der Seiten keine Kenntnis vom Inhalt der übermittelten Daten sowie deren
-              Nutzung durch die Drittanbieter erhalten.
+              Wir haben die IP-Anonymisierung aktiviert. Auf dieser Webseite wird Ihre IP-Adresse von Google daher innerhalb von Mitgliedstaaten der
+              Europäischen Union oder in anderen Vertragsstaaten des Abkommens über den Europäischen Wirtschaftsraum zuvor gekürzt. Nur in
+              Ausnahmefällen wird die volle IP-Adresse an einen Server von Google in den USA übertragen und dort gekürzt. Im Auftrag des Betreibers
+              dieser Website wird Google diese Informationen benutzen, um Ihre Nutzung der Website auszuwerten, um Reports über die Websiteaktivitäten
+              zusammenzustellen und um weitere mit der Websitenutzung und der Internetnutzung verbundene Dienstleistungen gegenüber dem
+              Websitebetreiber zu erbringen. Die im Rahmen von Google Analytics von Ihrem Browser übermittelte IP-Adresse wird nicht mit anderen Daten
+              von Google zusammengeführt.
             </p>
             <p>
-              Für weitere Informationen zur Datenverarbeitung durch Drittanbieter beachten Sie bitte die jeweiligen Datenschutzerklärungen der
-              entsprechenden Anbieter.
+              Sie können die Speicherung der Cookies durch eine entsprechende Einstellung Ihrer Browser-Software verhindern; wir weisen Sie jedoch
+              darauf hin, dass Sie in diesem Fall gegebenenfalls nicht sämtliche Funktionen dieser Website vollumfänglich werden nutzen können. Sie
+              können darüber hinaus die Erfassung der durch das Cookie erzeugten und auf Ihre Nutzung der Website bezogenen Daten (inkl. Ihrer
+              IP-Adresse) an Google sowie die Verarbeitung dieser Daten durch Google verhindern, indem Sie das unter dem folgenden Link verfügbare
+              Browser-Plugin herunterladen und installieren:
+              <a
+                href="https://tools.google.com/dlpage/gaoptout?hl=de"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="hover:text-vsg-gold-600 transition-colors break-all"
+              >
+                https://tools.google.com/dlpage/gaoptout?hl=de
+              </a>
             </p>
           </div>
         </div>
 
-        <!-- Änderungen -->
+        <!-- 5. Änderungen dieser Datenschutzerklärung -->
         <div class="border-t border-vsg-blue-100 pt-12">
           <h2 class="font-display text-2xl tracking-wider text-vsg-blue-900 md:text-3xl">5. Änderungen dieser Datenschutzerklärung</h2>
           <p class="mt-4 font-body text-lg leading-relaxed text-vsg-blue-700">
