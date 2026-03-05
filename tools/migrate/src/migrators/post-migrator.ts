@@ -28,8 +28,8 @@ export async function migratePosts(
         continue;
       }
 
-      // Filter posts for this category
-      const posts = allPosts.filter(post => post.catid === category.id);
+      // Filter posts for this category (exclude posts with no catid)
+      const posts = allPosts.filter(post => post.catid != null && post.catid === category.id);
 
       if (posts.length === 0) {
         continue;
@@ -57,9 +57,21 @@ export async function migratePosts(
         );
 
         if (result.rows.length > 0) {
+          const newPostId: number = result.rows[0].id;
+          await pgClient.query(
+            `INSERT INTO "_CategoryToPost" ("A", "B") VALUES ($1, $2) ON CONFLICT DO NOTHING`,
+            [pgCategoryId, newPostId],
+          );
           totalPosts++;
+        } else {
+          logger.warning(`Skipped duplicate slug post: "${post.title}" (slug="${slug}")`);
         }
       }
+    }
+
+    const uncategorizedPosts = allPosts.filter(post => post.catid == null);
+    for (const post of uncategorizedPosts) {
+      logger.warning(`Skipped post with no category: "${post.title}"`);
     }
 
     spinner.succeed(`Migrated ${totalPosts} posts`);

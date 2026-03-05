@@ -14,3 +14,10 @@ clean-migrations:
 	DATABASE_URL="postgresql://user:secret@localhost:5432/database_test?schema=public" pnpm --filter api exec prisma migrate reset
 	DATABASE_URL="postgresql://user:secret@localhost:5432/database_test?schema=public" pnpm --filter api prisma:migrate
 	pnpm --filter migrate migrate
+
+migrate:
+	pnpm --filter api prisma:generate
+	pnpm --filter api exec prisma migrate reset
+	DATABASE_URL="postgresql://user:secret@localhost:5432/database_test?schema=public" pnpm --filter api exec prisma migrate reset
+	DATABASE_URL="postgresql://user:secret@localhost:5432/database_test?schema=public" pnpm --filter api prisma:migrate
+	pnpm --filter migrate migrate

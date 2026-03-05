@@ -12,7 +12,7 @@ export interface JoomlaPost {
   id: number;
   title: string;
   content: string | null;
-  catid: number;
+  catid: number | null;
   hits: number;
   created: Date;
   modified: Date;

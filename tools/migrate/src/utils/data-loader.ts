@@ -82,7 +82,7 @@ export async function loadPostsData(): Promise<JoomlaPost[]> {
       id: Number(row.id),
       title: row.title as string,
       content: (row.content as string | null) ?? null,
-      catid: Number(row.catid),
+      catid: row.catid != null && row.catid !== '' ? Number(row.catid) : null,
       hits: Number(row.hits),
       created: new Date(row.created as string),
       modified: new Date(row.modified as string),
