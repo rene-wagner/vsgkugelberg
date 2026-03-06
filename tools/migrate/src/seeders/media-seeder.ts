@@ -21,7 +21,7 @@ const MEDIA_SOURCE_DIR = path.join(__dirname, '../../data/media');
 const UPLOAD_TARGET_DIR = path.join(__dirname, '../../../../apps/api/uploads');
 
 // Media folders to create
-const MEDIA_FOLDERS = ['Kontakte', 'Abteilungen', 'Standorte', 'Logos'];
+const MEDIA_FOLDERS = ['Kontakte', 'Abteilungen', 'Standorte', 'Logos', 'Dokumente'];
 
 // Source directory to folder mapping
 const SOURCE_DIR_TO_FOLDER: Record<string, string> = {
@@ -29,6 +29,7 @@ const SOURCE_DIR_TO_FOLDER: Record<string, string> = {
   'department-icons': 'Abteilungen',
   'locations': 'Standorte',
   'logos': 'Logos',
+  'documents': 'Dokumente',
 };
 
 /**
@@ -148,7 +149,7 @@ export async function seedMediaFiles(
             `INSERT INTO "Media" ("filename", "originalName", "path", "mimetype", "size", "type", "folderId", "createdAt", "updatedAt")
              VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
              RETURNING id`,
-            [uniqueFilename, originalFilename, relativePath, mimetype, fileStats.size, 'IMAGE', folderId],
+            [uniqueFilename, originalFilename, relativePath, mimetype, fileStats.size, mimetype === 'application/pdf' ? 'DOCUMENT' : 'IMAGE', folderId],
           );
 
           const mediaId = result.rows[0].id;
