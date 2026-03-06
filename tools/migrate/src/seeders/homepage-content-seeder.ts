@@ -23,9 +23,9 @@ export async function seedHomepage(pgClient: Client, mediaMap: MediaFileMap): Pr
         "id", "heroTag", "heroLogoId",
         "departmentsHeadline", "departmentsDescription", "departmentsSubtitle",
         "postsHeadline", "postsDescription", "postsSubtitle", "postsCount",
-        "ctaHeadline", "ctaDescription", "updatedAt"
+        "ctaHeadline", "ctaDescription", "welcomeText", "updatedAt"
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW()
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, NOW()
       )`,
       [
         1,
@@ -40,6 +40,7 @@ export async function seedHomepage(pgClient: Client, mediaMap: MediaFileMap): Pr
         homepage.postsCount,
         homepage.ctaHeadline,
         homepage.ctaDescription,
+        homepage.welcomeText ?? null,
       ],
     );
 

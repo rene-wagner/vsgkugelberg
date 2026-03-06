@@ -47,6 +47,7 @@ export interface CompleteDepartmentData {
   name: string;
   slug: string;
   shortDescription: string;
+  welcomeText?: string;
   stats: SeedDepartmentStat[];
   locations: SeedDepartmentLocation[];
   trainingGroups: SeedTrainingGroup[];
@@ -140,6 +141,7 @@ export interface SeedHomepageStat {
 
 export interface SeedHomepage {
   heroTag: string;
+  welcomeText?: string;
   stats: SeedHomepageStat[];
   departmentsHeadline: string;
   departmentsDescription: string;

@@ -27,14 +27,15 @@ async function seedDepartments(pgClient: Client): Promise<DepartmentMap> {
 
   for (const dept of departments) {
     const result = await pgClient.query(
-      `INSERT INTO "Department" ("name", "slug", "shortDescription", "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, NOW(), NOW())
+      `INSERT INTO "Department" ("name", "slug", "shortDescription", "welcomeText", "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, NOW(), NOW())
        ON CONFLICT ("slug") DO UPDATE SET
          "name" = EXCLUDED."name",
          "shortDescription" = EXCLUDED."shortDescription",
+         "welcomeText" = EXCLUDED."welcomeText",
          "updatedAt" = NOW()
        RETURNING id`,
-      [dept.name, dept.slug, dept.shortDescription],
+      [dept.name, dept.slug, dept.shortDescription, dept.welcomeText ?? null],
     );
 
     departmentMap.set(dept.slug, result.rows[0].id);
