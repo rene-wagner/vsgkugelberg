@@ -22,6 +22,7 @@ export function getFileMimetype(filename: string): string {
     '.png': 'image/png',
     '.svg': 'image/svg+xml',
     '.webp': 'image/webp',
+    '.pdf': 'application/pdf',
   };
 
   return mimeTypes[ext] || 'application/octet-stream';
